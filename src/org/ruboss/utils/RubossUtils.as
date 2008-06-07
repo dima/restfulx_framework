@@ -1,0 +1,141 @@
+/*************************************************************************
+ * Copyright 2008, Ruboss Technology Corporation.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License v3 as
+ * published by the Free Software Foundation.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License v3 for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License v3 along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ **************************************************************************/
+package org.ruboss.utils {
+  import flash.utils.describeType;
+  
+  import mx.collections.ArrayCollection;
+  import mx.formatters.DateFormatter;
+  import mx.utils.ObjectUtil;
+    
+  public class RubossUtils {
+    
+    public static function clone(object:Object):Object {
+      return object;
+    }
+    
+    public static function getResourceController(object:Object):String {
+      return describeResource(object).arg.(@key == "controller").@value;
+    }
+    
+    public static function describeResource(object:Object):XMLList {
+      return (object is Class) ? 
+        describeType(object).factory.metadata.(@name == "Resource") :
+        describeType(object).metadata.(@name == "Resource");
+    }
+    
+    public static function getAttributeAnnotation(attribute:XML, annotationName:String):XMLList {
+      return attribute.metadata.(@name == annotationName);
+    }
+    
+    public static function isLazy(attribute:XML):Boolean {
+      return getAttributeAnnotation(attribute, "Lazy").length() > 0;
+    }
+    
+    public static function isBelongsTo(attribute:XML):Boolean {
+      return getAttributeAnnotation(attribute, "BelongsTo").length() > 0;
+    }
+    
+    public static function isHasMany(attribute:XML):Boolean {
+      return getAttributeAnnotation(attribute, "HasMany").length() > 0;
+    }
+    
+    public static function isHasOne(attribute:XML):Boolean {
+      return getAttributeAnnotation(attribute, "HasOne").length() > 0;
+    }
+    
+    public static function isDateTime(attribute:XML):Boolean {
+      return getAttributeAnnotation(attribute, "DateTime").length() > 0;
+    }
+
+    public static function toCamelCase(string:String):String {
+      return string.replace(/_[a-z]/g, function x():String {
+        return (arguments[0] as String).slice(1).toUpperCase();
+      });      
+    }
+    
+    public static function toSnakeCase(string:String):String {
+      return lowerCaseFirst(string).replace(/[A-Z]/g, function x():String {
+        return "_" + (arguments[0] as String).toLowerCase();
+      });
+    }
+    
+    public static function lowerCaseFirst(string:String):String {
+      return string.charAt(0).toLowerCase() + string.slice(1);
+    }
+    
+    public static function cast(targetName:String, targetType:String, value:Object):* {
+      if (targetType == "Boolean") {
+        return (value == "true" || value == 1) ? true : false;
+      } else if (targetType == "Date") {
+        return new Date(Date.parse(value));
+      } else {
+        return String(value).replace("\\x3A", ":").split("\\n").join("\n");
+      }
+    }
+    
+    public static function uncast(ref:*, isDateTime:Boolean = false):* {
+      if (ref is Date) {
+        var formatter:DateFormatter = new DateFormatter;
+        if (isDateTime) {
+          formatter.formatString = "YYYY-MM-DDTHH:NN:SS";
+        } else {
+          formatter.formatString = "YYYY-MM-DD";
+        }
+        return formatter.format(ref as Date);
+      } else {
+        return String(ref);
+      }
+    }
+
+   public static function isEmpty(str:String):Boolean {
+     return str == null || str == "";
+   }
+
+   public static function getWithDefault(str:String, defaultStr:String):String {
+     return isEmpty(str) ? defaultStr : str;
+   }
+
+    public static function daysFromNow(numDays:int):Date {
+      return new Date((new Date().time + (1000*60*60*24*numDays)));
+    }
+    
+    public static function isInTheFuture(date:Date):Boolean {
+      if (date == null) return false;
+      var now:Date = new Date();
+      return ObjectUtil.dateCompare(date, now) > 0;
+    }
+        
+    public static function mergeArrays(items:Array, toAdd:Array, 
+      after:Boolean = false):ArrayCollection {
+      var results:Array;
+      if (after) {
+        results = items.slice(0);
+        return new ArrayCollection(results.concat(toAdd));
+      } else {
+        results = toAdd.slice(0);
+        return new ArrayCollection(results.concat(items));
+      }
+    }
+
+    public static function removeFirstMatch(o:Object, ac:ArrayCollection):Object {
+      var index:int = ac.source.indexOf(o);
+      if (index == -1) return null;
+      return ac.removeItemAt(index);
+    }    
+  }
+}

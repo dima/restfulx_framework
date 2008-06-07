@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rcomponents:DateTimeTextInput xmlns:rcomponents="org.ruboss.components.*" formatString="MM/DD/YYYY"/>
