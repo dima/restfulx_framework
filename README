@@ -1,0 +1,2 @@
+The goal of the Ruboss Framework is to automate much of the plumbing necessary to use Adobe Flex and Adobe AIR with Ruby on Rails. 
+The Ruboss Framework brings the design principles and productivity of Rails to Flex development, and makes integration with RESTful Rails controllers as simple as possible.
