@@ -184,6 +184,7 @@ package org.ruboss.services.http {
         // create instance
         var clazz:Class = getDefinitionByName(fqn) as Class;
         object = new clazz;
+        object["id"] = node.id;
       }
       
       var objectMetadata:XML = describeType(object);  
@@ -245,9 +246,15 @@ package org.ruboss.services.http {
             // treat it as an ArrayCollection                
             if (ref != null && ref.hasOwnProperty(collectionName)) {
               if (ref[collectionName] == null) {
-                ref[collectionName] = new ArrayCollection;
+                ref[collectionName] = new ModelsCollection;
               }
-              (ref[collectionName] as ArrayCollection).addItem(object);
+              
+              var col:ModelsCollection = ref[collectionName] as ModelsCollection;
+              if (col.hasItem(object)) {
+                col.setItem(object);
+              } else {
+                col.addItem(object);
+              }
             // if we've got a singular definition then it must be a 1->1 relationship, hence
             // we try to set-up the links directly      
             } else if (ref != null && ref.hasOwnProperty(localName)) {
