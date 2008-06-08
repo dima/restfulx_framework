@@ -87,7 +87,7 @@ package org.ruboss.services.http {
     
     private function isValidProperty(name:String, type:String, 
       object:Object):Boolean {
-      return !(name == "id" || type == "mx.collections::ArrayCollection" 
+      return !(name == "id" || type == "org.ruboss.models::ModelsCollection" 
         || object[name] == null);
     }
 
