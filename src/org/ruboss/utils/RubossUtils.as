@@ -88,17 +88,17 @@ package org.ruboss.utils {
       }
     }
     
-    public static function uncast(ref:*, isDateTime:Boolean = false):* {
-      if (ref is Date) {
+    public static function uncast(object:Object, property:String):* {
+      if (object[property] is Date) {
         var formatter:DateFormatter = new DateFormatter;
-        if (isDateTime) {
+        if (ObjectUtil.hasMetadata(object, property, "DateTime")) {
           formatter.formatString = "YYYY-MM-DDTHH:NN:SS";
         } else {
           formatter.formatString = "YYYY-MM-DD";
         }
-        return formatter.format(ref as Date);
+        return formatter.format(object[property] as Date);
       } else {
-        return String(ref);
+        return String(object[property]);
       }
     }
 

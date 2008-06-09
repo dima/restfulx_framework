@@ -255,7 +255,7 @@ package org.ruboss.services.air {
               (ref == null) ? null : ref["id"];
           } else {
             statement.parameters[":" + snakeName] = 
-              RubossUtils.uncast(object[localName]);
+              RubossUtils.uncast(object, localName);
           }
         }
       }
@@ -284,7 +284,7 @@ package org.ruboss.services.air {
               (ref == null) ? null : ref["id"];
           } else {
             sqlStatement.parameters[":" + snakeName] = 
-              RubossUtils.uncast(object[localName]);
+              RubossUtils.uncast(object, localName);
           }
         }
       }

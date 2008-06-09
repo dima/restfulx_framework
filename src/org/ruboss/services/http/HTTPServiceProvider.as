@@ -61,7 +61,7 @@ package org.ruboss.services.http {
       if (metadata == null) return result;
       
       for (var tag:String in metadata) {
-        result += tag + "=" + encodeURI(RubossUtils.uncast(metadata[tag])) + "&";
+        result += tag + "=" + encodeURI(RubossUtils.uncast(metadata, tag)) + "&";
       }
       return result.replace(/&$/, "");
     }
@@ -94,7 +94,7 @@ package org.ruboss.services.http {
           }
         } else {
           vars.push(("<" + snakeName + ">" + 
-            RubossUtils.uncast(object[nodeName]) + "</" + snakeName + ">"));
+            RubossUtils.uncast(object, nodeName) + "</" + snakeName + ">"));
         }
       }
 
@@ -103,7 +103,7 @@ package org.ruboss.services.http {
         extras = "<_metadata>";
         for (var elm:String in metadata) {
           var elmName:String = RubossUtils.toSnakeCase(elm);
-          extras += "<" + elmName + ">" + RubossUtils.uncast(metadata[elm]) + "</" + elmName + ">"; 
+          extras += "<" + elmName + ">" + RubossUtils.uncast(metadata, elm) + "</" + elmName + ">"; 
         }
         extras += "</_metadata>";
       }
@@ -136,14 +136,14 @@ package org.ruboss.services.http {
           }
         } else {
           result[(localName + "[" + snakeName + "]")] = 
-            RubossUtils.uncast(object[nodeName], RubossUtils.isDateTime(node));
+            RubossUtils.uncast(object, nodeName);
         }
       }
       
       if (metadata != null) {
         for (var elm:String in metadata) {
           var elmName:String = RubossUtils.toSnakeCase(elm);
-          result["_metadata[" + elmName + "]"] = RubossUtils.uncast(metadata[elm]); 
+          result["_metadata[" + elmName + "]"] = RubossUtils.uncast(metadata, elm); 
         }
       }
             
