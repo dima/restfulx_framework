@@ -1,2 +1,114 @@
+Motivation
+----------
 The goal of the Ruboss Framework is to automate much of the plumbing necessary to use Adobe Flex and Adobe AIR with Ruby on Rails. 
 The Ruboss Framework brings the design principles and productivity of Rails to Flex development, and makes integration with RESTful Rails controllers as simple as possible.
+
+Introduction
+-------------
+In this tutorial we will build a new application from scratch using the Ruboss Framework. This is made pretty simple thanks to the generators that accompany the framework. However, the real beauty is in the actual generated code which uses the framework -- this is clean Flex code, and it is very similar to the code you would write.
+
+Assumptions
+-----------
+The following steps have been tried with Flex Builder 3 on Mac OS X. You should have Git, RubyOnRails *2.1* and MySQL 5.0+ installed for the RubyOnRails portion of this tutorial and Flex Builder 3 if you intend to edit your Flex code using it (NOTE: this is not required if you have Flex SDK installed: make sure you have added Flex SDK bin directory to your $PATH variable so that you can invoke mxmlc from the command line). This tutorial assumes that you are going to install the Ruboss Rails plugin directly from github (which is why Git is necessary). If you install the plugin in some other way then you don't need Git.
+
+Developing a Flex application that talks to RubyOnRails with Ruboss Framework
+-----------------------------------------------------------------------------
+This application will be called pomodo:
+
+$>rails -d mysql pomodo
+
+Next, we switch to the new application directory and install the ruboss plugin:
+
+$>cd pomodo
+$>./script/plugin install git://github.com/dima/ruboss_rails_integration.git
+
+Next, we run the rconfig generator to create the new Flex project:
+
+$>./script/generate rconfig
+
+If you are using a non-default Rails configuration with a root password defined for your local MySQL database, you'll also need to run this next step. Otherwise you can safely ignore the following rake task and proceed to the next step.
+
+$>rake db:mysql:stage ADMINPASS=<mysql root password> USER=<application username> PASS=<application password>
+
+This rake task will modify config/database.yml (and save original database.yml definitions into database.yml.sample) to use the user/password combination you've defined above. It'll also grant appropriate permissions in the MySQL database and attempt to drop, then recreate appropriate rails application database defined by RAILS_ENV.
+
+If you want to perform db:mysql:stage for all the databases defined in config/database.yml run the following command instead:
+
+$>rake db:mysql:stage:all ADMINPASS=<mysql root password> USER=<application username> PASS=<application password>
+
+Next, we proceed to scaffold our application.
+
+Using YAML to scaffold your Flex+Rails application
+--------------------------------------------------
+Scaffolding is a cool way to get started with a Rails (and now Flex) applications quickly. Unfortunately, things tend to become quite cumbersome once you get beyond 5 or so models. You have to individually run scaffolding for each model and then go and edit relationships in both rails and flex code. This approach just doesn't scale. You might tolerate doing all this manual work for a few models, but what are you going to do when you have to run pretty much the same command 30 or 40 times and then remember how all these things relate to each other? Wouldn't it be better if you could specify the bulk of your data model in some easy to read file and just run that once?
+
+This is basically the intuition behind two scripts that make their way into your Rails application script folder when you install the Ruboss plugin. These scripts are called yamlscaffold and multiscaffold respectively. They do pretty much the same thing (but accept differently formatted input) - and might end up being refactored into just one script later.
+
+Now comes the cool stuff. Let's create a file called db/model.yml that contains the following:
+project:
+ - name: string
+ - notes: text
+ - start_date: date
+ - end_date: date
+ - completed: boolean
+ - belongs_to: [user]
+ - has_many: [tasks]
+
+location:
+ - name: string
+ - notes: text
+ - belongs_to: [user]
+ - has_many: [tasks]
+
+task:
+ - name: string
+ - notes: text
+ - start_time: datetime
+ - end_time: datetime
+ - completed: boolean
+ - next_action: boolean
+ - belongs_to: [project, location, user]
+
+note:
+ - content: text
+ - belongs_to: [user]
+
+user:
+ - login: string
+ - first_name: string
+ - last_name: string
+ - email: string
+ - has_many: [tasks, projects, locations]
+ - has_one: [note]
+
+This should be fairly self explanatory except for a few details you might not have seen in YAML documents before.
+
+  1. You can specify most of the aspects of the models (including relationships) directly in the YAML file:
+    A. Use belongs_to: [<references here>] notation (e.g. belongs_to: [user]) to refer to the belongs_to end of the relationship.
+    B. has_one: following by an array of model names to denote has_one end of relationship (e.g. has_one: [note])
+    C. has_many: works the same way has_one and belongs_to do.
+  2. - in front of every attribute line preserves the exact order of elements in generated code. Make sure you add it!
+  
+That's pretty much all there is to it. If your db/model.yml file contains the text above, you can run:
+
+$>./script/yamlscaffold
+
+And watch scaffolding fly by on the console.
+
+Check out the Flex and Rails code after you run the command. It should have all the fields and relationships set up. This means no more extra manual labour to get your application into a runnable state. Just load some data by running:
+
+$>rake db:refresh
+
+If you have added Flex SDK bin directory to your $PATH variable run:
+
+$>rake ruboss:flex:build
+
+This will compile your new Flex application and move generated .swf file into the public/bin directory.
+
+If you *DON'T* have mxmlc executable accessible from the command line you'll have to open this project in Flex Builder and compile it.
+
+Next, start the server by running:
+
+$>./script/server
+
+And point your browser at http://localhost:3000. It's not going to be the greatest Flex application ever written but for a 5 minute scaffolding job it's definitely not bad.
