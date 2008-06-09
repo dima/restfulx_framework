@@ -51,15 +51,15 @@ package org.ruboss.services {
       // checking then just return true
       if (!fqn || !checkOrder) return true;
       
-      if (!Ruboss.models.standalone[fqn] && !Ruboss.models.fetched[fqn]) {
-        var dependencies:Array = (useLazyMode) ? Ruboss.models.lazy[fqn] : Ruboss.models.eager[fqn];
+      if (!controller.state.standalone[fqn] && !controller.state.fetched[fqn]) {
+        var dependencies:Array = (useLazyMode) ? controller.state.lazy[fqn] : controller.state.eager[fqn];
         for each (var dependency:String in dependencies) {
           // if we are still missing some dependencies queue this response 
           // for later 
-          if (!Ruboss.models.fetched[dependency]) {
+          if (!controller.state.fetched[dependency]) {
             Ruboss.log.debug("missing dependency: " + dependency + " of: " + fqn + 
               " queuing this response until the dependency is received.");
-            (Ruboss.models.queue[dependency] as Array).push({"target":this, 
+            (Ruboss.models.state.queue[dependency] as Array).push({"target":this, 
               "event":event});
             return false;
           }
@@ -68,7 +68,7 @@ package org.ruboss.services {
       
       // OK, so looks like we have all the dependencies, mark this model 
       // as fetched
-      Ruboss.models.fetched[fqn] = true;
+      controller.state.fetched[fqn] = true;
       return true;
     }
     
@@ -89,13 +89,13 @@ package org.ruboss.services {
             Ruboss.log.debug("handling response for: " + fqn);
             var checkedResult:Object = service.unmarshall(event.result);
             handler.call(controller, checkedResult);
-            for each (var dependant:Object in Ruboss.models.queue[fqn]) {
+            for each (var dependant:Object in controller.state.queue[fqn]) {
               var target:Object = dependant["target"];
               var targetEvent:Object = dependant["event"];
               IResponder(target).result(targetEvent);
             }
             // OK so we notified all the dependants, need to clean up
-            Ruboss.models.queue[fqn] = new Array;
+            controller.state.queue[fqn] = new Array;
             // and fire user's callback responder here
             if (afterCallback != null) {
               invokeAfterCallback(checkedResult);
@@ -103,7 +103,7 @@ package org.ruboss.services {
           }
           
           //reset the standalone flag
-          delete Ruboss.models.standalone[fqn];
+          delete controller.state.standalone[fqn];
         }
       }
     }

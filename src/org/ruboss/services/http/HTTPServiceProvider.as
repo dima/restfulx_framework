@@ -16,18 +16,18 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  **************************************************************************/
 package org.ruboss.services.http {
-  import flash.utils.Dictionary;
   import flash.utils.describeType;
   import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
   
-  import mx.collections.ArrayCollection;
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.http.HTTPService;
+  import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
   import org.ruboss.models.ModelsCollection;
+  import org.ruboss.models.ModelsStateMetadata;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ServiceManager;
   import org.ruboss.utils.RubossUtils;
@@ -36,66 +36,45 @@ package org.ruboss.services.http {
     
     public static const ID:int = ServiceManager.generateId();
     
-    // maps FQNs and local model names to controllers
-    private var controllers:Dictionary;
+    private var state:ModelsStateMetadata;
     
-    // a list of all registered controllers mapped to fqns
-    private var fqns:Dictionary;
-    
-    // maps FQNs to localNames and back
-    private var keys:Dictionary;
-    
-    public function HTTPServiceProvider(models:Array) {
-      this.controllers = new Dictionary;
-      this.fqns = new Dictionary;
-      this.keys = new Dictionary;
-      
-      // set up data structures
-      for each (var model:Class in models) {
-        var fqn:String = getQualifiedClassName(model);
-        var modelName:String = fqn.split("::")[1] as String;
-        
-        // this is what model names would look like after 
-        // camel-casing variable names we get from RoR
-        var localName:String = modelName.charAt(0).toLowerCase() + 
-          modelName.slice(1);
-        
-        var controller:String = RubossUtils.getResourceController(model);
-        fqns[controller] = fqn;
-        
-        controllers[fqn] = controller;
-        controllers[localName] = controller;
-
-        keys[localName] = fqn;
-        keys[fqn] = localName;
-      }
+    public function HTTPServiceProvider(state:ModelsStateMetadata) {
+      this.state = state;
     }
     
     private function nestResource(object:Object, nestedBy:Array = null):String {
       var result:String = "";
       if (nestedBy == null || nestedBy.length == 0) 
-        return controllers[getQualifiedClassName(object)] + ".fxml";
+        return state.controllers[getQualifiedClassName(object)] + ".fxml";
       
       for each (var resource:Object in nestedBy) {
-        result += controllers[getQualifiedClassName(resource)] + "/" + 
+        result += state.controllers[getQualifiedClassName(resource)] + "/" + 
           resource["id"];
       }
       
-      result += "/" + controllers[getQualifiedClassName(object)] + ".fxml";
+      result += "/" + state.controllers[getQualifiedClassName(object)] + ".fxml";
       return result;
     }
+
+    private function urlEncodeMetadata(metadata:Object = null):String {
+      var result:String = "";
+      if (metadata == null) return result;
+      
+      for (var tag:String in metadata) {
+        result += tag + "=" + encodeURI(RubossUtils.uncast(metadata[tag])) + "&";
+      }
+      return result.replace(/&$/, "");
+    }
     
-    private function isValidProperty(name:String, type:String, 
-      object:Object):Boolean {
-      return !(name == "id" || type == "org.ruboss.models::ModelsCollection" 
-        || object[name] == null);
+    private function isValidProperty(name:String, type:String, object:Object):Boolean {
+      return !(name == "id" || type == "org.ruboss.models::ModelsCollection" || object[name] == null);
     }
 
     private function marshallToXML(object:Object, metadata:Object = null):XML {
       var result:String = null;
       
       var fqn:String = getQualifiedClassName(object);
-      var localName:String = RubossUtils.toSnakeCase(keys[fqn]);
+      var localName:String = RubossUtils.toSnakeCase(state.keys[fqn]);
       
       var vars:Array = new Array;
       for each (var node:XML in describeType(object)..accessor) {
@@ -108,7 +87,7 @@ package org.ruboss.services.http {
         
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
-        if (controllers[type]) {
+        if (state.controllers[type]) {
           if (RubossUtils.isBelongsTo(node)) {
             vars.push(("<" + snakeName + "_id>" + object[nodeName]["id"] + 
               "</" + snakeName + "_id>"));
@@ -136,7 +115,7 @@ package org.ruboss.services.http {
     
     private function marshallToVO(object:Object, metadata:Object = null):Object {        
       var fqn:String = getQualifiedClassName(object);
-      var localName:String = RubossUtils.toSnakeCase(keys[fqn]);
+      var localName:String = RubossUtils.toSnakeCase(state.keys[fqn]);
       
       var result:Object = new Object;
       for each (var node:XML in describeType(object)..accessor) {
@@ -150,7 +129,7 @@ package org.ruboss.services.http {
         
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
-        if (controllers[type]) {
+        if (state.controllers[type]) {
           if (RubossUtils.isBelongsTo(node)) {
             result[(localName + "[" + snakeName + "_id]")] = 
               object[nodeName]["id"];
@@ -171,140 +150,148 @@ package org.ruboss.services.http {
       return result;
     }
     
-    private function unmarshallNode(node:XML, 
-      targetRef:Object = null, singleRef:Boolean = false, refName:String = null):Object {
+    private function unmarshallNode(node:XML, implicitReference:Object = null, implicitReferenceName:String = null):Object {
       var localName:String = RubossUtils.toCamelCase(node.localName());
-      var fqn:String = keys[localName];
-      if (fqn == null) 
+      var fqn:String = state.keys[localName];
+      if (fqn == null || parseInt(node.id) == 0) 
         throw new Error("cannot unmarshall " + node.localName() + 
-          " no mapping exists");
+          " no mapping exists or receieved a node with invalid id");
 
+      // if we already have something with this fqn and id in cache attempt to reuse it
+      // this will ensure that whatever is doing comparison by reference should still be happy
       var object:Object = ModelsCollection(Ruboss.models.cache[fqn]).withId(node.id);
+      
+      // if not in cache, we need to create a new instance
       if (object == null) {
-        // create instance
         var clazz:Class = getDefinitionByName(fqn) as Class;
         object = new clazz;
         object["id"] = node.id;
       }
-      
-      var objectMetadata:XML = describeType(object);  
-                  
-      // TODO: needs to handle arrays too
+                        
+      // TODO: needs to handle arrays too?
       for each (var element:XML in node.elements()) {
         var targetName:String = element.localName();
         var isRef:Boolean = false;
         var isNestedArray:Boolean = false;
-        // treat refs to other model objects specially
+
+        // if we got a node with a name that terminates in "_id" we check to see if
+        // it's a model reference       
         if (targetName.search(/.*_id$/) != -1) {
-          targetName = targetName.replace(/_id$/, "");
-          isRef = true;
+          var checkName:String = RubossUtils.toCamelCase(targetName.replace(/_id$/, ""));
+          if (state.keys[checkName]) {
+            targetName = checkName;
+            isRef = true;
+          }
+        } else {
+          // if the XML element name is a known controller name and assume
+          // we got back a nested list of model elements
+          if (element.@type == "array" && state.fqns[targetName]) {
+            isNestedArray = true;
+          }
+          // convert names back to camel case
+          targetName = RubossUtils.toCamelCase(targetName);
         }
         
-        // if the XML element name is a known controller name assume
-        // we got back a nested list of elements
-        if (fqns[targetName] && element.@type == "array") {
-          isNestedArray = true;
-        }
-                
-        // convert names back to camel case
-        targetName = RubossUtils.toCamelCase(targetName);
-                
         if (object.hasOwnProperty(targetName)) {
+          // if this property is a reference, try to resolve the 
+          // reference and set up biderctional links between models
           if (isRef) {
-            // if targetName is a reference, try to resolve the 
-            // reference and set up biderctional 1->N links
-            // between models
-            var ref:Object = (targetName == refName) ? targetRef : null;
-            if (ref == null) {
-              var key:String = keys[targetName];
-              // the key is likely to be null in case some parts of the relationship are not initialized
-              // correctly.
-              if (key == null) {
-                Ruboss.log.warn("WARNING! The following relationship could not be resolved: " + targetName +
-                  " for the XML element of: " + element.localName() + ". Check your model for consistency."); 
-              } else {
-                var elementId:int = parseInt(element.toString());
-                
-                // TODO: this is a pretty dodgy/magic? check. it's here simply because of the stupid default fixtures
-                if (elementId != 0) {
-                  ref = (Ruboss.models.cache[key] as ModelsCollection).withId(elementId);
-                  if (ref == null) {
-                    var definition:Class = getDefinitionByName(key) as Class;
-                    ref = new definition;
-                    ref["id"] = elementId;
-                  }
-                }
-              }
-            }
+            var ref:Object = inferReference(element, targetName, implicitReference, implicitReferenceName);
                             
-            // collectionName should be the same as the camel-cased 
-            // name of the controller for the current node
+            // collectionName should be the same as the camel-cased name of the controller for the current node
             var collectionName:String = 
-              RubossUtils.toCamelCase(controllers[RubossUtils.toCamelCase(node.localName())]);
+              RubossUtils.toCamelCase(state.controllers[RubossUtils.toCamelCase(node.localName())]);
                 
-            // if we've got a plural definition it's got to be a 1->N relationship, hence
-            // treat it as an ArrayCollection                
-            if (ref != null && ref.hasOwnProperty(collectionName)) {
-              if (ref[collectionName] == null) {
-                ref[collectionName] = new ModelsCollection;
+            // if we've got a plural definition which is annotated with [HasMany] 
+            // it's got to be a 1->N relationship           
+            if (ref != null && ref.hasOwnProperty(collectionName) && 
+              ObjectUtil.hasMetadata(ref, collectionName, "HasMany")) {
+              var items:ModelsCollection = ModelsCollection(ref[collectionName]);
+              if (items == null) {
+                items = new ModelsCollection;
               }
               
-              var col:ModelsCollection = ref[collectionName] as ModelsCollection;
-              if (col.hasItem(object)) {
-                col.setItem(object);
+              // add (or replace) the current item to the reference collection
+              if (items.hasItem(object)) {
+                items.setItem(object);
               } else {
-                col.addItem(object);
+                items.addItem(object);
               }
-            // if we've got a singular definition then it must be a 1->1 relationship, hence
-            // we try to set-up the links directly      
-            } else if (ref != null && ref.hasOwnProperty(localName)) {
+            // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
+            // link them up
+            } else if (ref != null && ref.hasOwnProperty(localName) && 
+              ObjectUtil.hasMetadata(ref, localName, "HasOne")) {
               ref[localName] = object;
             }
+            // and the reverse
             object[targetName] = ref;
           } else if (isNestedArray) {
-            for each (var nestedElement:XML in element.children()) {
-              unmarshallNode(nestedElement, object, false, localName);
-            }
+            // if we've got a nested array, unmarshall nested nodes setting implicitReference to *this*
+            // object and implicitReferenceName to *this object's localName*
+            processNestedArray(element, object, localName);
           } else if (!isRef) {
-            var targetType:String = objectMetadata.accessor.(@name == targetName).@type.toString();
+            var targetType:String = getQualifiedClassName(object[targetName]);
             // we have a nested *singular* definition, need to hook it up
-            if (keys[targetName] == targetType) {
-              var nestedRef:Object = unmarshallNode(element, object, false, localName);
+            if (state.keys[targetName] == targetType) {
+              var nestedRef:Object = unmarshallNode(element, object, localName);
               if (nestedRef != null) {
                 object[targetName] = nestedRef;
               }
             } else {
               object[targetName] = 
-                RubossUtils.cast(targetName, targetType, element.toString());
+                RubossUtils.cast(targetName, element.@type, element.toString());
             }
           }
         }
       }
 
-      for each (var relationship:Object in Ruboss.models.relationships[controllers[fqn]]) {
-        var relName:String = relationship["name"];
-        var relAttribute:String = relationship["attribute"];
-        var localRelName:String = keys[relName];        
-        var relTarget:String = keys[fqns[relAttribute]];
-
-        var throughRelationship:ArrayCollection = object[localRelName][relAttribute];
-        if (throughRelationship == null) {
-          throughRelationship = new ArrayCollection;
-        }
-        throughRelationship.addItem(object[relTarget]);        
-      }
-            
-//      for each (var reference:Object in Ruboss.services.references[fqn]) {
-//        var refAttribute:String = reference["attribute"];
-//        var refType:String = reference["type"];
-//        for each (var item:Object in Ruboss.models.cache[refType]) {
-//          if (item[refAttribute] != null && (item[refAttribute]["id"] == object["id"])) {
-//            item[refAttribute] = object;
-//          }
-//        }
-//      }
-
       return object;
+    }
+    
+    private function inferReference(element:XML, targetName:String, implicitReference:Object, 
+      implicitReferenceName:String):Object {
+      // try to set the reference implicitly (if it was passed as an argument)
+      // this is typically the case when we are processing a nested node and parent
+      // node is already created and initialized
+      var ref:Object = (targetName == implicitReferenceName) ? implicitReference : null;
+            
+      // if reference is not implicit let's try to look it up in the cache
+      if (ref == null) {
+        var key:String = state.keys[targetName];
+        // the key is likely to be null in case some parts of the relationship are not initialized
+        // correctly.
+        if (key == null) {
+          Ruboss.log.warn("WARNING! The following relationship could not be resolved: " + targetName +
+            " for the XML element of: " + element.localName() + ". Check your model for consistency."); 
+         } else {
+          var elementId:int = parseInt(element.toString());
+                
+          if (elementId != 0 && !isNaN(elementId)) {
+            ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId);
+            // even if this reference is not in the cache, we still want to keep some 
+            // information about it (in particular it's id)
+            if (ref == null) {
+              var definition:Class = getDefinitionByName(key) as Class;
+              ref = new definition;
+              ref["id"] = elementId;
+            }
+          }
+        }
+      }
+      return ref;
+    }
+    
+    private function processNestedArray(element:XML, implicitReference:Object, implicitReferenceName:String):void {
+      for each (var nestedElement:XML in element.children()) {
+        var object:Object = unmarshallNode(nestedElement, implicitReference, implicitReferenceName);
+        var fqn:String = getQualifiedClassName(object);
+        var items:ModelsCollection = ModelsCollection(Ruboss.models.cache[fqn]);
+        if (items.hasItem(object)) {
+          items.setItem(object);
+        } else {
+          items.addItem(object);
+        }
+      }     
     }
 
     private function getHTTPService(object:Object, nestedBy:Array = null):HTTPService {
@@ -338,8 +325,8 @@ package org.ruboss.services.http {
             
       var objectName:String = RubossUtils.toCamelCase(xmlFragmentName);
       
-      return (fqns[xmlFragmentName] == null) ? keys[objectName] : 
-        fqns[xmlFragmentName];
+      return (state.fqns[xmlFragmentName] == null) ? state.keys[objectName] : 
+        state.fqns[xmlFragmentName];
     }
     
     public function error(object:Object):Boolean {
@@ -357,7 +344,6 @@ package org.ruboss.services.http {
       return marshallToXML(object, metadata);
     }
 
-    // TODO: error handling from rails
     public function unmarshall(object:Object):Object {
       var xmlFragment:XML = XML(object);
       Ruboss.log.debug("unmarshalling response:\n" + xmlFragment.toXMLString());
@@ -368,27 +354,17 @@ package org.ruboss.services.http {
       // on the model (which are typically plural) we know we got back 
       // a collection of "known" model elements
       if (xmlFragment.@type == "array") {
-        // we are only gong to specifically unmarshall known relationships
-        if (fqns[objectName]) {
+        // we are only going to specifically unmarshall known relationships
+        if (state.fqns[objectName]) {
           for each (var node:XML in xmlFragment.children()) {
-            results.push(unmarshallNode(node, null));
+            results.push(unmarshallNode(node));
           }
         }
         return results;
       } else {
         // otherwise treat it as a single element (treat it as a show)
-        return unmarshallNode(xmlFragment, null, true);
+        return unmarshallNode(xmlFragment);
       }
-    }
-
-    private function urlEncodeMetadata(metadata:Object = null):String {
-      var result:String = "";
-      if (metadata == null) return result;
-      
-      for (var tag:String in metadata) {
-        result += tag + "=" + encodeURI(RubossUtils.uncast(metadata[tag])) + "&";
-      }
-      return result.replace(/&$/, "");
     }
     
     public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {

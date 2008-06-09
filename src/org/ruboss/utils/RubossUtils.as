@@ -79,9 +79,9 @@ package org.ruboss.utils {
     }
     
     public static function cast(targetName:String, targetType:String, value:Object):* {
-      if (targetType == "Boolean") {
+      if (targetType == "boolean") {
         return (value == "true" || value == 1) ? true : false;
-      } else if (targetType == "Date") {
+      } else if (targetType == "date" || targetType == "datetime") {
         return new Date(Date.parse(value));
       } else {
         return String(value).replace("\\x3A", ":").split("\\n").join("\n");

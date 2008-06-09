@@ -17,7 +17,6 @@
  **************************************************************************/
 package org.ruboss.controllers {
   import flash.events.EventDispatcher;
-  import flash.net.registerClassAlias;
   import flash.utils.Dictionary;
   import flash.utils.describeType;
   import flash.utils.getDefinitionByName;
@@ -26,9 +25,11 @@ package org.ruboss.controllers {
   import mx.collections.ArrayCollection;
   import mx.events.PropertyChangeEvent;
   import mx.managers.CursorManager;
+  import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
   import org.ruboss.models.ModelsCollection;
+  import org.ruboss.models.ModelsStateMetadata;
   import org.ruboss.services.GenericServiceErrors;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ServiceManager;
@@ -41,67 +42,30 @@ package org.ruboss.controllers {
     // internal cache of fetched model instances
     // maps model FQNs to ModelsCollections of instances
     public var cache:Dictionary;
-        
-    // indicates which model types have been *requested* with index
-    // maps model FQNs to booleans
-    public var indexed:Dictionary;
-
-    // same thing as above but for models requested via show method
-    // maps models FQNs to an ArrayModel of ids
-    public var showed:Dictionary;
-        
-    // stores *all* model dependendecies = eager mode, trying to fetch everything 
-    // we use this to make sure that everything is fetched and resolved in *correct* order
-    public var eager:Dictionary;
     
-    // stores model dependencies excluding lazy dependencies = lazy mode, trying to
-    // fetch only *absolutely required* dependencies
-    public var lazy:Dictionary;
-
-    // stores computed N-N relationships    
-    public var relationships:Dictionary;
-    
-    // stores model page sizes (by default -1 = no paging required)
-    public var pages:Dictionary;
+    public var state:ModelsStateMetadata;
 
     // maps service ids to service instances (local reference)
     private var services:Dictionary;
-
-    // this is used to temporarily store models and dependants of others while we are processing
-    // responses
-    public var queue:Dictionary;
-
-    // this indicates which models have been fetched and cached
-    // maps model FQNs to boolean values, can be reset on-demand
-    public var fetched:Dictionary;
-
-    // this indicates which models are being processed standalone (without dependency resolution)
-    // maps model FQNs to boolean values and is typically reset at the end of service response
-    // processing
-    public var standalone:Dictionary;
     
     private var defaultServiceId:int;
         
     public function RubossModelsController(models:Array, extraServices:Array, 
       targetServiceId:int = -1) {
       super();
-      
       cache = new Dictionary;
-      indexed = new Dictionary;
-      showed = new Dictionary;
+
+      // set-up model cache
+      for each (var model:Class in models) {
+        var fqn:String = getQualifiedClassName(model);
+        cache[fqn] = new ModelsCollection;
+      }
       
-      eager = new Dictionary;
-      lazy = new Dictionary;
-      relationships = new Dictionary;
+      state = new ModelsStateMetadata(models);
+      
       services = new Dictionary;
-      
-      pages = new Dictionary;
-      queue = new Dictionary;
-      fetched = new Dictionary;
-      standalone = new Dictionary;
-      
       // initialize default service
-      services[HTTPServiceProvider.ID] = new HTTPServiceProvider(models);
+      services[HTTPServiceProvider.ID] = new HTTPServiceProvider(state);
 
       // hook up extra services (e.g. AIR, AMF, SimpleDB)
       for each (var extraService:IServiceProvider in extraServices) {
@@ -113,63 +77,9 @@ package org.ruboss.controllers {
       } else {
         defaultServiceId = targetServiceId;
       }
-      
-      // set-up model data structures
-      for each (var model:Class in models) {
-        var fqn:String = getQualifiedClassName(model);
-        
-        cache[fqn] = new ModelsCollection;
-        eager[fqn] = new Array;
-        lazy[fqn] = new Array;
-        showed[fqn] = new ArrayCollection;
-        pages[fqn] = -1;
-        
-        registerClassAlias(fqn.replace("::","."), model);
-      }
-
-      // once we have set up the core data structures we need another pass to compute 
-      // dependencies and find has_many(:through) relationships if any
-      models.forEach(function(elm:Object, index:int, array:Array):void {
-        computeDependecyTree(elm);
-      });
-
-      for (var dependency:String in eager) {
-        queue[dependency] = new Array;
-      }
 
       // initialize services
       Ruboss.services = new ServiceManager(services);
-    }
-    
-    private function computeDependecyTree(model:Object):void {
-      var fqn:String = getQualifiedClassName(model);
-      for each (var node:XML in describeType(model)..accessor) {
-        var type:String = node.@type;
-        // we are only interested in declared [BelongsTo] accessors, avoiding
-        // primitive circular dependencies (model dependency on itself) and making
-        // sure dependency is of a *known* model type
-        if (node.@declaredBy == fqn && cache[type] && type != fqn && RubossUtils.isBelongsTo(node)) {
-          if (!RubossUtils.isLazy(node)) {
-            (lazy[fqn] as Array).push(type);
-          }
-          (eager[fqn] as Array).push(type);
-          //(references[type] as Array).push({attribute: node.@name, type: fqn});
-        }
-
-        // hook up N-N = has_many(:through) relationships
-        // we do it in the same pass as dependency computation because we need access to the same
-        // set of nodes and there's no point in going over every single accessor of every single model twice   
-        for each (var relationship:XML in RubossUtils.getAttributeAnnotation(node, "HasMany")) {
-          var value:String = relationship.arg.(@key == "through").@value.toString();
-          if (value != "") {
-            var target:String = RubossUtils.toSnakeCase(value);
-            if (relationships[target] == null) {
-              relationships[target] = new Array;
-            }
-            (relationships[target] as Array).push({name: fqn, attribute: node.@name.toString()});
-          }        
-        }
-      }  
     }
     
     private function getServiceProvider(serviceId:int = -1):IServiceProvider {
@@ -177,10 +87,7 @@ package org.ruboss.controllers {
       return IServiceProvider(services[serviceId]);
     }
     
-    private function invokeService(method:Function, service:IServiceProvider, operand:Object, 
-      serviceResponder:ServiceResponder, metadata:Object = null, nestedBy:Array = null):void {
-      CursorManager.setBusyCursor();
-      
+    private function setServiceMetadata(metadata:Object):void {
       // if no metadata is defined check if we have any default *global* metadata set
       if (metadata == null) {
         metadata = Ruboss.defaultMetadata;
@@ -191,11 +98,47 @@ package org.ruboss.controllers {
           }
         }
       }
-            
+    }
+    
+    private function setCurrentPage(metadata:Object, page:int):Object {
+      if (page != -1) {
+        if (metadata != null) {
+          metadata["page"] = page;
+        } else {
+          metadata = {page: page};
+        }
+      }
+      return metadata;
+    }
+    
+    private function processNtoNRelationships(object:Object):void {
+      var fqn:String = getQualifiedClassName(object);
+      for each (var relationship:Object in state.relationships[state.controllers[fqn]]) {
+        var name:String = relationship["name"];
+        var attribute:String = relationship["attribute"];
+        var local:String = state.keys[name];        
+        var target:String = state.keys[state.fqns[attribute]];
+
+        var items:ModelsCollection = object[local][attribute];
+        if (items == null) {
+          items = new ModelsCollection;
+        }
+        if (items.hasItem(object[target])) {
+          items.setItem(object[target]);
+        } else {
+          items.addItem(object[target]);
+        }       
+      }
+    }
+    
+    private function invokeService(method:Function, service:IServiceProvider, operand:Object, 
+      serviceResponder:ServiceResponder, metadata:Object = null, nestedBy:Array = null):void {
+      CursorManager.setBusyCursor();
+      setServiceMetadata(metadata);
       method.call(service, operand, serviceResponder, metadata, nestedBy);   
     }
 
-    private function invokeIndex(handler:Function, targetServiceId:int, clazz:Class, fetchDependencies:Boolean,
+    private function invokeServiceIndex(handler:Function, targetServiceId:int, clazz:Class, fetchDependencies:Boolean,
       useLazyMode:Boolean, afterCallback:Object, metadata:Object, nestedBy:Array):void {
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(handler, service, this, 
@@ -203,25 +146,112 @@ package org.ruboss.controllers {
       invokeService(service.index, service, clazz, serviceResponder, metadata, nestedBy);        
     }
     
-    public function reset(object:Object = null):void {
-      // if no argument is specified, reset everything
-      if (object == null) {
-        indexed = new Dictionary;
-        for (var model:String in showed) {
-          showed[model] = new ArrayCollection;
+    private function invokeIndex(clazz:Class, afterCallback:Object = null, fetchDependencies:Boolean = true, 
+      useLazyMode:Boolean = true, page:int = -1, metadata:Object = null, nestedBy:Array = null, 
+      targetServiceId:int = -1):void {
+      var fqn:String = getQualifiedClassName(clazz);
+      state.pages[fqn] = page;
+        
+      if (!fetchDependencies) {
+        // flag this model as standalone (in that it doesn't require dependencies)
+        // this is reset once the response is handled (so that you can request it again
+        // if necessary and fetch dependencies at that time)
+        state.standalone[fqn] = true;
+      }
+      
+      if (fetchDependencies) {
+        // request dependencies if necessary
+        var dependencies:Array = (useLazyMode) ? state.lazy[fqn] : state.eager[fqn];
+        for each (var dependency:String in dependencies) {
+          if (!state.indexed[dependency]) {
+            Ruboss.log.debug("indexing dependency:" + dependency + " of: " + fqn);
+            index(getDefinitionByName(dependency) as Class, 
+              null, fetchDependencies, useLazyMode, -1, metadata, null, targetServiceId);
+          }
         }
-        fetched = new Dictionary;
-      } else {
-        var fqn:String = getQualifiedClassName(object);
+      }
+        
+      state.indexed[fqn] = true;
 
-        if (object is Class) {
-          indexed[fqn] = false;
-        } else {
-          var showedCollection:ArrayCollection = showed[fqn] as ArrayCollection;
-          var showedIndex:int = showedCollection.getItemIndex(object["id"]);
-          if (showedIndex > -1) showedCollection.removeItemAt(showedIndex);     
+      metadata = setCurrentPage(metadata, page);
+                
+      invokeServiceIndex(function(models:Array):void {
+        if (models.length == 0) return;
+        var name:String = getQualifiedClassName(models[0]);
+        for each (var item:Object in models) {
+          processNtoNRelationships(item);
         }
-      }     
+
+        var items:ModelsCollection = new ModelsCollection(models);
+        cache[name] = items;
+        dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));
+      }, targetServiceId, clazz, fetchDependencies, useLazyMode, afterCallback, metadata, nestedBy);
+    }
+    
+    private function invokePage(clazz:Class, afterCallback:Object = null, fetchDependencies:Boolean = true, 
+      useLazyMode:Boolean = true, page:int = -1, metadata:Object = null, nestedBy:Array = null, 
+      targetServiceId:int = -1):void {
+      var fqn:String = getQualifiedClassName(clazz);
+
+      if (!fetchDependencies) {
+        // flag this model as standalone (in that it doesn't require dependencies)
+        // this is reset once the response is handled (so that you can request it again
+        // if necessary and fetch dependencies at that time)
+        state.standalone[fqn] = true;
+      }
+
+      metadata = setCurrentPage(metadata, page);
+        
+      state.pages[fqn] = page;
+        
+      invokeServiceIndex(function(models:Array):void {
+        if (models.length == 0) return;
+        var items:ModelsCollection = null;
+
+        var name:String = getQualifiedClassName(models[0]);
+        var current:ModelsCollection = ModelsCollection(cache[name]);
+          
+        var threshold:int = Ruboss.cacheThreshold[name];
+          
+        if (threshold > 1 && (current.length + models.length) >= threshold) {
+          var sliceStart:int = Math.min(current.length, models.length);
+          Ruboss.log.debug("cache size for: " + name + " will exceed the max threshold of: " + threshold + 
+            ", slicing at: " + sliceStart);
+          items = new ModelsCollection(current.source.slice(sliceStart));
+        } else {
+          items = current;
+        }
+
+        for each (var model:Object in models) {
+          if (items.hasItem(model)) {
+            items.setItem(model);
+          } else {
+            items.addItem(model);
+          }
+          processNtoNRelationships(model);
+        }
+
+        cache[name] = items;
+        dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));
+      }, targetServiceId, clazz, fetchDependencies, useLazyMode, afterCallback, metadata, nestedBy);
+    }
+
+    private function cleanupModelReferences(fqn:String, model:Object):void {
+      var property:String = RubossUtils.toCamelCase(state.controllers[fqn]);
+      for each (var dependency:String in state.eager[fqn]) {
+        for each (var item:Object in cache[dependency]) {
+          if (ObjectUtil.hasMetadata(item, property, "HasMany") && item[property] != null) {
+            var items:ModelsCollection = ModelsCollection(item[property]);
+            if (items.hasItem(model)) {
+              items.removeItem(model);
+            } 
+          } 
+        }
+      }
+    }
+    
+    public function reset(object:Object = null):void {
+      state.reset(object);   
     }
 
     public function reload(object:Object, afterCallback:Object = null, fetchDependencies:Boolean = true, 
@@ -229,7 +259,8 @@ package org.ruboss.controllers {
       targetServiceId:int = -1):void {
       reset(object);      
       if (object is Class) {
-        index(Class(object), afterCallback, fetchDependencies, useLazyMode, page, metadata, nestedBy, targetServiceId);
+        index(Class(object), afterCallback, fetchDependencies, useLazyMode, page, metadata, nestedBy, 
+          targetServiceId);
       } else {
         show(object, afterCallback, fetchDependencies, useLazyMode, metadata, nestedBy, targetServiceId);
       }
@@ -237,7 +268,7 @@ package org.ruboss.controllers {
     
     public function cached(clazz:Class):ModelsCollection {
       var fqn:String = getQualifiedClassName(clazz);
-      return cache[fqn] as ModelsCollection;      
+      return ModelsCollection(cache[fqn]);      
     }
 
     [Bindable(event="propertyChange")]    
@@ -246,94 +277,15 @@ package org.ruboss.controllers {
       targetServiceId:int = -1):ModelsCollection {
       var fqn:String = getQualifiedClassName(clazz);
       
-      if (!indexed[fqn]) {
-        pages[fqn] = page;
-        
-        if (!fetchDependencies) {
-          // flag this model as standalone (in that it doesn't require dependencies)
-          // this is reset once the response is handled (so that you can request it again
-          // if necessary and fetch dependencies at that time)
-          standalone[fqn] = true;
-        }
-      
-        if (fetchDependencies) {
-          // request dependencies if necessary
-          var dependencies:Array = (useLazyMode) ? lazy[fqn] : eager[fqn];
-          for each (var dependency:String in dependencies) {
-            if (!indexed[dependency]) {
-              Ruboss.log.debug("indexing dependency:" + dependency + " of: " + fqn);
-              index(getDefinitionByName(dependency) as Class, 
-                null, fetchDependencies, useLazyMode, -1, metadata, null, targetServiceId);
-            }
-          }
-        }
-        
-        indexed[fqn] = true;
-
-        if (page != -1) {
-          if (metadata != null) {
-            metadata["page"] = page;
-          } else {
-            metadata = {page: page};
-          }
-        }
-                
-        invokeIndex(function(models:Array):void {
-          if (models.length == 0) return;
-          var name:String = getQualifiedClassName(models[0]);
-
-          var items:ModelsCollection = new ModelsCollection(models);
-          cache[name] = items;
-          dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));
-        }, targetServiceId, clazz, fetchDependencies, useLazyMode, afterCallback, metadata, nestedBy);
-      } else if (page != pages[fqn]) {
-        if (!fetchDependencies) {
-          // flag this model as standalone (in that it doesn't require dependencies)
-          // this is reset once the response is handled (so that you can request it again
-          // if necessary and fetch dependencies at that time)
-          standalone[fqn] = true;
-        }
-
-        if (page != -1) {
-          if (metadata != null) {
-            metadata["page"] = page;
-          } else {
-            metadata = {page: page};
-          }
-        }
-        
-        pages[fqn] = page;
-        
-        invokeIndex(function(models:Array):void {
-          if (models.length == 0) return;
-          var name:String = getQualifiedClassName(models[0]);
-          var currentItems:ModelsCollection = cache[name];
-          var items:ModelsCollection = null;
-          var threshold:int = Ruboss.cacheThreshold[name];
-          
-          if (threshold > 1 && (currentItems.length + models.length) >= threshold) {
-            var sliceStart:int = Math.min(currentItems.length, models.length);
-            Ruboss.log.debug("cache size for: " + name + " will exceed the max threshold of: " + threshold + 
-              ", slicing at: " + sliceStart);
-            items = new ModelsCollection(currentItems.source.slice(sliceStart));
-          } else {
-            items = currentItems;
-          }
-
-          for each (var model:Object in models) {
-            if (items.hasItem(model)) {
-              items.setItem(model);
-            } else {
-              items.addItem(model);
-            }
-          }
-
-          cache[name] = items;
-          dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));
-        }, targetServiceId, clazz, fetchDependencies, useLazyMode, afterCallback, metadata, nestedBy);
+      if (!state.indexed[fqn]) {
+        invokeIndex(clazz, afterCallback, fetchDependencies, useLazyMode, page, metadata, nestedBy, 
+          targetServiceId);
+      } else if (page != state.pages[fqn]) {
+        invokePage(clazz, afterCallback, fetchDependencies, useLazyMode, page, metadata, nestedBy, 
+          targetServiceId);
       }
       
-      return cache[fqn] as ModelsCollection;
+      return ModelsCollection(cache[fqn]);
     }
     
     [Bindable(event="propertyChange")]    
@@ -341,30 +293,29 @@ package org.ruboss.controllers {
       useLazyMode:Boolean = false, metadata:Object = null, nestedBy:Array = null, 
       targetServiceId:int = -1):Object {
       var fqn:String = getQualifiedClassName(object);
-      var showedCollection:ArrayCollection = ArrayCollection(showed[fqn]);
+      var showed:ArrayCollection = ArrayCollection(state.showed[fqn]);
       var objectId:int = object["id"];
       
-      if (!showedCollection.contains(objectId)) {
+      if (!showed.contains(objectId)) {
         if (!fetchDependencies) {
           // flag this model as standalone (in that it doesn't require dependencies)
           // this is reset once the response is handled (so that you can request it again
           // if necessary and fetch dependencies at that time)
-          standalone[fqn] = true;
+          state.standalone[fqn] = true;
         }
         
         if (fetchDependencies) {
           var objectMetadata:XML = describeType(object);
-          var dependencies:Array = (useLazyMode) ? lazy[fqn] : eager[fqn];
-          for each (var dependency:String in dependencies[fqn]) {
+          var dependencies:Array = (useLazyMode) ? state.lazy[fqn] : state.eager[fqn];
+          for each (var dependency:String in dependencies) {
             for each (var node:XML in objectMetadata.accessor.(@type == dependency)) {
               if (RubossUtils.isBelongsTo(node)) {
-                var accessor:String = node.@name;
-                // TODO: this is a pretty dodgy/magic? check. it's here simply because of the stupid default fixtures
-                if (object[accessor] != null && object[accessor]["id"] != 0 && object[accessor]["id"] != 1) {
+                var property:String = node.@name;
+                if (object[property] != null && object[property]["id"] != 0) {
                   Ruboss.log.debug("requesting single show dependency:" + dependency + 
-                    " with id: " + object[accessor]["id"] + " of: " + fqn);                    
-                  if (!showedCollection.contains(object[accessor]["id"])) {
-                    show(object[accessor], null, fetchDependencies, useLazyMode, metadata, null, targetServiceId);
+                    " with id: " + object[property]["id"] + " of: " + fqn);                    
+                  if (!showed.contains(object[property]["id"])) {
+                    show(object[property], null, fetchDependencies, useLazyMode, metadata, null, targetServiceId);
                   }
                 }
               }
@@ -372,24 +323,25 @@ package org.ruboss.controllers {
           }
         }
         
-        showedCollection.addItem(objectId);
+        showed.addItem(objectId);
         
         var service:IServiceProvider = getServiceProvider(targetServiceId);
         var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
           var fqn:String = getQualifiedClassName(model);
-          var items:ModelsCollection = cache[fqn] as ModelsCollection;
+          var items:ModelsCollection = ModelsCollection(cache[fqn]);
           if (items.hasItem(model)) {
             items.setItem(model);
           } else {
             items.addItem(model);
           }
+          processNtoNRelationships(model);
           dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));
         }, service, this, fetchDependencies, useLazyMode, afterCallback);
 
         invokeService(service.show, service, object, serviceResponder, metadata, nestedBy);
       }
       
-      return (cache[getQualifiedClassName(object)] as ModelsCollection).getItem(object);
+      return ModelsCollection(cache[fqn]).getItem(object);
     }
 
     public function update(object:Object, afterCallback:Object = null, metadata:Object = null,
@@ -401,6 +353,7 @@ package org.ruboss.controllers {
         if (items.hasItem(model)) {
           items.setItem(model);
         }
+        processNtoNRelationships(model);
         Ruboss.errors = new GenericServiceErrors;
         dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));
       }, service, this, false, false, afterCallback);
@@ -414,6 +367,7 @@ package org.ruboss.controllers {
         var fqn:String = getQualifiedClassName(model);
         var items:ModelsCollection = cache[fqn] as ModelsCollection;
         items.addItem(model);
+        processNtoNRelationships(model);
         Ruboss.errors = new GenericServiceErrors;
         dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));
       }, service, this, false, false, afterCallback);
@@ -426,7 +380,10 @@ package org.ruboss.controllers {
       var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
         var fqn:String = getQualifiedClassName(model);
         var items:ModelsCollection = cache[fqn] as ModelsCollection;
-        items.removeItem(object);
+        if (items.hasItem(model)) {
+          items.removeItem(model);
+        }
+        cleanupModelReferences(fqn, model);
         dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));     
       }, service, this, false, false, afterCallback);
       invokeService(service.destroy, service, object, serviceResponder, metadata, nestedBy);
