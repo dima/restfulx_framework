@@ -112,3 +112,6 @@ Next, start the server by running:
 $>./script/server
 
 And point your browser at http://localhost:3000. It's not going to be the greatest Flex application ever written but for a 5 minute scaffolding job it's definitely not bad.
+
+
+Copyright (c) 2008 [Ruboss Technology Corporation], released under the GPLv3 license
