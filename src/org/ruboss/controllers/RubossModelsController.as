@@ -65,11 +65,12 @@ package org.ruboss.controllers {
       
       services = new Dictionary;
       // initialize default service
-      services[HTTPServiceProvider.ID] = new HTTPServiceProvider(state);
+      services[HTTPServiceProvider.ID] = new HTTPServiceProvider(this);
 
       // hook up extra services (e.g. AIR, AMF, SimpleDB)
-      for each (var extraService:IServiceProvider in extraServices) {
-        services[extraService.id] = extraService;
+      for each (var extraService:Class in extraServices) {
+        var service:IServiceProvider = new extraService(this) as IServiceProvider;
+        services[service.id] = service;
       }
       
       if (targetServiceId == -1) {

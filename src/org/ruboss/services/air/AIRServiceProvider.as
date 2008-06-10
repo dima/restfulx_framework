@@ -21,14 +21,16 @@ package org.ruboss.services.air {
   import flash.filesystem.File;
   import flash.utils.Dictionary;
   import flash.utils.describeType;
-  import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
   
-  import mx.collections.ArrayCollection;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
+  import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.controllers.RubossModelsController;
+  import org.ruboss.models.ModelsCollection;
+  import org.ruboss.models.ModelsStateMetadata;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ServiceManager;
   import org.ruboss.utils.RubossUtils;
@@ -36,42 +38,46 @@ package org.ruboss.services.air {
   public class AIRServiceProvider implements IServiceProvider {
     
     public static const ID:int = ServiceManager.generateId();
+
+    private static var types:Object = {
+      "int" : "INTEGER",
+      "uint" : "INTEGER",
+      "Boolean" : "BOOLEAN",
+      "String" : "TEXT",
+      "Number" : "DOUBLE",
+      "Date" : "DATE",
+      "DateTime" : "DATETIME"
+    }
+    
+    private var state:ModelsStateMetadata;
     
     private var sql:Dictionary;
-    
-    private var keys:Dictionary;
         
     private var connection:SQLConnection;
 
-    public function AIRServiceProvider(models:Array, 
-      databaseName:String = null) {
-      if (databaseName == null) databaseName = Ruboss.defaultAirDatabaseName;
+    public function AIRServiceProvider(controller:RubossModelsController) {
+      this.state = controller.state;
+      
+      var databaseName:String = Ruboss.airDatabaseName;
       var dbFile:File = File.userDirectory.resolvePath(databaseName + ".db");
 
       this.sql = new Dictionary;
-      this.keys = new Dictionary;
       this.connection = new SQLConnection;
       
-      for each (var model:Class in models) {
+      for each (var model:Class in state.models) {
         var fqn:String = getQualifiedClassName(model);
-        var modelName:String = fqn.split("::")[1] as String;
-        
-        // this is what model names would look like after camel-casing variable
-        // names
-        var localName:String = modelName.charAt(0).toLowerCase() + 
-          modelName.slice(1);
-        
-        keys[localName] = fqn;
-        keys[fqn] = localName;
-        
         sql[fqn] = new Dictionary;          
       }
       
-      models.forEach(function(elm:Object, index:int, array:Array):void {
+      state.models.forEach(function(elm:Object, index:int, array:Array):void {
         extractMetadata(elm);
       });
       
       initializeConnection(databaseName, dbFile);
+    }
+    
+    private function isNotValidType(node:XML):Boolean {
+      return (RubossUtils.isHasMany(node) || RubossUtils.isHasOne(node));
     }
     
     private function extractMetadata(model:Object):void {
@@ -85,32 +91,26 @@ package org.ruboss.services.air {
       
       var updateStatement:String = "UPDATE " + tableName + " SET ";
       
-      for each (var n:XML in describeType(model)..accessor) {
-        if (n.@declaredBy == modelName) {
-          var snakeName:String = RubossUtils.toSnakeCase(n.@name.toString());
-          var type:String = n.@type;
+      for each (var node:XML in describeType(model)..accessor) {
+        if (node.@declaredBy == modelName) {
+          var snakeName:String = RubossUtils.toSnakeCase(node.@name);
+          var type:String = node.@type;
           
           // skip collections
-          if (type == "mx.collections::ArrayCollection") continue;
+          if (isNotValidType(node) || type == "org.ruboss.models::ModelsCollection") continue;
                       
-          if (sql[type]) {
+          if (sql[type] && RubossUtils.isBelongsTo(node)) {
             snakeName = snakeName + "_id";
           }
           
-          createStatement += snakeName + " " +  getSQLType(type);
-          if (n.@name.toString() == "id") {
-            createStatement += " PRIMARY KEY AUTOINCREMENT, ";
-          } else {
-            createStatement += ", ";
-            insertStatement += snakeName + ", ";
-            insertParams += ":" + snakeName + ", ";
-
-            updateStatement += snakeName + "=:" + snakeName + ","; 
-          }
+          createStatement += snakeName + " " +  getSQLType(node) + ", ";
+          insertStatement += snakeName + ", ";
+          insertParams += ":" + snakeName + ", ";
+          updateStatement += snakeName + "=:" + snakeName + ","; 
         }
       }
       
-      createStatement = createStatement.substr(0, createStatement.length - 2) + ")";
+      createStatement += "id INTEGER PRIMARY KEY AUTOINCREMENT)";      
       sql[modelName]["create"] = createStatement;
             
       insertParams = insertParams.substr(0, insertParams.length - 2);
@@ -129,13 +129,15 @@ package org.ruboss.services.air {
       sql[modelName]["select"] = selectStatement;
     }
 
-    private function getSQLType(type:String):String {
-      if (type == "int" || type == "uint" || sql[type]) {
-        return "INTEGER";
-      } else if (type == "Number") {
-        return "REAL";
+    private function getSQLType(node:XML):String {
+      var type:String = node.@type;
+      var result:String = types[type];
+      if (sql[type]) {
+        return types["int"];
+      } else if (RubossUtils.isDateTime(node)) {
+        return types["DateTime"];
       } else {
-        return "TEXT";
+        return (result == null) ? types["String"] : result; 
       }
     }
     
@@ -166,7 +168,7 @@ package org.ruboss.services.air {
     
     private function isValidTypeAndName(type:String, name:String):Boolean {   
       // skip collections and ids, ids are auto generated
-      return !(type == "mx.collections::ArrayCollection" || name == "id");      
+      return !(type == "org.ruboss.models::ModelsCollection" || name == "id");      
     }
 
     public function get id():int {
@@ -190,41 +192,78 @@ package org.ruboss.services.air {
     }
     
     public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var statement:SQLStatement = 
-        getSQLStatement(sql[getQualifiedClassName(clazz)]["select"]);
+      var fqn:String = getQualifiedClassName(clazz);
+      var statement:SQLStatement = getSQLStatement(sql[fqn]["select"]);
       statement.execute();
       var data:Array = statement.getResult().data;
+      
       var result:Array  = new Array;
       for each (var object:Object in data) {
         var model:Object = new clazz();
-        var typeData:XML = describeType(model);
+        model["id"] = object["id"];
+        
+        var objectMetadata:XML = describeType(model);        
         for (var property:String in object) {
           var targetName:String = property;
+          
+          if (targetName == "id") continue;
+          
           var value:Object = object[property];
           
           var isRef:Boolean = false;
-          // treat refs to other model objects specially
+          // if we got a node with a name that terminates in "_id" we check to see if
+          // it's a model reference       
           if (targetName.search(/.*_id$/) != -1) {
-            targetName = targetName.replace(/_id$/, "");
-            isRef = true;
-          }
-          
-          targetName = RubossUtils.toCamelCase(targetName);
-
-          if (isRef && parseInt(String(value)) > 0) {
-            var ref:Object = 
-              Ruboss.models.index(getDefinitionByName(keys[targetName])
-              	as Class).withId(parseInt(String(value)));
-            var collectionName:String = sql[clazz];
-            if (ref != null && ref.hasOwnProperty(collectionName)) {
-              if (ref[collectionName] == null) {
-                ref[collectionName] = new ArrayCollection;
-              }
-              (ref[collectionName] as ArrayCollection).addItem(object);
+            var checkName:String = RubossUtils.toCamelCase(targetName.replace(/_id$/, ""));
+            if (state.keys[checkName]) {
+              targetName = checkName;
+              isRef = true;
             }
+          } else {
+            targetName = RubossUtils.toCamelCase(targetName);
+          }
+
+          if (isRef) {
+            var elementId:int = parseInt(value.toString());
+            
+            var ref:Object = null; 
+            if (elementId != 0 && !isNaN(elementId)) {
+              var key:String = state.keys[targetName];
+              // key should be fqn for the targetName;
+              var models:RubossModelsController = Ruboss.models;
+              ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId);
+            }
+
+            // collectionName should be the same as the camel-cased name of the controller for the current node
+            var collectionName:String = RubossUtils.toCamelCase(state.controllers[state.keys[fqn]]);
+                
+            // if we've got a plural definition which is annotated with [HasMany] 
+            // it's got to be a 1->N relationship           
+            if (ref != null && ref.hasOwnProperty(collectionName) &&
+              ObjectUtil.hasMetadata(ref, collectionName, "HasMany")) {
+              var items:ModelsCollection = ModelsCollection(ref[collectionName]);
+              if (items == null) {
+                items = new ModelsCollection;
+                ref[collectionName] = items;
+              }
+              
+              // add (or replace) the current item to the reference collection
+              if (items.hasItem(model)) {
+                items.setItem(model);
+              } else {
+                items.addItem(model);
+              }
+            // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
+            // link them up
+            } else if (ref != null && ref.hasOwnProperty(targetName) && 
+              ObjectUtil.hasMetadata(ref, targetName, "HasOne")) {
+              ref[targetName] = model;
+            }
+            // and the reverse
             model[targetName] = ref;
           } else if (!isRef) {
-            model[targetName] = RubossUtils.cast(typeData, targetName, value);
+            var targetType:String = getSQLType(XMLList(objectMetadata..accessor.(@name == targetName))[0]).toLowerCase();
+            model[targetName] = RubossUtils.cast(targetName, targetType, value);
           }
         }
         result.push(model);
@@ -234,7 +273,6 @@ package org.ruboss.services.air {
     
     // TODO implement proper select * from foo where id = object["id"]
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      //index(clazz, responder);
     }
     
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
@@ -246,9 +284,9 @@ package org.ruboss.services.air {
           var type:String = n.@type;
           var snakeName:String = RubossUtils.toSnakeCase(localName);
 
-          if (!isValidTypeAndName(type, n.@name)) continue;
+          if (!isValidTypeAndName(type, n.@name) || isNotValidType(n)) continue;
                       
-          if (sql[type]) {
+          if (sql[type] && RubossUtils.isBelongsTo(n)) {
             snakeName = snakeName + "_id";
             var ref:Object = object[localName];
             statement.parameters[":" + snakeName] = 
@@ -275,9 +313,9 @@ package org.ruboss.services.air {
           var type:String = n.@type;
           var snakeName:String = RubossUtils.toSnakeCase(localName);
 
-          if (!isValidTypeAndName(type, n.@name)) continue;
+          if (!isValidTypeAndName(type, n.@name) || isNotValidType(n)) continue;
                       
-          if (sql[type]) {
+          if (sql[type] && RubossUtils.isBelongsTo(n)) {
             snakeName = snakeName + "_id";
             var ref:Object = object[localName];
             sqlStatement.parameters[":" + snakeName] = 

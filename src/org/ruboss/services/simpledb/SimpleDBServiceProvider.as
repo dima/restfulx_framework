@@ -18,6 +18,7 @@
 package org.ruboss.services.simpledb {
   import mx.rpc.IResponder;
   
+  import org.ruboss.controllers.RubossModelsController;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ServiceManager;
 
@@ -25,8 +26,7 @@ package org.ruboss.services.simpledb {
     
     public static const ID:int = ServiceManager.generateId();
 
-    public function SimpleDBServiceProvider() {
-      super();
+    public function SimpleDBServiceProvider(controller:RubossModelsController) {
     }
 
     public function get id():int {

@@ -25,7 +25,7 @@ package org.ruboss.utils {
   public class RubossUtils {
     
     public static function clone(object:Object):Object {
-      return object;
+      return ObjectUtil.copy(object);
     }
     
     public static function getResourceController(object:Object):String {

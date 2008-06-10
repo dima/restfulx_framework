@@ -62,8 +62,8 @@ package org.ruboss {
     // this is typically useful with HTTP provider (but may be useful with other providers too)
     public static var defaultMetadata:Object;
     
-    // default database name to use for AIR applications
-    public static var defaultAirDatabaseName:String = "rubossdb";
+    // database name to use for AIR applications
+    public static var airDatabaseName:String = "rubossdb";
     
     // stores maximum allowed number of instances per model type in the cache
     // used when paging to determine when to start throwing things out

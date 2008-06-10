@@ -20,6 +20,7 @@ package org.ruboss.services.amf {
   import mx.rpc.remoting.RemoteObject;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.controllers.RubossModelsController;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ServiceManager;
   import org.ruboss.utils.RubossUtils;
@@ -29,6 +30,9 @@ package org.ruboss.services.amf {
     public static const ID:int = ServiceManager.generateId();
     
     private var amfChannelId:String = Ruboss.amfChannelId;
+    
+    public function AMFServiceProvider(controller:RubossModelsController) {
+    }
     
     public function get id():int {
       return ID;

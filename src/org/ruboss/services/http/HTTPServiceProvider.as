@@ -26,6 +26,7 @@ package org.ruboss.services.http {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.controllers.RubossModelsController;
   import org.ruboss.models.ModelsCollection;
   import org.ruboss.models.ModelsStateMetadata;
   import org.ruboss.services.IServiceProvider;
@@ -38,8 +39,8 @@ package org.ruboss.services.http {
     
     private var state:ModelsStateMetadata;
     
-    public function HTTPServiceProvider(state:ModelsStateMetadata) {
-      this.state = state;
+    public function HTTPServiceProvider(controller:RubossModelsController) {
+      this.state = controller.state;
     }
     
     private function nestResource(object:Object, nestedBy:Array = null):String {
@@ -209,6 +210,7 @@ package org.ruboss.services.http {
               var items:ModelsCollection = ModelsCollection(ref[collectionName]);
               if (items == null) {
                 items = new ModelsCollection;
+                ref[collectionName] = items;
               }
               
               // add (or replace) the current item to the reference collection
@@ -395,8 +397,9 @@ package org.ruboss.services.http {
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = "POST";
-      httpService.request = marshallToXML(object, metadata);
-      httpService.contentType = "application/xml";
+      //httpService.request = marshallToXML(object, metadata);
+      httpService.request = marshallToVO(object, metadata);
+      //httpService.contentType = "application/xml";
       
       invokeHTTPService(httpService, responder);      
     }
