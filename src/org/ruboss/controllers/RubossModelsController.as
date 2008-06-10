@@ -239,6 +239,7 @@ package org.ruboss.controllers {
 
     private function cleanupModelReferences(fqn:String, model:Object):void {
       var property:String = RubossUtils.toCamelCase(state.controllers[fqn]);
+      var localName:String = state.keys[fqn];
       for each (var dependency:String in state.eager[fqn]) {
         for each (var item:Object in cache[dependency]) {
           if (ObjectUtil.hasMetadata(item, property, "HasMany") && item[property] != null) {
@@ -246,7 +247,10 @@ package org.ruboss.controllers {
             if (items.hasItem(model)) {
               items.removeItem(model);
             } 
-          } 
+          }
+          if (ObjectUtil.hasMetadata(item, localName, "HasOne") && item[localName] != null) {
+            item[localName] = null;
+          }
         }
       }
     }
@@ -348,6 +352,7 @@ package org.ruboss.controllers {
     public function update(object:Object, afterCallback:Object = null, metadata:Object = null,
       nestedBy:Array = null, targetServiceId:int = -1):void {
       var service:IServiceProvider = getServiceProvider(targetServiceId);
+      cleanupModelReferences(getQualifiedClassName(object), object);
       var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
         var fqn:String = getQualifiedClassName(model);
         var items:ModelsCollection = cache[fqn] as ModelsCollection;

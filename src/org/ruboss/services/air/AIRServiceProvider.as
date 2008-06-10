@@ -38,7 +38,7 @@ package org.ruboss.services.air {
   public class AIRServiceProvider implements IServiceProvider {
     
     public static const ID:int = ServiceManager.generateId();
-
+    
     private static var types:Object = {
       "int" : "INTEGER",
       "uint" : "INTEGER",
@@ -77,7 +77,21 @@ package org.ruboss.services.air {
     }
     
     private function isNotValidType(node:XML):Boolean {
-      return (RubossUtils.isHasMany(node) || RubossUtils.isHasOne(node));
+      return (RubossUtils.isHasMany(node) || RubossUtils.isHasOne(node) || 
+        node.@type == "org.ruboss.models::ModelsCollection" || 
+        node.@type == "mx.collections::ArrayCollection");
+    }
+
+    private function getSQLType(node:XML):String {
+      var type:String = node.@type;
+      var result:String = types[type];
+      if (sql[type]) {
+        return types["int"];
+      } else if (RubossUtils.isDateTime(node)) {
+        return types["DateTime"];
+      } else {
+        return (result == null) ? types["String"] : result; 
+      }
     }
     
     private function extractMetadata(model:Object):void {
@@ -96,8 +110,8 @@ package org.ruboss.services.air {
           var snakeName:String = RubossUtils.toSnakeCase(node.@name);
           var type:String = node.@type;
           
-          // skip collections
-          if (isNotValidType(node) || type == "org.ruboss.models::ModelsCollection") continue;
+          // skip collections, [HasOne] and [HasMany] relationships
+          if (isNotValidType(node)) continue;
                       
           if (sql[type] && RubossUtils.isBelongsTo(node)) {
             snakeName = snakeName + "_id";
@@ -128,18 +142,6 @@ package org.ruboss.services.air {
       var selectStatement:String = "SELECT * FROM " + tableName;
       sql[modelName]["select"] = selectStatement;
     }
-
-    private function getSQLType(node:XML):String {
-      var type:String = node.@type;
-      var result:String = types[type];
-      if (sql[type]) {
-        return types["int"];
-      } else if (RubossUtils.isDateTime(node)) {
-        return types["DateTime"];
-      } else {
-        return (result == null) ? types["String"] : result; 
-      }
-    }
     
     private function initializeConnection(databaseName:String, 
       databaseFile:File):void {
@@ -166,9 +168,71 @@ package org.ruboss.services.air {
       }
     }
     
-    private function isValidTypeAndName(type:String, name:String):Boolean {   
-      // skip collections and ids, ids are auto generated
-      return !(type == "org.ruboss.models::ModelsCollection" || name == "id");      
+    private function processModel(fqn:String, model:Object, source:Object):void {
+      var metadata:XML = describeType(model);        
+      for (var property:String in source) {
+        if (property == "id") continue;
+          
+        var targetName:String = property;
+        var value:Object = source[property];
+          
+        var isRef:Boolean = false;
+        // if we got a node with a name that terminates in "_id" we check to see if
+        // it's a model reference       
+        if (targetName.search(/.*_id$/) != -1) {
+          var checkName:String = RubossUtils.toCamelCase(targetName.replace(/_id$/, ""));
+          if (state.keys[checkName]) {
+            targetName = checkName;
+            isRef = true;
+          }
+        } else {
+          targetName = RubossUtils.toCamelCase(targetName);
+        }
+
+        if (isRef) {
+          var elementId:int = parseInt(value.toString());
+            
+          var ref:Object = null; 
+          if (elementId != 0 && !isNaN(elementId)) {
+            var key:String = state.keys[targetName];
+            // key should be fqn for the targetName;
+            var models:RubossModelsController = Ruboss.models;
+            ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId);
+          }
+
+          // collectionName should be the same as the camel-cased name of the controller for the current node
+          var collectionName:String = RubossUtils.toCamelCase(state.controllers[state.keys[fqn]]);
+                
+          // if we've got a plural definition which is annotated with [HasMany] 
+          // it's got to be a 1->N relationship           
+          if (ref != null && ref.hasOwnProperty(collectionName) &&
+            ObjectUtil.hasMetadata(ref, collectionName, "HasMany")) {
+            var items:ModelsCollection = ModelsCollection(ref[collectionName]);
+            if (items == null) {
+              items = new ModelsCollection;
+              ref[collectionName] = items;
+            }
+              
+            // add (or replace) the current item to the reference collection
+            if (items.hasItem(model)) {
+              items.setItem(model);
+            } else {
+              items.addItem(model);
+            }
+            
+          // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
+          // link them up
+          } else if (ref != null && ref.hasOwnProperty(targetName) && 
+            ObjectUtil.hasMetadata(ref, targetName, "HasOne")) {
+            ref[targetName] = model;
+          }
+          // and the reverse
+          model[targetName] = ref;
+        } else if (!isRef) {
+          var targetType:String = getSQLType(XMLList(metadata..accessor.(@name == targetName))[0]).toLowerCase();
+          model[targetName] = RubossUtils.cast(targetName, targetType, value);
+        }
+      }      
     }
 
     public function get id():int {
@@ -195,105 +259,43 @@ package org.ruboss.services.air {
       var fqn:String = getQualifiedClassName(clazz);
       var statement:SQLStatement = getSQLStatement(sql[fqn]["select"]);
       statement.execute();
-      var data:Array = statement.getResult().data;
       
       var result:Array  = new Array;
-      for each (var object:Object in data) {
+      for each (var object:Object in statement.getResult().data) {
         var model:Object = new clazz();
         model["id"] = object["id"];
-        
-        var objectMetadata:XML = describeType(model);        
-        for (var property:String in object) {
-          var targetName:String = property;
-          
-          if (targetName == "id") continue;
-          
-          var value:Object = object[property];
-          
-          var isRef:Boolean = false;
-          // if we got a node with a name that terminates in "_id" we check to see if
-          // it's a model reference       
-          if (targetName.search(/.*_id$/) != -1) {
-            var checkName:String = RubossUtils.toCamelCase(targetName.replace(/_id$/, ""));
-            if (state.keys[checkName]) {
-              targetName = checkName;
-              isRef = true;
-            }
-          } else {
-            targetName = RubossUtils.toCamelCase(targetName);
-          }
-
-          if (isRef) {
-            var elementId:int = parseInt(value.toString());
-            
-            var ref:Object = null; 
-            if (elementId != 0 && !isNaN(elementId)) {
-              var key:String = state.keys[targetName];
-              // key should be fqn for the targetName;
-              var models:RubossModelsController = Ruboss.models;
-              ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId);
-            }
-
-            // collectionName should be the same as the camel-cased name of the controller for the current node
-            var collectionName:String = RubossUtils.toCamelCase(state.controllers[state.keys[fqn]]);
-                
-            // if we've got a plural definition which is annotated with [HasMany] 
-            // it's got to be a 1->N relationship           
-            if (ref != null && ref.hasOwnProperty(collectionName) &&
-              ObjectUtil.hasMetadata(ref, collectionName, "HasMany")) {
-              var items:ModelsCollection = ModelsCollection(ref[collectionName]);
-              if (items == null) {
-                items = new ModelsCollection;
-                ref[collectionName] = items;
-              }
-              
-              // add (or replace) the current item to the reference collection
-              if (items.hasItem(model)) {
-                items.setItem(model);
-              } else {
-                items.addItem(model);
-              }
-            // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
-            // link them up
-            } else if (ref != null && ref.hasOwnProperty(targetName) && 
-              ObjectUtil.hasMetadata(ref, targetName, "HasOne")) {
-              ref[targetName] = model;
-            }
-            // and the reverse
-            model[targetName] = ref;
-          } else if (!isRef) {
-            var targetType:String = getSQLType(XMLList(objectMetadata..accessor.(@name == targetName))[0]).toLowerCase();
-            model[targetName] = RubossUtils.cast(targetName, targetType, value);
-          }
-        }
+        processModel(fqn, model, object);
         result.push(model);
       }
       invokeResponder(responder, result);
     }
     
-    // TODO implement proper select * from foo where id = object["id"]
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var fqn:String = getQualifiedClassName(object);
+      var statement:SQLStatement = getSQLStatement(sql[fqn]["select"] + " WHERE id=" + object["id"]);
+      statement.execute();
+      
+      processModel(fqn, object, statement.getResult().data[0]);
+      invokeResponder(responder, object);
     }
     
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:SQLStatement = getSQLStatement(sql[fqn]["insert"]);
-      for each (var n:XML in describeType(object)..accessor) {
-        if (n.@declaredBy == getQualifiedClassName(object)) {
-          var localName:String = n.@name;
-          var type:String = n.@type;
-          var snakeName:String = RubossUtils.toSnakeCase(localName);
+      for each (var node:XML in describeType(object)..accessor) {
+        if (node.@declaredBy == getQualifiedClassName(object)) {
+          if (isNotValidType(node)) continue;
 
-          if (!isValidTypeAndName(type, n.@name) || isNotValidType(n)) continue;
+          var localName:String = node.@name;
+          var type:String = node.@type;
+          var snakeName:String = RubossUtils.toSnakeCase(localName);
                       
-          if (sql[type] && RubossUtils.isBelongsTo(n)) {
+          if (sql[type] && RubossUtils.isBelongsTo(node)) {
             snakeName = snakeName + "_id";
             var ref:Object = object[localName];
-            statement.parameters[":" + snakeName] = 
-              (ref == null) ? null : ref["id"];
+            statement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
           } else {
-            statement.parameters[":" + snakeName] = 
-              RubossUtils.uncast(object, localName);
+            statement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
           }
         }
       }
@@ -307,27 +309,25 @@ package org.ruboss.services.air {
       var statement:String = sql[fqn]["update"];
       statement = statement.replace("{id}", object["id"]);
       var sqlStatement:SQLStatement = getSQLStatement(statement);
-      for each (var n:XML in describeType(object)..accessor) {
-        if (n.@declaredBy == getQualifiedClassName(object)) {
-          var localName:String = n.@name;
-          var type:String = n.@type;
+      for each (var node:XML in describeType(object)..accessor) {
+        if (node.@declaredBy == getQualifiedClassName(object)) {
+          if (isNotValidType(node)) continue;
+
+          var localName:String = node.@name;
+          var type:String = node.@type;
           var snakeName:String = RubossUtils.toSnakeCase(localName);
 
-          if (!isValidTypeAndName(type, n.@name) || isNotValidType(n)) continue;
-                      
-          if (sql[type] && RubossUtils.isBelongsTo(n)) {
+          if (sql[type] && RubossUtils.isBelongsTo(node)) {
             snakeName = snakeName + "_id";
             var ref:Object = object[localName];
-            sqlStatement.parameters[":" + snakeName] = 
-              (ref == null) ? null : ref["id"];
+            sqlStatement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
           } else {
-            sqlStatement.parameters[":" + snakeName] = 
-              RubossUtils.uncast(object, localName);
+            sqlStatement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
           }
         }
       }
       sqlStatement.execute();
-      invokeResponder(responder, object);
+      show(object, responder, metadata, nestedBy);
     }
     
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
