@@ -113,5 +113,84 @@ $>./script/server
 
 And point your browser at http://localhost:3000. It's not going to be the greatest Flex application ever written but for a 5 minute scaffolding job it's definitely not bad.
 
+Porting Pomodo to AIR
+---------------------
 
-Copyright (c) 2008 [Ruboss Technology Corporation], released under the GPLv3 license
+"rconfig" generator you've just seen above actually takes an optional argument, which is quite handy for converting our Flex project into an AIR project. Make sure you say "Y" when prompted to overwrite .actionScriptProperties, .project and Pomodo.mxml files:
+
+$>./script/generate rconfig -a
+
+It is recommended that you shutdown your Flex Builder before running the generator above (if you are running it). This generator will change a few Flex Builder specific files (such as .actionScriptProperties and .project) to include AIR specific information. This is how Flex Builder itself knows that it's dealing with an AIR project as opposed to a Flex one. It's not a very good idea to be changing Flex Builder specific files while it's running.
+
+It's also a good idea to remove the Pomodo Run definition from Flex Builder (if you have it). To do that open "Run Dialog..." and delete Pomodo definition. Why is this a good idea? Well, we've previously run our application in Flex Builder as a Flex application. Flex Builder has saved that definition in its cache and is now convinced Pomodo is a Flex application. Converting this project to an AIR project makes the stuff Flex Builder has in its cache out of date. Our application is now going to be an AIR app. As far as Flex Builder is concerned these are not the same thing and they are run differently.
+
+OK, let's open Flex Builder again. With Flex Builder pacified we can now get back to somewhat more intersting stuff. The generator command above will also convert your main application file to something like this:
+
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
+  xmlns:components="pomodo.components.*"
+  layout="vertical"
+  styleName="plain"
+  initialize="init()">
+  <mx:Script>
+    <![CDATA[
+      import org.ruboss.services.AIRServiceProvider;
+      import pomodo.controllers.PomodoController;
+
+      private function init():void {
+        PomodoController.initialize([AIRServiceProvider], AIRServiceProvider.ID, "pomodo");
+      }
+    ]]>
+  </mx:Script>
+  <mx:TabNavigator width="100%" height="100%">
+    <!-- For a simple demo, put all the components here. -->
+    <components:ProjectBox/>
+    <components:TaskBox/>
+  </mx:TabNavigator>
+</mx:WindowedApplication>
+
+Basically the only thing the generator changed in the code is the way our main application controller is initialized during application start-up.
+
+OK, you are all done, hit the run button and you should see the same application now running in AIR. It will have no data of course because there is no fixtures for AIR. So go ahead and create a few tasks and projects. They are now being saved to your local AIR database called "pomodo".
+
+To recap: converting between a Flex application that talks to Rails server using XML-over-HTTP into an AIR application that's using local SQL database is just a matter of running one command. A command that only changes the way our application is initialized, NOT any of the code used to actually manipulate projects and tasks.
+
+Getting Pomodo AIR application to talk to RubyOnRails again!
+------------------------------------------------------------
+One nice thing about having much of the plumbing abstracted away is that you can now have your brand new AIR application talking to the Rails server again.
+
+If you simply call "PomodoController.initialize()" with no arguments then XML-over-HTTP is going to be the default service provider. So let's change our Pomodo.mxml code to this:
+
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
+  xmlns:components="pomodo.components.*"
+  layout="vertical"
+  styleName="plain"
+  initialize="init()">
+  <mx:Script>
+    <![CDATA[
+      import org.ruboss.Ruboss;
+      import pomodo.controllers.PomodoController;
+
+      private function init():void {
+        Ruboss.httpRootUrl = "http://localhost:3000/";
+        PomodoController.initialize();
+      }
+    ]]>
+  </mx:Script>
+  <mx:TabNavigator width="100%" height="100%">
+    <!-- For a simple demo, put all the components here. -->
+    <components:ProjectBox/>
+    <components:TaskBox/>
+  </mx:TabNavigator>
+</mx:WindowedApplication>
+
+As you might have guessed this will tell the app to stop using local AIR database and start talking to the remote Rails server again. Remember to start your Rails server using "script/server" before running this app.
+
+Finally, to convert our AIR application back into the Flex application it used to be run rconfig generator with no arguments again:
+
+$>./script/generate rconfig
+
+Again, remember to delete the Pomodo Run target and shutdown Flex Builder before you do that.
+
+Copyright (c) 2008 Ruboss Technology Corporation, released under the GPLv3 license
