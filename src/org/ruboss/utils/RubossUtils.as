@@ -17,6 +17,8 @@
  **************************************************************************/
 package org.ruboss.utils {
   import flash.utils.describeType;
+  import flash.utils.getDefinitionByName;
+  import flash.utils.getQualifiedClassName;
   
   import mx.collections.ArrayCollection;
   import mx.formatters.DateFormatter;
@@ -25,7 +27,16 @@ package org.ruboss.utils {
   public class RubossUtils {
     
     public static function clone(object:Object):Object {
-      return object;
+      var fqn:String = getQualifiedClassName(object);
+      var cloned:Object = new (getDefinitionByName(fqn) as Class)();
+      cloned["id"] = object["id"];
+      for each (var node:XML in describeType(object)..accessor) {
+        if (node.@declaredBy == fqn) {
+          var name:String = node.@name;
+          cloned[name] = object[name];
+        }
+      }
+      return cloned;
     }
     
     public static function getResourceController(object:Object):String {
