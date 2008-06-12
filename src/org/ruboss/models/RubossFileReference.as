@@ -16,21 +16,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  **************************************************************************/
 package org.ruboss.models {
-  public class RubossModel {
-    private var _label:String;
-    
-    public var id:int;
-    
-    public var fetched:Boolean;
-    
-    public var attachment:RubossFileReference;
+  import flash.net.FileReference;
+  
+  public class RubossFileReference extends FileReference {
+    public var keyName:String;
         
-    public function RubossModel(label:String = "id") {
-      _label = label;
+    public function RubossFileReference(keyName:String = "uploaded_data") {
+      super();
+      this.keyName = keyName;
     }
-    
-    public function toString():String {
-      return this[_label].toString();
-    }    
   }
 }

@@ -159,9 +159,8 @@ package org.ruboss.services.air {
       return sqlStatement;     
     }
     
-    private function invokeResponder(responder:IResponder, 
-			result:Object):void {
-      var event:ResultEvent = new ResultEvent("QUERY_COMPLETE", false, 
+    private function invokeResponder(responder:IResponder, result:Object):void {
+      var event:ResultEvent = new ResultEvent(ResultEvent.RESULT, false, 
         false, result);
       if (responder != null) {
         responder.result(event);

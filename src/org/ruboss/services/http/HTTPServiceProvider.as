@@ -16,12 +16,18 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  **************************************************************************/
 package org.ruboss.services.http {
+  import flash.events.DataEvent;
+  import flash.events.IOErrorEvent;
+  import flash.net.URLRequest;
+  import flash.net.URLRequestMethod;
+  import flash.net.URLVariables;
   import flash.utils.describeType;
   import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
   
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
+  import mx.rpc.events.ResultEvent;
   import mx.rpc.http.HTTPService;
   import mx.utils.ObjectUtil;
   
@@ -29,6 +35,7 @@ package org.ruboss.services.http {
   import org.ruboss.controllers.RubossModelsController;
   import org.ruboss.models.ModelsCollection;
   import org.ruboss.models.ModelsStateMetadata;
+  import org.ruboss.models.RubossFileReference;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ServiceManager;
   import org.ruboss.utils.RubossUtils;
@@ -68,7 +75,10 @@ package org.ruboss.services.http {
     }
     
     private function isValidProperty(name:String, type:String, object:Object):Boolean {
-      return !(name == "id" || type == "org.ruboss.models::ModelsCollection" || object[name] == null);
+      return !(name == "id" || name == "attachment" || type == "org.ruboss.models::ModelsCollection" || 
+        type == "mx.collections::ArrayCollection" || type == "flash.net::FileReference" ||
+        type == "flash.net::FileReferenceList" || type == "org.ruboss.models::RubossFileReference" ||
+        object[name] == null);
     }
 
     private function marshallToXML(object:Object, metadata:Object = null):XML {
@@ -246,7 +256,8 @@ package org.ruboss.services.http {
           }
         }
       }
-
+      
+      object["fetched"] = true;
       return object;
     }
     
@@ -276,6 +287,7 @@ package org.ruboss.services.http {
               var definition:Class = getDefinitionByName(key) as Class;
               ref = new definition;
               ref["id"] = elementId;
+              ref["fetched"] = false;
             }
           }
         }
@@ -294,6 +306,37 @@ package org.ruboss.services.http {
           items.addItem(object);
         }
       }     
+    }
+
+    private function uploadFile(httpService:HTTPService, object:Object, responder:IResponder):void {      
+      var fqn:String = getQualifiedClassName(object);
+      var localName:String = RubossUtils.toSnakeCase(state.keys[fqn]);
+      var file:RubossFileReference = RubossFileReference(object["attachment"]);
+      
+      var payload:URLVariables = new URLVariables;
+      for (var key:String in httpService.request) {
+        payload[key] = httpService.request[key];
+      }
+      
+      var request:URLRequest = new URLRequest;
+      request.url = httpService.url;
+      request.method = httpService.method;
+      request.data = payload;
+      
+      file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(event:DataEvent):void {
+        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, event.data));
+      });
+      file.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+      
+      file.upload(request, localName + "[" + file.keyName + "]");
+    }
+    
+    private function sendOrUpload(httpService:HTTPService, object:Object, responder:IResponder):void {
+      if (object["attachment"] == null) {
+        invokeHTTPService(httpService, responder);
+      } else {
+        uploadFile(httpService, object, responder);  
+      }       
     }
 
     private function getHTTPService(object:Object, nestedBy:Array = null):HTTPService {
@@ -371,7 +414,7 @@ package org.ruboss.services.http {
     
     public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = "GET";
+      httpService.method = URLRequestMethod.GET;
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
@@ -383,7 +426,7 @@ package org.ruboss.services.http {
     
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = "GET";
+      httpService.method = URLRequestMethod.GET;
       httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
         
       var urlParams:String = urlEncodeMetadata(metadata);
@@ -396,27 +439,23 @@ package org.ruboss.services.http {
     
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = "POST";
-      //httpService.request = marshallToXML(object, metadata);
+      httpService.method = URLRequestMethod.POST;
       httpService.request = marshallToVO(object, metadata);
-      //httpService.contentType = "application/xml";
-      
-      invokeHTTPService(httpService, responder);      
+      sendOrUpload(httpService, object, responder);   
     }
     
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = "POST";
+      httpService.method = URLRequestMethod.POST;
       httpService.request = marshallToVO(object, metadata);
       httpService.request["_method"] = "PUT";
       httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
-      
-      invokeHTTPService(httpService, responder);  
+      sendOrUpload(httpService, object, responder); 
     }
     
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = "POST";
+      httpService.method = URLRequestMethod.POST;
       httpService.request["_method"] = "DELETE";
       httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
         
