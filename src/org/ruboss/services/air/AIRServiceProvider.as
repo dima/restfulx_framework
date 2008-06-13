@@ -66,6 +66,8 @@ package org.ruboss.services.air {
       
       for each (var model:Class in state.models) {
         var fqn:String = getQualifiedClassName(model);
+        if (RubossUtils.isEmpty(RubossUtils.getResourceController(model))) continue;
+        
         sql[fqn] = new Dictionary;          
       }
       
@@ -96,6 +98,10 @@ package org.ruboss.services.air {
     
     private function extractMetadata(model:Object):void {
       var tableName:String = RubossUtils.getResourceController(model);
+      
+      // make sure we don't try to create anything for a resource with no controller
+      if (RubossUtils.isEmpty(tableName)) return;
+      
       var modelName:String = getQualifiedClassName(model);
       
       var createStatement:String = "CREATE TABLE IF NOT EXISTS " + tableName + "(";

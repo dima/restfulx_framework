@@ -23,7 +23,6 @@ package org.ruboss.models {
   
   import mx.collections.ArrayCollection;
   
-  import org.ruboss.Ruboss;
   import org.ruboss.utils.RubossUtils;
   
   public class ModelsStateMetadata {
@@ -109,6 +108,10 @@ package org.ruboss.models {
         var localName:String = modelName.charAt(0).toLowerCase() + modelName.slice(1);
         
         var controller:String = RubossUtils.getResourceController(model);
+        
+        // don't store any metadata for a model that doesn't have a controller
+        if (RubossUtils.isEmpty(controller)) continue;
+        
         fqns[controller] = fqn;
         
         controllers[fqn] = controller;
@@ -160,12 +163,16 @@ package org.ruboss.models {
     
     private function computeDependecyTree(model:Object):void {
       var fqn:String = getQualifiedClassName(model);
+      // don't compute dependencies for a model that doesn't have a controller
+      if (RubossUtils.isEmpty(RubossUtils.getResourceController(model))) return;
+      
       for each (var node:XML in describeType(model)..accessor) {
         var type:String = node.@type;
+        if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn)) continue; 
         // we are only interested in declared [BelongsTo] accessors, avoiding
         // primitive circular dependencies (model dependency on itself) and making
         // sure dependency is of a *known* model type
-        if (node.@declaredBy == fqn && controllers[type] && type != fqn && RubossUtils.isBelongsTo(node)) {
+        if (controllers[type] && type != fqn && RubossUtils.isBelongsTo(node)) {
           if (!RubossUtils.isLazy(node)) {
             (lazy[fqn] as Array).push(type);
           }
