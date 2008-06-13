@@ -106,7 +106,8 @@ package org.ruboss.services.air {
       var updateStatement:String = "UPDATE " + tableName + " SET ";
       
       for each (var node:XML in describeType(model)..accessor) {
-        if (node.@declaredBy == modelName) {
+        var declaredBy:String = node.@declaredBy;
+        if (RubossUtils.isInSamePackage(declaredBy, modelName)) {
           var snakeName:String = RubossUtils.toSnakeCase(node.@name);
           var type:String = node.@type;
           
@@ -282,7 +283,7 @@ package org.ruboss.services.air {
       var fqn:String = getQualifiedClassName(object);
       var statement:SQLStatement = getSQLStatement(sql[fqn]["insert"]);
       for each (var node:XML in describeType(object)..accessor) {
-        if (node.@declaredBy == getQualifiedClassName(object)) {
+        if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
           if (isNotValidType(node)) continue;
 
           var localName:String = node.@name;
@@ -309,7 +310,7 @@ package org.ruboss.services.air {
       statement = statement.replace("{id}", object["id"]);
       var sqlStatement:SQLStatement = getSQLStatement(statement);
       for each (var node:XML in describeType(object)..accessor) {
-        if (node.@declaredBy == getQualifiedClassName(object)) {
+        if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
           if (isNotValidType(node)) continue;
 
           var localName:String = node.@name;

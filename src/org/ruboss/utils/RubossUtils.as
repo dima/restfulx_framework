@@ -23,20 +23,32 @@ package org.ruboss.utils {
   import mx.collections.ArrayCollection;
   import mx.formatters.DateFormatter;
   import mx.utils.ObjectUtil;
+  
+  import org.ruboss.models.RubossModel;
     
   public class RubossUtils {
     
+    public static function isInSamePackage(fqn1:String, fqn2:String):Boolean {
+      return fqn1.split("::")[0] == fqn2.split("::")[0];
+    }
+    
     public static function clone(object:Object):Object {
-      var fqn:String = getQualifiedClassName(object);
-      var cloned:Object = new (getDefinitionByName(fqn) as Class)();
-      cloned["id"] = object["id"];
-      for each (var node:XML in describeType(object)..accessor) {
-        if (node.@declaredBy == fqn) {
-          var name:String = node.@name;
-          cloned[name] = object[name];
+      if (object is RubossModel) {
+        var fqn:String = getQualifiedClassName(object);
+        var clazz:Class = getDefinitionByName(fqn) as Class;
+        var cloned:Object = new clazz;
+        cloned["id"] = object["id"];
+        for each (var node:XML in describeType(object)..accessor) {
+          var declaredBy:String = node.@declaredBy;
+          if (isInSamePackage(declaredBy, fqn)) {
+            var name:String = node.@name;
+            cloned[name] = object[name];
+          }
         }
+        return cloned;
+      } else {
+        return ObjectUtil.copy(object);
       }
-      return cloned;
     }
     
     public static function getResourceController(object:Object):String {

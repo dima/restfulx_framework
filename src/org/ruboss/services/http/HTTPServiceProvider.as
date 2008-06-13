@@ -75,9 +75,12 @@ package org.ruboss.services.http {
     }
     
     private function isValidProperty(name:String, type:String, object:Object):Boolean {
-      return !(name == "id" || name == "attachment" || type == "org.ruboss.models::ModelsCollection" || 
-        type == "mx.collections::ArrayCollection" || type == "flash.net::FileReference" ||
-        type == "flash.net::FileReferenceList" || type == "org.ruboss.models::RubossFileReference" ||
+      return !(name == "id" || name == "attachment" || name == "fetched" || 
+        type == "org.ruboss.models::ModelsCollection" || 
+        type == "mx.collections::ArrayCollection" || 
+        type == "flash.net::FileReference" ||
+        type == "flash.net::FileReferenceList" || 
+        type == "org.ruboss.models::RubossFileReference" ||
         object[name] == null);
     }
 
@@ -220,7 +223,6 @@ package org.ruboss.services.http {
               var items:ModelsCollection = ModelsCollection(ref[collectionName]);
               if (items == null) {
                 items = new ModelsCollection;
-                ref[collectionName] = items;
               }
               
               // add (or replace) the current item to the reference collection
@@ -229,6 +231,9 @@ package org.ruboss.services.http {
               } else {
                 items.addItem(object);
               }
+              
+              ref[collectionName] = items;
+
             // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
             // link them up
             } else if (ref != null && ref.hasOwnProperty(localName) && 
