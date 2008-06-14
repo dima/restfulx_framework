@@ -88,7 +88,7 @@ package org.ruboss.controllers {
       return IServiceProvider(services[serviceId]);
     }
     
-    private function setServiceMetadata(metadata:Object):void {
+    private function setServiceMetadata(metadata:Object):Object {
       // if no metadata is defined check if we have any default *global* metadata set
       if (metadata == null) {
         metadata = Ruboss.defaultMetadata;
@@ -99,6 +99,7 @@ package org.ruboss.controllers {
           }
         }
       }
+      return metadata;
     }
     
     private function setCurrentPage(metadata:Object, page:int):Object {
@@ -135,7 +136,7 @@ package org.ruboss.controllers {
     private function invokeService(method:Function, service:IServiceProvider, operand:Object, 
       serviceResponder:ServiceResponder, metadata:Object = null, nestedBy:Array = null):void {
       CursorManager.setBusyCursor();
-      setServiceMetadata(metadata);
+      metadata = setServiceMetadata(metadata);
       method.call(service, operand, serviceResponder, metadata, nestedBy);   
     }
 
