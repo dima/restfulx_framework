@@ -168,7 +168,8 @@ package org.ruboss.models {
       
       for each (var node:XML in describeType(model)..accessor) {
         var type:String = node.@type;
-        if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn)) continue; 
+        if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
+          RubossUtils.isIgnored(node)) continue; 
         // we are only interested in declared [BelongsTo] accessors, avoiding
         // primitive circular dependencies (model dependency on itself) and making
         // sure dependency is of a *known* model type

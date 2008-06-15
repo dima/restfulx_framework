@@ -81,6 +81,10 @@ package org.ruboss.utils {
       return getAttributeAnnotation(attribute, "HasOne").length() > 0;
     }
     
+    public static function isIgnored(attribute:XML):Boolean {
+      return getAttributeAnnotation(attribute, "Ignored").length() > 0;
+    }
+    
     public static function isDateTime(attribute:XML):Boolean {
       return getAttributeAnnotation(attribute, "DateTime").length() > 0;
     }

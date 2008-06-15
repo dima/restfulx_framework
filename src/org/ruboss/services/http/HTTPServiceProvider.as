@@ -44,6 +44,15 @@ package org.ruboss.services.http {
     
     public static const ID:int = ServiceManager.generateId();
     
+    // these types are always ignored during serialization
+    private const ignoredTypes:Array = [
+      "org.ruboss.models::ModelsCollection",
+      "mx.collections::ArrayCollection",
+      "flash.net::FileReference",
+      "flash.net::FileReferenceList",
+      "org.ruboss.models::RubossFileReference"
+    ];
+    
     private var state:ModelsStateMetadata;
     
     public function HTTPServiceProvider(controller:RubossModelsController) {
@@ -74,14 +83,8 @@ package org.ruboss.services.http {
       return result.replace(/&$/, "");
     }
     
-    private function isValidProperty(name:String, type:String, object:Object):Boolean {
-      return !(name == "id" || name == "attachment" || name == "fetched" || 
-        type == "org.ruboss.models::ModelsCollection" || 
-        type == "mx.collections::ArrayCollection" || 
-        type == "flash.net::FileReference" ||
-        type == "flash.net::FileReferenceList" || 
-        type == "org.ruboss.models::RubossFileReference" ||
-        object[name] == null);
+    private function isInvalidProperty(type:String):Boolean {
+      return ignoredTypes.indexOf(type) > -1;
     }
 
     private function marshallToXML(object:Object, metadata:Object = null):XML {
@@ -92,12 +95,14 @@ package org.ruboss.services.http {
       
       var vars:Array = new Array;
       for each (var node:XML in describeType(object)..accessor) {
+        if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
+          RubossUtils.isIgnored(node)) continue;
+          
         var nodeName:String = node.@name;
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(nodeName);
         
-        // skip id property, null references and collections
-        if (!isValidProperty(nodeName, type, object)) continue;
+        if (isInvalidProperty(type) || object[nodeName] == null) continue;
         
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
@@ -133,13 +138,14 @@ package org.ruboss.services.http {
       
       var result:Object = new Object;
       for each (var node:XML in describeType(object)..accessor) {
+        if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
+          RubossUtils.isIgnored(node)) continue;
+          
         var nodeName:String = node.@name;
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(nodeName);
         
-        // skip id property, null references and collections of 
-        // other model objects
-        if (!isValidProperty(nodeName, type, object)) continue;
+        if (isInvalidProperty(type) || object[nodeName] == null) continue;
         
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
