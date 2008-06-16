@@ -259,6 +259,12 @@ package org.ruboss.services.http {
               var nestedRef:Object = unmarshallNode(element, object, localName);
               if (nestedRef != null) {
                 object[targetName] = nestedRef;
+                var cached:ModelsCollection = ModelsCollection(Ruboss.models.cache[targetType]);
+                if (cached.hasItem(nestedRef)) {
+                  cached.setItem(nestedRef);
+                } else {
+                  cached.addItem(nestedRef);
+                }
               }
             } else {
               object[targetName] = 
