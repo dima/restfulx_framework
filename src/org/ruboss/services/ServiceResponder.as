@@ -16,7 +16,6 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  **************************************************************************/
 package org.ruboss.services {
-  import mx.collections.ArrayCollection;
   import mx.controls.Alert;
   import mx.managers.CursorManager;
   import mx.rpc.IResponder;
@@ -51,24 +50,32 @@ package org.ruboss.services {
       // checking then just return true
       if (!fqn || !checkOrder) return true;
       
-      if (!controller.state.standalone[fqn] && !controller.state.fetched[fqn]) {
-        var dependencies:Array = (useLazyMode) ? controller.state.lazy[fqn] : controller.state.eager[fqn];
+      var dependencies:Array = controller.state.fetching[fqn];
+            
+      if (!controller.state.standalone[fqn]) {
         for each (var dependency:String in dependencies) {
           // if we are still missing some dependencies queue this response 
           // for later 
-          if (!controller.state.fetched[dependency]) {
-            Ruboss.log.debug("missing dependency: " + dependency + " of: " + fqn + 
-              " queuing this response until the dependency is received.");
-            (Ruboss.models.state.queue[dependency] as Array).push({"target":this, 
-              "event":event});
-            return false;
-          }
+          Ruboss.log.debug("missing dependency: " + dependency + " of: " + fqn + 
+            " queuing this response until the dependency is received.");
+          (Ruboss.models.state.queue[dependency] as Array).push({"target":this, 
+            "event":event});
+          return false;
+        }
+      }
+
+      // if we didn't need to queue this response we should go through the current
+      // fetching stack and remove this fqn, so that the other models don't need to wait
+      // for it
+      for (var name:String in controller.state.fetching) {
+        var fetching:Array = controller.state.fetching[name] as Array;
+        var toRemove:int = fetching.indexOf(fqn);
+        if (toRemove > -1) {
+          fetching.splice(toRemove, 1);
         }
       }
       
-      // OK, so looks like we have all the dependencies, mark this model 
-      // as fetched
-      controller.state.fetched[fqn] = true;
+      // OK, so looks like we have all the dependencies
       return true;
     }
     

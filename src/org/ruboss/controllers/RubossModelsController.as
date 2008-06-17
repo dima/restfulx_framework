@@ -171,6 +171,7 @@ package org.ruboss.controllers {
               null, fetchDependencies, useLazyMode, -1, metadata, null, targetServiceId);
           }
         }
+        state.fetching[fqn] = dependencies.slice(0);
       }
         
       state.indexed[fqn] = true;
@@ -313,13 +314,15 @@ package org.ruboss.controllers {
         if (fetchDependencies) {
           var objectMetadata:XML = describeType(object);
           var dependencies:Array = (useLazyMode) ? state.lazy[fqn] : state.eager[fqn];
+          var toFetch:Array = new Array;
           for each (var dependency:String in dependencies) {
             for each (var node:XML in objectMetadata.accessor.(@type == dependency)) {
               if (RubossUtils.isBelongsTo(node)) {
                 var property:String = node.@name;
                 if (object[property] != null && object[property]["id"] != 0) {
                   Ruboss.log.debug("requesting single show dependency:" + dependency + 
-                    " with id: " + object[property]["id"] + " of: " + fqn);                    
+                    " with id: " + object[property]["id"] + " of: " + fqn);
+                  toFetch.push(dependency);              
                   if (!showed.contains(object[property]["id"])) {
                     show(object[property], null, fetchDependencies, useLazyMode, metadata, null, targetServiceId);
                   }
@@ -327,6 +330,7 @@ package org.ruboss.controllers {
               }
             }
           }
+          state.fetching[fqn] = toFetch;
         }
         
         showed.addItem(objectId);

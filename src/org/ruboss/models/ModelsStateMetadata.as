@@ -68,14 +68,14 @@ package org.ruboss.models {
     // responses
     public var queue:Dictionary;
 
-    // this indicates which models have been fetched and cached
-    // maps model FQNs to boolean values, can be reset on-demand
-    public var fetched:Dictionary;
-
     // this indicates which models are being processed standalone (without dependency resolution)
     // maps model FQNs to boolean values and is typically reset at the end of service response
     // processing
     public var standalone:Dictionary;
+
+    // this indicates which models have been fetched and cached
+    // maps model FQNs to boolean values, can be reset on-demand
+    public var fetching:Dictionary;
 
     public function ModelsStateMetadata(models:Array) {
       this.models = models;
@@ -94,8 +94,9 @@ package org.ruboss.models {
       
       pages = new Dictionary;
       queue = new Dictionary;
-      fetched = new Dictionary;
       standalone = new Dictionary;
+
+      fetching = new Dictionary;
 
       // set-up model data structures
       for each (var model:Class in models) {
@@ -125,6 +126,7 @@ package org.ruboss.models {
         references[fqn] = new Array;
         showed[fqn] = new ArrayCollection;
         pages[fqn] = -1;
+        fetching[fqn] = new Array;
         
         registerClassAlias(fqn.replace("::","."), model);
       }
@@ -147,7 +149,6 @@ package org.ruboss.models {
         for (var model:String in showed) {
           showed[model] = new ArrayCollection;
         }
-        fetched = new Dictionary;
       } else {
         var fqn:String = getQualifiedClassName(object);
 
