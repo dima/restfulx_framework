@@ -43,6 +43,7 @@ package org.ruboss.controllers {
     // maps model FQNs to ModelsCollections of instances
     public var cache:Dictionary;
     
+    // encapsulates much of the models metadata
     public var state:ModelsStateMetadata;
 
     // maps service ids to service instances (local reference)
@@ -79,7 +80,7 @@ package org.ruboss.controllers {
         defaultServiceId = targetServiceId;
       }
 
-      // initialize services
+      // initialize service manager
       Ruboss.services = new ServiceManager(services);
     }
     
@@ -163,7 +164,8 @@ package org.ruboss.controllers {
       
       if (fetchDependencies) {
         // request dependencies if necessary
-        var dependencies:Array = (useLazyMode) ? state.lazy[fqn] : state.eager[fqn];
+        var dependencies:Array = (useLazyMode && getServiceProvider(targetServiceId).canLazyLoad()) ? 
+          state.lazy[fqn] : state.eager[fqn];
         for each (var dependency:String in dependencies) {
           if (!state.indexed[dependency]) {
             Ruboss.log.debug("indexing dependency:" + dependency + " of: " + fqn);
@@ -313,7 +315,8 @@ package org.ruboss.controllers {
         
         if (fetchDependencies) {
           var objectMetadata:XML = describeType(object);
-          var dependencies:Array = (useLazyMode) ? state.lazy[fqn] : state.eager[fqn];
+          var dependencies:Array = (useLazyMode && getServiceProvider(targetServiceId).canLazyLoad()) ? 
+            state.lazy[fqn] : state.eager[fqn];          
           var toFetch:Array = new Array;
           for each (var dependency:String in dependencies) {
             for each (var node:XML in objectMetadata.accessor.(@type == dependency)) {

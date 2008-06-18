@@ -36,5 +36,9 @@ package org.ruboss.services {
     public function getServiceProvider(id:int):IServiceProvider {
       return services[id];
     }
+    
+    public function canLazyLoad(id:int):Boolean {
+      return getServiceProvider(id).canLazyLoad();
+    }
   }
 }

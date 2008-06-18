@@ -90,7 +90,7 @@ package org.ruboss.services {
     public function result(event:Object):void {
       CursorManager.removeBusyCursor();    
       if (handler != null) {
-        if (!service.error(event.result)) {
+        if (!service.hasErrors(event.result)) {
           var fqn:String = service.peek(event.result);
           if (checkResultOrder(fqn, event)) {
             Ruboss.log.debug("handling response for: " + fqn);

@@ -20,10 +20,12 @@ package org.ruboss.services {
   
   public interface IServiceProvider {
     function get id():int;
+        
+    function hasErrors(object:Object):Boolean;
     
+    function canLazyLoad():Boolean;
+
     function peek(object:Object):String;
-    
-    function error(object:Object):Boolean;
     
     function marshall(object:Object, metadata:Object = null):Object;
 

@@ -380,6 +380,21 @@ package org.ruboss.services.http {
     public function get id():int {
       return ID;
     }
+    
+    public function hasErrors(object:Object):Boolean {
+      var response:XML = XML(object);
+      var xmlFragmentName:String = response.localName().toString();
+      if (xmlFragmentName == "errors" && response.@type == null) {
+        Ruboss.log.debug("received service error response, terminating processing");
+        Ruboss.errors = new HTTPServiceErrors(response);
+        return true;
+      }
+      return false;
+    }
+    
+    public function canLazyLoad():Boolean {
+      return true;
+    }
 
     public function peek(object:Object):String {
       var xmlFragmentName:String = XML(object).localName().toString();
@@ -389,17 +404,6 @@ package org.ruboss.services.http {
       
       return (state.fqns[xmlFragmentName] == null) ? state.keys[objectName] : 
         state.fqns[xmlFragmentName];
-    }
-    
-    public function error(object:Object):Boolean {
-      var response:XML = XML(object);
-      var xmlFragmentName:String = response.localName().toString();
-      if (xmlFragmentName == "errors" && response.@type == null) {
-        Ruboss.log.debug("received service error response, terminating processing");
-        Ruboss.errors = new HTTPServiceErrors(response);
-        return true;
-      }
-      return false;
     }
 
     public function marshall(object:Object, metadata:Object = null):Object {

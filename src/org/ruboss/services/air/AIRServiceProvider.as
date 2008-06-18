@@ -245,20 +245,24 @@ package org.ruboss.services.air {
       return ID;
     }
     
-    public function marshall(object:Object, metadata:Object = null):Object {
-      return object;
+    public function hasErrors(object:Object):Boolean {
+      return false;
     }
 
-    public function unmarshall(object:Object):Object {
-      return object;
+    public function canLazyLoad():Boolean {
+      return false;
     }
 
     public function peek(object:Object):String {
       return null;
     }
     
-    public function error(object:Object):Boolean {
-      return false;
+    public function marshall(object:Object, metadata:Object = null):Object {
+      return object;
+    }
+
+    public function unmarshall(object:Object):Object {
+      return object;
     }
     
     public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
