@@ -16,6 +16,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  **************************************************************************/
 package org.ruboss.models {
+  import org.ruboss.Ruboss;
+  
   [Bindable]
   public class RubossModel {
     private var _label:String;
@@ -29,9 +31,27 @@ package org.ruboss.models {
     public function RubossModel(label:String = "id") {
       _label = label;
     }
+
+    public function create(afterCallback:Object = null, metadata:Object = null, nestedBy:Array = null, 
+      targetServiceId:int = -1):void {
+      Ruboss.models.create(this, afterCallback,
+        metadata, nestedBy, targetServiceId);
+    }
+
+    public function update(afterCallback:Object = null, metadata:Object = null, nestedBy:Array = null,
+      targetServiceId:int = -1):void {
+      Ruboss.models.update(this, afterCallback,
+        metadata, nestedBy, targetServiceId);
+    }
+    
+    public function destroy(afterCallback:Object = null, metadata:Object = null, nestedBy:Array = null,
+      targetServiceId:int = -1):void {
+      Ruboss.models.destroy(this, afterCallback, metadata,
+        nestedBy, targetServiceId);
+    }
     
     public function toString():String {
       return this[_label].toString();
-    }    
+    }
   }
 }
