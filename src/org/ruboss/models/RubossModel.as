@@ -16,22 +16,45 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  **************************************************************************/
 package org.ruboss.models {
+  import org.ruboss.Ruboss;
+
   [Bindable]
   public class RubossModel {
     private var _label:String;
-    
+
     public var id:int;
-    
+
     public var fetched:Boolean;
-    
+
     public var attachment:RubossFileReference;
-        
+
     public function RubossModel(label:String = "id") {
       _label = label;
     }
-    
+
+    [Bindable(event="propertyChange")]
+    public function show(afterCallback:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false,
+      metadata:Object = null, nestedBy:Array = null, targetServiceId:int = -1):Object {
+      return Ruboss.models.show(this, afterCallback, fetchDependencies, useLazyMode, metadata, nestedBy, targetServiceId);
+    }
+
+    public function create(afterCallback:Object = null, metadata:Object = null, nestedBy:Array = null, 
+      targetServiceId:int = -1):void {
+      Ruboss.models.create(this, afterCallback, metadata, nestedBy, targetServiceId);
+    }
+
+    public function update(afterCallback:Object = null, metadata:Object = null, nestedBy:Array = null,
+      targetServiceId:int = -1):void {
+      Ruboss.models.update(this, afterCallback, metadata, nestedBy, targetServiceId);
+    }
+
+    public function destroy(afterCallback:Object = null, metadata:Object = null, nestedBy:Array = null,
+      targetServiceId:int = -1):void {
+      Ruboss.models.destroy(this, afterCallback, metadata, nestedBy, targetServiceId);
+    }
+
     public function toString():String {
       return this[_label].toString();
-    }    
+    }
   }
 }
