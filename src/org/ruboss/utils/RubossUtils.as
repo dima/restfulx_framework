@@ -116,6 +116,8 @@ package org.ruboss.utils {
     }
     
     public static function uncast(object:Object, property:String):* {
+      if (object[property] == null) return null;
+      
       if (object[property] is Date) {
         var formatter:DateFormatter = new DateFormatter;
         if (ObjectUtil.hasMetadata(object, property, "DateTime")) {
