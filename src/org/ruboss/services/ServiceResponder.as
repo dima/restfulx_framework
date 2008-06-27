@@ -93,7 +93,7 @@ package org.ruboss.services {
         if (!service.hasErrors(event.result)) {
           var fqn:String = service.peek(event.result);
           if (checkResultOrder(fqn, event)) {
-            Ruboss.log.debug("handling response for: " + fqn);
+            if (fqn != null) Ruboss.log.debug("handling response for: " + fqn);
             var checkedResult:Object = service.unmarshall(event.result);
             handler.call(controller, checkedResult);
             for each (var dependant:Object in controller.state.queue[fqn]) {

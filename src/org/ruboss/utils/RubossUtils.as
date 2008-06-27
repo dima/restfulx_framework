@@ -106,6 +106,8 @@ package org.ruboss.utils {
     }
     
     public static function cast(targetName:String, targetType:String, value:Object):* {
+      if (value == null) return null;
+      
       if (targetType == "boolean") {
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date" || targetType == "datetime") {
