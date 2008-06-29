@@ -191,7 +191,7 @@ package org.ruboss.services.air {
           targetName = RubossUtils.toCamelCase(targetName);
         }
 
-        if (isRef) {
+        if (isRef && value != null) {
           var elementId:int = parseInt(value.toString());
             
           var ref:Object = null; 
@@ -270,9 +270,11 @@ package org.ruboss.services.air {
       for each (var object:Object in statement.getResult().data) {
         var model:Object = new clazz();
         model["id"] = object["id"];
+        model["fetched"] = true;
         processModel(fqn, model, object);
         result.push(model);
       }
+      state.fetching[fqn] = new Array;
       invokeResponder(responder, result);
     }
     
@@ -301,7 +303,11 @@ package org.ruboss.services.air {
             var ref:Object = object[localName];
             statement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
           } else {
-            statement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
+            if (object[localName] is Boolean) {
+              statement.parameters[":" + snakeName] = object[localName];
+            } else {
+              statement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
+            }
           }
         }
       }
@@ -328,7 +334,11 @@ package org.ruboss.services.air {
             var ref:Object = object[localName];
             sqlStatement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
           } else {
-            sqlStatement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
+            if (object[localName] is Boolean) {
+              sqlStatement.parameters[":" + snakeName] = object[localName];
+            } else {
+              sqlStatement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
+            }
           }
         }
       }

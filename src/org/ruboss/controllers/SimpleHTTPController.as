@@ -12,7 +12,6 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.controllers {
-  import mx.collections.ItemResponder;
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.http.HTTPService;
@@ -28,8 +27,11 @@ package org.ruboss.controllers {
     public static const DELETE:int = 4;
     
     private var rootUrl:String;
+    private var contentType:String;
     
-    public function SimpleHTTPController(rootUrl:String = null) {
+    public function SimpleHTTPController(contentType:String = "application/x-www-form-urlencoded", 
+      rootUrl:String = null) {
+      this.contentType = contentType;
       if (rootUrl != null) this.rootUrl = rootUrl;
     }
     
@@ -48,7 +50,7 @@ package org.ruboss.controllers {
         
       service.resultFormat = "e4x";
       service.useProxy = false;
-      service.contentType = "application/x-www-form-urlencoded";
+      service.contentType = contentType;
       service.url = rootUrl + url;
       
       service.request = data;

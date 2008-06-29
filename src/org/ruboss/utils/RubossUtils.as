@@ -102,6 +102,8 @@ package org.ruboss.utils {
     }
     
     public static function cast(targetName:String, targetType:String, value:Object):* {
+      if (value == null) return null;
+      
       if (targetType == "boolean") {
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date" || targetType == "datetime") {
@@ -112,6 +114,8 @@ package org.ruboss.utils {
     }
     
     public static function uncast(object:Object, property:String):* {
+      if (object[property] == null) return null;
+      
       if (object[property] is Date) {
         var formatter:DateFormatter = new DateFormatter;
         if (ObjectUtil.hasMetadata(object, property, "DateTime")) {
