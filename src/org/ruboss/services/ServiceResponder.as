@@ -29,7 +29,6 @@ package org.ruboss.services {
     private var checkOrder:Boolean;
     private var useLazyMode:Boolean;
 
-    
     public function ServiceResponder(handler:Function, service:IServiceProvider, 
       controller:RubossModelsController, checkOrder:Boolean, useLazyMode:Boolean, 
       afterCallback:Object = null) {
