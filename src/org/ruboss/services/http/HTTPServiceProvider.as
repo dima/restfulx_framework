@@ -380,7 +380,7 @@ package org.ruboss.services.http {
     public function hasErrors(object:Object):Boolean {
       var response:XML = XML(object);
       var xmlFragmentName:String = response.localName().toString();
-      if (xmlFragmentName == "errors" && response.@type == null) {
+      if (xmlFragmentName == "errors" && RubossUtils.isEmpty(response.@type)) {
         Ruboss.log.debug("received service error response, terminating processing");
         Ruboss.errors = new HTTPServiceErrors(response);
         return true;
