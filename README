@@ -5,7 +5,6 @@ The Ruboss Framework brings the design principles and productivity of Rails to F
 Integration
 -----------
 
-- Refer to http://github.com/dima/ruboss_rails_integration/wikis/home for details on how to get started with the Ruboss framework and Ruby on Rails.
-- Refer to http://github.com/dima/ruboss_merb_integration/wikis/home for details on how to get started with the Ruboss framework and Merb.
+- Refer to http://github.com/dima/ruboss_on_ruby/wikis/home for details on how to get started with the Ruboss framework and Ruby Web Frameworks such as Ruby On Rails 2.1 and Merb 0.9.3+
 
 Copyright (c) 2008 Ruboss Technology Corporation, released under the GPLv3 license
