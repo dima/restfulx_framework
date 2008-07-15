@@ -162,7 +162,6 @@ package org.ruboss.controllers {
         // request dependencies if necessary
         var dependencies:Array = (useLazyMode && getServiceProvider(targetServiceId).canLazyLoad()) ? 
           state.lazy[fqn] : state.eager[fqn];
-        var fetching:Array = new Array;
         for each (var dependency:String in dependencies) {
           if (!state.indexed[dependency]) {
             Ruboss.log.debug("indexing dependency:" + dependency + " of: " + fqn);
@@ -172,13 +171,13 @@ package org.ruboss.controllers {
               metadata: metadata,
               targetServiceId: targetServiceId
             });
-            fetching.push(dependency);
           }
         }
-        state.fetching[fqn] = fetching;
+        state.fetching[fqn] = dependencies.slice(0);
       }
         
       state.indexed[fqn] = true;
+      state.waiting[fqn] = true;
 
       metadata = setCurrentPage(metadata, page);
                 
@@ -335,7 +334,7 @@ package org.ruboss.controllers {
           var objectMetadata:XML = describeType(object);
           var dependencies:Array = (useLazyMode && getServiceProvider(targetServiceId).canLazyLoad()) ? 
             state.lazy[fqn] : state.eager[fqn];          
-          var toFetch:Array = new Array;
+          var fetching:Array = new Array;
           for each (var dependency:String in dependencies) {
             for each (var node:XML in objectMetadata.accessor.(@type == dependency)) {
               if (RubossUtils.isBelongsTo(node)) {
@@ -349,15 +348,16 @@ package org.ruboss.controllers {
                       useLazyMode: useLazyMode, 
                       metadata: metadata, 
                       targetServiceId: targetServiceId});
-                    toFetch.push(dependency);              
                   }
+                  fetching.push(dependency);              
                 }
               }
             }
           }
-          state.fetching[fqn] = toFetch;
+          state.fetching[fqn] = fetching;
         }
         
+        state.waiting[fqn] = true;
         showed.addItem(objectId);
         
         var service:IServiceProvider = getServiceProvider(targetServiceId);

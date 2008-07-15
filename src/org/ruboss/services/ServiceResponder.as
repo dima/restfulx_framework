@@ -49,13 +49,15 @@ package org.ruboss.services {
             
       if (!controller.state.standalone[fqn]) {
         for each (var dependency:String in dependencies) {
-          // if we are still missing some dependencies queue this response 
+          // if we are waintg for this dependency and it's still missing, queue this response 
           // for later 
-          Ruboss.log.debug("missing dependency: " + dependency + " of: " + fqn + 
-            " queuing this response until the dependency is received.");
-          (Ruboss.models.state.queue[dependency] as Array).push({"target":this, 
-            "event":event});
-          return false;
+          if (controller.state.waiting[dependency]) {
+            Ruboss.log.debug("missing dependency: " + dependency + " of: " + fqn + 
+              " queuing this response until the dependency is received.");
+            (Ruboss.models.state.queue[dependency] as Array).push({"target":this, 
+              "event":event});
+            return false;
+          }
         }
       }
 
@@ -71,6 +73,7 @@ package org.ruboss.services {
       }
       
       // OK, so looks like we have all the dependencies
+      delete controller.state.waiting[fqn];
       return true;
     }
     
@@ -98,6 +101,7 @@ package org.ruboss.services {
             }
             // OK so we notified all the dependants, need to clean up
             controller.state.queue[fqn] = new Array;
+            controller.state.fetching[fqn] = new Array;
             // and fire user's callback responder here
             if (afterCallback != null) {
               invokeAfterCallback(checkedResult);

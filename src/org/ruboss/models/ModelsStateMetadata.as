@@ -72,6 +72,10 @@ package org.ruboss.models {
     // this indicates which models have been fetched and cached
     // maps model FQNs to boolean values, can be reset on-demand
     public var fetching:Dictionary;
+    
+    // this indicates which models have actually been requested as part of a particular run
+    // gets cleaned up
+    public var waiting:Dictionary;
 
     public function ModelsStateMetadata(models:Array) {
       this.models = models;
@@ -93,6 +97,7 @@ package org.ruboss.models {
       standalone = new Dictionary;
 
       fetching = new Dictionary;
+      waiting = new Dictionary;
 
       // set-up model data structures
       for each (var model:Class in models) {
