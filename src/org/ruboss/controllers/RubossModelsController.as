@@ -290,10 +290,10 @@ package org.ruboss.controllers {
       var metadata:Object = opts['metadata'];
       var nestedBy:Array = opts['nestedBy'];
       
-      var fetchDependencies:Boolean = opts['fetchDependencies'] || true;
-      var useLazyMode:Boolean = opts['useLazyMode'] || true;
-      var page:int = opts['page'] || -1;
-      var targetServiceId:int = opts['targetServiceId'] || -1;
+      var fetchDependencies:Boolean = opts['fetchDependencies'] ? opts['fetchDependencies'] : true;
+      var useLazyMode:Boolean = opts['useLazyMode'] ? opts['useLazyMode'] : true;
+      var page:int = opts['page'] ? opts['page'] : -1;
+      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
       
       if (!state.indexed[fqn]) {
         invokeIndex(clazz, afterCallback, fetchDependencies, useLazyMode, page, metadata, nestedBy, 
@@ -319,9 +319,9 @@ package org.ruboss.controllers {
       var metadata:Object = opts['metadata'];
       var nestedBy:Array = opts['nestedBy'];
       
-      var fetchDependencies:Boolean = opts['fetchDependencies'] || true;
-      var useLazyMode:Boolean = opts['useLazyMode'] || true;
-      var targetServiceId:int = opts['targetServiceId'] || -1;
+      var fetchDependencies:Boolean = opts['fetchDependencies'] ? opts['fetchDependencies'] : true;
+      var useLazyMode:Boolean = opts['useLazyMode'] ? opts['useLazyMode'] : false;
+      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
       
       if (!showed.contains(objectId)) {
         if (!fetchDependencies) {
@@ -387,7 +387,7 @@ package org.ruboss.controllers {
       var metadata:Object = opts['metadata'];
       var nestedBy:Array = opts['nestedBy'];
       
-      var targetServiceId:int = opts['targetServiceId'] || -1;
+      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
 
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       cleanupModelReferences(getQualifiedClassName(object), object);
@@ -412,7 +412,7 @@ package org.ruboss.controllers {
       var metadata:Object = opts['metadata'];
       var nestedBy:Array = opts['nestedBy'];
       
-      var targetServiceId:int = opts['targetServiceId'] || -1;
+      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
       
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
@@ -434,7 +434,7 @@ package org.ruboss.controllers {
       var metadata:Object = opts['metadata'];
       var nestedBy:Array = opts['nestedBy'];
       
-      var targetServiceId:int = opts['targetServiceId'] || -1;
+      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
       
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {

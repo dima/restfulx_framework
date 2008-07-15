@@ -31,22 +31,40 @@ package org.ruboss.models {
     [Bindable(event="propertyChange")]
     public function show(afterCallback:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false,
       metadata:Object = null, nestedBy:Array = null, targetServiceId:int = -1):Object {
-      return Ruboss.models.show(this, afterCallback, fetchDependencies, useLazyMode, metadata, nestedBy, targetServiceId);
+      return Ruboss.models.show(this,
+        { afterCallback: afterCallback,
+          fetchDependencies: fetchDependencies,
+          useLazyMode: useLazyMode,
+          metadata: metadata, 
+          nestedBy: nestedBy,
+          targetServiceId: targetServiceId});
     }
 
     public function create(afterCallback:Object = null, metadata:Object = null, nestedBy:Array = null, 
       targetServiceId:int = -1):void {
-      Ruboss.models.create(this, afterCallback, metadata, nestedBy, targetServiceId);
+      Ruboss.models.create(this,
+        { afterCallback: afterCallback,
+          metadata: metadata, 
+          nestedBy: nestedBy,
+          targetServiceId: targetServiceId});
     }
 
     public function update(afterCallback:Object = null, metadata:Object = null, nestedBy:Array = null,
       targetServiceId:int = -1):void {
-      Ruboss.models.update(this, afterCallback, metadata, nestedBy, targetServiceId);
+      Ruboss.models.update(this,
+        { afterCallback: afterCallback,
+          metadata: metadata, 
+          nestedBy: nestedBy,
+          targetServiceId: targetServiceId});
     }
 
     public function destroy(afterCallback:Object = null, metadata:Object = null, nestedBy:Array = null,
       targetServiceId:int = -1):void {
-      Ruboss.models.destroy(this, afterCallback, metadata, nestedBy, targetServiceId);
+      Ruboss.models.destroy(this,
+        { afterCallback: afterCallback,
+          metadata: metadata, 
+          nestedBy: nestedBy,
+          targetServiceId: targetServiceId});
     }
 
     public function toString():String {
