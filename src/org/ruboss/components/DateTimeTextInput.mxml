@@ -30,7 +30,7 @@
   private function updateDate():void {
     var time:Number = Date.parse(text);
     date = isNaN(time) ? null : new Date(time);
-    text = formatDate(date);
+    text = formatDate(date);//needed in case binding doesn't trigger
   }
 ]]></mx:Script>
   <mx:DateFormatter id="dateFormatter" formatString="{formatString}"/>
