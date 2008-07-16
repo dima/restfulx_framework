@@ -15,6 +15,9 @@ package org.ruboss.utils {
   import flash.utils.describeType;
   import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
+
+  import flash.net.URLRequest;
+  import flash.net.navigateToURL;
   
   import mx.collections.ArrayCollection;
   import mx.formatters.DateFormatter;
@@ -163,6 +166,28 @@ package org.ruboss.utils {
       var index:int = ac.source.indexOf(o);
       if (index == -1) return null;
       return ac.removeItemAt(index);
-    }    
+    }
+    
+    /**
+     * @param url either a String URL or a URLRequest
+     * @param target the target for the URL
+     * @return true if the navigateToURL call succeeded, false if it did not (or if it wasn't attempted)
+     */
+    public static function navToURL(url:Object, target:String = "_top"):Boolean {
+      var request:URLRequest;
+      if (url is String) {
+        request = new URLRequest(String(url));
+      } else if (url is URLRequest) {
+        request = URLRequest(url);
+      } else {
+        return false;
+      }
+      try {
+        navigateToURL(request, target);
+      } catch (e:Error) {
+        return false; 
+      }
+      return true;
+    }
   }
 }
