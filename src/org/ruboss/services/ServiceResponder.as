@@ -116,8 +116,8 @@ package org.ruboss.services {
     
     public function fault(error:Object):void {
       CursorManager.removeBusyCursor();
-      Alert.show("Error", "An error has occured while invoking service provider with id: " + service.id + 
-        ". Enabled debugging and check the console for details.");
+      throw new Error("An error has occured while invoking service provider with id: " + service.id + 
+        " :" + error.toString());
       Ruboss.log.error(error.toString());
     }
   }
