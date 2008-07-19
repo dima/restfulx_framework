@@ -278,22 +278,39 @@ package org.ruboss.controllers {
       return ModelsCollection(cache[fqn]);      
     }
 
-    [Bindable(event="propertyChange")]    
-    public function index(clazz:Class, opts:Object = null):ModelsCollection {
+    /**
+     * @param clazz the Class to index
+     * @param opts an optional Object of key/value pairs which can be used to clober the value of any subsequent
+     * parameters, thus allowing the Rails-style "poor man's keyword arguments" style of method calls
+     * @param afterCallback TODO_DOCUMENT
+     * @param nestedBy TODO_DOCUMENT
+     * @param metadata TODO_DOCUMENT
+     * @param fetchDependencies TODO_DOCUMENT
+     * @param useLazyMode TODO_DOCUMENT
+     * @param page TODO_DOCUMENT
+     * @param targetServiceId TODO_DOCUMENT
+     */
+    [Bindable(event="propertyChange")]
+    public function index(
+      clazz:Class,
+      opts:Object = null,
+      afterCallback:Object = null,
+      nestedBy:Array = null,
+      metadata:Object = null,
+      fetchDependencies:Boolean = true,
+      useLazyMode:Boolean = true,
+      page:int = -1,
+      targetServiceId:int = -1):ModelsCollection {
+      if (opts != null) {
+        if (opts['afterCallback']) afterCallback = opts['afterCallback'];
+        if (opts['nestedBy']) nestedBy = opts['nestedBy'];
+        if (opts['metadata']) metadata = opts['metadata'];
+        if (opts['fetchDependencies']) fetchDependencies = opts['fetchDependencies'];
+        if (opts['useLazyMode']) useLazyMode = opts['useLazyMode'];
+        if (opts['page']) page = opts['page'];
+        if (opts['targetServiceId']) targetServiceId = opts['targetServiceId'];
+      }
       var fqn:String = getQualifiedClassName(clazz);
-      
-      if (opts == null) opts = {};
-      
-      // extract arguments;
-      var afterCallback:Object = opts['afterCallback'];
-      var metadata:Object = opts['metadata'];
-      var nestedBy:Array = opts['nestedBy'];
-      
-      var fetchDependencies:Boolean = opts['fetchDependencies'] ? opts['fetchDependencies'] : true;
-      var useLazyMode:Boolean = opts['useLazyMode'] ? opts['useLazyMode'] : true;
-      var page:int = opts['page'] ? opts['page'] : -1;
-      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
-      
       if (!state.indexed[fqn]) {
         invokeIndex(clazz, afterCallback, fetchDependencies, useLazyMode, page, metadata, nestedBy, 
           targetServiceId);
@@ -301,26 +318,30 @@ package org.ruboss.controllers {
         invokePage(clazz, afterCallback, fetchDependencies, useLazyMode, page, metadata, nestedBy, 
           targetServiceId);
       }
-      
       return ModelsCollection(cache[fqn]);
     }
     
-    [Bindable(event="propertyChange")]    
-    public function show(object:Object, opts:Object = null):Object {
+    [Bindable(event="propertyChange")]
+    public function show(
+      object:Object,
+      opts:Object = null,
+      afterCallback:Object = null,
+      nestedBy:Array = null,
+      metadata:Object = null,
+      fetchDependencies:Boolean = true,
+      useLazyMode:Boolean = false,
+      targetServiceId:int = -1):Object {
+      if (opts != null) {
+        if (opts['afterCallback']) afterCallback = opts['afterCallback'];
+        if (opts['nestedBy']) nestedBy = opts['nestedBy'];
+        if (opts['metadata']) metadata = opts['metadata'];
+        if (opts['fetchDependencies']) fetchDependencies = opts['fetchDependencies'];
+        if (opts['useLazyMode']) useLazyMode = opts['useLazyMode'];
+        if (opts['targetServiceId']) targetServiceId = opts['targetServiceId'];
+      }
       var fqn:String = getQualifiedClassName(object);
       var showed:ArrayCollection = ArrayCollection(state.showed[fqn]);
       var objectId:int = object["id"];
-
-      if (opts == null) opts = {};
-
-      // extract arguments;
-      var afterCallback:Object = opts['afterCallback'];
-      var metadata:Object = opts['metadata'];
-      var nestedBy:Array = opts['nestedBy'];
-      
-      var fetchDependencies:Boolean = opts['fetchDependencies'] ? opts['fetchDependencies'] : true;
-      var useLazyMode:Boolean = opts['useLazyMode'] ? opts['useLazyMode'] : false;
-      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
       
       if (!showed.contains(objectId)) {
         if (!fetchDependencies) {
@@ -379,16 +400,19 @@ package org.ruboss.controllers {
       return ModelsCollection(cache[fqn]).getItem(object);
     }
 
-    public function update(object:Object, opts:Object = null):void {
-      if (opts == null) opts = {};
-
-      // extract arguments;
-      var afterCallback:Object = opts['afterCallback'];
-      var metadata:Object = opts['metadata'];
-      var nestedBy:Array = opts['nestedBy'];
-      
-      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
-
+    public function update(
+      object:Object,
+      opts:Object = null,
+      afterCallback:Object = null,
+      nestedBy:Array = null,
+      metadata:Object = null,
+      targetServiceId:int = -1):void {
+      if (opts != null) {
+        if (opts['afterCallback']) afterCallback = opts['afterCallback'];
+        if (opts['nestedBy']) nestedBy = opts['nestedBy'];
+        if (opts['metadata']) metadata = opts['metadata'];
+        if (opts['targetServiceId']) targetServiceId = opts['targetServiceId'];
+      }
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       cleanupModelReferences(getQualifiedClassName(object), object);
       var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
@@ -404,16 +428,19 @@ package org.ruboss.controllers {
       invokeService(service.update, service, object, serviceResponder, metadata, nestedBy);
     }
     
-    public function create(object:Object, opts:Object = null):void {
-      if (opts == null) opts = {};
-
-      // extract arguments;
-      var afterCallback:Object = opts['afterCallback'];
-      var metadata:Object = opts['metadata'];
-      var nestedBy:Array = opts['nestedBy'];
-      
-      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
-      
+    public function create(
+      object:Object,
+      opts:Object = null,
+      afterCallback:Object = null,
+      nestedBy:Array = null,
+      metadata:Object = null,
+      targetServiceId:int = -1):void {
+      if (opts != null) {
+        if (opts['afterCallback']) afterCallback = opts['afterCallback'];
+        if (opts['nestedBy']) nestedBy = opts['nestedBy'];
+        if (opts['metadata']) metadata = opts['metadata'];
+        if (opts['targetServiceId']) targetServiceId = opts['targetServiceId'];
+      }
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
         var fqn:String = getQualifiedClassName(model);
@@ -426,16 +453,19 @@ package org.ruboss.controllers {
       invokeService(service.create, service, object, serviceResponder, metadata, nestedBy);
     }
 
-    public function destroy(object:Object, opts:Object = null):void {
-     if (opts == null) opts = {};
-
-      // extract arguments;
-      var afterCallback:Object = opts['afterCallback'];
-      var metadata:Object = opts['metadata'];
-      var nestedBy:Array = opts['nestedBy'];
-      
-      var targetServiceId:int = opts['targetServiceId'] ? opts['targetServiceId'] : -1;
-      
+    public function destroy(
+      object:Object,
+      opts:Object = null,
+      afterCallback:Object = null,
+      nestedBy:Array = null,
+      metadata:Object = null,
+      targetServiceId:int = -1):void {
+      if (opts != null) {
+        if (opts['afterCallback']) afterCallback = opts['afterCallback'];
+        if (opts['nestedBy']) nestedBy = opts['nestedBy'];
+        if (opts['metadata']) metadata = opts['metadata'];
+        if (opts['targetServiceId']) targetServiceId = opts['targetServiceId'];
+      }
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
         var fqn:String = getQualifiedClassName(model);
