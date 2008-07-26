@@ -249,17 +249,20 @@ package org.ruboss.services.http {
             // object and implicitReferenceName to *this object's localName*
             processNestedArray(element, object, localName);
           } else if (!isRef) {
-            var targetType:String = getQualifiedClassName(object[targetName]);
-            // we have a nested *singular* definition, need to hook it up
-            if (state.keys[targetName] == targetType) {
-              var nestedRef:Object = unmarshallNode(element, object, localName);
-              if (nestedRef != null) {
-                object[targetName] = nestedRef;
-                var cached:ModelsCollection = ModelsCollection(Ruboss.models.cache[targetType]);
-                if (cached.hasItem(nestedRef)) {
-                  cached.setItem(nestedRef);
-                } else {
-                  cached.addItem(nestedRef);
+            if (ObjectUtil.hasMetadata(object, targetName, "HasOne") ||
+              ObjectUtil.hasMetadata(object, targetName, "BelongsTo")) {
+              var targetType:String = state.keys[targetName];
+              // we have a nested *singular* definition, need to hook it up
+              if (targetType) {
+                var nestedRef:Object = unmarshallNode(element, object, localName);
+                if (nestedRef != null) {
+                  object[targetName] = nestedRef;
+                  var cached:ModelsCollection = ModelsCollection(Ruboss.models.cache[targetType]);
+                  if (cached.hasItem(nestedRef)) {
+                    cached.setItem(nestedRef);
+                  } else {
+                    cached.addItem(nestedRef);
+                  }
                 }
               }
             } else {
