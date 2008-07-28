@@ -265,12 +265,16 @@ package org.ruboss.controllers {
       state.reset(object);   
     }
 
-    public function reload(object:Object, opts:Object = null):void {
+    public function reload(object:Object, optsOrAfterCallback:Object = null, nestedBy:Array = null,
+      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, page:int = -1,
+      targetServiceId:int = -1):void {
       reset(object);      
       if (object is Class) {
-        index(Class(object), opts);
+        index(Class(object), optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode, page,
+          targetServiceId);
       } else {
-        show(object, opts);
+        show(object, optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode, 
+          targetServiceId);
       }
     }
     
@@ -288,7 +292,7 @@ package org.ruboss.controllers {
      *   Ruboss.models.index(Project, {afterCallback:myAfterCallbackFunction, nestedBy:[company]});
      * 
      * @param clazz the Class to index
-     * @param optionsHashOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
      * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
      * clober the value of any subsequent parameters, thus allowing the Rails-style "poor man's keyword arguments"
      * style of method calls (note that this can specify an afterCallback inside the anonymous object as well).
@@ -300,21 +304,21 @@ package org.ruboss.controllers {
      * @param targetServiceId TODO_DOCUMENT
      */
     [Bindable(event="propertyChange")]
-    public function index(clazz:Class, optionsHashOrAfterCallback:Object = null, nestedBy:Array = null,
+    public function index(clazz:Class, optsOrAfterCallback:Object = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, page:int = -1,
       targetServiceId:int = -1):ModelsCollection {
       var afterCallback:Object = null;
-      if (optionsHashOrAfterCallback != null) {
-        if (optionsHashOrAfterCallback is Function || optionsHashOrAfterCallback is IResponder) {
-          afterCallback = optionsHashOrAfterCallback;
+      if (optsOrAfterCallback != null) {
+        if (optsOrAfterCallback is Function || optsOrAfterCallback is IResponder) {
+          afterCallback = optsOrAfterCallback;
         } else {
-          if (optionsHashOrAfterCallback['afterCallback']) afterCallback = optionsHashOrAfterCallback['afterCallback'];
-          if (optionsHashOrAfterCallback['nestedBy']) nestedBy = optionsHashOrAfterCallback['nestedBy'];
-          if (optionsHashOrAfterCallback['metadata']) metadata = optionsHashOrAfterCallback['metadata'];
-          if (optionsHashOrAfterCallback['fetchDependencies']) fetchDependencies = optionsHashOrAfterCallback['fetchDependencies'];
-          if (optionsHashOrAfterCallback['useLazyMode']) useLazyMode = optionsHashOrAfterCallback['useLazyMode'];
-          if (optionsHashOrAfterCallback['page']) page = optionsHashOrAfterCallback['page'];
-          if (optionsHashOrAfterCallback['targetServiceId']) targetServiceId = optionsHashOrAfterCallback['targetServiceId'];
+          if (optsOrAfterCallback['afterCallback']) afterCallback = optsOrAfterCallback['afterCallback'];
+          if (optsOrAfterCallback['nestedBy']) nestedBy = optsOrAfterCallback['nestedBy'];
+          if (optsOrAfterCallback['metadata']) metadata = optsOrAfterCallback['metadata'];
+          if (optsOrAfterCallback['fetchDependencies']) fetchDependencies = optsOrAfterCallback['fetchDependencies'];
+          if (optsOrAfterCallback['useLazyMode']) useLazyMode = optsOrAfterCallback['useLazyMode'];
+          if (optsOrAfterCallback['page']) page = optsOrAfterCallback['page'];
+          if (optsOrAfterCallback['targetServiceId']) targetServiceId = optsOrAfterCallback['targetServiceId'];
         }
       }
       var fqn:String = getQualifiedClassName(clazz);
@@ -329,20 +333,20 @@ package org.ruboss.controllers {
     }
     
     [Bindable(event="propertyChange")]
-    public function show(object:Object, optionsHashOrAfterCallback:Object = null, nestedBy:Array = null,
+    public function show(object:Object, optsOrAfterCallback:Object = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false,
       targetServiceId:int = -1):Object {
       var afterCallback:Object = null;
-      if (optionsHashOrAfterCallback != null) {
-        if (optionsHashOrAfterCallback is Function || optionsHashOrAfterCallback is IResponder) {
-          afterCallback = optionsHashOrAfterCallback;
+      if (optsOrAfterCallback != null) {
+        if (optsOrAfterCallback is Function || optsOrAfterCallback is IResponder) {
+          afterCallback = optsOrAfterCallback;
         } else {
-          if (optionsHashOrAfterCallback['afterCallback']) afterCallback = optionsHashOrAfterCallback['afterCallback'];
-          if (optionsHashOrAfterCallback['nestedBy']) nestedBy = optionsHashOrAfterCallback['nestedBy'];
-          if (optionsHashOrAfterCallback['metadata']) metadata = optionsHashOrAfterCallback['metadata'];
-          if (optionsHashOrAfterCallback['fetchDependencies']) fetchDependencies = optionsHashOrAfterCallback['fetchDependencies'];
-          if (optionsHashOrAfterCallback['useLazyMode']) useLazyMode = optionsHashOrAfterCallback['useLazyMode'];
-          if (optionsHashOrAfterCallback['targetServiceId']) targetServiceId = optionsHashOrAfterCallback['targetServiceId'];
+          if (optsOrAfterCallback['afterCallback']) afterCallback = optsOrAfterCallback['afterCallback'];
+          if (optsOrAfterCallback['nestedBy']) nestedBy = optsOrAfterCallback['nestedBy'];
+          if (optsOrAfterCallback['metadata']) metadata = optsOrAfterCallback['metadata'];
+          if (optsOrAfterCallback['fetchDependencies']) fetchDependencies = optsOrAfterCallback['fetchDependencies'];
+          if (optsOrAfterCallback['useLazyMode']) useLazyMode = optsOrAfterCallback['useLazyMode'];
+          if (optsOrAfterCallback['targetServiceId']) targetServiceId = optsOrAfterCallback['targetServiceId'];
         }
       }
       var fqn:String = getQualifiedClassName(object);
@@ -406,17 +410,17 @@ package org.ruboss.controllers {
       return ModelsCollection(cache[fqn]).getItem(object);
     }
 
-    public function update(object:Object, optionsHashOrAfterCallback:Object = null, nestedBy:Array = null,
+    public function update(object:Object, optsOrAfterCallback:Object = null, nestedBy:Array = null,
       metadata:Object = null, targetServiceId:int = -1):void {
       var afterCallback:Object = null;
-      if (optionsHashOrAfterCallback != null) {
-        if (optionsHashOrAfterCallback is Function || optionsHashOrAfterCallback is IResponder) {
-          afterCallback = optionsHashOrAfterCallback;
+      if (optsOrAfterCallback != null) {
+        if (optsOrAfterCallback is Function || optsOrAfterCallback is IResponder) {
+          afterCallback = optsOrAfterCallback;
         } else {
-          if (optionsHashOrAfterCallback['afterCallback']) afterCallback = optionsHashOrAfterCallback['afterCallback'];
-          if (optionsHashOrAfterCallback['nestedBy']) nestedBy = optionsHashOrAfterCallback['nestedBy'];
-          if (optionsHashOrAfterCallback['metadata']) metadata = optionsHashOrAfterCallback['metadata'];
-          if (optionsHashOrAfterCallback['targetServiceId']) targetServiceId = optionsHashOrAfterCallback['targetServiceId'];
+          if (optsOrAfterCallback['afterCallback']) afterCallback = optsOrAfterCallback['afterCallback'];
+          if (optsOrAfterCallback['nestedBy']) nestedBy = optsOrAfterCallback['nestedBy'];
+          if (optsOrAfterCallback['metadata']) metadata = optsOrAfterCallback['metadata'];
+          if (optsOrAfterCallback['targetServiceId']) targetServiceId = optsOrAfterCallback['targetServiceId'];
         }
       }
       var service:IServiceProvider = getServiceProvider(targetServiceId);
@@ -434,17 +438,17 @@ package org.ruboss.controllers {
       invokeService(service.update, service, object, serviceResponder, metadata, nestedBy);
     }
     
-    public function create(object:Object, optionsHashOrAfterCallback:Object = null, nestedBy:Array = null,
+    public function create(object:Object, optsOrAfterCallback:Object = null, nestedBy:Array = null,
       metadata:Object = null, targetServiceId:int = -1):void {
       var afterCallback:Object = null;
-      if (optionsHashOrAfterCallback != null) {
-        if (optionsHashOrAfterCallback is Function || optionsHashOrAfterCallback is IResponder) {
-          afterCallback = optionsHashOrAfterCallback;
+      if (optsOrAfterCallback != null) {
+        if (optsOrAfterCallback is Function || optsOrAfterCallback is IResponder) {
+          afterCallback = optsOrAfterCallback;
         } else {
-          if (optionsHashOrAfterCallback['afterCallback']) afterCallback = optionsHashOrAfterCallback['afterCallback'];
-          if (optionsHashOrAfterCallback['nestedBy']) nestedBy = optionsHashOrAfterCallback['nestedBy'];
-          if (optionsHashOrAfterCallback['metadata']) metadata = optionsHashOrAfterCallback['metadata'];
-          if (optionsHashOrAfterCallback['targetServiceId']) targetServiceId = optionsHashOrAfterCallback['targetServiceId'];
+          if (optsOrAfterCallback['afterCallback']) afterCallback = optsOrAfterCallback['afterCallback'];
+          if (optsOrAfterCallback['nestedBy']) nestedBy = optsOrAfterCallback['nestedBy'];
+          if (optsOrAfterCallback['metadata']) metadata = optsOrAfterCallback['metadata'];
+          if (optsOrAfterCallback['targetServiceId']) targetServiceId = optsOrAfterCallback['targetServiceId'];
         }
       }
       var service:IServiceProvider = getServiceProvider(targetServiceId);
@@ -459,17 +463,17 @@ package org.ruboss.controllers {
       invokeService(service.create, service, object, serviceResponder, metadata, nestedBy);
     }
 
-    public function destroy(object:Object, optionsHashOrAfterCallback:Object = null, nestedBy:Array = null,
+    public function destroy(object:Object, optsOrAfterCallback:Object = null, nestedBy:Array = null,
       metadata:Object = null, targetServiceId:int = -1):void {
       var afterCallback:Object = null;
-      if (optionsHashOrAfterCallback != null) {
-        if (optionsHashOrAfterCallback is Function || optionsHashOrAfterCallback is IResponder) {
-          afterCallback = optionsHashOrAfterCallback;
+      if (optsOrAfterCallback != null) {
+        if (optsOrAfterCallback is Function || optsOrAfterCallback is IResponder) {
+          afterCallback = optsOrAfterCallback;
         } else {
-          if (optionsHashOrAfterCallback['afterCallback']) afterCallback = optionsHashOrAfterCallback['afterCallback'];
-          if (optionsHashOrAfterCallback['nestedBy']) nestedBy = optionsHashOrAfterCallback['nestedBy'];
-          if (optionsHashOrAfterCallback['metadata']) metadata = optionsHashOrAfterCallback['metadata'];
-          if (optionsHashOrAfterCallback['targetServiceId']) targetServiceId = optionsHashOrAfterCallback['targetServiceId'];
+          if (optsOrAfterCallback['afterCallback']) afterCallback = optsOrAfterCallback['afterCallback'];
+          if (optsOrAfterCallback['nestedBy']) nestedBy = optsOrAfterCallback['nestedBy'];
+          if (optsOrAfterCallback['metadata']) metadata = optsOrAfterCallback['metadata'];
+          if (optsOrAfterCallback['targetServiceId']) targetServiceId = optsOrAfterCallback['targetServiceId'];
         }
       }
       var service:IServiceProvider = getServiceProvider(targetServiceId);
