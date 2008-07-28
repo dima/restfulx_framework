@@ -127,7 +127,8 @@ package org.ruboss.controllers {
           items.setItem(object[target]);
         } else {
           items.addItem(object[target]);
-        }       
+        }
+        object[local][attribute] = items;      
       }
     }
     
