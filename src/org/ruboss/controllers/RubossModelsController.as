@@ -119,6 +119,8 @@ package org.ruboss.controllers {
         var local:String = state.keys[name];        
         var target:String = state.keys[state.fqns[attribute]];
 
+        if (!object.hasOwnProperty(local)) continue;
+        
         var items:ModelsCollection = object[local][attribute];
         if (items == null) {
           items = new ModelsCollection;

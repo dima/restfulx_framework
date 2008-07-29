@@ -169,18 +169,37 @@ package org.ruboss.models {
       if (RubossUtils.isEmpty(RubossUtils.getResourceController(model))) return;
       
       for each (var node:XML in describeType(model)..accessor) {
-        var type:String = node.@type;
+        var types:Array = new Array;
+        if (controllers[node.@type.toString()]) {
+          types.push(node.@type.toString());
+        }
+        
         if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
-          RubossUtils.isIgnored(node)) continue; 
+          RubossUtils.isIgnored(node) || !RubossUtils.isBelongsTo(node)) continue;
+          
         // we are only interested in declared [BelongsTo] accessors, avoiding
         // primitive circular dependencies (model dependency on itself) and making
         // sure dependency is of a *known* model type
-        if (controllers[type] && type != fqn && RubossUtils.isBelongsTo(node)) {
-          if (!RubossUtils.isLazy(node)) {
-            (lazy[fqn] as Array).push(type);
+        var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+        var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
+          
+        if (polymorphic) {
+          for each (var shortName:String in descriptor.arg.(@key == "dependsOn").@value.toString().split(",")) {
+            var key:String = keys[RubossUtils.lowerCaseFirst(shortName)];
+            if (key) {
+              types.push(key);
+            }
           }
-          (eager[fqn] as Array).push(type);
-          (references[type] as Array).push({attribute: node.@name, type: fqn});
+        }
+
+        for each (var type:String in types) {
+          if (controllers[type] && type != fqn) {
+            if (!RubossUtils.isLazy(node)) {
+              (lazy[fqn] as Array).push(type);
+            }
+            (eager[fqn] as Array).push(type);
+            (references[type] as Array).push({attribute: node.@name, type: fqn});
+          }
         }
 
         // hook up N-N = has_many(:through) relationships
@@ -188,7 +207,7 @@ package org.ruboss.models {
         // set of nodes and there's no point in going over every single accessor of every single model twice   
         for each (var relationship:XML in RubossUtils.getAttributeAnnotation(node, "HasMany")) {
           var value:String = relationship.arg.(@key == "through").@value.toString();
-          if (value != "") {
+          if (!RubossUtils.isEmpty(value)) {
             var target:String = RubossUtils.toSnakeCase(value);
             if (relationships[target] == null) {
               relationships[target] = new Array;

@@ -187,15 +187,28 @@ package org.ruboss.services.http {
       // TODO: needs to handle arrays too?
       for each (var element:XML in node.elements()) {
         var targetName:String = element.localName();
+        var referenceTargetName:String = targetName;
         var isRef:Boolean = false;
         var isNestedArray:Boolean = false;
 
         // if we got a node with a name that terminates in "_id" we check to see if
         // it's a model reference       
         if (targetName.search(/.*_id$/) != -1) {
-          var checkName:String = RubossUtils.toCamelCase(targetName.replace(/_id$/, ""));
-          if (state.keys[checkName]) {
-            targetName = checkName;
+          var checkName:String = targetName.replace(/_id$/, "");
+          var camelCheckName:String = RubossUtils.toCamelCase(checkName);
+          
+          // check to see if it's a polymorphic association
+          var polymorphicRef:String = node[checkName + "_type"];
+          if (!RubossUtils.isEmpty(polymorphicRef)) {
+            var polymorphicRefName:String = RubossUtils.lowerCaseFirst(polymorphicRef);
+            if (state.keys[polymorphicRefName]) {
+              referenceTargetName = polymorphicRefName;
+              targetName = camelCheckName;
+              isRef = true;
+            }
+          } else if (state.keys[camelCheckName]) {
+            targetName = camelCheckName;
+            referenceTargetName = targetName;
             isRef = true;
           }
         } else {
@@ -206,13 +219,14 @@ package org.ruboss.services.http {
           }
           // convert names back to camel case
           targetName = RubossUtils.toCamelCase(targetName);
+          referenceTargetName = targetName;
         }
         
         if (object.hasOwnProperty(targetName)) {
           // if this property is a reference, try to resolve the 
           // reference and set up biderctional links between models
           if (isRef) {
-            var ref:Object = inferReference(element, targetName, implicitReference, implicitReferenceName);
+            var ref:Object = inferReference(element, referenceTargetName, implicitReference, implicitReferenceName);
                             
             // collectionName should be the same as the camel-cased name of the controller for the current node
             var collectionName:String = 
