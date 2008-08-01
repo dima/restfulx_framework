@@ -44,10 +44,6 @@ package org.ruboss.controllers {
         if (optsOrResultHandler['contentType']) this.contentType = optsOrResultHandler['contentType'];
         if (optsOrResultHandler['rootUrl']) this.rootUrl = optsOrResultHandler['rootUrl'];
       }
-      
-      if (faultHandler == null) {
-        this.faultHandler = defaultFaultHandler;
-      }
     }
     
     public function invoke(optsOrURL:Object, data:Object = null, method:* = SimpleHTTPController.GET, 
@@ -83,12 +79,12 @@ package org.ruboss.controllers {
       }
       
       var responder:ItemResponder = null;
-      if (unmarshall && cache) {
-        responder = new ItemResponder(unmarshallAndCacheResultHandler, faultHandler);
+      if (cache) {
+        responder = new ItemResponder(unmarshallAndCacheResultHandler, defaultFaultHandler);
       } else if (unmarshall) {
-        responder = new ItemResponder(unmarshallResultHandler, faultHandler);
+        responder = new ItemResponder(unmarshallResultHandler, defaultFaultHandler);
       } else {
-        responder = new ItemResponder(defaultResultHandler, faultHandler);
+        responder = new ItemResponder(defaultResultHandler, defaultFaultHandler);
       }
       
       send(url, data, httpVerb, responder);
@@ -100,19 +96,24 @@ package org.ruboss.controllers {
     
     private function unmarshallResultHandler(data:Object, token:Object = null):void {
       var result:Object = unmarshall(data);
-      resultHandler(result, token);
+      if (resultHandler != null) resultHandler(result);
     }
     
+    // TODO: append results to cache here
     private function unmarshallAndCacheResultHandler(data:Object, token:Object = null):void {
       unmarshallResultHandler(data, token); 
     }
     
     private function defaultResultHandler(data:Object, token:Object = null):void {
-      resultHandler(data.result, token);
+      if (resultHandler != null) resultHandler(data.result);
     }
     
     private function defaultFaultHandler(info:Object, token:Object = null):void {
-      throw new Error(info.toString());
+      if (faultHandler != null) { 
+        faultHandler(info);
+      } else {
+        throw new Error(info.toString());
+      }
     }
     
     // if you don't like to create responder objects send()
