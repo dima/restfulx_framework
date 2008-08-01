@@ -102,10 +102,14 @@ package org.ruboss.services.http {
         
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
-        if (state.controllers[type]) {
-          if (RubossUtils.isBelongsTo(node)) {
-            vars.push(("<" + snakeName + "_id>" + object[nodeName]["id"] + 
-              "</" + snakeName + "_id>"));
+        if (RubossUtils.isBelongsTo(node)) {
+          var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+          var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
+
+          vars.push(("<" + snakeName + "_id>" + object[nodeName]["id"] + "</" + snakeName + "_id>"));
+          if (polymorphic) {
+            vars.push(("<" + snakeName + "_type>" + getQualifiedClassName(object[nodeName]).split("::")[1] + 
+              "</" + snakeName + "_type>"));
           }
         } else {
           vars.push(("<" + snakeName + ">" + 
@@ -145,10 +149,13 @@ package org.ruboss.services.http {
         
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
-        if (state.controllers[type]) {
-          if (RubossUtils.isBelongsTo(node)) {
-            result[(localName + "[" + snakeName + "_id]")] = 
-              object[nodeName]["id"];
+        if (RubossUtils.isBelongsTo(node)) {
+          var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+          var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
+
+          result[(localName + "[" + snakeName + "_id]")] = object[nodeName]["id"]; 
+          if (polymorphic) {
+            result[(localName + "[" + snakeName + "_type]")] = getQualifiedClassName(object[nodeName]).split("::")[1];
           }
         } else {
           result[(localName + "[" + snakeName + "]")] = 
