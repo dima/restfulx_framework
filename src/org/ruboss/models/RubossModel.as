@@ -31,7 +31,8 @@ package org.ruboss.models {
     [Bindable(event="propertyChange")]
     public function show(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,
       fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1):Object {
-      return Ruboss.models.show(this, optionsHashOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode, targetServiceId);
+      return Ruboss.models.show(this, optionsHashOrAfterCallback, nestedBy, metadata, 
+        fetchDependencies, useLazyMode, targetServiceId);
     }
 
     public function create(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,

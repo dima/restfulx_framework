@@ -12,7 +12,6 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.services {
-  import mx.controls.Alert;
   import mx.managers.CursorManager;
   import mx.rpc.IResponder;
   
@@ -84,6 +83,15 @@ package org.ruboss.services {
         (afterCallback as Function)(result);
       }
     }
+    
+    private function invokeAfterCallbackErrorHandler(info:Object):void {
+      if (afterCallback is IResponder) {
+        IResponder(afterCallback).fault(info);
+      } else {
+        throw new Error("An error has occured while invoking service provider with id: " + service.id + 
+          " :" + info.toString());        
+      }
+    }
 
     public function result(event:Object):void {
       CursorManager.removeBusyCursor();    
@@ -116,8 +124,7 @@ package org.ruboss.services {
     
     public function fault(error:Object):void {
       CursorManager.removeBusyCursor();
-      throw new Error("An error has occured while invoking service provider with id: " + service.id + 
-        " :" + error.toString());
+      invokeAfterCallbackErrorHandler(error);
       Ruboss.log.error(error.toString());
     }
   }

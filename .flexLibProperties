@@ -5,11 +5,14 @@
 <classEntry path="org.ruboss.components.DateTextInput"/>
 <classEntry path="org.ruboss.components.DateTimeTextInput"/>
 <classEntry path="org.ruboss.components.MoneyTextInput"/>
-<classEntry path="org.ruboss.controllers.RubossCommandController"/>
+<classEntry path="org.ruboss.controllers.ICommand"/>
+<classEntry path="org.ruboss.controllers.RubossCommandsController"/>
+<classEntry path="org.ruboss.controllers.RubossCommandsEventDispatcher"/>
 <classEntry path="org.ruboss.controllers.RubossModelsController"/>
 <classEntry path="org.ruboss.controllers.SimpleHTTPController"/>
 <classEntry path="org.ruboss.events.RubossEvent"/>
 <classEntry path="org.ruboss.models.ModelsCollection"/>
+<classEntry path="org.ruboss.models.ModelsStateMetadata"/>
 <classEntry path="org.ruboss.models.RubossFileReference"/>
 <classEntry path="org.ruboss.models.RubossModel"/>
 <classEntry path="org.ruboss.services.GenericServiceErrors"/>

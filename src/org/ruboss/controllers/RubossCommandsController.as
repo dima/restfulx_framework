@@ -12,24 +12,21 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.controllers {
-  import com.adobe.cairngorm.control.FrontController;
-  
   import flash.utils.Dictionary;
-  import flash.utils.describeType;
+  import flash.utils.getQualifiedClassName;
   
   import org.ruboss.Ruboss;
   import org.ruboss.events.RubossEvent;
   
-  public class RubossCommandController extends FrontController {
+  public class RubossCommandsController {
     
     // maps command classes to event names
-    private var cmds:Dictionary = new Dictionary;
-    
-    public function RubossCommandController(commands:Array, models:Array, 
+    private var commands:Dictionary = new Dictionary;
+
+    public function RubossCommandsController(commands:Array, models:Array, 
       extraServices:Array = null, targetServiceId:int = -1) {
       for each (var cmd:Class in commands) {
-        cmds[cmd] = getCommandName(cmd);
-        addCommand(cmds[cmd], cmd);
+        addCommand(cmd);
       }
       
       if (extraServices == null) extraServices = new Array;
@@ -39,24 +36,38 @@ package org.ruboss.controllers {
         targetServiceId);
     }
 
-    // we fire RubossEvents rather than Cairngorm to make sure 
-    // targetServiceId is known to commands
-    public function execute(cmd:Class, data:Object = null, 
-      targetServiceId:int = -1):void {
-      if (!cmds[cmd]) {
-        cmds[cmd] = getCommandName(cmd);
-        addCommand(cmds[cmd], cmd);
+    public function addCommand(cmd:Class, useWeakReference:Boolean = true):void {
+      var commandName:String = getCommandName(cmd);
+      commands[commandName] = cmd;  
+      RubossCommandsEventDispatcher.getInstance().addEventListener(commandName, executeCommand, 
+        false, 0, useWeakReference);
+    }
+    
+    public function removeCommand(cmd:Class):void {
+      var cmdName:String = getCommandName(cmd);
+      RubossCommandsEventDispatcher.getInstance().removeEventListener(cmdName, executeCommand);
+      delete commands[cmdName]; 
+    }
+
+    private function executeCommand(event:RubossEvent):void {
+      var cmd:ICommand = new commands[event.type];
+      cmd.execute(event);
+    }
+
+    public function execute(cmd:Class, data:Object = null, targetServiceId:int = -1):void {
+      var cmdName:String = getCommandName(cmd);
+      if (!commands[cmdName]) {
+        addCommand(cmd);
       }
       
-      var event:RubossEvent = new RubossEvent(cmds[cmd]);
-      event.data = (data == null) ? new Object() : data;
-      event.targetServiceId = (targetServiceId == -1) ? 
-        Ruboss.defaultServiceId : targetServiceId;
+      var event:RubossEvent = new RubossEvent(cmdName);
+      event.data = (data == null) ? {} : data;
+      event.targetServiceId = (targetServiceId == -1) ? Ruboss.defaultServiceId : targetServiceId;
       event.dispatch();        
     }
 
     private static function getCommandName(cmd:Class):String {
-      return describeType(cmd).@name;
+      return getQualifiedClassName(cmd);
     }
   }
 }

@@ -12,11 +12,13 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.controllers {
+  import mx.collections.ItemResponder;
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.http.HTTPService;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.services.http.HTTPServiceProvider;
   
   // custom HTTP controller that allows sending arbitrary data (as 
   // opposed to models) over HTTP faking PUT and DELETE
@@ -28,11 +30,89 @@ package org.ruboss.controllers {
     
     private var rootUrl:String;
     private var contentType:String;
+    private var resultHandler:Function;
+    private var faultHandler:Function;
     
-    public function SimpleHTTPController(contentType:String = "application/x-www-form-urlencoded", 
-      rootUrl:String = null) {
-      this.contentType = contentType;
-      if (rootUrl != null) this.rootUrl = rootUrl;
+    public function SimpleHTTPController(optsOrResultHandler:Object = null, faultHandler:Function = null, 
+      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null) {
+      if (optsOrResultHandler == null) optsOrResultHandler = {};
+      if (optsOrResultHandler is Function) {
+        this.resultHandler = optsOrResultHandler as Function;
+      } else {
+        if (optsOrResultHandler['onResult']) this.resultHandler = optsOrResultHandler['onResult'];
+        if (optsOrResultHandler['onFault']) this.faultHandler = optsOrResultHandler['onFault'];
+        if (optsOrResultHandler['contentType']) this.contentType = optsOrResultHandler['contentType'];
+        if (optsOrResultHandler['rootUrl']) this.rootUrl = optsOrResultHandler['rootUrl'];
+      }
+      
+      if (faultHandler == null) {
+        this.faultHandler = defaultFaultHandler;
+      }
+    }
+    
+    public function invoke(optsOrURL:Object, data:Object = null, method:* = SimpleHTTPController.GET, 
+      unmarshall:Boolean = false, cache:Boolean = false):void {
+      var url:String = null;
+      if (optsOrURL is String) {
+        url = String(optsOrURL);
+      } else {
+        if (optsOrURL['URL']) url = optsOrURL['URL'];
+        if (optsOrURL['data']) data = optsOrURL['data'];
+        if (optsOrURL['method']) method = optsOrURL['method'];
+        if (optsOrURL['unmarshall']) unmarshall = optsOrURL['unmarshall'];
+        if (optsOrURL['cache']) cache = optsOrURL['cache'];
+      }
+      
+      if (data == null) {
+        data = {};
+      }
+      
+      var httpVerb:int = SimpleHTTPController.GET;
+      if (method is String) {
+        if (method == "GET") {
+          httpVerb = SimpleHTTPController.GET;
+        } else if (method == "POST") {
+          httpVerb = SimpleHTTPController.POST;
+        } else if (method == "PUT") {
+          httpVerb = SimpleHTTPController.PUT;
+        } else if (method == "DELETE") {
+          httpVerb = SimpleHTTPController.DELETE;
+        }
+      } else if (method is int) {
+        httpVerb = method;
+      }
+      
+      var responder:ItemResponder = null;
+      if (unmarshall && cache) {
+        responder = new ItemResponder(unmarshallAndCacheResultHandler, faultHandler);
+      } else if (unmarshall) {
+        responder = new ItemResponder(unmarshallResultHandler, faultHandler);
+      } else {
+        responder = new ItemResponder(defaultResultHandler, faultHandler);
+      }
+      
+      send(url, data, httpVerb, responder);
+    }
+    
+    private function unmarshall(data:Object):Object {
+      return Ruboss.services.getServiceProvider(HTTPServiceProvider.ID).unmarshall(data.result);
+    }
+    
+    private function unmarshallResultHandler(data:Object, token:Object = null):void {
+      var result:Object = unmarshall(data);
+      resultHandler(result, token);
+    }
+    
+    private function unmarshallAndCacheResultHandler(data:Object, token:Object = null):void {
+      unmarshallResultHandler(data, token); 
+    }
+    
+    private function defaultResultHandler(data:Object, token:Object = null):void {
+      resultHandler(data.result, token);
+    }
+    
+    private function defaultFaultHandler(info:Object, token:Object = null):void {
+      throw new Error(info.toString());
     }
     
     // if you don't like to create responder objects send()
@@ -40,12 +120,16 @@ package org.ruboss.controllers {
     // send("/foobar.xml", {some:"data"}, SimpleHTTPController.GET,
     //   new ItemResponder(function result(data:Object):void {},
     //     function fault(info:Object):void {});
-    public function send(url:String, data:Object, method:int,
+    public function send(url:String, data:Object = null, method:int = SimpleHTTPController.GET,
       responder:IResponder = null):void {
       var service:HTTPService = new HTTPService();
             
       if (rootUrl == null) {
         rootUrl = Ruboss.httpRootUrl;
+      }
+      
+      if (data == null) {
+        data = {};
       }
         
       service.resultFormat = "e4x";

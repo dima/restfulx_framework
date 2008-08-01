@@ -12,17 +12,26 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.events {
-  import com.adobe.cairngorm.control.CairngormEvent;
+  import flash.events.Event;
+  
+  import org.ruboss.controllers.RubossCommandsEventDispatcher;
+  
+  public class RubossEvent extends Event {
 
-  public class RubossEvent extends CairngormEvent {
+    // command data
+    public var data:*;
     
-    // since we deal with many services commands need to know which service 
+    // since we deal with many services commands may need to know which service 
     // to delegate low-level behaviour to
     public var targetServiceId:int;
     
     public function RubossEvent(type:String, bubbles:Boolean = false, 
       cancelable:Boolean = false) {
       super(type, bubbles, cancelable);
+    }
+    
+    public function dispatch():Boolean {
+      return RubossCommandsEventDispatcher.getInstance().dispatchEvent(this);
     }
   }
 }

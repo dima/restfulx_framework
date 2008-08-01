@@ -21,8 +21,9 @@ package org.ruboss {
   import mx.logging.LogEventLevel;
   import mx.logging.targets.TraceTarget;
   
-  import org.ruboss.controllers.RubossCommandController;
+  import org.ruboss.controllers.RubossCommandsController;
   import org.ruboss.controllers.RubossModelsController;
+  import org.ruboss.controllers.SimpleHTTPController;
   import org.ruboss.services.IServiceErrors;
   import org.ruboss.services.ServiceManager;
   import org.ruboss.services.http.HTTPServiceProvider;
@@ -36,8 +37,8 @@ package org.ruboss {
     // centralized access to RESTful CRUD operations on models
     public static var models:RubossModelsController;
     
-    // wrapper around Cairngorm-type commands
-    public static var commands:RubossCommandController;
+    // auxiliary (non-CRUD) commands controller
+    public static var commands:RubossCommandsController;
     
     // exposes available service providers
     public static var services:ServiceManager;
@@ -67,6 +68,11 @@ package org.ruboss {
     
     // default error 
     public static const DEFAULT_ERROR_FIELD:String = ":base";
+    
+    public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, 
+      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null):SimpleHTTPController {
+      return new SimpleHTTPController(optsOrResultHandler, faultHandler, contentType, rootUrl);    
+    }
 
     public static function merge(items:ArrayCollection, toAdd:Array, 
       after:Boolean = false):ArrayCollection {
