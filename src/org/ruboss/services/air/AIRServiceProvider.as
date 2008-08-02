@@ -115,15 +115,30 @@ package org.ruboss.services.air {
           
           // skip collections, [HasOne] and [HasMany] relationships
           if (isNotValidType(node)) continue;
-                      
-          if (sql[type] && RubossUtils.isBelongsTo(node)) {
-            snakeName = snakeName + "_id";
-          }
           
-          createStatement += snakeName + " " +  getSQLType(node) + ", ";
-          insertStatement += snakeName + ", ";
-          insertParams += ":" + snakeName + ", ";
-          updateStatement += snakeName + "=:" + snakeName + ","; 
+          if (RubossUtils.isBelongsTo(node)) {
+            var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+            var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
+            
+            if (polymorphic) {
+              var snakeNameType:String = snakeName + "_type";
+              createStatement += snakeNameType + " " + types["String"] + ", ";
+              insertStatement += snakeNameType + ", ";
+              insertParams += ":" + snakeNameType + ", ";
+              updateStatement += snakeNameType + "=:" + snakeNameType + ",";
+            }
+            
+            snakeName = snakeName + "_id";
+            createStatement += snakeName + " " +  types["int"] + ", ";
+            insertStatement += snakeName + ", ";
+            insertParams += ":" + snakeName + ", ";
+            updateStatement += snakeName + "=:" + snakeName + ",";
+          } else {   
+            createStatement += snakeName + " " +  getSQLType(node) + ", ";
+            insertStatement += snakeName + ", ";
+            insertParams += ":" + snakeName + ", ";
+            updateStatement += snakeName + "=:" + snakeName + ",";
+          }
         }
       }
       
@@ -176,15 +191,28 @@ package org.ruboss.services.air {
         if (property == "id") continue;
           
         var targetName:String = property;
+        var referenceTargetName:String = targetName;
         var value:Object = source[property];
           
         var isRef:Boolean = false;
         // if we got a node with a name that terminates in "_id" we check to see if
         // it's a model reference       
         if (targetName.search(/.*_id$/) != -1) {
-          var checkName:String = RubossUtils.toCamelCase(targetName.replace(/_id$/, ""));
-          if (state.keys[checkName]) {
-            targetName = checkName;
+          var checkName:String = targetName.replace(/_id$/, "");
+          var camelCheckName:String = RubossUtils.toCamelCase(checkName);
+          
+          // check to see if it's a polymorphic association
+          var polymorphicRef:String = source[checkName + "_type"];
+          if (!RubossUtils.isEmpty(polymorphicRef)) {
+            var polymorphicRefName:String = RubossUtils.lowerCaseFirst(polymorphicRef);
+            if (state.keys[polymorphicRefName]) {
+              referenceTargetName = polymorphicRefName;
+              targetName = camelCheckName;
+              isRef = true;
+            }
+          } else if (state.keys[camelCheckName]) {
+            targetName = camelCheckName;
+            referenceTargetName = targetName;
             isRef = true;
           }
         } else {
@@ -196,9 +224,8 @@ package org.ruboss.services.air {
             
           var ref:Object = null; 
           if (elementId != 0 && !isNaN(elementId)) {
-            var key:String = state.keys[targetName];
+            var key:String = state.keys[referenceTargetName];
             // key should be fqn for the targetName;
-            var models:RubossModelsController = Ruboss.models;
             ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId);
           }
 
@@ -224,13 +251,13 @@ package org.ruboss.services.air {
             
           // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
           // link them up
-          } else if (ref != null && ref.hasOwnProperty(targetName) && 
-            ObjectUtil.hasMetadata(ref, targetName, "HasOne")) {
-            ref[targetName] = model;
+          } else if (ref != null && ref.hasOwnProperty(state.keys[fqn]) && 
+            ObjectUtil.hasMetadata(ref, state.keys[fqn], "HasOne")) {
+            ref[state.keys[fqn]] = model;
           }
           // and the reverse
           model[targetName] = ref;
-        } else if (!isRef) {
+        } else if (!isRef && model.hasOwnProperty(targetName)) {
           var targetType:String = getSQLType(XMLList(metadata..accessor.(@name == targetName))[0]).toLowerCase();
           model[targetName] = RubossUtils.cast(targetName, targetType, value);
         }
@@ -268,12 +295,20 @@ package org.ruboss.services.air {
       
       var result:Array  = new Array;
       for each (var object:Object in statement.getResult().data) {
-        var model:Object = new clazz();
-        model["id"] = object["id"];
-        model["fetched"] = true;
+        // if we already have something with this fqn and id in cache attempt to reuse it
+        // this will ensure that whatever is doing comparison by reference should still be happy
+        var model:Object = Ruboss.models.cached(Class(clazz)).withId(object["id"]);
+      
+        // if not in cache, we need to create a new instance
+        if (model == null) {
+          model = new clazz;
+          model["id"] = object["id"];
+        }
         processModel(fqn, model, object);
+        model["fetched"] = true;
         result.push(model);
       }
+      delete state.waiting[fqn];
       state.fetching[fqn] = new Array;
       invokeResponder(responder, result);
     }
@@ -298,10 +333,17 @@ package org.ruboss.services.air {
           var type:String = node.@type;
           var snakeName:String = RubossUtils.toSnakeCase(localName);
                       
-          if (sql[type] && RubossUtils.isBelongsTo(node)) {
+          if (RubossUtils.isBelongsTo(node)) {
+            var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+            var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
+            if (polymorphic) {
+              statement.parameters[":" + snakeName + "_type"] = (object[localName] == null) ? null : 
+                getQualifiedClassName(object[localName]).split("::")[1];
+            }
             snakeName = snakeName + "_id";
             var ref:Object = object[localName];
             statement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
+
           } else {
             if (object[localName] is Boolean) {
               statement.parameters[":" + snakeName] = object[localName];
@@ -329,7 +371,12 @@ package org.ruboss.services.air {
           var type:String = node.@type;
           var snakeName:String = RubossUtils.toSnakeCase(localName);
 
-          if (sql[type] && RubossUtils.isBelongsTo(node)) {
+          if (RubossUtils.isBelongsTo(node)) {
+            var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+            var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
+            if (polymorphic) {
+              sqlStatement.parameters[":" + snakeName + "_type"] = getQualifiedClassName(object[localName]).split("::")[1];
+            }
             snakeName = snakeName + "_id";
             var ref:Object = object[localName];
             sqlStatement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
