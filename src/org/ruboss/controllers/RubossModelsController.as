@@ -21,6 +21,7 @@ package org.ruboss.controllers {
   import mx.collections.ArrayCollection;
   import mx.events.PropertyChangeEvent;
   import mx.managers.CursorManager;
+  import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.utils.ObjectUtil;
   
@@ -137,7 +138,7 @@ package org.ruboss.controllers {
     private function invokeService(method:Function, service:IServiceProvider, operand:Object, 
       serviceResponder:ServiceResponder, metadata:Object = null, nestedBy:Array = null):void {
       CursorManager.setBusyCursor();
-      metadata = setServiceMetadata(metadata);
+      metadata = setServiceMetadata(metadata);      
       method.call(service, operand, serviceResponder, metadata, nestedBy);   
     }
 

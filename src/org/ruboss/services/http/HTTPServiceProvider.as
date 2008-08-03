@@ -41,18 +41,11 @@ package org.ruboss.services.http {
     public static const ID:int = ServiceManager.generateId();
     
     // these types are always ignored during serialization
-    private const ignoredTypes:Array = [
-      "org.ruboss.models::ModelsCollection",
-      "mx.collections::ArrayCollection",
-      "flash.net::FileReference",
-      "flash.net::FileReferenceList",
-      "org.ruboss.models::RubossFileReference"
-    ];
     
     private var state:ModelsStateMetadata;
     
     public function HTTPServiceProvider(controller:RubossModelsController) {
-      this.state = controller.state;
+      state = controller.state;
     }
     
     private function nestResource(object:Object, nestedBy:Array = null):String {
@@ -80,7 +73,7 @@ package org.ruboss.services.http {
     }
     
     private function isInvalidProperty(type:String):Boolean {
-      return ignoredTypes.indexOf(type) > -1;
+      return RubossUtils.isInvalidProperty(type);
     }
 
     private function marshallToXML(object:Object, metadata:Object = null):XML {

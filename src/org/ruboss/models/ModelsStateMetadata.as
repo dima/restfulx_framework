@@ -174,19 +174,17 @@ package org.ruboss.models {
           types.push(node.@type.toString());
         }
         
-        if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
-          RubossUtils.isIgnored(node) || !RubossUtils.isBelongsTo(node)) continue;
+        if (!RubossUtils.isBelongsTo(node) || !RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
+          RubossUtils.isIgnored(node)) continue;
           
         // we are only interested in declared [BelongsTo] accessors, avoiding
         // primitive circular dependencies (model dependency on itself) and making
         // sure dependency is of a *known* model type
         var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
-        var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
-          
-        if (polymorphic) {
+        if (RubossUtils.isPolymorphicBelongsTo(node)) {
           for each (var shortName:String in descriptor.arg.(@key == "dependsOn").@value.toString().split(",")) {
             var key:String = keys[RubossUtils.lowerCaseFirst(shortName)];
-            if (key) {
+            if (key != null) {
               types.push(key);
             }
           }

@@ -12,12 +12,11 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.utils {
+  import flash.net.URLRequest;
+  import flash.net.navigateToURL;
   import flash.utils.describeType;
   import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
-
-  import flash.net.URLRequest;
-  import flash.net.navigateToURL;
   
   import mx.collections.ArrayCollection;
   import mx.formatters.DateFormatter;
@@ -26,6 +25,17 @@ package org.ruboss.utils {
   import org.ruboss.models.RubossModel;
     
   public class RubossUtils {
+    private static const IGNORED_TYPES:Array = [
+      "org.ruboss.models::ModelsCollection",
+      "mx.collections::ArrayCollection",
+      "flash.net::FileReference",
+      "flash.net::FileReferenceList",
+      "org.ruboss.models::RubossFileReference"
+    ];
+
+    public static function isInvalidProperty(type:String):Boolean {
+      return IGNORED_TYPES.indexOf(type) > -1;
+    }
     
     public static function isInSamePackage(fqn1:String, fqn2:String):Boolean {
       return fqn1.split("::")[0] == fqn2.split("::")[0];
@@ -62,6 +72,15 @@ package org.ruboss.utils {
     
     public static function getAttributeAnnotation(attribute:XML, annotationName:String):XMLList {
       return attribute.metadata.(@name == annotationName);
+    }
+    
+    public static function isPolymorphicBelongsTo(attribute:XML):Boolean {
+      var descriptors:XMLList = RubossUtils.getAttributeAnnotation(attribute, "BelongsTo");
+      if (descriptors.length() > 0) {
+        return (descriptors[0].arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
+      } else {
+        return false;
+      }
     }
     
     public static function isLazy(attribute:XML):Boolean {

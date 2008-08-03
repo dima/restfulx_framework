@@ -14,11 +14,15 @@
 package org.ruboss.services.air {
   import flash.data.SQLConnection;
   import flash.data.SQLStatement;
+  import flash.events.TimerEvent;
   import flash.filesystem.File;
   import flash.utils.Dictionary;
+  import flash.utils.Timer;
   import flash.utils.describeType;
+  import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
   
+  import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
   import mx.utils.ObjectUtil;
@@ -47,18 +51,26 @@ package org.ruboss.services.air {
     
     private var state:ModelsStateMetadata;
     
+    private var pending:Array;
+    
+    private var indexing:Dictionary;
+    
     private var sql:Dictionary;
         
     private var connection:SQLConnection;
+    
+    private var timer:Timer;
 
     public function AIRServiceProvider(controller:RubossModelsController) {
-      this.state = controller.state;
-      
       var databaseName:String = Ruboss.airDatabaseName;
       var dbFile:File = File.userDirectory.resolvePath(databaseName + ".db");
-
-      this.sql = new Dictionary;
-      this.connection = new SQLConnection;
+      
+      state = controller.state;
+      
+      pending = new Array;
+      indexing = new Dictionary;
+      sql = new Dictionary;
+      connection = new SQLConnection;
       
       for each (var model:Class in state.models) {
         var fqn:String = getQualifiedClassName(model);
@@ -74,10 +86,8 @@ package org.ruboss.services.air {
       initializeConnection(databaseName, dbFile);
     }
     
-    private function isNotValidType(node:XML):Boolean {
-      return (RubossUtils.isHasMany(node) || RubossUtils.isHasOne(node) || 
-        node.@type == "org.ruboss.models::ModelsCollection" || 
-        node.@type == "mx.collections::ArrayCollection");
+    private function isInvalidProperty(type:String):Boolean {
+      return RubossUtils.isInvalidProperty(type);
     }
 
     private function getSQLType(node:XML):String {
@@ -113,32 +123,26 @@ package org.ruboss.services.air {
           var snakeName:String = RubossUtils.toSnakeCase(node.@name);
           var type:String = node.@type;
           
-          // skip collections, [HasOne] and [HasMany] relationships
-          if (isNotValidType(node)) continue;
+          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
           
           if (RubossUtils.isBelongsTo(node)) {
-            var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
-            var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
-            
-            if (polymorphic) {
+            if (RubossUtils.isPolymorphicBelongsTo(node)) {
               var snakeNameType:String = snakeName + "_type";
               createStatement += snakeNameType + " " + types["String"] + ", ";
               insertStatement += snakeNameType + ", ";
               insertParams += ":" + snakeNameType + ", ";
               updateStatement += snakeNameType + "=:" + snakeNameType + ",";
             }
-            
+           
             snakeName = snakeName + "_id";
             createStatement += snakeName + " " +  types["int"] + ", ";
-            insertStatement += snakeName + ", ";
-            insertParams += ":" + snakeName + ", ";
-            updateStatement += snakeName + "=:" + snakeName + ",";
           } else {   
             createStatement += snakeName + " " +  getSQLType(node) + ", ";
-            insertStatement += snakeName + ", ";
-            insertParams += ":" + snakeName + ", ";
-            updateStatement += snakeName + "=:" + snakeName + ",";
           }
+          
+          insertStatement += snakeName + ", ";
+          insertParams += ":" + snakeName + ", ";
+          updateStatement += snakeName + "=:" + snakeName + ",";
         }
       }
       
@@ -195,6 +199,7 @@ package org.ruboss.services.air {
         var value:Object = source[property];
           
         var isRef:Boolean = false;
+        
         // if we got a node with a name that terminates in "_id" we check to see if
         // it's a model reference       
         if (targetName.search(/.*_id$/) != -1) {
@@ -290,14 +295,46 @@ package org.ruboss.services.air {
     
     public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(clazz);
+      if (indexing[fqn]) return;
+      
       var statement:SQLStatement = getSQLStatement(sql[fqn]["select"]);
+      
+      var token:AsyncToken = new AsyncToken(null);
+      token.addResponder(responder);
+      var query:Object = {token:token, fqn:fqn, statement:statement};
+      pending.push(query);
+      if (!timer) {
+        timer = new Timer(1);
+        timer.addEventListener(TimerEvent.TIMER, executeIndex);
+        timer.start();
+      }
+
+    }
+    
+    private function executeIndex(event:TimerEvent):void {
+      var query:Object = pending.shift();
+      if (!query) return;
+      
+      if (pending.length == 0) {
+        timer.stop();
+        timer = null;
+      }
+      
+      var statement:SQLStatement = SQLStatement(query['statement']);
+      var token:AsyncToken = AsyncToken(query['token']);
+      var fqn:String = query['fqn'];
+      
+      var clazz:Class = getDefinitionByName(fqn) as Class;
+      
+      if (!token.hasResponder()) return;
+      
       statement.execute();
       
       var result:Array  = new Array;
       for each (var object:Object in statement.getResult().data) {
         // if we already have something with this fqn and id in cache attempt to reuse it
         // this will ensure that whatever is doing comparison by reference should still be happy
-        var model:Object = Ruboss.models.cached(Class(clazz)).withId(object["id"]);
+        var model:Object = Ruboss.models.cached(clazz).withId(object["id"]);
       
         // if not in cache, we need to create a new instance
         if (model == null) {
@@ -308,9 +345,10 @@ package org.ruboss.services.air {
         model["fetched"] = true;
         result.push(model);
       }
+      delete indexing[fqn];
       delete state.waiting[fqn];
       state.fetching[fqn] = new Array;
-      invokeResponder(responder, result);
+      invokeResponder(token.responders[0], result);    
     }
     
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
@@ -327,16 +365,14 @@ package org.ruboss.services.air {
       var statement:SQLStatement = getSQLStatement(sql[fqn]["insert"]);
       for each (var node:XML in describeType(object)..accessor) {
         if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
-          if (isNotValidType(node)) continue;
-
           var localName:String = node.@name;
           var type:String = node.@type;
           var snakeName:String = RubossUtils.toSnakeCase(localName);
+
+          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
                       
           if (RubossUtils.isBelongsTo(node)) {
-            var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
-            var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
-            if (polymorphic) {
+            if (RubossUtils.isPolymorphicBelongsTo(node)) {
               statement.parameters[":" + snakeName + "_type"] = (object[localName] == null) ? null : 
                 getQualifiedClassName(object[localName]).split("::")[1];
             }
@@ -365,16 +401,14 @@ package org.ruboss.services.air {
       var sqlStatement:SQLStatement = getSQLStatement(statement);
       for each (var node:XML in describeType(object)..accessor) {
         if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
-          if (isNotValidType(node)) continue;
-
           var localName:String = node.@name;
           var type:String = node.@type;
           var snakeName:String = RubossUtils.toSnakeCase(localName);
 
+          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
+
           if (RubossUtils.isBelongsTo(node)) {
-            var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
-            var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
-            if (polymorphic) {
+            if (RubossUtils.isPolymorphicBelongsTo(node)) {
               sqlStatement.parameters[":" + snakeName + "_type"] = getQualifiedClassName(object[localName]).split("::")[1];
             }
             snakeName = snakeName + "_id";
