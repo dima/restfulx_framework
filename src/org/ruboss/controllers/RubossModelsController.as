@@ -287,6 +287,20 @@ package org.ruboss.controllers {
       return ModelsCollection(cache[fqn]);      
     }
 
+    /**
+     * The index method gets a ModelsCollection for every instance of Class.  Examples of usage:
+     *   Ruboss.models.index(Project);
+     * 
+     * Note that the following two method calls are equivalent:
+     *   Ruboss.models.index(Project, myAfterCallbackFunction, [company]);
+     *   Ruboss.models.index(Project, {afterCallback:myAfterCallbackFunction, nestedBy:[company]});
+     * 
+     * @param clazz the Class to index
+     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     * clober the value of any subsequent parameters, thus allowing the Rails-style "poor man's keyword arguments"
+     * style of method calls (note that this can specify an afterCallback inside the anonymous object as well).
+     */
     [Bindable(event="propertyChange")]
     public function index(clazz:Class, optsOrAfterCallback:Object = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, page:int = -1,
