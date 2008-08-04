@@ -16,6 +16,7 @@ package org.ruboss.controllers {
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.http.HTTPService;
+  import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
   import org.ruboss.services.http.HTTPServiceProvider;
@@ -36,6 +37,9 @@ package org.ruboss.controllers {
     public function SimpleHTTPController(optsOrResultHandler:Object = null, faultHandler:Function = null, 
       contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null) {
       if (optsOrResultHandler == null) optsOrResultHandler = {};
+      this.faultHandler = faultHandler;
+      this.contentType = contentType;
+      this.rootUrl = rootUrl;
       if (optsOrResultHandler is Function) {
         this.resultHandler = optsOrResultHandler as Function;
       } else {
@@ -162,7 +166,7 @@ package org.ruboss.controllers {
       
       Ruboss.log.debug("sending request to URL:" + service.url + " with method: " + 
         service.method + " and content:" + ((service.request == null) ? 
-        "null" : "\r" + service.request.toString()));      
+        "null" : "\r" + ObjectUtil.toString(service.request)));      
       
       var call:AsyncToken = service.send();
       if (responder != null) {
