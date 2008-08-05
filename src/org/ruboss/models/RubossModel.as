@@ -51,7 +51,7 @@ package org.ruboss.models {
     }
 
     public function toString():String {
-      return this[_label].toString();
+      return this[_label] == null ? "" : this[_label].toString();
     }
   }
 }
