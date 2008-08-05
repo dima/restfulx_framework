@@ -17,13 +17,22 @@ package org.ruboss.controllers {
   
   import org.ruboss.events.RubossEvent;
 
+  /**
+   * Singleton. Manages ruboss command related event registration.
+   */
   public class RubossCommandsEventDispatcher extends EventDispatcher {
     private static var instance:RubossCommandsEventDispatcher;
 
+    /** 
+    * @param target IEventDispatcher implementation
+    */
     public function RubossCommandsEventDispatcher(target:IEventDispatcher = null) {
       super(target);
     }
     
+    /**
+     * @return current dispatcher instance.
+     */
     public static function getInstance():RubossCommandsEventDispatcher {
       if (instance == null) instance = new RubossCommandsEventDispatcher;
       return instance;

@@ -18,11 +18,24 @@ package org.ruboss.controllers {
   import org.ruboss.Ruboss;
   import org.ruboss.events.RubossEvent;
   
+  /**
+   * Manages registered commands (classes that implement org.ruboss.controllers.ICommand)
+   * and wraps around RubossModelsController initialization for convenience.
+   */
   public class RubossCommandsController {
     
     // maps command classes to event names
     private var commands:Dictionary = new Dictionary;
 
+    /**
+     * Creates a new instance of the controller.
+     *  
+     * @param commands the array of command classes to register e.g. [Command1, Command2]
+     * @param models the array of model classes to register e.g. [Model1, Model2]
+     * @param extraServices the array of services to use (HTTPServiceProvider is registered
+     *  by default. All other providers (e.g. AIR) must be registered here)
+     * @param targetServiceId default service to use for operations (by default HTTPServiceProvider.ID)
+     */
     public function RubossCommandsController(commands:Array, models:Array, 
       extraServices:Array = null, targetServiceId:int = -1) {
       for each (var cmd:Class in commands) {
@@ -36,6 +49,12 @@ package org.ruboss.controllers {
         targetServiceId);
     }
 
+    /**
+     * Adds a given command class to the controller registry.
+     *  
+     * @param cmd command class
+     * @param useWeakReference will be registered for events using a weak reference
+     */
     public function addCommand(cmd:Class, useWeakReference:Boolean = true):void {
       var commandName:String = getCommandName(cmd);
       commands[commandName] = cmd;  
@@ -43,17 +62,26 @@ package org.ruboss.controllers {
         false, 0, useWeakReference);
     }
     
+    /**
+     * Removes a given command from the registry.
+     * 
+     * @param cmd command class to remove
+     *  
+     * @see addCommand
+     */
     public function removeCommand(cmd:Class):void {
       var cmdName:String = getCommandName(cmd);
       RubossCommandsEventDispatcher.getInstance().removeEventListener(cmdName, executeCommand);
       delete commands[cmdName]; 
     }
 
-    private function executeCommand(event:RubossEvent):void {
-      var cmd:ICommand = new commands[event.type];
-      cmd.execute(event);
-    }
-
+    /**
+     * Executes a given command passing data and target service id for reference.
+     *  
+     * @param cmd command to execute
+     * @param data arbitrary data to pass to the command
+     * @param targetServiceId indicates which service the command should use (if any)
+     */
     public function execute(cmd:Class, data:Object = null, targetServiceId:int = -1):void {
       var cmdName:String = getCommandName(cmd);
       if (!commands[cmdName]) {
@@ -64,6 +92,11 @@ package org.ruboss.controllers {
       event.data = (data == null) ? {} : data;
       event.targetServiceId = (targetServiceId == -1) ? Ruboss.defaultServiceId : targetServiceId;
       event.dispatch();        
+    }
+
+    private function executeCommand(event:RubossEvent):void {
+      var cmd:ICommand = new commands[event.type];
+      cmd.execute(event);
     }
 
     private static function getCommandName(cmd:Class):String {
