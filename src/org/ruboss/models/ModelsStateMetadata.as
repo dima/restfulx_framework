@@ -21,62 +21,84 @@ package org.ruboss.models {
   
   import org.ruboss.utils.RubossUtils;
   
+  /**
+   * Centralized store for model related metadata.
+   */
   public class ModelsStateMetadata {
     
-    // currently registered model classes
+    /** currently registered model classes */
     public var models:Array;
     
-    // maps FQNs and local model names to controllers
+    /** maps FQNs and local model names to controllers */
     public var controllers:Dictionary;
     
-    // a list of all registered controllers mapped to fqns
+    /** a list of all registered controllers mapped to fqns */
     public var fqns:Dictionary;
     
-    // maps FQNs to localNames and back
+    /** maps FQNs to localNames and back */
     public var keys:Dictionary;
        
-    // indicates which model types have been *requested* with index
-    // maps model FQNs to booleans
+    /**
+     * indicates which model types have been *requested* with index
+     * maps model FQNs to booleans
+     */
     public var indexed:Dictionary;
 
-    // same thing as above but for models requested via show method
-    // maps models FQNs to an ArrayModel of ids
+    /**
+     * same thing as above but for models requested via show method
+     * maps models FQNs to an ArrayModel of ids
+     */
     public var showed:Dictionary;
         
-    // stores *all* model dependendecies = eager mode, trying to fetch everything 
-    // we use this to make sure that everything is fetched and resolved in *correct* order
+    /**
+     * stores *all* model dependendecies = eager mode, trying to fetch everything 
+     * we use this to make sure that everything is fetched and resolved in *correct* order
+     */
     public var eager:Dictionary;
     
-    // stores model dependencies excluding lazy dependencies = lazy mode, trying to
-    // fetch only *absolutely required* dependencies
+    /**
+     * stores model dependencies excluding lazy dependencies = lazy mode, trying to
+     * fetch only *absolutely required* dependencies
+     */
     public var lazy:Dictionary;
     
-    // maps models to models that refer to them
+    /** maps models to models that refer to them */
     public var references:Dictionary;
 
-    // stores computed N-N relationships    
+    /** stores computed N-N relationships */ 
     public var relationships:Dictionary;
     
-    // stores model page sizes (by default -1 = no paging required)
+    /** stores model page sizes (by default -1 = no paging required) */
     public var pages:Dictionary;
 
-    // this is used to temporarily store models and dependants of others while we are processing
-    // responses
+    /** 
+     * this is used to temporarily store models and dependants of others while we are processing
+     * responses
+     */
     public var queue:Dictionary;
 
-    // this indicates which models are being processed standalone (without dependency resolution)
-    // maps model FQNs to boolean values and is typically reset at the end of service response
-    // processing
+    /**
+     * this indicates which models are being processed standalone (without dependency resolution)
+     * maps model FQNs to boolean values and is typically reset at the end of service response
+     * processing
+     */
     public var standalone:Dictionary;
 
-    // this indicates which models have been fetched and cached
-    // maps model FQNs to boolean values, can be reset on-demand
+    /** 
+     * this indicates which models have been fetched and cached
+     * maps model FQNs to boolean values, can be reset on-demand
+     */
     public var fetching:Dictionary;
     
-    // this indicates which models have actually been requested as part of a particular run
-    // gets cleaned up
+    /**
+     * this indicates which models have actually been requested as part of a particular run
+     * gets cleaned up
+     */
     public var waiting:Dictionary;
 
+    /**
+     * @param models an array of models to process
+     */
     public function ModelsStateMetadata(models:Array) {
       this.models = models;
       
@@ -143,6 +165,11 @@ package org.ruboss.models {
       }
     }
 
+    /**
+     * Resets model metadata.
+     *  
+     * @param object can be a model class or specific model instance
+     */
     public function reset(object:Object = null):void {
       // if no argument is specified, reset everything
       if (object == null) {

@@ -16,20 +16,34 @@ package org.ruboss.events {
   
   import org.ruboss.controllers.RubossCommandsEventDispatcher;
   
+  /**
+   * Generic Ruboss event (used by commands).
+   */
   public class RubossEvent extends Event {
 
-    // command data
+    /** command data */
     public var data:*;
     
-    // since we deal with many services commands may need to know which service 
-    // to delegate low-level behaviour to
+    /** 
+     * Since we deal with many services commands may need to know which service 
+     * to delegate low-level behaviour to
+     */
     public var targetServiceId:int;
     
+    /**
+     * @see flash.events.Event
+     */
     public function RubossEvent(type:String, bubbles:Boolean = false, 
       cancelable:Boolean = false) {
       super(type, bubbles, cancelable);
     }
     
+    /**
+     * Dispatches current instance of the event using RubossCommandsEventDispatcher.
+     * Event handlers are typically org.ruboss.controllers.ICommand#execute implementations.
+     *  
+     * @return boolean indicating if event was dispatched successfully
+     */
     public function dispatch():Boolean {
       return RubossCommandsEventDispatcher.getInstance().dispatchEvent(this);
     }

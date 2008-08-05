@@ -21,8 +21,10 @@ package org.ruboss.controllers {
   import org.ruboss.Ruboss;
   import org.ruboss.services.http.HTTPServiceProvider;
   
-  // custom HTTP controller that allows sending arbitrary data (as 
-  // opposed to models) over HTTP faking PUT and DELETE
+  /**
+   * Custom HTTP controller that allows sending arbitrary data (as 
+   * opposed to models) over HTTP faking PUT and DELETE
+   */
   public class SimpleHTTPController {
     public static const GET:int = 1;
     public static const POST:int = 2;
@@ -34,6 +36,13 @@ package org.ruboss.controllers {
     private var resultHandler:Function;
     private var faultHandler:Function;
     
+    /**
+     * @param optsOrResultHandler can be either an anonymous object of options or a result handler 
+     *  function.
+     * @param faultHandler function to call on HTTPService error
+     * @param contentType content type for the request
+     * @param rootUrl the URL to prefix to requests
+     */
     public function SimpleHTTPController(optsOrResultHandler:Object = null, faultHandler:Function = null, 
       contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null) {
       if (optsOrResultHandler == null) optsOrResultHandler = {};
@@ -50,6 +59,19 @@ package org.ruboss.controllers {
       }
     }
     
+    /**
+     * Invokes a specified URL using indicated method and passing provided data. Optionally
+     * unmarshalling and/or caching the response.
+     *  
+     * @param optsOrResultHandler can be either an anonymous object of options or a result handler 
+     *  function.
+     * @param data data object to pass along
+     * @param method HTTP method to use
+     * @param unmarshall boolean indicating if the response should be unmarshalled using
+     *  HTTPSericeProvider
+     * @param cache boolean indicating if the response should be cached (this implicitly assumes
+     *  the response will be unmarshalled first)
+     */
     public function invoke(optsOrURL:Object, data:Object = null, method:* = SimpleHTTPController.GET, 
       unmarshall:Boolean = false, cache:Boolean = false):void {
       var url:String = null;
@@ -94,37 +116,25 @@ package org.ruboss.controllers {
       send(url, data, httpVerb, responder);
     }
     
-    private function unmarshall(data:Object):Object {
-      return Ruboss.services.getServiceProvider(HTTPServiceProvider.ID).unmarshall(data.result);
-    }
-    
-    private function unmarshallResultHandler(data:Object, token:Object = null):void {
-      var result:Object = unmarshall(data);
-      if (resultHandler != null) resultHandler(result);
-    }
-    
-    // TODO: append results to cache here
-    private function unmarshallAndCacheResultHandler(data:Object, token:Object = null):void {
-      unmarshallResultHandler(data, token); 
-    }
-    
-    private function defaultResultHandler(data:Object, token:Object = null):void {
-      if (resultHandler != null) resultHandler(data.result);
-    }
-    
-    private function defaultFaultHandler(info:Object, token:Object = null):void {
-      if (faultHandler != null) { 
-        faultHandler(info);
-      } else {
-        throw new Error(info.toString());
-      }
-    }
-    
-    // if you don't like to create responder objects send()
-    // you can use ItemResponder like so:
-    // send("/foobar.xml", {some:"data"}, SimpleHTTPController.GET,
-    //   new ItemResponder(function result(data:Object):void {},
-    //     function fault(info:Object):void {});
+    /**
+     * A different take on invoke. Can be used with standalone org.ruboss.controllers.ICommand
+     * implementations if they also implement IResponder interface.
+     *
+     * If you don't like to create responder objects you can use ItemResponder like so:
+     * send("/foobar.xml", {some:"data"}, SimpleHTTPController.GET,
+     *   new ItemResponder(function result(data:Object):void {},
+     *    function fault(info:Object):void {});
+     *  
+     * Or use invoke function above.
+     *  
+     * @see invoke
+     *  
+     * @param url URL to call
+     * @param data data to pass along
+     * @param HTTP method to use
+     * @param responder IResponder implementation to callback.
+     *  
+     */
     public function send(url:String, data:Object = null, method:int = SimpleHTTPController.GET,
       responder:IResponder = null):void {
       var service:HTTPService = new HTTPService();
@@ -172,6 +182,32 @@ package org.ruboss.controllers {
       if (responder != null) {
         call.addResponder(responder);
       }  
+    }
+        
+    private function unmarshall(data:Object):Object {
+      return Ruboss.services.getServiceProvider(HTTPServiceProvider.ID).unmarshall(data.result);
+    }
+    
+    private function unmarshallResultHandler(data:Object, token:Object = null):void {
+      var result:Object = unmarshall(data);
+      if (resultHandler != null) resultHandler(result);
+    }
+    
+    // TODO: append results to cache here
+    private function unmarshallAndCacheResultHandler(data:Object, token:Object = null):void {
+      unmarshallResultHandler(data, token); 
+    }
+    
+    private function defaultResultHandler(data:Object, token:Object = null):void {
+      if (resultHandler != null) resultHandler(data.result);
+    }
+    
+    private function defaultFaultHandler(info:Object, token:Object = null):void {
+      if (faultHandler != null) { 
+        faultHandler(info);
+      } else {
+        throw new Error(info.toString());
+      }
     }
   }
 }

@@ -14,9 +14,18 @@
 package org.ruboss.models {
   import flash.net.FileReference;
   
+  /**
+   * Allows Flash file references to be attached to models. Requires something
+   * like attachment_fu on the server-side.
+   */
   public class RubossFileReference extends FileReference {
+    
+    /** key name to use (default is "uploaded_data", which is what attachment_fu expects) */
     public var keyName:String;
-        
+    
+    /**
+     * @param keyName keyname to use default "uploaded_data" 
+     */
     public function RubossFileReference(keyName:String = "uploaded_data") {
       super();
       this.keyName = keyName;

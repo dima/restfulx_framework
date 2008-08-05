@@ -14,7 +14,16 @@
 package org.ruboss.controllers {
   import org.ruboss.events.RubossEvent;
   
+  /**
+   * Must be implemented by commands
+   */
   public interface ICommand {
+    
+    /**
+     * Commands must expose an execute method with the following signature.
+     *  
+     * @param event RubossEvent instance that will be passed to the command.
+     */
     function execute(event:RubossEvent):void;
   }
 }
