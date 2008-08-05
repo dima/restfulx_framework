@@ -98,6 +98,7 @@ package org.ruboss.controllers {
     /**
      * Resets model metadata.
      *  
+     * @see org.ruboss.models.ModelsStateMetadata#reset
      * @param object can be a model class or specific model instance
      */
     public function reset(object:Object = null):void {
@@ -131,6 +132,11 @@ package org.ruboss.controllers {
       }
     }
     
+    /**
+     * Get current cache representation for a particular model class.
+     * 
+     * @param clazz model class to look up
+     */
     public function cached(clazz:Class):ModelsCollection {
       var fqn:String = getQualifiedClassName(clazz);
       return ModelsCollection(cache[fqn]);      
