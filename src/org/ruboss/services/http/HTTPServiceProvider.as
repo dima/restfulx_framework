@@ -85,7 +85,7 @@ package org.ruboss.services.http {
       var vars:Array = new Array;
       for each (var node:XML in describeType(object)..accessor) {
         if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
-          RubossUtils.isIgnored(node)) continue;
+          RubossUtils.isIgnored(node) || RubossUtils.isHasOne(node)) continue;
           
         var nodeName:String = node.@name;
         var type:String = node.@type;
@@ -132,7 +132,7 @@ package org.ruboss.services.http {
       var result:Object = new Object;
       for each (var node:XML in describeType(object)..accessor) {
         if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
-          RubossUtils.isIgnored(node)) continue;
+          RubossUtils.isIgnored(node) || RubossUtils.isHasOne(node)) continue;
           
         var nodeName:String = node.@name;
         var type:String = node.@type;
