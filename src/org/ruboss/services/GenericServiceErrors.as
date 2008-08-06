@@ -14,15 +14,32 @@
 package org.ruboss.services {
   import mx.validators.ValidationResult;
   
+  /**
+   * Basic IServiceErrors implementation that effectively has *no* errors. If you
+   * do Ruboss.errors = new GenericServiceErrors you will clear any previously
+   * defined errors.
+   */
   public class GenericServiceErrors implements IServiceErrors {
+    
+    /** error holder */
     protected var errors:Object = new Object;
 
     public function GenericServiceErrors() {}
 
+    /**
+     * Default validation result creator. Can be overrided by specific
+     * implementations of necessary.
+     *  
+     * @param message message to display as error
+     * @return ValidationResult object
+     */
     protected function createValidationResult(message:String):ValidationResult {
       return new ValidationResult(true, "", "SERVICE_VALIDATION_ERROR", message);
     }
 
+    /**
+     * @see org.ruboss.services.IServiceErrors#getFieldErrors
+     */
     public function getFieldErrors(field:String):Array {
       return errors[field] == null ? [] : errors[field];
     }

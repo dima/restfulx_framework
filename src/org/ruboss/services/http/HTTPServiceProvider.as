@@ -36,18 +36,167 @@ package org.ruboss.services.http {
   import org.ruboss.services.ServiceManager;
   import org.ruboss.utils.RubossUtils;
 
+  /**
+   * XML-over-HTTP service provider.
+   */
   public class HTTPServiceProvider implements IServiceProvider {
     
+    /** service id */
     public static const ID:int = ServiceManager.generateId();
-    
-    // these types are always ignored during serialization
-    
+        
     private var state:ModelsStateMetadata;
     
+    /**
+     * @param controller reference to RubossModelsController instance
+     */
     public function HTTPServiceProvider(controller:RubossModelsController) {
       state = controller.state;
     }
     
+    /**
+     * @see org.ruboss.services.IServiceProvider#id
+     */
+    public function get id():int {
+      return ID;
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#hasErrors
+     */    
+    public function hasErrors(object:Object):Boolean {
+      var response:XML = XML(object);
+      var xmlFragmentName:String = response.localName().toString();
+      if (xmlFragmentName == "errors" && RubossUtils.isEmpty(response.@type)) {
+        Ruboss.log.debug("received service error response, terminating processing");
+        Ruboss.errors = new HTTPServiceErrors(response);
+        return true;
+      }
+      return false;
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#canLazyLoad
+     */
+    public function canLazyLoad():Boolean {
+      return true;
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#peek
+     */
+    public function peek(object:Object):String {
+      var xmlFragmentName:String = XML(object).localName().toString();
+      Ruboss.log.debug("peeking at: " + xmlFragmentName);
+            
+      var objectName:String = RubossUtils.toCamelCase(xmlFragmentName);
+      
+      return (state.fqns[xmlFragmentName] == null) ? state.keys[objectName] : 
+        state.fqns[xmlFragmentName];
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#marshall
+     */
+    public function marshall(object:Object, metadata:Object = null):Object {
+      return marshallToXML(object, metadata);
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#unmarshall
+     */
+    public function unmarshall(object:Object):Object {
+      var xmlFragment:XML = XML(object);
+      Ruboss.log.debug("unmarshalling response:\n" + xmlFragment.toXMLString());
+
+      var objectName:String = xmlFragment.localName();
+      var results:Array = new Array;
+      // if the object name is the same as the controller specified 
+      // on the model (which are typically plural) we know we got back 
+      // a collection of "known" model elements
+      if (xmlFragment.@type == "array") {
+        // we are only going to specifically unmarshall known relationships
+        if (state.fqns[objectName]) {
+          for each (var node:XML in xmlFragment.children()) {
+            results.push(unmarshallNode(node));
+          }
+        }
+        return results;
+      } else {
+        // otherwise treat it as a single element (treat it as a show)
+        return unmarshallNode(xmlFragment);
+      }
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#index
+     */
+    public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var httpService:HTTPService = getHTTPService(object, nestedBy);
+      httpService.method = URLRequestMethod.GET;
+        
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        httpService.url += "?" + urlParams;  
+      }
+      
+      invokeHTTPService(httpService, responder);
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#show
+     */
+    public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var httpService:HTTPService = getHTTPService(object, nestedBy);
+      httpService.method = URLRequestMethod.GET;
+      httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
+        
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        httpService.url += "?" + urlParams;  
+      }
+      
+      invokeHTTPService(httpService, responder);
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#create
+     */    
+    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var httpService:HTTPService = getHTTPService(object, nestedBy);
+      httpService.method = URLRequestMethod.POST;
+      httpService.request = marshallToVO(object, metadata);
+      sendOrUpload(httpService, object, responder);   
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#update
+     */
+    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var httpService:HTTPService = getHTTPService(object, nestedBy);
+      httpService.method = URLRequestMethod.POST;
+      httpService.request = marshallToVO(object, metadata);
+      httpService.request["_method"] = "PUT";
+      httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
+      sendOrUpload(httpService, object, responder); 
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#destroy
+     */
+    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var httpService:HTTPService = getHTTPService(object, nestedBy);
+      httpService.method = URLRequestMethod.POST;
+      httpService.request["_method"] = "DELETE";
+      httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
+        
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        httpService.url += "?" + urlParams;  
+      }
+      
+      invokeHTTPService(httpService, responder);
+    }
+
     private function nestResource(object:Object, nestedBy:Array = null):String {
       var result:String = "";
       if (nestedBy == null || nestedBy.length == 0) 
@@ -388,117 +537,6 @@ package org.ruboss.services.http {
       if (responder != null) {
         call.addResponder(responder);
       }
-    }
-
-    public function get id():int {
-      return ID;
-    }
-    
-    public function hasErrors(object:Object):Boolean {
-      var response:XML = XML(object);
-      var xmlFragmentName:String = response.localName().toString();
-      if (xmlFragmentName == "errors" && RubossUtils.isEmpty(response.@type)) {
-        Ruboss.log.debug("received service error response, terminating processing");
-        Ruboss.errors = new HTTPServiceErrors(response);
-        return true;
-      }
-      return false;
-    }
-    
-    public function canLazyLoad():Boolean {
-      return true;
-    }
-
-    public function peek(object:Object):String {
-      var xmlFragmentName:String = XML(object).localName().toString();
-      Ruboss.log.debug("peeking at: " + xmlFragmentName);
-            
-      var objectName:String = RubossUtils.toCamelCase(xmlFragmentName);
-      
-      return (state.fqns[xmlFragmentName] == null) ? state.keys[objectName] : 
-        state.fqns[xmlFragmentName];
-    }
-
-    public function marshall(object:Object, metadata:Object = null):Object {
-      return marshallToXML(object, metadata);
-    }
-
-    public function unmarshall(object:Object):Object {
-      var xmlFragment:XML = XML(object);
-      Ruboss.log.debug("unmarshalling response:\n" + xmlFragment.toXMLString());
-
-      var objectName:String = xmlFragment.localName();
-      var results:Array = new Array;
-      // if the object name is the same as the controller specified 
-      // on the model (which are typically plural) we know we got back 
-      // a collection of "known" model elements
-      if (xmlFragment.@type == "array") {
-        // we are only going to specifically unmarshall known relationships
-        if (state.fqns[objectName]) {
-          for each (var node:XML in xmlFragment.children()) {
-            results.push(unmarshallNode(node));
-          }
-        }
-        return results;
-      } else {
-        // otherwise treat it as a single element (treat it as a show)
-        return unmarshallNode(xmlFragment);
-      }
-    }
-    
-    public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.GET;
-        
-      var urlParams:String = urlEncodeMetadata(metadata);
-      if (urlParams != "") {
-        httpService.url += "?" + urlParams;  
-      }
-      
-      invokeHTTPService(httpService, responder);
-    }
-    
-    public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.GET;
-      httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
-        
-      var urlParams:String = urlEncodeMetadata(metadata);
-      if (urlParams != "") {
-        httpService.url += "?" + urlParams;  
-      }
-      
-      invokeHTTPService(httpService, responder);
-    }
-    
-    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.POST;
-      httpService.request = marshallToVO(object, metadata);
-      sendOrUpload(httpService, object, responder);   
-    }
-    
-    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.POST;
-      httpService.request = marshallToVO(object, metadata);
-      httpService.request["_method"] = "PUT";
-      httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
-      sendOrUpload(httpService, object, responder); 
-    }
-    
-    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.POST;
-      httpService.request["_method"] = "DELETE";
-      httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
-        
-      var urlParams:String = urlEncodeMetadata(metadata);
-      if (urlParams != "") {
-        httpService.url += "?" + urlParams;  
-      }
-      
-      invokeHTTPService(httpService, responder);
     }
   }
 }
