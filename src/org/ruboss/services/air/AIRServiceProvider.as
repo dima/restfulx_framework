@@ -35,8 +35,12 @@ package org.ruboss.services.air {
   import org.ruboss.services.ServiceManager;
   import org.ruboss.utils.RubossUtils;
 
+  /**
+   * AIR Service Provider implementation.
+   */
   public class AIRServiceProvider implements IServiceProvider {
     
+    /** service id */
     public static const ID:int = ServiceManager.generateId();
     
     private static var types:Object = {
@@ -61,6 +65,9 @@ package org.ruboss.services.air {
     
     private var timer:Timer;
 
+    /**
+     * @param controller reference to RubossModelsController instance
+     */
     public function AIRServiceProvider(controller:RubossModelsController) {
       var databaseName:String = Ruboss.airDatabaseName;
       var dbFile:File = File.userDirectory.resolvePath(databaseName + ".db");
@@ -84,6 +91,164 @@ package org.ruboss.services.air {
       });
       
       initializeConnection(databaseName, dbFile);
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#id
+     */
+    public function get id():int {
+      return ID;
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#hasErrors
+     */
+    public function hasErrors(object:Object):Boolean {
+      return false;
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#canLazyLoad
+     */
+    public function canLazyLoad():Boolean {
+      return false;
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#peek
+     */
+    public function peek(object:Object):String {
+      return null;
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#marshall
+     */
+    public function marshall(object:Object, metadata:Object = null):Object {
+      return object;
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#unmarshall
+     */
+    public function unmarshall(object:Object):Object {
+      return object;
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#index
+     */
+    public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var fqn:String = getQualifiedClassName(clazz);
+      if (indexing[fqn]) return;
+      
+      var statement:SQLStatement = getSQLStatement(sql[fqn]["select"]);
+      
+      var token:AsyncToken = new AsyncToken(null);
+      token.addResponder(responder);
+      var query:Object = {token:token, fqn:fqn, statement:statement};
+      pending.push(query);
+      if (!timer) {
+        timer = new Timer(1);
+        timer.addEventListener(TimerEvent.TIMER, executeIndex);
+        timer.start();
+      }
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#show
+     */
+    public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var fqn:String = getQualifiedClassName(object);
+      var statement:SQLStatement = getSQLStatement(sql[fqn]["select"] + " WHERE id=" + object["id"]);
+      statement.execute();
+      
+      processModel(fqn, object, statement.getResult().data[0]);
+      invokeResponder(responder, object);
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#create
+     */
+    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var fqn:String = getQualifiedClassName(object);
+      var statement:SQLStatement = getSQLStatement(sql[fqn]["insert"]);
+      for each (var node:XML in describeType(object)..accessor) {
+        if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
+          var localName:String = node.@name;
+          var type:String = node.@type;
+          var snakeName:String = RubossUtils.toSnakeCase(localName);
+
+          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
+                      
+          if (RubossUtils.isBelongsTo(node)) {
+            if (RubossUtils.isPolymorphicBelongsTo(node)) {
+              statement.parameters[":" + snakeName + "_type"] = (object[localName] == null) ? null : 
+                getQualifiedClassName(object[localName]).split("::")[1];
+            }
+            snakeName = snakeName + "_id";
+            var ref:Object = object[localName];
+            statement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
+
+          } else {
+            if (object[localName] is Boolean) {
+              statement.parameters[":" + snakeName] = object[localName];
+            } else {
+              statement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
+            }
+          }
+        }
+      }
+      statement.execute();
+      object["id"] = statement.getResult().lastInsertRowID;
+      invokeResponder(responder, object);
+    }
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#update
+     */    
+    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var fqn:String = getQualifiedClassName(object);
+      var statement:String = sql[fqn]["update"];
+      statement = statement.replace("{id}", object["id"]);
+      var sqlStatement:SQLStatement = getSQLStatement(statement);
+      for each (var node:XML in describeType(object)..accessor) {
+        if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
+          var localName:String = node.@name;
+          var type:String = node.@type;
+          var snakeName:String = RubossUtils.toSnakeCase(localName);
+
+          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
+
+          if (RubossUtils.isBelongsTo(node)) {
+            if (RubossUtils.isPolymorphicBelongsTo(node)) {
+              sqlStatement.parameters[":" + snakeName + "_type"] = getQualifiedClassName(object[localName]).split("::")[1];
+            }
+            snakeName = snakeName + "_id";
+            var ref:Object = object[localName];
+            sqlStatement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
+          } else {
+            if (object[localName] is Boolean) {
+              sqlStatement.parameters[":" + snakeName] = object[localName];
+            } else {
+              sqlStatement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
+            }
+          }
+        }
+      }
+      sqlStatement.execute();
+      show(object, responder, metadata, nestedBy);
+    }
+    
+    /**
+     * @see org.ruboss.services.IServiceProvider#destroy
+     */
+    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var fqn:String = getQualifiedClassName(object);
+      var statement:String = sql[fqn]["delete"];
+      statement = statement.replace("{id}", object["id"]);
+      getSQLStatement(statement).execute();
+      invokeResponder(responder, object);
     }
     
     private function isInvalidProperty(type:String):Boolean {
@@ -268,48 +433,6 @@ package org.ruboss.services.air {
         }
       }      
     }
-
-    public function get id():int {
-      return ID;
-    }
-    
-    public function hasErrors(object:Object):Boolean {
-      return false;
-    }
-
-    public function canLazyLoad():Boolean {
-      return false;
-    }
-
-    public function peek(object:Object):String {
-      return null;
-    }
-    
-    public function marshall(object:Object, metadata:Object = null):Object {
-      return object;
-    }
-
-    public function unmarshall(object:Object):Object {
-      return object;
-    }
-    
-    public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var fqn:String = getQualifiedClassName(clazz);
-      if (indexing[fqn]) return;
-      
-      var statement:SQLStatement = getSQLStatement(sql[fqn]["select"]);
-      
-      var token:AsyncToken = new AsyncToken(null);
-      token.addResponder(responder);
-      var query:Object = {token:token, fqn:fqn, statement:statement};
-      pending.push(query);
-      if (!timer) {
-        timer = new Timer(1);
-        timer.addEventListener(TimerEvent.TIMER, executeIndex);
-        timer.start();
-      }
-
-    }
     
     private function executeIndex(event:TimerEvent):void {
       var query:Object = pending.shift();
@@ -349,90 +472,6 @@ package org.ruboss.services.air {
       delete state.waiting[fqn];
       state.fetching[fqn] = new Array;
       invokeResponder(token.responders[0], result);    
-    }
-    
-    public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var fqn:String = getQualifiedClassName(object);
-      var statement:SQLStatement = getSQLStatement(sql[fqn]["select"] + " WHERE id=" + object["id"]);
-      statement.execute();
-      
-      processModel(fqn, object, statement.getResult().data[0]);
-      invokeResponder(responder, object);
-    }
-    
-    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var fqn:String = getQualifiedClassName(object);
-      var statement:SQLStatement = getSQLStatement(sql[fqn]["insert"]);
-      for each (var node:XML in describeType(object)..accessor) {
-        if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
-          var localName:String = node.@name;
-          var type:String = node.@type;
-          var snakeName:String = RubossUtils.toSnakeCase(localName);
-
-          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
-                      
-          if (RubossUtils.isBelongsTo(node)) {
-            if (RubossUtils.isPolymorphicBelongsTo(node)) {
-              statement.parameters[":" + snakeName + "_type"] = (object[localName] == null) ? null : 
-                getQualifiedClassName(object[localName]).split("::")[1];
-            }
-            snakeName = snakeName + "_id";
-            var ref:Object = object[localName];
-            statement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
-
-          } else {
-            if (object[localName] is Boolean) {
-              statement.parameters[":" + snakeName] = object[localName];
-            } else {
-              statement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
-            }
-          }
-        }
-      }
-      statement.execute();
-      object["id"] = statement.getResult().lastInsertRowID;
-      invokeResponder(responder, object);
-    }
-    
-    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var fqn:String = getQualifiedClassName(object);
-      var statement:String = sql[fqn]["update"];
-      statement = statement.replace("{id}", object["id"]);
-      var sqlStatement:SQLStatement = getSQLStatement(statement);
-      for each (var node:XML in describeType(object)..accessor) {
-        if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
-          var localName:String = node.@name;
-          var type:String = node.@type;
-          var snakeName:String = RubossUtils.toSnakeCase(localName);
-
-          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
-
-          if (RubossUtils.isBelongsTo(node)) {
-            if (RubossUtils.isPolymorphicBelongsTo(node)) {
-              sqlStatement.parameters[":" + snakeName + "_type"] = getQualifiedClassName(object[localName]).split("::")[1];
-            }
-            snakeName = snakeName + "_id";
-            var ref:Object = object[localName];
-            sqlStatement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
-          } else {
-            if (object[localName] is Boolean) {
-              sqlStatement.parameters[":" + snakeName] = object[localName];
-            } else {
-              sqlStatement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
-            }
-          }
-        }
-      }
-      sqlStatement.execute();
-      show(object, responder, metadata, nestedBy);
-    }
-    
-    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var fqn:String = getQualifiedClassName(object);
-      var statement:String = sql[fqn]["delete"];
-      statement = statement.replace("{id}", object["id"]);
-      getSQLStatement(statement).execute();
-      invokeResponder(responder, object);
     }
   }
 }

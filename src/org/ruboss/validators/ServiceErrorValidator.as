@@ -17,8 +17,14 @@ package org.ruboss.validators {
   import org.ruboss.Ruboss;
   import org.ruboss.services.IServiceErrors;
   
+  /**
+   * Flex Validator that can be used to display errors that are stored in
+   * IServiceErrors format.
+   */
   public class ServiceErrorValidator extends Validator {    
     private var errors:IServiceErrors;
+    
+    /** field that the errors are for */
     public var field:String;
 
     public function ServiceErrorValidator() {
@@ -26,11 +32,18 @@ package org.ruboss.validators {
       field = Ruboss.DEFAULT_ERROR_FIELD;
     }
 
+    /** 
+     * Set the errors and do validation
+     * @param errors errors
+     */
     public function set serviceErrors(errors:IServiceErrors):void {
       this.errors = errors;
       validate();
     }
   
+    /**
+     * @see mx.validators.Validator#doValidation
+     */
     override protected function doValidation(value:Object):Array {
       return errors.getFieldErrors(field);
     }

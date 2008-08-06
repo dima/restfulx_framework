@@ -14,25 +14,48 @@
 package org.ruboss.services {
   import flash.utils.Dictionary;
   
+  /**
+   * Provides centralized access to currently available services.
+   */
   public class ServiceManager {
     
     private static var idGenerator:int = 1;
     
     // list of service providers (usually initialized at start-up and not modified afterwards)
     private var services:Dictionary;
-        
+    
+    /**
+     * @param services a dictionary that maps service ids to service instances
+     */
     public function ServiceManager(services:Dictionary) {
       this.services = services;
     }
     
+    /**
+     * Creates a unique ID for the service.
+     * 
+     * @return unique ID representing the service
+     */
     public static function generateId():int {
       return idGenerator++;
     }
 
+    /**
+     * Looks up a service provider instance by id
+     *  
+     * @param id service provider id
+     * @return IServiceProvider instance that corresponds to the ID provided
+     */
     public function getServiceProvider(id:int):IServiceProvider {
       return services[id];
     }
     
+    /**
+     * A wrapper around IServiceProvider#canLazyLoad implementation of a specific service provider
+     * 
+     * @param id service provider id
+     * @return true of the service provider can lazy load, false otherwise
+     */
     public function canLazyLoad(id:int):Boolean {
       return getServiceProvider(id).canLazyLoad();
     }

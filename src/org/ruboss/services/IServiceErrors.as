@@ -12,9 +12,17 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.services {
+  
+  /**
+   * Must be implemented by specific Service providers to return UI consumable
+   * errors.
+   */
   public interface IServiceErrors {    
-    // returns an array of errors (Strings) for the specified
-    // field or empty array if there are no errors
+    /**
+     * @param field field name we want to retrieve errors for
+     * @return an array of errors (Strings) for the specified
+     *  field or empty array if there are no errors
+     */
     function getFieldErrors(field:String):Array;
   }
 }

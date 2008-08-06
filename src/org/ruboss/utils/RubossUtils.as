@@ -23,7 +23,10 @@ package org.ruboss.utils {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.models.RubossModel;
-    
+
+  /**
+   * Various Utilities
+   */
   public class RubossUtils {
     private static const IGNORED_TYPES:Array = [
       "org.ruboss.models::ModelsCollection",
@@ -33,14 +36,31 @@ package org.ruboss.utils {
       "org.ruboss.models::RubossFileReference"
     ];
 
+    /**
+     * Checks to see if a property should be ignored during serialization based on type.
+     * 
+     * @param type property type
+     */
     public static function isInvalidProperty(type:String):Boolean {
       return IGNORED_TYPES.indexOf(type) > -1;
     }
     
+    /**
+     * Checks if given FQNs are in the same package
+     * 
+     * @param fqn1 FQN1
+     * @param fqn2 FQN2
+     */
     public static function isInSamePackage(fqn1:String, fqn2:String):Boolean {
       return fqn1.split("::")[0] == fqn2.split("::")[0];
     }
     
+    /**
+     * If the object cloned is a RubossModel do clone based on reflection, else
+     * default to binary ObjectUtil clone.
+     *  
+     * @param object object to clone
+     */
     public static function clone(object:Object):Object {
       if (object is RubossModel) {
         var fqn:String = getQualifiedClassName(object);
@@ -60,20 +80,37 @@ package org.ruboss.utils {
       }
     }
     
+    /**
+     * Get Ruboss Model resource controller annotation
+     *  
+     * @param object ruboss model
+     * @result string value of [Resource(controller="*")]
+     */
     public static function getResourceController(object:Object):String {
       return describeResource(object).arg.(@key == "controller").@value;
     }
     
+    /**
+     * Gets Resource metadata.
+     *  
+     * @param object object to instrospect
+     */
     public static function describeResource(object:Object):XMLList {
       return (object is Class) ? 
         describeType(object).factory.metadata.(@name == "Resource") :
         describeType(object).metadata.(@name == "Resource");
     }
     
+    /**
+     * Get specific annotation from XML node.
+     */
     public static function getAttributeAnnotation(attribute:XML, annotationName:String):XMLList {
       return attribute.metadata.(@name == annotationName);
     }
     
+    /**
+     * Checks if the node is annotated with [BelongsTo(polymorphic="true")]
+     */
     public static function isPolymorphicBelongsTo(attribute:XML):Boolean {
       var descriptors:XMLList = RubossUtils.getAttributeAnnotation(attribute, "BelongsTo");
       if (descriptors.length() > 0) {
@@ -83,46 +120,77 @@ package org.ruboss.utils {
       }
     }
     
+    /**
+     * Checks if the node is annotated with [Lazy]
+     */
     public static function isLazy(attribute:XML):Boolean {
       return getAttributeAnnotation(attribute, "Lazy").length() > 0;
     }
-    
+
+    /**
+     * Checks if the node is annotated with [BelongsTo]
+     */    
     public static function isBelongsTo(attribute:XML):Boolean {
       return getAttributeAnnotation(attribute, "BelongsTo").length() > 0;
     }
     
+    /**
+     * Checks if the node is annotated with [HasMany]
+     */
     public static function isHasMany(attribute:XML):Boolean {
       return getAttributeAnnotation(attribute, "HasMany").length() > 0;
     }
     
+    /**
+     * Checks if the node is annotated with [HasOne]
+     */
     public static function isHasOne(attribute:XML):Boolean {
       return getAttributeAnnotation(attribute, "HasOne").length() > 0;
     }
     
+    /**
+     * Checks if the node is annotated with [Ignored]
+     */
     public static function isIgnored(attribute:XML):Boolean {
       return getAttributeAnnotation(attribute, "Ignored").length() > 0;
     }
     
+    /**
+     * Checks if the node is annotated with [DateTime]
+     */
     public static function isDateTime(attribute:XML):Boolean {
       return getAttributeAnnotation(attribute, "DateTime").length() > 0;
     }
 
+    /**
+     * Converts a string to CamelCase from snake_case
+     */
     public static function toCamelCase(string:String):String {
       return string.replace(/_[a-z]/g, function x():String {
         return (arguments[0] as String).slice(1).toUpperCase();
       });      
     }
     
+    /**
+     * Converts a string to snake_case from CamelCase
+     */
     public static function toSnakeCase(string:String):String {
       return lowerCaseFirst(string).replace(/[A-Z]/g, function x():String {
         return "_" + (arguments[0] as String).toLowerCase();
       });
     }
     
+    /**
+     * Lower cases first letter in a string leaving the rest of it alone
+     */
     public static function lowerCaseFirst(string:String):String {
       return string.charAt(0).toLowerCase() + string.slice(1);
     }
     
+    /**
+     * Casts a variable to specific type from a string, while trying to do the right thing
+     * based on targetType description.
+     */
     public static function cast(targetName:String, targetType:String, value:Object):* {
       if (value == null) return null;
       
@@ -135,6 +203,9 @@ package org.ruboss.utils {
       }
     }
     
+    /**
+     * Convert a specific object to its string representation
+     */
     public static function uncast(object:Object, property:String):* {
       if (object[property] == null) return null;
       
@@ -151,24 +222,39 @@ package org.ruboss.utils {
       }
     }
 
-   public static function isEmpty(str:String):Boolean {
-     return str == null || str == "";
-   }
+    /**
+     * Check if the string is null or empty
+     */
+    public static function isEmpty(str:String):Boolean {
+      return str == null || str == "";
+    }
 
-   public static function getWithDefault(str:String, defaultStr:String):String {
-     return isEmpty(str) ? defaultStr : str;
-   }
+    /**
+     * Get default string is str is empty or null
+     */
+    public static function getWithDefault(str:String, defaultStr:String):String {
+      return isEmpty(str) ? defaultStr : str;
+    }
 
+    /**
+     * Calculate days from now
+     */
     public static function daysFromNow(numDays:int):Date {
       return new Date((new Date().time + (1000*60*60*24*numDays)));
     }
     
+    /**
+     * Check if a date is in the future
+     */
     public static function isInTheFuture(date:Date):Boolean {
       if (date == null) return false;
       var now:Date = new Date();
       return ObjectUtil.dateCompare(date, now) > 0;
     }
-        
+
+    /**
+     * Merges two arrays and returns a new ArrayCollection of the result
+     */
     public static function mergeArrays(items:Array, toAdd:Array, 
       after:Boolean = false):ArrayCollection {
       var results:Array;
@@ -181,6 +267,9 @@ package org.ruboss.utils {
       }
     }
 
+    /**
+     * Shifts first match of the object from target ArrayCollection
+     */
     public static function removeFirstMatch(o:Object, ac:ArrayCollection):Object {
       var index:int = ac.source.indexOf(o);
       if (index == -1) return null;

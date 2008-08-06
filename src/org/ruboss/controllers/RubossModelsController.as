@@ -110,8 +110,8 @@ package org.ruboss.controllers {
      *  
      * @param object model instance or model Class reference to reload
      * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     * clober the value of any subsequent parameters.
+     *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     *  clober the value of any subsequent parameters.
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param fetchDependencies if true model dependencies will be recursively fetched as well
@@ -153,8 +153,8 @@ package org.ruboss.controllers {
      * 
      * @param clazz the Class to index
      * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     * clober the value of any subsequent parameters.
+     *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     *  clober the value of any subsequent parameters.
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param fetchDependencies if true model dependencies will be recursively fetched as well
@@ -200,8 +200,8 @@ package org.ruboss.controllers {
      * 
      * @param object object to show
      * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     * clober the value of any subsequent parameters.
+     *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     *  clober the value of any subsequent parameters.
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param fetchDependencies if true model dependencies will be recursively fetched as well
@@ -278,7 +278,7 @@ package org.ruboss.controllers {
           }
           processNtoNRelationships(model);
           dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));
-        }, service, this, fetchDependencies, useLazyMode, afterCallback);
+        }, service, this, fetchDependencies, afterCallback);
 
         invokeService(service.show, service, object, serviceResponder, metadata, nestedBy);
       }
@@ -295,8 +295,8 @@ package org.ruboss.controllers {
      * 
      * @param object object to update
      * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     * clober the value of any subsequent parameters.
+     *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     *  clober the value of any subsequent parameters.
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
@@ -325,7 +325,7 @@ package org.ruboss.controllers {
         processNtoNRelationships(model);
         Ruboss.errors = new GenericServiceErrors;
         dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));
-      }, service, this, false, false, afterCallback);
+      }, service, this, false, afterCallback);
       invokeService(service.update, service, object, serviceResponder, metadata, nestedBy);
     }
     
@@ -338,8 +338,8 @@ package org.ruboss.controllers {
      * 
      * @param object object to create
      * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     * clober the value of any subsequent parameters.
+     *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     *  clober the value of any subsequent parameters.
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
@@ -365,7 +365,7 @@ package org.ruboss.controllers {
         processNtoNRelationships(model);
         Ruboss.errors = new GenericServiceErrors;
         dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));
-      }, service, this, false, false, afterCallback);
+      }, service, this, false, afterCallback);
       invokeService(service.create, service, object, serviceResponder, metadata, nestedBy);
     }
 
@@ -378,8 +378,8 @@ package org.ruboss.controllers {
      * 
      * @param object object to destroy
      * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     * clober the value of any subsequent parameters.
+     *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     *  clober the value of any subsequent parameters.
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
@@ -406,7 +406,7 @@ package org.ruboss.controllers {
         }
         cleanupModelReferences(fqn, model);
         dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));     
-      }, service, this, false, false, afterCallback);
+      }, service, this, false, afterCallback);
       invokeService(service.destroy, service, object, serviceResponder, metadata, nestedBy);
     }
 
@@ -471,10 +471,10 @@ package org.ruboss.controllers {
     }
 
     private function invokeServiceIndex(handler:Function, targetServiceId:int, clazz:Class, fetchDependencies:Boolean,
-      useLazyMode:Boolean, afterCallback:Object, metadata:Object, nestedBy:Array):void {
+      afterCallback:Object, metadata:Object, nestedBy:Array):void {
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(handler, service, this, 
-        fetchDependencies, useLazyMode, afterCallback);
+        fetchDependencies, afterCallback);
       invokeService(service.index, service, clazz, serviceResponder, metadata, nestedBy);        
     }
     
@@ -524,7 +524,7 @@ package org.ruboss.controllers {
         var items:ModelsCollection = new ModelsCollection(models);
         cache[name] = items;
         dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));
-      }, targetServiceId, clazz, fetchDependencies, useLazyMode, afterCallback, metadata, nestedBy);
+      }, targetServiceId, clazz, fetchDependencies, afterCallback, metadata, nestedBy);
     }
     
     private function invokePage(clazz:Class, afterCallback:Object = null, fetchDependencies:Boolean = true, 
@@ -572,7 +572,7 @@ package org.ruboss.controllers {
 
         cache[name] = items;
         dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));
-      }, targetServiceId, clazz, fetchDependencies, useLazyMode, afterCallback, metadata, nestedBy);
+      }, targetServiceId, clazz, fetchDependencies, afterCallback, metadata, nestedBy);
     }
 
     private function cleanupModelReferences(fqn:String, model:Object):void {
