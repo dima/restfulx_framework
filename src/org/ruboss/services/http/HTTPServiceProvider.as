@@ -200,14 +200,15 @@ package org.ruboss.services.http {
     private function nestResource(object:Object, nestedBy:Array = null):String {
       var result:String = "";
       if (nestedBy == null || nestedBy.length == 0) 
-        return state.controllers[getQualifiedClassName(object)] + ".fxml";
+        return RubossUtils.getResourcePathPrefix(object) + state.controllers[getQualifiedClassName(object)] + ".fxml";
       
       for each (var resource:Object in nestedBy) {
-        result += state.controllers[getQualifiedClassName(resource)] + "/" + 
-          resource["id"];
+        result += RubossUtils.getResourcePathPrefix(resource) + 
+          state.controllers[getQualifiedClassName(resource)] + "/" + resource["id"];
       }
       
-      result += "/" + state.controllers[getQualifiedClassName(object)] + ".fxml";
+      result += "/" + RubossUtils.getResourcePathPrefix(object) + 
+        state.controllers[getQualifiedClassName(object)] + ".fxml";
       return result;
     }
 
