@@ -21,7 +21,6 @@ package org.ruboss.controllers {
   import mx.collections.ArrayCollection;
   import mx.events.PropertyChangeEvent;
   import mx.managers.CursorManager;
-  import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.utils.ObjectUtil;
   
@@ -137,6 +136,7 @@ package org.ruboss.controllers {
      * 
      * @param clazz model class to look up
      */
+    [Bindable(event="propertyChange")]
     public function cached(clazz:Class):ModelsCollection {
       var fqn:String = getQualifiedClassName(clazz);
       return ModelsCollection(cache[fqn]);      
@@ -268,17 +268,7 @@ package org.ruboss.controllers {
         showed.addItem(objectId);
         
         var service:IServiceProvider = getServiceProvider(targetServiceId);
-        var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
-          var fqn:String = getQualifiedClassName(model);
-          var items:ModelsCollection = ModelsCollection(cache[fqn]);
-          if (items.hasItem(model)) {
-            items.setItem(model);
-          } else {
-            items.addItem(model);
-          }
-          processNtoNRelationships(model);
-          dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));
-        }, service, this, fetchDependencies, afterCallback);
+        var serviceResponder:ServiceResponder = new ServiceResponder(onShow, service, this, fetchDependencies, afterCallback);
 
         invokeService(service.show, service, object, serviceResponder, metadata, nestedBy);
       }
@@ -316,16 +306,7 @@ package org.ruboss.controllers {
       }
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       cleanupModelReferences(getQualifiedClassName(object), object);
-      var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
-        var fqn:String = getQualifiedClassName(model);
-        var items:ModelsCollection = cache[fqn] as ModelsCollection;
-        if (items.hasItem(model)) {
-          items.setItem(model);
-        }
-        processNtoNRelationships(model);
-        Ruboss.errors = new GenericServiceErrors;
-        dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));
-      }, service, this, false, afterCallback);
+      var serviceResponder:ServiceResponder = new ServiceResponder(onUpdate, service, this, false, afterCallback);
       invokeService(service.update, service, object, serviceResponder, metadata, nestedBy);
     }
     
@@ -358,14 +339,7 @@ package org.ruboss.controllers {
         }
       }
       var service:IServiceProvider = getServiceProvider(targetServiceId);
-      var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
-        var fqn:String = getQualifiedClassName(model);
-        var items:ModelsCollection = cache[fqn] as ModelsCollection;
-        items.addItem(model);
-        processNtoNRelationships(model);
-        Ruboss.errors = new GenericServiceErrors;
-        dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));
-      }, service, this, false, afterCallback);
+      var serviceResponder:ServiceResponder = new ServiceResponder(onCreate, service, this, false, afterCallback);
       invokeService(service.create, service, object, serviceResponder, metadata, nestedBy);
     }
 
@@ -398,15 +372,7 @@ package org.ruboss.controllers {
         }
       }
       var service:IServiceProvider = getServiceProvider(targetServiceId);
-      var serviceResponder:ServiceResponder = new ServiceResponder(function(model:Object):void {
-        var fqn:String = getQualifiedClassName(model);
-        var items:ModelsCollection = cache[fqn] as ModelsCollection;
-        if (items.hasItem(model)) {
-          items.removeItem(model);
-        }
-        cleanupModelReferences(fqn, model);
-        dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));     
-      }, service, this, false, afterCallback);
+      var serviceResponder:ServiceResponder = new ServiceResponder(onDestroy, service, this, false, afterCallback);
       invokeService(service.destroy, service, object, serviceResponder, metadata, nestedBy);
     }
 
@@ -514,17 +480,7 @@ package org.ruboss.controllers {
 
       metadata = setCurrentPage(metadata, page);
                 
-      invokeServiceIndex(function(models:Array):void {
-        if (models.length == 0) return;
-        var name:String = getQualifiedClassName(models[0]);
-        for each (var item:Object in models) {
-          processNtoNRelationships(item);
-        }
-
-        var items:ModelsCollection = new ModelsCollection(models);
-        cache[name] = items;
-        dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));
-      }, targetServiceId, clazz, fetchDependencies, afterCallback, metadata, nestedBy);
+      invokeServiceIndex(onIndex, targetServiceId, clazz, fetchDependencies, afterCallback, metadata, nestedBy);
     }
     
     private function invokePage(clazz:Class, afterCallback:Object = null, fetchDependencies:Boolean = true, 
@@ -543,36 +499,92 @@ package org.ruboss.controllers {
         
       state.pages[fqn] = page;
         
-      invokeServiceIndex(function(models:Array):void {
-        if (models.length == 0) return;
-        var items:ModelsCollection = null;
+      invokeServiceIndex(onPage, targetServiceId, clazz, fetchDependencies, afterCallback, metadata, nestedBy);
+    }
 
-        var name:String = getQualifiedClassName(models[0]);
-        var current:ModelsCollection = ModelsCollection(cache[name]);
-          
-        var threshold:int = Ruboss.cacheThreshold[name];
-          
-        if (threshold > 1 && (current.length + models.length) >= threshold) {
-          var sliceStart:int = Math.min(current.length, models.length);
-          Ruboss.log.debug("cache size for: " + name + " will exceed the max threshold of: " + threshold + 
-            ", slicing at: " + sliceStart);
-          items = new ModelsCollection(current.source.slice(sliceStart));
+    private function onIndex(models:Array):void {
+      if (models.length == 0) return;
+      var name:String = getQualifiedClassName(models[0]);
+      for each (var item:Object in models) {
+        processNtoNRelationships(item);
+      }
+
+      var items:ModelsCollection = new ModelsCollection(models);
+      cache[name] = items;
+      dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));      
+    }
+    
+    private function onPage(models:Array):void {
+      if (models.length == 0) return;
+      var items:ModelsCollection = null;
+
+      var name:String = getQualifiedClassName(models[0]);
+      var current:ModelsCollection = ModelsCollection(cache[name]);
+        
+      var threshold:int = Ruboss.cacheThreshold[name];
+        
+      if (threshold > 1 && (current.length + models.length) >= threshold) {
+        var sliceStart:int = Math.min(current.length, models.length);
+        Ruboss.log.debug("cache size for: " + name + " will exceed the max threshold of: " + threshold + 
+          ", slicing at: " + sliceStart);
+        items = new ModelsCollection(current.source.slice(sliceStart));
+      } else {
+        items = current;
+      }
+
+      for each (var model:Object in models) {
+        if (items.hasItem(model)) {
+          items.setItem(model);
         } else {
-          items = current;
+          items.addItem(model);
         }
+        processNtoNRelationships(model);
+      }
 
-        for each (var model:Object in models) {
-          if (items.hasItem(model)) {
-            items.setItem(model);
-          } else {
-            items.addItem(model);
-          }
-          processNtoNRelationships(model);
-        }
-
-        cache[name] = items;
-        dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));
-      }, targetServiceId, clazz, fetchDependencies, afterCallback, metadata, nestedBy);
+      cache[name] = items;
+      dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));      
+    }
+    
+    private function onShow(model:Object):void {
+      var fqn:String = getQualifiedClassName(model);
+      var items:ModelsCollection = ModelsCollection(cache[fqn]);
+      if (items.hasItem(model)) {
+        items.setItem(model);
+      } else {
+        items.addItem(model);
+      }
+      processNtoNRelationships(model);
+      dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));      
+    }
+    
+    private function onCreate(model:Object):void {
+      var fqn:String = getQualifiedClassName(model);
+      var items:ModelsCollection = cache[fqn] as ModelsCollection;
+      items.addItem(model);
+      processNtoNRelationships(model);
+      Ruboss.errors = new GenericServiceErrors;
+      dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));     
+    }
+    
+    private function onUpdate(model:Object):void {
+      var fqn:String = getQualifiedClassName(model);
+      var items:ModelsCollection = cache[fqn] as ModelsCollection;
+      if (items.hasItem(model)) {
+        items.setItem(model);
+      }
+      processNtoNRelationships(model);
+      Ruboss.errors = new GenericServiceErrors;
+      dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));      
+    }
+    
+    private function onDestroy(model:Object):void {
+      var fqn:String = getQualifiedClassName(model);
+      var items:ModelsCollection = cache[fqn] as ModelsCollection;
+      if (items.hasItem(model)) {
+        items.removeItem(model);
+      }
+      cleanupModelReferences(fqn, model);
+      dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));        
     }
 
     private function cleanupModelReferences(fqn:String, model:Object):void {
