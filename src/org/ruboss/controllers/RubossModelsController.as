@@ -12,6 +12,7 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.controllers {
+  import flash.events.Event;
   import flash.events.EventDispatcher;
   import flash.utils.Dictionary;
   import flash.utils.describeType;
@@ -19,12 +20,12 @@ package org.ruboss.controllers {
   import flash.utils.getQualifiedClassName;
   
   import mx.collections.ArrayCollection;
-  import mx.events.PropertyChangeEvent;
   import mx.managers.CursorManager;
   import mx.rpc.IResponder;
   import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.events.CacheUpdateEvent;
   import org.ruboss.models.ModelsCollection;
   import org.ruboss.models.ModelsStateMetadata;
   import org.ruboss.services.GenericServiceErrors;
@@ -136,7 +137,7 @@ package org.ruboss.controllers {
      * 
      * @param clazz model class to look up
      */
-    [Bindable(event="propertyChange")]
+    [Bindable(event="cacheUpdate")]
     public function cached(clazz:Class):ModelsCollection {
       var fqn:String = getQualifiedClassName(clazz);
       return ModelsCollection(cache[fqn]);      
@@ -162,7 +163,7 @@ package org.ruboss.controllers {
      * @param page page to request (only used by index method)
      * @param targetServiceId service provider to use
      */
-    [Bindable(event="propertyChange")]
+    [Bindable(event="cacheUpdate")]
     public function index(clazz:Class, optsOrAfterCallback:Object = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, page:int = -1,
       targetServiceId:int = -1):ModelsCollection {
@@ -208,7 +209,7 @@ package org.ruboss.controllers {
      * @param useLazyModel if true dependencies marked with [Lazy] will be skipped (not fetched)
      * @param targetServiceId service provider to use
      */
-    [Bindable(event="propertyChange")]
+    [Bindable(event="cacheUpdate")]
     public function show(object:Object, optsOrAfterCallback:Object = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false,
       targetServiceId:int = -1):Object {
@@ -432,7 +433,8 @@ package org.ruboss.controllers {
     private function invokeService(method:Function, service:IServiceProvider, operand:Object, 
       serviceResponder:ServiceResponder, metadata:Object = null, nestedBy:Array = null):void {
       CursorManager.setBusyCursor();
-      metadata = setServiceMetadata(metadata);      
+      metadata = setServiceMetadata(metadata);
+      dispatchEvent(new Event("serviceCallStart"));   
       method.call(service, operand, serviceResponder, metadata, nestedBy);   
     }
 
@@ -511,7 +513,7 @@ package org.ruboss.controllers {
 
       var items:ModelsCollection = new ModelsCollection(models);
       cache[name] = items;
-      dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));      
+      dispatchEvent(new CacheUpdateEvent(name));      
     }
     
     private function onPage(models:Array):void {
@@ -542,7 +544,7 @@ package org.ruboss.controllers {
       }
 
       cache[name] = items;
-      dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "index", cache, cache));      
+      dispatchEvent(new CacheUpdateEvent(name));      
     }
     
     private function onShow(model:Object):void {
@@ -554,7 +556,7 @@ package org.ruboss.controllers {
         items.addItem(model);
       }
       processNtoNRelationships(model);
-      dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));      
+      dispatchEvent(new CacheUpdateEvent(fqn));      
     }
     
     private function onCreate(model:Object):void {
@@ -563,7 +565,7 @@ package org.ruboss.controllers {
       items.addItem(model);
       processNtoNRelationships(model);
       Ruboss.errors = new GenericServiceErrors;
-      dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));     
+      dispatchEvent(new CacheUpdateEvent(fqn));     
     }
     
     private function onUpdate(model:Object):void {
@@ -574,7 +576,7 @@ package org.ruboss.controllers {
       }
       processNtoNRelationships(model);
       Ruboss.errors = new GenericServiceErrors;
-      dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));      
+      dispatchEvent(new CacheUpdateEvent(fqn));      
     }
     
     private function onDestroy(model:Object):void {
@@ -584,7 +586,7 @@ package org.ruboss.controllers {
         items.removeItem(model);
       }
       cleanupModelReferences(fqn, model);
-      dispatchEvent(PropertyChangeEvent.createUpdateEvent(cache, fqn, items, items));        
+      dispatchEvent(new CacheUpdateEvent(fqn));        
     }
 
     private function cleanupModelReferences(fqn:String, model:Object):void {

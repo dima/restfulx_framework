@@ -12,6 +12,8 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.services {
+  import flash.events.Event;
+  
   import mx.managers.CursorManager;
   import mx.rpc.IResponder;
   
@@ -50,7 +52,8 @@ package org.ruboss.services {
      * @see mx.rpc.IResponder#result
      */
     public function result(event:Object):void {
-      CursorManager.removeBusyCursor();    
+      CursorManager.removeBusyCursor();
+      controller.dispatchEvent(new Event("serviceCallEnd"));
       if (handler != null) {
         if (!service.hasErrors(event.result)) {
           var fqn:String = service.peek(event.result);
@@ -84,6 +87,7 @@ package org.ruboss.services {
      */
     public function fault(error:Object):void {
       CursorManager.removeBusyCursor();
+      controller.dispatchEvent(new Event("serviceCallEnd"));
       invokeAfterCallbackErrorHandler(error);
       Ruboss.log.error(error.toString());
     }
