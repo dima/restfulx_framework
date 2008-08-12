@@ -131,7 +131,7 @@ package org.ruboss.models {
         // camel-casing variable names we get from RoR
         var localName:String = modelName.charAt(0).toLowerCase() + modelName.slice(1);
         
-        var controller:String = RubossUtils.getResourceController(model);
+        var controller:String = RubossUtils.getResourceName(model);
         
         // don't store any metadata for a model that doesn't have a controller
         if (RubossUtils.isEmpty(controller)) continue;
@@ -193,7 +193,7 @@ package org.ruboss.models {
     private function computeDependecyTree(model:Object):void {
       var fqn:String = getQualifiedClassName(model);
       // don't compute dependencies for a model that doesn't have a controller
-      if (RubossUtils.isEmpty(RubossUtils.getResourceController(model))) return;
+      if (RubossUtils.isEmpty(RubossUtils.getResourceName(model))) return;
       
       for each (var node:XML in describeType(model)..accessor) {
         var types:Array = new Array;

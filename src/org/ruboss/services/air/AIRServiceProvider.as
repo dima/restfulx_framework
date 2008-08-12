@@ -81,7 +81,7 @@ package org.ruboss.services.air {
       
       for each (var model:Class in state.models) {
         var fqn:String = getQualifiedClassName(model);
-        if (RubossUtils.isEmpty(RubossUtils.getResourceController(model))) continue;
+        if (RubossUtils.isEmpty(RubossUtils.getResourceName(model))) continue;
         
         sql[fqn] = new Dictionary;          
       }
@@ -148,9 +148,10 @@ package org.ruboss.services.air {
       token.addResponder(responder);
       var query:Object = {token:token, fqn:fqn, statement:statement};
       pending.push(query);
+      
       if (!timer) {
         timer = new Timer(1);
-        timer.addEventListener(TimerEvent.TIMER, executeIndex);
+        timer.addEventListener(TimerEvent.TIMER, executePendindIndex);
         timer.start();
       }
     }
@@ -268,7 +269,7 @@ package org.ruboss.services.air {
     }
     
     private function extractMetadata(model:Object):void {
-      var tableName:String = RubossUtils.getResourceController(model);
+      var tableName:String = RubossUtils.getResourceName(model);
       
       // make sure we don't try to create anything for a resource with no controller
       if (RubossUtils.isEmpty(tableName)) return;
@@ -434,23 +435,20 @@ package org.ruboss.services.air {
       }      
     }
     
-    private function executeIndex(event:TimerEvent):void {
-      var query:Object = pending.shift();
-      if (!query) return;
-      
+    private function executePendindIndex(event:TimerEvent):void {
       if (pending.length == 0) {
         timer.stop();
         timer = null;
       }
       
+      var query:Object = pending.shift();
+      if (!query) return;
+      
       var statement:SQLStatement = SQLStatement(query['statement']);
       var token:AsyncToken = AsyncToken(query['token']);
       var fqn:String = query['fqn'];
-      
       var clazz:Class = getDefinitionByName(fqn) as Class;
-      
-      if (!token.hasResponder()) return;
-      
+            
       statement.execute();
       
       var result:Array  = new Array;
@@ -468,6 +466,7 @@ package org.ruboss.services.air {
         model["fetched"] = true;
         result.push(model);
       }
+      
       delete indexing[fqn];
       delete state.waiting[fqn];
       state.fetching[fqn] = new Array;
