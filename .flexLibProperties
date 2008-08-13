@@ -3,6 +3,7 @@
 <includeClasses>
 <classEntry path="org.ruboss.components.MoneyTextInput"/>
 <classEntry path="org.ruboss.components.DateTextInput"/>
+<classEntry path="org.ruboss.events.ServiceCallStopEvent"/>
 <classEntry path="org.ruboss.services.http.HTTPServiceProvider"/>
 <classEntry path="org.ruboss.services.ServiceManager"/>
 <classEntry path="org.ruboss.services.air.AIRServiceProvider"/>
@@ -20,6 +21,7 @@
 <classEntry path="org.ruboss.models.RubossFileReference"/>
 <classEntry path="org.ruboss.validators.ServiceErrorValidator"/>
 <classEntry path="org.ruboss.utils.RubossUtils"/>
+<classEntry path="org.ruboss.events.ServiceCallStartEvent"/>
 <classEntry path="org.ruboss.services.IServiceProvider"/>
 <classEntry path="org.ruboss.controllers.RubossModelsController"/>
 <classEntry path="org.ruboss.events.RubossEvent"/>

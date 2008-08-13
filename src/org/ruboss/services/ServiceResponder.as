@@ -12,13 +12,12 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.services {
-  import flash.events.Event;
-  
   import mx.managers.CursorManager;
   import mx.rpc.IResponder;
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.RubossModelsController;
+  import org.ruboss.events.ServiceCallStopEvent;
 
   /**
    * Central response manager for RESTful CRUD operations.
@@ -53,7 +52,7 @@ package org.ruboss.services {
      */
     public function result(event:Object):void {
       CursorManager.removeBusyCursor();
-      controller.dispatchEvent(new Event("serviceCallEnd"));
+      controller.dispatchEvent(new ServiceCallStopEvent);
       if (handler != null) {
         if (!service.hasErrors(event.result)) {
           var fqn:String = service.peek(event.result);
@@ -87,7 +86,7 @@ package org.ruboss.services {
      */
     public function fault(error:Object):void {
       CursorManager.removeBusyCursor();
-      controller.dispatchEvent(new Event("serviceCallEnd"));
+      controller.dispatchEvent(new ServiceCallStopEvent);
       invokeAfterCallbackErrorHandler(error);
       Ruboss.log.error(error.toString());
     }
