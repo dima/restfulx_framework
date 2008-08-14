@@ -12,7 +12,6 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.controllers {
-  import flash.events.Event;
   import flash.events.EventDispatcher;
   import flash.utils.Dictionary;
   import flash.utils.describeType;
@@ -26,6 +25,7 @@ package org.ruboss.controllers {
   
   import org.ruboss.Ruboss;
   import org.ruboss.events.CacheUpdateEvent;
+  import org.ruboss.events.ServiceCallStartEvent;
   import org.ruboss.models.ModelsCollection;
   import org.ruboss.models.ModelsStateMetadata;
   import org.ruboss.services.GenericServiceErrors;
@@ -434,7 +434,7 @@ package org.ruboss.controllers {
       serviceResponder:ServiceResponder, metadata:Object = null, nestedBy:Array = null):void {
       CursorManager.setBusyCursor();
       metadata = setServiceMetadata(metadata);
-      dispatchEvent(new Event("serviceCallStart"));   
+      dispatchEvent(new ServiceCallStartEvent);   
       method.call(service, operand, serviceResponder, metadata, nestedBy);   
     }
 
