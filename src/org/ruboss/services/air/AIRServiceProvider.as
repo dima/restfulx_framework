@@ -124,7 +124,7 @@ package org.ruboss.services.air {
     /**
      * @see org.ruboss.services.IServiceProvider#marshall
      */
-    public function marshall(object:Object, metadata:Object = null):Object {
+    public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       return object;
     }
 

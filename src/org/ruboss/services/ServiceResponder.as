@@ -59,7 +59,7 @@ package org.ruboss.services {
           if (checkResultOrder(fqn, event)) {
             if (fqn != null) Ruboss.log.debug("handling response for: " + fqn);
             var checkedResult:Object = service.unmarshall(event.result);
-            handler.call(controller, checkedResult);
+            handler(checkedResult);
             for each (var dependant:Object in controller.state.queue[fqn]) {
               var target:Object = dependant["target"];
               var targetEvent:Object = dependant["event"];

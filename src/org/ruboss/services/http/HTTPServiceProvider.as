@@ -97,8 +97,8 @@ package org.ruboss.services.http {
     /**
      * @see org.ruboss.services.IServiceProvider#marshall
      */
-    public function marshall(object:Object, metadata:Object = null):Object {
-      return marshallToXML(object, metadata);
+    public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
+      return marshallToXML(object, recursive, metadata);
     }
 
     /**
@@ -226,7 +226,8 @@ package org.ruboss.services.http {
       return RubossUtils.isInvalidProperty(type);
     }
 
-    private function marshallToXML(object:Object, metadata:Object = null):XML {
+    private function marshallToXML(object:Object, recursive:Boolean = false, metadata:Object = null, 
+      parent:Object = null):XML {
       var result:String = null;
       
       var fqn:String = getQualifiedClassName(object);
@@ -235,7 +236,7 @@ package org.ruboss.services.http {
       var vars:Array = new Array;
       for each (var node:XML in describeType(object)..accessor) {
         if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
-          RubossUtils.isIgnored(node) || RubossUtils.isHasOne(node)) continue;
+          RubossUtils.isIgnored(node)) continue;
           
         var nodeName:String = node.@name;
         var type:String = node.@type;
@@ -243,9 +244,20 @@ package org.ruboss.services.http {
         
         if (isInvalidProperty(type) || object[nodeName] == null) continue;
         
-        // treat model objects specially (we are only interested in serializing
-        // the [BelongsTo] end of the relationship
-        if (RubossUtils.isBelongsTo(node)) {
+        if (RubossUtils.isHasMany(node)) {
+          if (!recursive) continue;
+          var embedded:Array = new Array;
+          for each (var item:Object in object[nodeName]) {
+            if (item != parent) {
+              embedded.push(marshallToXML(item, recursive, metadata, object));
+            }
+          }
+          vars.push("<" + snakeName + " type=\"array\">" + embedded.join("") + "</" + snakeName + ">");          
+        } else if (RubossUtils.isHasOne(node)) {
+          if (!recursive) continue;
+          vars.push(marshallToXML(object[nodeName], recursive, metadata, object).toXMLString());          
+        } else if (RubossUtils.isBelongsTo(node)) {
+          if (recursive && object[nodeName] == parent) continue;
           var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
           var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
 
@@ -253,10 +265,10 @@ package org.ruboss.services.http {
           if (polymorphic) {
             vars.push(("<" + snakeName + "_type>" + getQualifiedClassName(object[nodeName]).split("::")[1] + 
               "</" + snakeName + "_type>"));
-          }
+          }            
         } else {
           vars.push(("<" + snakeName + ">" + 
-            RubossUtils.uncast(object, nodeName) + "</" + snakeName + ">"));
+            RubossUtils.uncast(object, nodeName) + "</" + snakeName + ">"));               
         }
       }
 

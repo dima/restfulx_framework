@@ -20,6 +20,7 @@ package org.ruboss.controllers {
   
   import org.ruboss.Ruboss;
   import org.ruboss.services.http.HTTPServiceProvider;
+  import org.ruboss.utils.RubossUtils;
   
   /**
    * Custom HTTP controller that allows sending arbitrary data (as 
@@ -35,6 +36,7 @@ package org.ruboss.controllers {
     private var contentType:String;
     private var resultHandler:Function;
     private var faultHandler:Function;
+    private var cacheHandler:Function;
     
     /**
      * @param optsOrResultHandler can be either an anonymous object of options or a result handler 
@@ -43,19 +45,19 @@ package org.ruboss.controllers {
      * @param contentType content type for the request
      * @param rootUrl the URL to prefix to requests
      */
-    public function SimpleHTTPController(optsOrResultHandler:Object = null, faultHandler:Function = null, 
+    public function SimpleHTTPController(optsOrOnResult:Object = null, onFault:Function = null, 
       contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null) {
-      if (optsOrResultHandler == null) optsOrResultHandler = {};
-      this.faultHandler = faultHandler;
+      if (optsOrOnResult == null) optsOrOnResult = {};
+      this.faultHandler = onFault;
       this.contentType = contentType;
       this.rootUrl = rootUrl;
-      if (optsOrResultHandler is Function) {
-        this.resultHandler = optsOrResultHandler as Function;
+      if (optsOrOnResult is Function) {
+        this.resultHandler = optsOrOnResult as Function;
       } else {
-        if (optsOrResultHandler['onResult']) this.resultHandler = optsOrResultHandler['onResult'];
-        if (optsOrResultHandler['onFault']) this.faultHandler = optsOrResultHandler['onFault'];
-        if (optsOrResultHandler['contentType']) this.contentType = optsOrResultHandler['contentType'];
-        if (optsOrResultHandler['rootUrl']) this.rootUrl = optsOrResultHandler['rootUrl'];
+        if (optsOrOnResult['onResult']) this.resultHandler = optsOrOnResult['onResult'];
+        if (optsOrOnResult['onFault']) this.faultHandler = optsOrOnResult['onFault'];
+        if (optsOrOnResult['contentType']) this.contentType = optsOrOnResult['contentType'];
+        if (optsOrOnResult['rootUrl']) this.rootUrl = optsOrOnResult['rootUrl'];
       }
     }
     
@@ -73,7 +75,7 @@ package org.ruboss.controllers {
      *  the response will be unmarshalled first)
      */
     public function invoke(optsOrURL:Object, data:Object = null, method:* = SimpleHTTPController.GET, 
-      unmarshall:Boolean = false, cache:Boolean = false):void {
+      unmarshall:Boolean = false, cacheBy:String = null):void {
       var url:String = null;
       if (optsOrURL is String) {
         url = String(optsOrURL);
@@ -82,7 +84,7 @@ package org.ruboss.controllers {
         if (optsOrURL['data']) data = optsOrURL['data'];
         if (optsOrURL['method']) method = optsOrURL['method'];
         if (optsOrURL['unmarshall']) unmarshall = optsOrURL['unmarshall'];
-        if (optsOrURL['cache']) cache = optsOrURL['cache'];
+        if (optsOrURL['cacheBy']) cacheBy = optsOrURL['cacheBy'];
       }
       
       if (data == null) {
@@ -105,7 +107,18 @@ package org.ruboss.controllers {
       }
       
       var responder:ItemResponder = null;
-      if (cache) {
+      if (!RubossUtils.isEmpty(cacheBy)) {
+        if (cacheBy == "create") {
+          cacheHandler = Ruboss.models.onCreate;
+        } else if (cacheBy == "update") {
+          cacheHandler = Ruboss.models.onUpdate;
+        } else if (cacheBy == "index") {
+          cacheHandler = Ruboss.models.onIndex;
+        } else if (cacheBy == "page") {
+          cacheHandler = Ruboss.models.onPage;
+        } else if (cacheBy == "destroy") {
+          cacheHandler = Ruboss.models.onDestroy;
+        }
         responder = new ItemResponder(unmarshallAndCacheResultHandler, defaultFaultHandler);
       } else if (unmarshall) {
         responder = new ItemResponder(unmarshallResultHandler, defaultFaultHandler);
@@ -195,7 +208,9 @@ package org.ruboss.controllers {
     
     // TODO: append results to cache here
     private function unmarshallAndCacheResultHandler(data:Object, token:Object = null):void {
-      unmarshallResultHandler(data, token); 
+      var result:Object = unmarshall(data);
+      cacheHandler(result);
+      if (resultHandler != null) resultHandler(result);
     }
     
     private function defaultResultHandler(data:Object, token:Object = null):void {
