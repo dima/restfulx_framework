@@ -504,7 +504,7 @@ package org.ruboss.controllers {
       invokeServiceIndex(onPage, targetServiceId, clazz, fetchDependencies, afterCallback, metadata, nestedBy);
     }
 
-    private function onIndex(models:Array):void {
+    public function onIndex(models:Array):void {
       if (models.length == 0) return;
       var name:String = getQualifiedClassName(models[0]);
       for each (var item:Object in models) {
@@ -516,7 +516,7 @@ package org.ruboss.controllers {
       dispatchEvent(new CacheUpdateEvent(name));      
     }
     
-    private function onPage(models:Array):void {
+    public function onPage(models:Array):void {
       if (models.length == 0) return;
       var items:ModelsCollection = null;
 
@@ -547,7 +547,7 @@ package org.ruboss.controllers {
       dispatchEvent(new CacheUpdateEvent(name));      
     }
     
-    private function onShow(model:Object):void {
+    public function onShow(model:Object):void {
       var fqn:String = getQualifiedClassName(model);
       var items:ModelsCollection = ModelsCollection(cache[fqn]);
       if (items.hasItem(model)) {
@@ -559,7 +559,7 @@ package org.ruboss.controllers {
       dispatchEvent(new CacheUpdateEvent(fqn));      
     }
     
-    private function onCreate(model:Object):void {
+    public function onCreate(model:Object):void {
       var fqn:String = getQualifiedClassName(model);
       var items:ModelsCollection = cache[fqn] as ModelsCollection;
       items.addItem(model);
@@ -568,7 +568,7 @@ package org.ruboss.controllers {
       dispatchEvent(new CacheUpdateEvent(fqn));     
     }
     
-    private function onUpdate(model:Object):void {
+    public function onUpdate(model:Object):void {
       var fqn:String = getQualifiedClassName(model);
       var items:ModelsCollection = cache[fqn] as ModelsCollection;
       if (items.hasItem(model)) {
@@ -579,7 +579,7 @@ package org.ruboss.controllers {
       dispatchEvent(new CacheUpdateEvent(fqn));      
     }
     
-    private function onDestroy(model:Object):void {
+    public function onDestroy(model:Object):void {
       var fqn:String = getQualifiedClassName(model);
       var items:ModelsCollection = cache[fqn] as ModelsCollection;
       if (items.hasItem(model)) {

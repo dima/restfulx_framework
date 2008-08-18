@@ -29,7 +29,6 @@ package org.ruboss.utils {
    */
   public class RubossUtils {
     private static const IGNORED_TYPES:Array = [
-      "org.ruboss.models::ModelsCollection",
       "mx.collections::ArrayCollection",
       "flash.net::FileReference",
       "flash.net::FileReferenceList",
