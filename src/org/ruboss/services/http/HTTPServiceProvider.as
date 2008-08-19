@@ -294,7 +294,7 @@ package org.ruboss.services.http {
       var result:Object = new Object;
       for each (var node:XML in describeType(object)..accessor) {
         if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
-          RubossUtils.isIgnored(node) || RubossUtils.isHasOne(node)) continue;
+          RubossUtils.isIgnored(node) || RubossUtils.isHasOne(node) || RubossUtils.isHasMany(node)) continue;
           
         var nodeName:String = node.@name;
         var type:String = node.@type;
