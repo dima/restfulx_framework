@@ -586,7 +586,6 @@ package org.ruboss.controllers {
         cleanupModelReferences(fqn, model);
         items.removeItem(model);
       }
-      model = null;
       dispatchEvent(new CacheUpdateEvent(fqn));        
     }
 
