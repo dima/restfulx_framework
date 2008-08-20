@@ -17,6 +17,7 @@ package org.ruboss.services.http {
   import flash.net.URLRequest;
   import flash.net.URLRequestMethod;
   import flash.net.URLVariables;
+  import flash.utils.Dictionary;
   import flash.utils.describeType;
   import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
@@ -116,14 +117,15 @@ package org.ruboss.services.http {
       if (xmlFragment.@type == "array") {
         // we are only going to specifically unmarshall known relationships
         if (state.fqns[objectName]) {
+          var intermediateCache:Dictionary = new Dictionary;
           for each (var node:XML in xmlFragment.children()) {
-            results.push(unmarshallNode(node));
+            results.push(unmarshallNode(node, null, null, intermediateCache));
           }
         }
         return results;
       } else {
         // otherwise treat it as a single element (treat it as a show)
-        return unmarshallNode(xmlFragment);
+        return unmarshallNode(xmlFragment, null, null, new Dictionary);
       }
     }
     
@@ -222,8 +224,12 @@ package org.ruboss.services.http {
       return result.replace(/&$/, "");
     }
     
-    private function isInvalidProperty(type:String):Boolean {
-      return RubossUtils.isInvalidProperty(type);
+    private function isInvalidPropertyType(type:String):Boolean {
+      return RubossUtils.isInvalidPropertyType(type);
+    }
+    
+    private function isInvalidPropertyName(name:String):Boolean {
+      return RubossUtils.isInvalidPropertyName(name);
     }
 
     private function marshallToXML(object:Object, recursive:Boolean = false, metadata:Object = null, 
@@ -235,14 +241,13 @@ package org.ruboss.services.http {
       
       var vars:Array = new Array;
       for each (var node:XML in describeType(object)..accessor) {
-        if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
-          RubossUtils.isIgnored(node)) continue;
+        if (RubossUtils.isIgnored(node)) continue;
           
         var nodeName:String = node.@name;
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(nodeName);
         
-        if (isInvalidProperty(type) || object[nodeName] == null) continue;
+        if (isInvalidPropertyName(nodeName) || isInvalidPropertyType(type) || object[nodeName] == null) continue;
         
         if (RubossUtils.isHasMany(node)) {
           if (!recursive) continue;
@@ -293,14 +298,13 @@ package org.ruboss.services.http {
       
       var result:Object = new Object;
       for each (var node:XML in describeType(object)..accessor) {
-        if (!RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
-          RubossUtils.isIgnored(node) || RubossUtils.isHasOne(node) || RubossUtils.isHasMany(node)) continue;
+        if (RubossUtils.isIgnored(node) || RubossUtils.isHasOne(node) || RubossUtils.isHasMany(node)) continue;
           
         var nodeName:String = node.@name;
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(nodeName);
         
-        if (isInvalidProperty(type) || object[nodeName] == null) continue;
+        if (isInvalidPropertyType(type) || isInvalidPropertyName(nodeName) || object[nodeName] == null) continue;
         
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
@@ -328,10 +332,13 @@ package org.ruboss.services.http {
       return result;
     }
     
-    private function unmarshallNode(node:XML, implicitReference:Object = null, implicitReferenceName:String = null):Object {
+    private function unmarshallNode(node:XML, implicitReference:Object = null, implicitReferenceName:String = null, 
+      intermediateCache:Dictionary = null):Object {
       var localName:String = RubossUtils.toCamelCase(node.localName());
       var fqn:String = state.keys[localName];
-      if (fqn == null || parseInt(node.id) == 0) 
+      var addToIntermediateCache:Boolean = false;
+      var nodeId:int = parseInt(node.id);
+      if (fqn == null || nodeId == 0) 
         throw new Error("cannot unmarshall " + node.localName() + 
           " no mapping exists or receieved a node with invalid id");
 
@@ -341,9 +348,14 @@ package org.ruboss.services.http {
       
       // if not in cache, we need to create a new instance
       if (object == null) {
-        var clazz:Class = getDefinitionByName(fqn) as Class;
-        object = new clazz;
-        object["id"] = node.id;
+        if (intermediateCache && intermediateCache[nodeId]) {
+          object = intermediateCache[nodeId];
+          if (object["fetched"]) return object;
+        } else {
+          var clazz:Class = getDefinitionByName(fqn) as Class;
+          object = new clazz;
+        }
+        object["id"] = nodeId;
       }
                         
       // TODO: needs to handle arrays too?
@@ -351,6 +363,7 @@ package org.ruboss.services.http {
         var targetName:String = element.localName();
         var referenceTargetName:String = targetName;
         var isRef:Boolean = false;
+        var isParentRef:Boolean = false;
         var isNestedArray:Boolean = false;
 
         // if we got a node with a name that terminates in "_id" we check to see if
@@ -359,19 +372,27 @@ package org.ruboss.services.http {
           var checkName:String = targetName.replace(/_id$/, "");
           var camelCheckName:String = RubossUtils.toCamelCase(checkName);
           
-          // check to see if it's a polymorphic association
-          var polymorphicRef:String = node[checkName + "_type"];
-          if (!RubossUtils.isEmpty(polymorphicRef)) {
-            var polymorphicRefName:String = RubossUtils.lowerCaseFirst(polymorphicRef);
-            if (state.keys[polymorphicRefName]) {
-              referenceTargetName = polymorphicRefName;
+          if (checkName == "parent") {
+            targetName = camelCheckName;
+            referenceTargetName = localName;
+            isRef = true;
+            isParentRef = true;
+            addToIntermediateCache = true;
+          } else {
+            // check to see if it's a polymorphic association
+            var polymorphicRef:String = node[checkName + "_type"];
+            if (!RubossUtils.isEmpty(polymorphicRef)) {
+              var polymorphicRefName:String = RubossUtils.lowerCaseFirst(polymorphicRef);
+              if (state.keys[polymorphicRefName]) {
+                referenceTargetName = polymorphicRefName;
+                targetName = camelCheckName;
+                isRef = true;
+              }
+            } else if (state.keys[camelCheckName]) {
               targetName = camelCheckName;
+              referenceTargetName = targetName;
               isRef = true;
             }
-          } else if (state.keys[camelCheckName]) {
-            targetName = camelCheckName;
-            referenceTargetName = targetName;
-            isRef = true;
           }
         } else {
           // if the XML element name is a known controller name and assume
@@ -388,10 +409,15 @@ package org.ruboss.services.http {
           // if this property is a reference, try to resolve the 
           // reference and set up biderctional links between models
           if (isRef) {
-            var ref:Object = inferReference(element, referenceTargetName, implicitReference, implicitReferenceName);
+            var ref:Object = null;
+            if (isParentRef) {
+              ref = findParentReference(element, node, intermediateCache);
+            } else {
+              ref = inferReference(element, referenceTargetName, implicitReference, implicitReferenceName);
+            }
                             
             // collectionName should be the same as the camel-cased name of the controller for the current node
-            var collectionName:String = 
+            var collectionName:String = (isParentRef) ? "children" :
               RubossUtils.toCamelCase(state.controllers[RubossUtils.toCamelCase(node.localName())]);
                 
             // if we've got a plural definition which is annotated with [HasMany] 
@@ -450,6 +476,9 @@ package org.ruboss.services.http {
       }
       
       object["fetched"] = true;
+      if (addToIntermediateCache) {
+        intermediateCache[object.id] = object;
+      }
       return object;
     }
     
@@ -485,6 +514,28 @@ package org.ruboss.services.http {
         }
       }
       return ref;
+    }
+    
+    private function findParentReference(element:XML, node:XML, intermediateCache:Dictionary):Object {
+      var elementId:int = parseInt(element.toString());
+      var fqn:String = state.keys[RubossUtils.toCamelCase(node.localName())];
+      if (elementId != 0 && !isNaN(elementId)) {
+        var parentRef:Object = null;
+        if (Ruboss.models.cache[fqn]) {
+          parentRef = ModelsCollection(Ruboss.models.cache[fqn]).withId(elementId);
+          if (parentRef) return parentRef;
+        }
+
+        if (!intermediateCache[elementId] && node.parent()) {
+          var parent:XML = node.parent()[node.localName()].(id == elementId)[0];
+          if (parent.id == elementId) {
+            parentRef = unmarshallNode(parent, null, null, intermediateCache);
+            intermediateCache[elementId] = parentRef;
+          }
+        }
+        return intermediateCache[elementId];
+      }
+      return null;
     }
     
     private function processNestedArray(element:XML, implicitReference:Object, implicitReferenceName:String):void {

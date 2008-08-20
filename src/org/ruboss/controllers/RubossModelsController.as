@@ -583,9 +583,10 @@ package org.ruboss.controllers {
       var fqn:String = getQualifiedClassName(model);
       var items:ModelsCollection = cache[fqn] as ModelsCollection;
       if (items.hasItem(model)) {
+        cleanupModelReferences(fqn, model);
         items.removeItem(model);
       }
-      cleanupModelReferences(fqn, model);
+      model = null;
       dispatchEvent(new CacheUpdateEvent(fqn));        
     }
 
@@ -604,6 +605,19 @@ package org.ruboss.controllers {
             item[localName] = null;
           }
         }
+      }
+      if (model.hasOwnProperty("parent") && model["parent"] != null && model["parent"].hasOwnProperty("children") &&
+        model["parent"]["children"] != null) {
+        var parentChildren:ModelsCollection = ModelsCollection(model["parent"]["children"]);
+        if (parentChildren.hasItem(model)) {
+          parentChildren.removeItem(model);
+        }
+      }
+      if (model.hasOwnProperty("children") && model["children"] != null) {
+        var children:ModelsCollection = ModelsCollection(model["children"]);
+        for each (var child:Object in children) {
+          onDestroy(child);
+        }  
       }
     }
   }

@@ -175,28 +175,26 @@ package org.ruboss.services.air {
       var fqn:String = getQualifiedClassName(object);
       var statement:SQLStatement = getSQLStatement(sql[fqn]["insert"]);
       for each (var node:XML in describeType(object)..accessor) {
-        if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
-          var localName:String = node.@name;
-          var type:String = node.@type;
-          var snakeName:String = RubossUtils.toSnakeCase(localName);
-
-          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
-                      
-          if (RubossUtils.isBelongsTo(node)) {
-            if (RubossUtils.isPolymorphicBelongsTo(node)) {
-              statement.parameters[":" + snakeName + "_type"] = (object[localName] == null) ? null : 
-                getQualifiedClassName(object[localName]).split("::")[1];
-            }
-            snakeName = snakeName + "_id";
-            var ref:Object = object[localName];
-            statement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
-
+        var localName:String = node.@name;
+        var type:String = node.@type;
+        var snakeName:String = RubossUtils.toSnakeCase(localName);
+  
+        if (isInvalidPropertyType(type) || isInvalidPropertyName(localName) || RubossUtils.isHasOne(node)) continue;
+                    
+        if (RubossUtils.isBelongsTo(node)) {
+          if (RubossUtils.isPolymorphicBelongsTo(node)) {
+            statement.parameters[":" + snakeName + "_type"] = (object[localName] == null) ? null : 
+              getQualifiedClassName(object[localName]).split("::")[1];
+          }
+          snakeName = snakeName + "_id";
+          var ref:Object = object[localName];
+          statement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
+  
+        } else {
+          if (object[localName] is Boolean) {
+            statement.parameters[":" + snakeName] = object[localName];
           } else {
-            if (object[localName] is Boolean) {
-              statement.parameters[":" + snakeName] = object[localName];
-            } else {
-              statement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
-            }
+            statement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
           }
         }
       }
@@ -214,26 +212,24 @@ package org.ruboss.services.air {
       statement = statement.replace("{id}", object["id"]);
       var sqlStatement:SQLStatement = getSQLStatement(statement);
       for each (var node:XML in describeType(object)..accessor) {
-        if (RubossUtils.isInSamePackage(node.@declaredBy, getQualifiedClassName(object))) {
-          var localName:String = node.@name;
-          var type:String = node.@type;
-          var snakeName:String = RubossUtils.toSnakeCase(localName);
-
-          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
-
-          if (RubossUtils.isBelongsTo(node)) {
-            if (RubossUtils.isPolymorphicBelongsTo(node)) {
-              sqlStatement.parameters[":" + snakeName + "_type"] = getQualifiedClassName(object[localName]).split("::")[1];
-            }
-            snakeName = snakeName + "_id";
-            var ref:Object = object[localName];
-            sqlStatement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
+        var localName:String = node.@name;
+        var type:String = node.@type;
+        var snakeName:String = RubossUtils.toSnakeCase(localName);
+  
+        if (isInvalidPropertyType(type) || isInvalidPropertyName(localName) || RubossUtils.isHasOne(node)) continue;
+  
+        if (RubossUtils.isBelongsTo(node)) {
+          if (RubossUtils.isPolymorphicBelongsTo(node)) {
+            sqlStatement.parameters[":" + snakeName + "_type"] = getQualifiedClassName(object[localName]).split("::")[1];
+          }
+          snakeName = snakeName + "_id";
+          var ref:Object = object[localName];
+          sqlStatement.parameters[":" + snakeName] = (ref == null) ? null : ref["id"];
+        } else {
+          if (object[localName] is Boolean) {
+            sqlStatement.parameters[":" + snakeName] = object[localName];
           } else {
-            if (object[localName] is Boolean) {
-              sqlStatement.parameters[":" + snakeName] = object[localName];
-            } else {
-              sqlStatement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
-            }
+            sqlStatement.parameters[":" + snakeName] = RubossUtils.uncast(object, localName);
           }
         }
       }
@@ -252,8 +248,12 @@ package org.ruboss.services.air {
       invokeResponder(responder, object);
     }
     
-    private function isInvalidProperty(type:String):Boolean {
-      return RubossUtils.isInvalidProperty(type);
+    private function isInvalidPropertyType(type:String):Boolean {
+      return RubossUtils.isInvalidPropertyType(type);
+    }
+    
+    private function isInvalidPropertyName(name:String):Boolean {
+      return RubossUtils.isInvalidPropertyName(name);
     }
 
     private function getSQLType(node:XML):String {
@@ -284,32 +284,29 @@ package org.ruboss.services.air {
       var updateStatement:String = "UPDATE " + tableName + " SET ";
       
       for each (var node:XML in describeType(model)..accessor) {
-        var declaredBy:String = node.@declaredBy;
-        if (RubossUtils.isInSamePackage(declaredBy, modelName)) {
-          var snakeName:String = RubossUtils.toSnakeCase(node.@name);
-          var type:String = node.@type;
-          
-          if (isInvalidProperty(type) || RubossUtils.isHasOne(node)) continue;
-          
-          if (RubossUtils.isBelongsTo(node)) {
-            if (RubossUtils.isPolymorphicBelongsTo(node)) {
-              var snakeNameType:String = snakeName + "_type";
-              createStatement += snakeNameType + " " + types["String"] + ", ";
-              insertStatement += snakeNameType + ", ";
-              insertParams += ":" + snakeNameType + ", ";
-              updateStatement += snakeNameType + "=:" + snakeNameType + ",";
-            }
-           
-            snakeName = snakeName + "_id";
-            createStatement += snakeName + " " +  types["int"] + ", ";
-          } else {   
-            createStatement += snakeName + " " +  getSQLType(node) + ", ";
+        var snakeName:String = RubossUtils.toSnakeCase(node.@name);
+        var type:String = node.@type;
+        
+        if (isInvalidPropertyType(type) || isInvalidPropertyName(node.@name) || RubossUtils.isHasOne(node)) continue;
+        
+        if (RubossUtils.isBelongsTo(node)) {
+          if (RubossUtils.isPolymorphicBelongsTo(node)) {
+            var snakeNameType:String = snakeName + "_type";
+            createStatement += snakeNameType + " " + types["String"] + ", ";
+            insertStatement += snakeNameType + ", ";
+            insertParams += ":" + snakeNameType + ", ";
+            updateStatement += snakeNameType + "=:" + snakeNameType + ",";
           }
-          
-          insertStatement += snakeName + ", ";
-          insertParams += ":" + snakeName + ", ";
-          updateStatement += snakeName + "=:" + snakeName + ",";
+         
+          snakeName = snakeName + "_id";
+          createStatement += snakeName + " " +  types["int"] + ", ";
+        } else {   
+          createStatement += snakeName + " " +  getSQLType(node) + ", ";
         }
+        
+        insertStatement += snakeName + ", ";
+        insertParams += ":" + snakeName + ", ";
+        updateStatement += snakeName + "=:" + snakeName + ",";
       }
       
       createStatement += "id INTEGER PRIMARY KEY AUTOINCREMENT)";      
