@@ -476,7 +476,7 @@ package org.ruboss.services.http {
       }
       
       object["fetched"] = true;
-      if (addToIntermediateCache) {
+      if (intermediateCache && addToIntermediateCache) {
         intermediateCache[object.id] = object;
       }
       return object;
