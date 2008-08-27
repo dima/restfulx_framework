@@ -36,6 +36,19 @@
   [Bindable]
   public var selectedItem:Object;
   
+  private function getRadioButtonItems(radioItems:Array, comboItems:ModelsCollection):ArrayCollection {
+    if (radioItems == null || comboItems == null) return null;
+    if (matchField == null) {
+      return new ArrayCollection(radioItems);
+    } else {
+      var retval:ArrayCollection = new ArrayCollection();
+      for (var i:int = 0; i < radioItems.length; i++) {
+        retval.addItem(comboItems.withPropertyValue(matchField, radioItems[i]));
+      }
+      return retval;
+    }
+  }
+  
   private function onRadioButtonClick(event:Event):void {
     trace("RadioComboBox#onRadioButtonClick: " + event);
     comboBox.selectedIndex = -1;
@@ -54,7 +67,7 @@
   
 ]]></mx:Script>
   <mx:RadioButtonGroup id="radioButtonGroup"/>
-  <mx:Repeater id="rp" dataProvider="{radioItems}">
+  <mx:Repeater id="rp" dataProvider="{getRadioButtonItems(radioItems, comboItems)}">
     <mx:RadioButton label="{rp.currentItem}" value="{rp.currentItem}" group="{radioButtonGroup}" click="onRadioButtonClick(event);"/>
   </mx:Repeater>
   <mx:RadioButton id="comboRB" label="" value="{null}" group="{radioButtonGroup}" click="onRadioButtonClick(event);"/>
