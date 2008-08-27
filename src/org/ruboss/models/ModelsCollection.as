@@ -12,34 +12,19 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.models {
-  import mx.collections.ArrayCollection;
+  import org.ruboss.collections.RubossCollection;
 
   /**
    * Adds a few handy methods to ArrayCollection class to simplify working 
    * with model objects.
    */
-  public class ModelsCollection extends ArrayCollection {
+  public class ModelsCollection extends RubossCollection {
     
     /** 
      * @see mx.collections.ArrayCollection
      */
     public function ModelsCollection(source:Array = null) {
       super(source);
-    }
-
-    /**
-     * Attempts to find *first* object in the collection that has specified property key
-     * and value
-     *  
-     * @param propertyName name of the property to look up
-     * @param propertyValue value of the property
-     *  
-     * @return *first* object that matches or null
-     */
-    [Bindable("collectionChange")]
-    public function withPropertyValue(propertyName:String, propertyValue:Object):Object {
-      var index:int = indexOfPropertyValue(propertyName, propertyValue);
-      return (index == -1) ? null : getItemAt(index);
     }
     
     /**
@@ -91,21 +76,6 @@ package org.ruboss.models {
      */ 
     public function removeItem(object:Object):void {
       removeItemAt(indexOfId(object["id"]));
-    }
-
-    /**
-     * Find index of the first item with a given property name/ value pair.
-     *  
-     * @param propertyName name of the property
-     * @param propertyValue value of the property
-     *  
-     * @return index offset
-     */
-    public function indexOfPropertyValue(propertyName:String, propertyValue:Object):int {
-      for (var i:int = 0; i < length; i++) {
-        if (getItemAt(i)[propertyName] == propertyValue) return i;
-      }
-      return -1;
     }
     
     /**

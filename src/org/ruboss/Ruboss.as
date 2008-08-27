@@ -21,6 +21,7 @@ package org.ruboss {
   import mx.logging.LogEventLevel;
   import mx.logging.targets.TraceTarget;
   
+  import org.ruboss.collections.RubossCollection;
   import org.ruboss.controllers.RubossCommandsController;
   import org.ruboss.controllers.RubossModelsController;
   import org.ruboss.controllers.SimpleHTTPController;
@@ -119,21 +120,21 @@ package org.ruboss {
      * @return a *new* ArrayCollection
      */
     public static function merge(items:ArrayCollection, toAdd:Array, 
-      after:Boolean = false):ArrayCollection {
+      after:Boolean = false):RubossCollection {
       return RubossUtils.mergeArrays(items.source, toAdd, after);
     }
     
     /**
-     * Filters a given ArrayCollection with no side effects, a new array collection is created
+     * Filters a given ArrayCollection with no side effects, a new ruboss array collection is created
      * that the filter is applied on.
      *  
      * @param items ArrayCollection instance to filter
      * @param filter filter function
      * 
-     * @return new filtered ArrayCollection instance
+     * @return new filtered RubossCollection instance
      */
-    public static function filter(items:ArrayCollection, filter:Function = null):ArrayCollection {
-      var results:ArrayCollection = new ArrayCollection(items.source.slice(0));
+    public static function filter(items:ArrayCollection, filter:Function = null):RubossCollection {
+      var results:RubossCollection = new RubossCollection(items.source.slice(0));
       results.filterFunction = filter;
       results.refresh();
       return results;
