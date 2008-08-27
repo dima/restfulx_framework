@@ -23,6 +23,7 @@ package org.ruboss.utils {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.models.RubossModel;
+  import org.ruboss.models.ModelsCollection;
 
   /**
    * Various Utilities
@@ -267,17 +268,17 @@ package org.ruboss.utils {
     }
 
     /**
-     * Merges two arrays and returns a new ArrayCollection of the result
+     * Merges two arrays and returns a new ModelsCollection of the result
      */
     public static function mergeArrays(items:Array, toAdd:Array, 
-      after:Boolean = false):ArrayCollection {
+      after:Boolean = false):ModelsCollection {
       var results:Array;
       if (after) {
         results = items.slice(0);
-        return new ArrayCollection(results.concat(toAdd));
+        return new ModelsCollection(results.concat(toAdd));
       } else {
         results = toAdd.slice(0);
-        return new ArrayCollection(results.concat(items));
+        return new ModelsCollection(results.concat(items));
       }
     }
 

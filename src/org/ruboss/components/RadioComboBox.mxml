@@ -13,6 +13,9 @@
  commercial license, please go to http://ruboss.com.
 -->
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:Metadata>
+  [Event("change")]
+</mx:Metadata>
 <mx:Script><![CDATA[
   import mx.collections.ArrayCollection;
   import org.ruboss.models.ModelsCollection;
@@ -52,6 +55,7 @@
   private function onRadioButtonClick(event:Event):void {
     comboBox.selectedIndex = -1;
     selectedItem = radioButtonGroup.selectedValue;
+    dispatchEvent(new Event("change"));
   }
   
   private function onComboBoxChange(event:Event):void {
