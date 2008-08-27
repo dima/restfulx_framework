@@ -29,6 +29,7 @@ package org.ruboss {
   import org.ruboss.services.ServiceManager;
   import org.ruboss.services.http.HTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
+  import org.ruboss.models.ModelsCollection;
   
   /**
    * Provides central access to most commonly used framework features
@@ -110,14 +111,14 @@ package org.ruboss {
     }
 
     /**
-     * Merges an array into an ArrayCollection (without side-effects). A new ArrayCollection is
+     * Merges an array into a RubossCollection (without side-effects). A new RubossCollection is
      * created/returned as a result.
      *  
      * @param items ArrayCollection to merge into
      * @param toAdd Array to merge
      * @param after if true toAdd gets appended else prepended
      *  
-     * @return a *new* ArrayCollection
+     * @return a *new* RubossCollection
      */
     public static function merge(items:ArrayCollection, toAdd:Array, 
       after:Boolean = false):RubossCollection {

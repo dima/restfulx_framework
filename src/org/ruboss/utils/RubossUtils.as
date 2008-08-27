@@ -24,6 +24,7 @@ package org.ruboss.utils {
   
   import org.ruboss.collections.RubossCollection;
   import org.ruboss.models.RubossModel;
+  import org.ruboss.models.ModelsCollection;
 
   /**
    * Various Utilities
@@ -282,7 +283,7 @@ package org.ruboss.utils {
     }
 
     /**
-     * Merges two arrays and returns a new ArrayCollection of the result
+     * Merges two arrays and returns a new RubossCollection of the result
      */
     public static function mergeArrays(items:Array, toAdd:Array, 
       after:Boolean = false):RubossCollection {
