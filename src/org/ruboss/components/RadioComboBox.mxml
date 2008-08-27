@@ -50,13 +50,11 @@
   }
   
   private function onRadioButtonClick(event:Event):void {
-    trace("RadioComboBox#onRadioButtonClick: " + event);
     comboBox.selectedIndex = -1;
     selectedItem = radioButtonGroup.selectedValue;
   }
   
   private function onComboBoxChange(event:Event):void {
-    trace("RadioComboBox#onComboBoxChange: " + event);
     selectedItem = comboBox.selectedItem;
   }
   
