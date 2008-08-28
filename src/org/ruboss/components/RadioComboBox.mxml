@@ -18,14 +18,14 @@
 </mx:Metadata>
 <mx:Script><![CDATA[
   import mx.collections.ArrayCollection;
-  import org.ruboss.models.ModelsCollection;
+  import org.ruboss.collections.RubossCollection;
   import org.ruboss.Ruboss;
 
   [Bindable]
   public var radioItems:Array;
   
   [Bindable]
-  public var comboItems:ModelsCollection;
+  public var comboItems:RubossCollection;
   
   [Bindable]
   public var matchField:String;
@@ -39,7 +39,7 @@
   [Bindable]
   public var selectedItem:Object;
   
-  private function getRadioButtonItems(radioItems:Array, comboItems:ModelsCollection):ArrayCollection {
+  private function getRadioButtonItems(radioItems:Array, comboItems:RubossCollection):ArrayCollection {
     if (radioItems == null || comboItems == null) return null;
     if (matchField == null) {
       return new ArrayCollection(radioItems);
@@ -66,7 +66,6 @@
     var searchKey:Object = (matchField == null) ? obj : obj[matchField];
     return radioItems.indexOf(searchKey) < 0;
   }
-  
 ]]></mx:Script>
   <mx:RadioButtonGroup id="radioButtonGroup"/>
   <mx:Repeater id="rp" dataProvider="{getRadioButtonItems(radioItems, comboItems)}">
