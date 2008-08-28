@@ -46,7 +46,7 @@ package org.ruboss.controllers {
      * @param rootUrl the URL to prefix to requests
      */
     public function SimpleHTTPController(optsOrOnResult:Object = null, onFault:Function = null, 
-      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null) {
+      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = "") {
       if (optsOrOnResult == null) optsOrOnResult = {};
       this.faultHandler = onFault;
       this.contentType = contentType;
