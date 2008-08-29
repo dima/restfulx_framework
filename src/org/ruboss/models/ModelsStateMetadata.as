@@ -200,9 +200,22 @@ package org.ruboss.models {
         if (controllers[node.@type.toString()]) {
           types.push(node.@type.toString());
         }
+
+        // hook up N-N = has_many(:through) relationships
+        // we do it in the same pass as dependency computation because we need access to the same
+        // set of nodes and there's no point in going over every single accessor of every single model twice   
+        for each (var relationship:XML in RubossUtils.getAttributeAnnotation(node, "HasMany")) {
+          var value:String = relationship.arg.(@key == "through").@value.toString();
+          if (!RubossUtils.isEmpty(value)) {
+            var target:String = RubossUtils.toSnakeCase(value);
+            if (relationships[target] == null) {
+              relationships[target] = new Array;
+            }
+            (relationships[target] as Array).push({name: fqn, attribute: node.@name.toString()});
+          }        
+        }
         
-        if (!RubossUtils.isBelongsTo(node) || !RubossUtils.isInSamePackage(node.@declaredBy, fqn) ||
-          RubossUtils.isIgnored(node)) continue;
+        if (!RubossUtils.isBelongsTo(node) || RubossUtils.isIgnored(node)) continue;
           
         // we are only interested in declared [BelongsTo] accessors, avoiding
         // primitive circular dependencies (model dependency on itself) and making
@@ -225,20 +238,6 @@ package org.ruboss.models {
             (eager[fqn] as Array).push(type);
             (references[type] as Array).push({attribute: node.@name, type: fqn});
           }
-        }
-
-        // hook up N-N = has_many(:through) relationships
-        // we do it in the same pass as dependency computation because we need access to the same
-        // set of nodes and there's no point in going over every single accessor of every single model twice   
-        for each (var relationship:XML in RubossUtils.getAttributeAnnotation(node, "HasMany")) {
-          var value:String = relationship.arg.(@key == "through").@value.toString();
-          if (!RubossUtils.isEmpty(value)) {
-            var target:String = RubossUtils.toSnakeCase(value);
-            if (relationships[target] == null) {
-              relationships[target] = new Array;
-            }
-            (relationships[target] as Array).push({name: fqn, attribute: node.@name.toString()});
-          }        
         }
       }  
     }
