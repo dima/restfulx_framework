@@ -24,7 +24,6 @@ package org.ruboss.utils {
   
   import org.ruboss.collections.RubossCollection;
   import org.ruboss.models.RubossModel;
-  import org.ruboss.models.ModelsCollection;
 
   /**
    * Various Utilities
@@ -295,6 +294,10 @@ package org.ruboss.utils {
         results = toAdd.slice(0);
         return new RubossCollection(results.concat(items));
       }
+    }
+    
+    public static function isAnyEmpty(... args):Boolean {
+      return args.indexOf('') > -1 || args.indexOf(null) > -1;
     }
 
     /**
