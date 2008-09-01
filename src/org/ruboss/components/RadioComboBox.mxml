@@ -60,6 +60,7 @@
   
   private function onComboBoxChange(event:Event):void {
     selectedItem = comboBox.selectedItem;
+    dispatchEvent(new Event("change"));
   }
   
   private function filterRadioItems(obj:Object):Boolean {

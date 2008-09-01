@@ -55,5 +55,25 @@ package org.ruboss.collections {
       }
       return -1;
     }
+
+    /**
+     * Returns a RubossCollection of *all* objects in the collection that have specified property key and value
+     *  
+     * @param propertyName name of the property to look up
+     * @param propertyValue value of the property
+     *  
+     * @return a RubossCollection of *all* objects that match; empty Array if none
+     */
+    [Bindable("collectionChange")]
+    public function itemsWithPropertyValue(propertyName:String, propertyValue:Object):RubossCollection {
+      var retval:RubossCollection = new RubossCollection();
+      for (var i:int = 0; i < length; i++) {
+        var item:Object = getItemAt(i);
+        if (item[propertyName] == propertyValue) {
+          retval.addItem(item);
+        }
+      }
+      return retval;
+    }
   }
 }
