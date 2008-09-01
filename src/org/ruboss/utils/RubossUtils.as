@@ -296,6 +296,9 @@ package org.ruboss.utils {
       }
     }
     
+    /**
+     * Checks to see if any of the arguments is empty or null
+     */
     public static function isAnyEmpty(... args):Boolean {
       return args.indexOf('') > -1 || args.indexOf(null) > -1;
     }
