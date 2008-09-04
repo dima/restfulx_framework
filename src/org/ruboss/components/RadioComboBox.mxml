@@ -36,8 +36,20 @@
   [Bindable]
   public var comboWidth:int = 200;
   
+  private var _selectedItem:Object;
+  
   [Bindable]
-  public var selectedItem:Object;
+  public function get selectedItem():Object {
+    return _selectedItem;
+  }
+
+  public function set selectedItem(obj:Object):void {
+    var dp:RubossCollection = comboBox.dataProvider as RubossCollection;
+    if (dp.contains(obj)) {
+      comboRB.selected = true;
+    }
+    _selectedItem = obj;
+  }
   
   private function getRadioButtonItems(radioItems:Array, comboItems:RubossCollection):ArrayCollection {
     if (radioItems == null || comboItems == null) return null;
@@ -68,11 +80,16 @@
     return radioItems.indexOf(searchKey) < 0;
   }
 ]]></mx:Script>
-  <mx:RadioButtonGroup id="radioButtonGroup"/>
+  <mx:RadioButtonGroup id="radioButtonGroup" selectedValue="{selectedItem}"/>
   <mx:Repeater id="rp" dataProvider="{getRadioButtonItems(radioItems, comboItems)}">
     <mx:RadioButton label="{rp.currentItem}" value="{rp.currentItem}" group="{radioButtonGroup}" click="onRadioButtonClick(event);"/>
   </mx:Repeater>
   <mx:RadioButton id="comboRB" label="" value="{null}" group="{radioButtonGroup}" click="onRadioButtonClick(event);"/>
-  <mx:ComboBox id="comboBox" dataProvider="{Ruboss.filter(comboItems, filterRadioItems)}" prompt="{comboPrompt}" enabled="{comboRB.selected}"
-    width="{comboWidth}" change="onComboBoxChange(event);"/>
+  <mx:ComboBox id="comboBox"
+    dataProvider="{Ruboss.filter(comboItems, filterRadioItems)}"
+    prompt="{comboPrompt}"
+    enabled="{comboRB.selected}"
+    width="{comboWidth}"
+    selectedItem="{selectedItem}"
+    change="onComboBoxChange(event);"/>
 </mx:HBox>
