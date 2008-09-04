@@ -37,7 +37,7 @@
   public var comboWidth:int = 200;
   
   [Bindable]
-  public var selectedItem:Object;
+  private var _selectedItem:Object;
   
   private function getRadioButtonItems(radioItems:Array, comboItems:RubossCollection):ArrayCollection {
     if (radioItems == null || comboItems == null) return null;
@@ -52,14 +52,25 @@
     }
   }
   
+  [Bindable]
+  public function get selectedItem():Object {
+    return _selectedItem;
+  }
+  
+  public function set selectedItem(value:Object):void {
+    _selectedItem = value;
+    radioButtonGroup.selectedValue = value;
+    comboBox.selectedItem = value;
+  }
+  
   private function onRadioButtonClick(event:Event):void {
     comboBox.selectedIndex = -1;
-    selectedItem = radioButtonGroup.selectedValue;
+    _selectedItem = radioButtonGroup.selectedValue;
     dispatchEvent(new Event("change"));
   }
   
   private function onComboBoxChange(event:Event):void {
-    selectedItem = comboBox.selectedItem;
+    _selectedItem = comboBox.selectedItem;
     dispatchEvent(new Event("change"));
   }
   
