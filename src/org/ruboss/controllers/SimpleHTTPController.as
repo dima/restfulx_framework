@@ -46,7 +46,7 @@ package org.ruboss.controllers {
      * @param rootUrl the URL to prefix to requests
      */
     public function SimpleHTTPController(optsOrOnResult:Object = null, onFault:Function = null, 
-      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = "") {
+      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null) {
       if (optsOrOnResult == null) optsOrOnResult = {};
       this.faultHandler = onFault;
       this.contentType = contentType;
@@ -87,7 +87,7 @@ package org.ruboss.controllers {
         if (optsOrURL['cacheBy']) cacheBy = optsOrURL['cacheBy'];
       }
       
-      if (data == null) {
+      if (!data) {
         data = {};
       }
       
@@ -152,11 +152,11 @@ package org.ruboss.controllers {
       responder:IResponder = null):void {
       var service:HTTPService = new HTTPService();
             
-      if (rootUrl == null) {
+      if (!rootUrl) {
         rootUrl = Ruboss.httpRootUrl;
       }
       
-      if (data == null) {
+      if (!data) {
         data = {};
       }
         
@@ -192,25 +192,29 @@ package org.ruboss.controllers {
         "null" : "\r" + ObjectUtil.toString(service.request)));      
       
       var call:AsyncToken = service.send();
-      if (responder != null) {
+      if (responder) {
         call.addResponder(responder);
       }  
     }
         
     private function unmarshall(data:Object):Object {
-      return Ruboss.services.getServiceProvider(HTTPServiceProvider.ID).unmarshall(data.result);
+      try {
+        return Ruboss.services.getServiceProvider(HTTPServiceProvider.ID).unmarshall(data.result);
+      } catch (e:Error) {
+        defaultFaultHandler(data.result);
+      }
+      return null;
     }
     
     private function unmarshallResultHandler(data:Object, token:Object = null):void {
       var result:Object = unmarshall(data);
-      if (resultHandler != null) resultHandler(result);
+      if (result && resultHandler != null) resultHandler(result);
     }
     
-    // TODO: append results to cache here
     private function unmarshallAndCacheResultHandler(data:Object, token:Object = null):void {
       var result:Object = unmarshall(data);
-      cacheHandler(result);
-      if (resultHandler != null) resultHandler(result);
+      if (result) cacheHandler(result);
+      if (result && resultHandler != null) resultHandler(result);
     }
     
     private function defaultResultHandler(data:Object, token:Object = null):void {

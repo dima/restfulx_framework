@@ -106,27 +106,33 @@ package org.ruboss.services.http {
      * @see org.ruboss.services.IServiceProvider#unmarshall
      */
     public function unmarshall(object:Object):Object {
-      var xmlFragment:XML = XML(object);
-      Ruboss.log.debug("unmarshalling response:\n" + xmlFragment.toXMLString());
+      try {
+        var xmlFragment:XML = XML(object);
+        Ruboss.log.debug("unmarshalling response:\n" + xmlFragment.toXMLString());
 
-      var objectName:String = xmlFragment.localName();
-      var results:Array = new Array;
-      // if the object name is the same as the controller specified 
-      // on the model (which are typically plural) we know we got back 
-      // a collection of "known" model elements
-      if (xmlFragment.@type == "array") {
-        // we are only going to specifically unmarshall known relationships
-        if (state.fqns[objectName]) {
-          var intermediateCache:Dictionary = new Dictionary;
-          for each (var node:XML in xmlFragment.children()) {
-            results.push(unmarshallNode(node, null, null, intermediateCache));
+        var objectName:String = xmlFragment.localName();
+        var results:Array = new Array;
+        // if the object name is the same as the controller specified 
+        // on the model (which are typically plural) we know we got back 
+        // a collection of "known" model elements
+        if (xmlFragment.@type == "array") {
+          // we are only going to specifically unmarshall known relationships
+          if (state.fqns[objectName]) {
+            var intermediateCache:Dictionary = new Dictionary;
+            for each (var node:XML in xmlFragment.children()) {
+              results.push(unmarshallNode(node, null, null, intermediateCache));
+            }
           }
+          return results;
+        } else {
+          // otherwise treat it as a single element (treat it as a show)
+          return unmarshallNode(xmlFragment, null, null, new Dictionary);
         }
-        return results;
-      } else {
-        // otherwise treat it as a single element (treat it as a show)
-        return unmarshallNode(xmlFragment, null, null, new Dictionary);
+      } catch(e:Error) {
+        Ruboss.log.error("'" + object + "' has not been unmarshalled. it is not an XML element.");
+        throw new Error("'" + object + "' is not an XML element");
       }
+      return object;
     }
     
     /**
