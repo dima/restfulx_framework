@@ -12,7 +12,7 @@
  RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  commercial license, please go to http://ruboss.com.
 -->
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml">
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml">
 <mx:Metadata>
   [Event("change")]
 </mx:Metadata>
@@ -76,19 +76,26 @@
   
   private function filterRadioItems(obj:Object):Boolean {
     var searchKey:Object = (matchField == null) ? obj : obj[matchField];
+    trace("searchKey = " + searchKey);
+    trace("radioItems = " + radioItems);
+    trace("radioItems.indexOf(searchKey) = " + radioItems.indexOf(searchKey));
     return radioItems.indexOf(searchKey) < 0;
   }
 ]]></mx:Script>
-  <mx:RadioButtonGroup id="radioButtonGroup" selectedValue="{selectedItem}"/>
-  <mx:Repeater id="rp" dataProvider="{getRadioButtonItems(radioItems, comboItems)}">
-    <mx:RadioButton label="{rp.currentItem}" value="{rp.currentItem}" group="{radioButtonGroup}" click="onRadioButtonClick(event);"/>
-  </mx:Repeater>
-  <mx:RadioButton id="comboRB" label="" value="{null}" group="{radioButtonGroup}" click="onRadioButtonClick(event);"/>
-  <mx:ComboBox id="comboBox"
-    dataProvider="{Ruboss.filter(comboItems, filterRadioItems)}"
-    prompt="{comboPrompt}"
-    enabled="{comboRB.selected}"
-    width="{comboWidth}"
-    selectedItem="{selectedItem}"
-    change="onComboBoxChange(event);"/>
-</mx:HBox>
+  <mx:HBox width="100%">
+    <mx:RadioButtonGroup id="radioButtonGroup" selectedValue="{selectedItem}"/>
+    <mx:Repeater id="rp" dataProvider="{getRadioButtonItems(radioItems, comboItems)}">
+      <mx:RadioButton label="{rp.currentItem}" value="{rp.currentItem}" group="{radioButtonGroup}" click="onRadioButtonClick(event);"/>
+    </mx:Repeater>
+  </mx:HBox>
+  <mx:HBox width="100%">
+    <mx:RadioButton id="comboRB" label="" value="{null}" group="{radioButtonGroup}" click="onRadioButtonClick(event);"/>
+    <mx:ComboBox id="comboBox"
+      dataProvider="{Ruboss.filter(comboItems, filterRadioItems)}"
+      prompt="{comboPrompt}"
+      enabled="{comboRB.selected}"
+      width="{comboWidth}"
+      selectedItem="{selectedItem}"
+      change="onComboBoxChange(event);"/>
+  </mx:HBox>
+</mx:VBox>
