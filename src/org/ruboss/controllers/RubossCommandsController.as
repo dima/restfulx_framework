@@ -56,10 +56,21 @@ package org.ruboss.controllers {
      * @param useWeakReference will be registered for events using a weak reference
      */
     public function addCommand(cmd:Class, useWeakReference:Boolean = true):void {
-      var commandName:String = getCommandName(cmd);
-      commands[commandName] = cmd;  
-      RubossCommandsEventDispatcher.getInstance().addEventListener(commandName, executeCommand, 
-        false, 0, useWeakReference);
+      addCommandByName(getCommandName(cmd), cmd, useWeakReference);
+    }
+    
+    /**
+     * Adds a given command using provided name (as opposed to inferred name) to the controller
+     * registry.
+     *  
+     * @param cmdName command name to use
+     * @param cmd Command class that will be invoked
+     * @param useWeakReference will be registered for events using a weak referece
+     */
+    public function addCommandByName(cmdName:String, cmd:Class, useWeakReference:Boolean = true):void {
+      commands[cmdName] = cmd;
+      RubossCommandsEventDispatcher.getInstance().addEventListener(cmdName, executeCommand, 
+        false, 0, useWeakReference);      
     }
     
     /**
@@ -70,22 +81,33 @@ package org.ruboss.controllers {
      * @see addCommand
      */
     public function removeCommand(cmd:Class):void {
-      var cmdName:String = getCommandName(cmd);
+      removeCommandByName(getCommandName(cmd));
+    }
+    
+    /**
+     * Removes a given command from the registry using the name provided.
+     * 
+     * @param cmdName command class to remove
+     *  
+     * @see addCommandByName
+     */
+    public function removeCommandByName(cmdName:String):void {
       RubossCommandsEventDispatcher.getInstance().removeEventListener(cmdName, executeCommand);
-      delete commands[cmdName]; 
+      delete commands[cmdName];      
     }
 
     /**
      * Executes a given command passing data and target service id for reference.
      *  
-     * @param cmd command to execute
+     * @param cmd command to execute. This can be either a String or a Class.
      * @param data arbitrary data to pass to the command
      * @param targetServiceId indicates which service the command should use (if any)
      */
-    public function execute(cmd:Class, data:Object = null, targetServiceId:int = -1):void {
+    public function execute(cmd:Object, data:Object = null, targetServiceId:int = -1):void {
       var cmdName:String = getCommandName(cmd);
       if (!commands[cmdName]) {
-        addCommand(cmd);
+        throw new Error("command " + cmdName + " is unknown. Commands have to be registered via addCommand() or " +
+          "addCommandByName() before execution.");
       }
       
       var event:RubossEvent = new RubossEvent(cmdName);
@@ -99,8 +121,12 @@ package org.ruboss.controllers {
       cmd.execute(event);
     }
 
-    private static function getCommandName(cmd:Class):String {
-      return getQualifiedClassName(cmd);
+    private static function getCommandName(cmd:Object):String {
+      if (cmd is Class) {
+        return getQualifiedClassName(cmd);
+      } else {
+        return String(cmd);
+      }
     }
   }
 }
