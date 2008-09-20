@@ -462,7 +462,7 @@ package org.ruboss.services.http {
               var targetType:String = state.keys[targetName];
               // we have a nested *singular* definition, need to hook it up
               if (targetType) {
-                var nestedRef:Object = unmarshallNode(element, object, localName);
+                var nestedRef:Object = unmarshallNode(element, object, localName, intermediateCache);
                 if (nestedRef != null) {
                   object[targetName] = nestedRef;
                   var cached:ModelsCollection = ModelsCollection(Ruboss.models.cache[targetType]);
@@ -532,11 +532,19 @@ package org.ruboss.services.http {
           if (parentRef) return parentRef;
         }
 
-        if (!intermediateCache[elementId] && node.parent()) {
-          var parent:XML = node.parent()[node.localName()].(id == elementId)[0];
-          if (parent.id == elementId) {
-            parentRef = unmarshallNode(parent, null, null, intermediateCache);
-            intermediateCache[elementId] = parentRef;
+        if (intermediateCache && !intermediateCache[elementId] && node.parent()) {
+          try {
+            // the following expression can blow up if we get a complex XML document where
+            // tree item is embeded inside another element which does not have parent reference
+            // inline.
+            var parent:XML = node.parent()[node.localName()].(id == elementId)[0];
+            if (parent.id == elementId) {
+              parentRef = unmarshallNode(parent, null, null, intermediateCache);
+              intermediateCache[elementId] = parentRef;
+            }
+          } catch (e:Error) {
+            Ruboss.log.warn("could not find parent reference with id=" + elementId + 
+              " in the enclosing XML response document.");
           }
         }
         return intermediateCache[elementId];
@@ -544,9 +552,10 @@ package org.ruboss.services.http {
       return null;
     }
     
-    private function processNestedArray(element:XML, implicitReference:Object, implicitReferenceName:String):void {
+    private function processNestedArray(element:XML, implicitReference:Object, implicitReferenceName:String,
+      intermediateCache:Dictionary = null):void {
       for each (var nestedElement:XML in element.children()) {
-        var object:Object = unmarshallNode(nestedElement, implicitReference, implicitReferenceName);
+        var object:Object = unmarshallNode(nestedElement, implicitReference, implicitReferenceName, intermediateCache);
         var fqn:String = getQualifiedClassName(object);
         var items:ModelsCollection = ModelsCollection(Ruboss.models.cache[fqn]);
         if (items.hasItem(object)) {
@@ -574,8 +583,8 @@ package org.ruboss.services.http {
       
       file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(event:DataEvent):void {
         responder.result(new ResultEvent(ResultEvent.RESULT, false, false, event.data));
-      });
-      file.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+      }, false, 0, true);
+      file.addEventListener(IOErrorEvent.IO_ERROR, responder.fault, false, 0, true);
       
       file.upload(request, localName + "[" + file.keyName + "]");
     }
