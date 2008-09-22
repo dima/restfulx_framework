@@ -504,23 +504,38 @@ package org.ruboss.controllers {
       invokeServiceIndex(onPage, targetServiceId, clazz, fetchDependencies, afterCallback, metadata, nestedBy);
     }
 
-    public function onIndex(models:Array):void {
-      if (models.length == 0) return;
-      var name:String = getQualifiedClassName(models[0]);
-      for each (var item:Object in models) {
+    public function onIndex(models:Object):void {
+      var toCache:Array = new Array;
+      if (models is Array) {
+        toCache = models as Array;
+      } else {
+        toCache.push(models);
+      }
+      
+      if (toCache.length == 0) return;
+      var name:String = getQualifiedClassName(toCache[0]);
+      for each (var item:Object in toCache) {
         processNtoNRelationships(item);
       }
 
-      var items:ModelsCollection = new ModelsCollection(models);
+      var items:ModelsCollection = new ModelsCollection(toCache);
       cache[name] = items;
       dispatchEvent(new CacheUpdateEvent(name));      
     }
     
-    public function onPage(models:Array):void {
-      if (models.length == 0) return;
+    public function onPage(models:Object):void {
+      var toCache:Array = new Array;
+      
+      if (models is Array) {
+        toCache = models as Array;
+      } else {
+        toCache.push(models);
+      }
+      
+      if (toCache.length == 0) return;
       var items:ModelsCollection = null;
 
-      var name:String = getQualifiedClassName(models[0]);
+      var name:String = getQualifiedClassName(toCache[0]);
       var current:ModelsCollection = ModelsCollection(cache[name]);
         
       var threshold:int = Ruboss.cacheThreshold[name];
@@ -534,7 +549,7 @@ package org.ruboss.controllers {
         items = current;
       }
 
-      for each (var model:Object in models) {
+      for each (var model:Object in toCache) {
         if (items.hasItem(model)) {
           items.setItem(model);
         } else {
