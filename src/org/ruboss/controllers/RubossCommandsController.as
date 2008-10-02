@@ -69,6 +69,7 @@ package org.ruboss.controllers {
      */
     public function addCommandByName(cmdName:String, cmd:Class, useWeakReference:Boolean = true):void {
       commands[cmdName] = cmd;
+      commands[cmd] = cmdName;
       RubossCommandsEventDispatcher.getInstance().addEventListener(cmdName, executeCommand, 
         false, 0, useWeakReference);      
     }
@@ -81,7 +82,7 @@ package org.ruboss.controllers {
      * @see addCommand
      */
     public function removeCommand(cmd:Class):void {
-      removeCommandByName(getCommandName(cmd));
+      removeCommandByName(commands[cmd]);
     }
     
     /**
@@ -104,7 +105,7 @@ package org.ruboss.controllers {
      * @param targetServiceId indicates which service the command should use (if any)
      */
     public function execute(cmd:Object, data:Object = null, targetServiceId:int = -1):void {
-      var cmdName:String = getCommandName(cmd);
+      var cmdName:String = commands[cmd];
       if (!commands[cmdName]) {
         throw new Error("command " + cmdName + " is unknown. Commands have to be registered via addCommand() or " +
           "addCommandByName() before execution.");

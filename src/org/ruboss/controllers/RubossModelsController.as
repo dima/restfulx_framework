@@ -46,6 +46,11 @@ package org.ruboss.controllers {
      */
     public var cache:Dictionary;
     
+    /**
+     * maps model class names to their FQNs, saves us from having to do getQualifiedClassName calls.
+     */
+    public var names:Dictionary;
+    
     /** encapsulates models control metadata and state */
     public var state:ModelsStateMetadata;
 
@@ -66,10 +71,12 @@ package org.ruboss.controllers {
       targetServiceId:int = -1) {
       super();
       cache = new Dictionary;
+      names = new Dictionary;
 
       // set-up model cache
       for each (var model:Class in models) {
         var fqn:String = getQualifiedClassName(model);
+        names[model] = fqn;
         cache[fqn] = new ModelsCollection;
       }
       
@@ -139,7 +146,7 @@ package org.ruboss.controllers {
      */
     [Bindable(event="cacheUpdate")]
     public function cached(clazz:Class):ModelsCollection {
-      var fqn:String = getQualifiedClassName(clazz);
+      var fqn:String = names[clazz];
       return ModelsCollection(cache[fqn]);      
     }
 
@@ -181,7 +188,7 @@ package org.ruboss.controllers {
           if (optsOrAfterCallback['targetServiceId']) targetServiceId = optsOrAfterCallback['targetServiceId'];
         }
       }
-      var fqn:String = getQualifiedClassName(clazz);
+      var fqn:String = names[clazz];
       if (!state.indexed[fqn]) {
         invokeIndex(clazz, afterCallback, fetchDependencies, useLazyMode, page, metadata, nestedBy, 
           targetServiceId);
@@ -449,7 +456,7 @@ package org.ruboss.controllers {
     private function invokeIndex(clazz:Class, afterCallback:Object = null, fetchDependencies:Boolean = true, 
       useLazyMode:Boolean = true, page:int = -1, metadata:Object = null, nestedBy:Array = null, 
       targetServiceId:int = -1):void {
-      var fqn:String = getQualifiedClassName(clazz);
+      var fqn:String = names[clazz];
       state.pages[fqn] = page;
         
       if (!fetchDependencies) {
@@ -488,7 +495,7 @@ package org.ruboss.controllers {
     private function invokePage(clazz:Class, afterCallback:Object = null, fetchDependencies:Boolean = true, 
       useLazyMode:Boolean = true, page:int = -1, metadata:Object = null, nestedBy:Array = null, 
       targetServiceId:int = -1):void {
-      var fqn:String = getQualifiedClassName(clazz);
+      var fqn:String = names[clazz];
 
       if (!fetchDependencies) {
         // flag this model as standalone (in that it doesn't require dependencies)
@@ -514,12 +521,14 @@ package org.ruboss.controllers {
       
       if (toCache.length == 0) return;
       var name:String = getQualifiedClassName(toCache[0]);
+
+      var items:ModelsCollection = ModelsCollection(cache[name]);
+      items.removeAll();
       for each (var item:Object in toCache) {
         processNtoNRelationships(item);
+        items.addItem(item);
       }
-
-      var items:ModelsCollection = new ModelsCollection(toCache);
-      cache[name] = items;
+      
       dispatchEvent(new CacheUpdateEvent(name));      
     }
     
