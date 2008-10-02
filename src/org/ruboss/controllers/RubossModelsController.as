@@ -103,6 +103,16 @@ package org.ruboss.controllers {
     }
     
     /**
+     * Checks to see if a particular model has been requested and cached successfully.
+     * 
+     * @param clazz Class reference of the model to be checked
+     */
+    public function contains(clazz:Class):Boolean {
+      var fqn:String = names[clazz];
+      return state.indexed[fqn] && !state.waiting[fqn];
+    }
+    
+    /**
      * Resets model metadata.
      *  
      * @see org.ruboss.models.ModelsStateMetadata#reset
