@@ -26,6 +26,7 @@ package org.ruboss.controllers {
   import org.ruboss.Ruboss;
   import org.ruboss.events.CacheUpdateEvent;
   import org.ruboss.events.ServiceCallStartEvent;
+  import org.ruboss.models.ModelsArray;
   import org.ruboss.models.ModelsCollection;
   import org.ruboss.models.ModelsStateMetadata;
   import org.ruboss.services.GenericServiceErrors;
@@ -522,62 +523,71 @@ package org.ruboss.controllers {
     }
 
     public function onIndex(models:Object):void {
-      var toCache:Array = new Array;
-      if (models is Array) {
-        toCache = models as Array;
+      var toCache:ModelsArray = new ModelsArray;
+      if (models is ModelsArray) {
+        toCache = models as ModelsArray;
       } else {
         toCache.push(models);
       }
       
-      if (toCache.length == 0) return;
-      var name:String = getQualifiedClassName(toCache[0]);
+      var name:String;
+      if (toCache.length) {
+        name = getQualifiedClassName(toCache[0]);
 
-      var items:ModelsCollection = ModelsCollection(cache[name]);
-      items.removeAll();
-      for each (var item:Object in toCache) {
-        processNtoNRelationships(item);
-        items.addItem(item);
+        var items:ModelsCollection = ModelsCollection(cache[name]);
+        items.removeAll();
+        for each (var item:Object in toCache) {
+          processNtoNRelationships(item);
+          items.addItem(item);
+        }
+      } else {
+        name = toCache.modelsType;
       }
       
       dispatchEvent(new CacheUpdateEvent(name));      
     }
     
     public function onPage(models:Object):void {
-      var toCache:Array = new Array;
+      var toCache:ModelsArray = new ModelsArray;
       
-      if (models is Array) {
-        toCache = models as Array;
+      if (models is ModelsArray) {
+        toCache = models as ModelsArray;
       } else {
         toCache.push(models);
       }
       
-      if (toCache.length == 0) return;
-      var items:ModelsCollection = null;
-
-      var name:String = getQualifiedClassName(toCache[0]);
-      var current:ModelsCollection = ModelsCollection(cache[name]);
-        
-      var threshold:int = Ruboss.cacheThreshold[name];
-        
-      if (threshold > 1 && (current.length + models.length) >= threshold) {
-        var sliceStart:int = Math.min(current.length, models.length);
-        Ruboss.log.debug("cache size for: " + name + " will exceed the max threshold of: " + threshold + 
-          ", slicing at: " + sliceStart);
-        items = new ModelsCollection(current.source.slice(sliceStart));
-      } else {
-        items = current;
-      }
-
-      for each (var model:Object in toCache) {
-        if (items.hasItem(model)) {
-          items.setItem(model);
+      var name:String;
+      if (toCache.length) {
+        var items:ModelsCollection = null;
+  
+        name = getQualifiedClassName(toCache[0]);
+        var current:ModelsCollection = ModelsCollection(cache[name]);
+          
+        var threshold:int = Ruboss.cacheThreshold[name];
+          
+        if (threshold > 1 && (current.length + models.length) >= threshold) {
+          var sliceStart:int = Math.min(current.length, models.length);
+          Ruboss.log.debug("cache size for: " + name + " will exceed the max threshold of: " + threshold + 
+            ", slicing at: " + sliceStart);
+          items = new ModelsCollection(current.source.slice(sliceStart));
         } else {
-          items.addItem(model);
+          items = current;
         }
-        processNtoNRelationships(model);
+  
+        for each (var model:Object in toCache) {
+          if (items.hasItem(model)) {
+            items.setItem(model);
+          } else {
+            items.addItem(model);
+          }
+          processNtoNRelationships(model);
+        }
+  
+        cache[name] = items;
+      } else {
+        name = toCache.modelsType;
       }
-
-      cache[name] = items;
+      
       dispatchEvent(new CacheUpdateEvent(name));      
     }
     
