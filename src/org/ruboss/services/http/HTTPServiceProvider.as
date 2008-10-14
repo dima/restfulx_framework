@@ -68,7 +68,7 @@ package org.ruboss.services.http {
       var response:XML = XML(object);
       var xmlFragmentName:String = response.localName().toString();
       if (xmlFragmentName == "errors" && RubossUtils.isEmpty(response.@type)) {
-        Ruboss.log.debug("received service error response, terminating processing");
+        Ruboss.log.debug("received service error response, terminating processing:\n" + response.toXMLString());
         Ruboss.errors = new HTTPServiceErrors(response);
         return true;
       }
@@ -129,7 +129,8 @@ package org.ruboss.services.http {
           return unmarshallNode(xmlFragment, null, null, new Dictionary);
         }
       } catch(e:Error) {
-        Ruboss.log.error("'" + object + "' has not been unmarshalled. it is not an XML element.");
+        Ruboss.log.error("'" + object + "' has not been unmarshalled. it is not an XML element: Error: " + 
+          e.getStackTrace());
         throw new Error("'" + object + "' is not an XML element");
       }
       return object;
@@ -580,6 +581,10 @@ package org.ruboss.services.http {
       request.url = httpService.url;
       request.method = httpService.method;
       request.data = payload;
+      
+      if (Ruboss.sessionToken) {
+        request.url = request.url + "?_swfupload_session_id=" + Ruboss.sessionToken;
+      }
       
       file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(event:DataEvent):void {
         responder.result(new ResultEvent(ResultEvent.RESULT, false, false, event.data));

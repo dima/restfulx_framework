@@ -29,7 +29,6 @@ package org.ruboss {
   import org.ruboss.services.ServiceManager;
   import org.ruboss.services.http.HTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
-  import org.ruboss.models.ModelsCollection;
   
   /**
    * Provides central access to most commonly used framework features
@@ -75,6 +74,11 @@ package org.ruboss {
      * used when paging to determine when to start throwing things out 
      */
     public static var cacheThreshold:Dictionary = new Dictionary;
+    
+    /**
+     * Stores current session id for use by URLRequest
+     */
+    public static var sessionToken:String;
     
     /** default error namespace used by service providers */
     public static const DEFAULT_ERROR_FIELD:String = ":base";
