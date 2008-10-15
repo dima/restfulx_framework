@@ -76,7 +76,7 @@ package org.ruboss {
     public static var cacheThreshold:Dictionary = new Dictionary;
     
     /**
-     * Stores current session id for use by URLRequest
+     * stores current session id for use by URLRequest
      */
     public static var sessionToken:String;
     
@@ -212,6 +212,12 @@ package org.ruboss {
       target.includeCategory = true;
       target.includeLevel = true;
       Log.addTarget(target);
+    }
+    
+    public static function reset():void {
+      errors = null;
+      defaultMetadata = null;
+      sessionToken = null;
     }
     
     /**
