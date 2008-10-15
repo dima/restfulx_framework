@@ -13,7 +13,6 @@
  ******************************************************************************/
 package org.ruboss {
   import flash.utils.Dictionary;
-  import flash.utils.getQualifiedClassName;
   
   import mx.collections.ArrayCollection;
   import mx.logging.ILogger;
@@ -187,7 +186,7 @@ package org.ruboss {
      * @param maxItems maximum number of items
      */
     public static function setCacheThreshold(clazz:Class, maxItems:int):void {
-      cacheThreshold[getQualifiedClassName(clazz)] = maxItems;
+      cacheThreshold[Ruboss.models.names[clazz]] = maxItems;
     }
     
     /**
@@ -195,7 +194,7 @@ package org.ruboss {
      * @see setCacheThreshold
      */
     public static function resetCacheThreshold(clazz:Class):void {
-      delete cacheThreshold[getQualifiedClassName(clazz)];
+      delete cacheThreshold[Ruboss.models.names[clazz]];
     }
 
     /**

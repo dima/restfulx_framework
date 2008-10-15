@@ -139,7 +139,7 @@ package org.ruboss.services.air {
      * @see org.ruboss.services.IServiceProvider#index
      */
     public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var fqn:String = getQualifiedClassName(clazz);
+      var fqn:String = Ruboss.models.names[clazz];
       if (indexing[fqn]) return;
       
       var statement:SQLStatement = getSQLStatement(sql[fqn]["select"]);
