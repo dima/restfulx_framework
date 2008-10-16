@@ -59,5 +59,11 @@
     text = formatCurrency(cents);//needed in case binding doesn't trigger
   }
 ]]></mx:Script>
-  <mx:CurrencyFormatter id="currencyFormatter" precision="2"/>
+  <mx:CurrencyFormatter id="currencyFormatter" precision="2" rounding="none"
+      decimalSeparatorTo="." thousandsSeparatorTo=","
+      useThousandsSeparator="true" useNegativeSign="true"
+      currencySymbol="$" alignSymbol="left"/>
+  <mx:CurrencyValidator id="currencyValidator" 
+      source="{this}" property="text"
+      alignSymbol="left" allowNegative="false"/>
 </mx:TextInput>
