@@ -63,7 +63,4 @@
       decimalSeparatorTo="." thousandsSeparatorTo=","
       useThousandsSeparator="true" useNegativeSign="true"
       currencySymbol="$" alignSymbol="left"/>
-  <mx:CurrencyValidator id="currencyValidator" 
-      source="{this}" property="text"
-      alignSymbol="left" allowNegative="false"/>
 </mx:TextInput>
