@@ -85,7 +85,7 @@ package org.ruboss.collections {
     /** 
      * @see mx.collections.ArrayCollection
      */
-    public function set filterFunctions( filtersArray:Array ):void {
+    public function set filterFunctions(filtersArray:Array):void {
       _filterFunctions = filtersArray;
       this.filterFunction = complexFilter;
     }
