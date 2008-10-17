@@ -16,8 +16,14 @@ package org.ruboss.collections {
 
   /**
    * Adds a few handy, frequently used methods to ArrayCollection class.
+   * 
+   * Multiple Filter Implementation based on: 
+   * http://blog.rotundu.eu/flex/arraycollection-with-multiple-filter-functions/
    */
   public class RubossCollection extends ArrayCollection {
+
+    // allows us to store multiple filter functions for the collection
+    private var _filterFunctions:Array;
 
     /** 
      * @see mx.collections.ArrayCollection
@@ -74,6 +80,36 @@ package org.ruboss.collections {
         }
       }
       return retval;
+    }
+    
+    /** 
+     * @see mx.collections.ArrayCollection
+     */
+    public function set filterFunctions( filtersArray:Array ):void {
+      _filterFunctions = filtersArray;
+      this.filterFunction = complexFilter;
+    }
+
+    /** 
+     * @see mx.collections.ArrayCollection
+     */
+    public function get filterFunctions():Array {
+      return _filterFunctions;
+    }
+    
+    /**
+     * Applies a complex filter (= multiple filters) to the collection 
+     * @param item item to filter
+     * @return true if item passes the filter, false otherwise
+     */
+    protected function complexFilter(item:Object):Boolean {
+      var filterFlag:Boolean = true;
+      var filter:Function;
+      for each (filter in filterFunctions) {
+        filterFlag = filter(item);
+        if (!filterFlag) break;
+      }
+      return filterFlag;
     }
   }
 }
