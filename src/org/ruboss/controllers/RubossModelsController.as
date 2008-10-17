@@ -432,19 +432,34 @@ package org.ruboss.controllers {
         var attribute:String = relationship["attribute"];
         var local:String = state.keys[name];        
         var target:String = state.keys[state.fqns[attribute]];
-
-        if (!object.hasOwnProperty(local)) continue;
         
-        var items:ModelsCollection = object[local][attribute];
-        if (items == null) {
-          items = new ModelsCollection;
-        }
-        if (items.hasItem(object[target])) {
-          items.setItem(object[target]);
+        if (relationship.hasOwnProperty("indirect")) {
+          var indirect:String = relationship["indirect"];
+          var indirectRef:String = state.keys[state.fqns[indirect]];
+          var indirectItems:ModelsCollection = object[indirectRef][local][attribute];
+          if (indirectItems == null) {
+            indirectItems = new ModelsCollection;
+            if (indirectItems.hasItem(object)) {
+              indirectItems.setItem(object);
+            } else {
+              indirectItems.addItem(object);
+            }
+          }
+          object[indirectRef][local][attribute] = indirectItems;
         } else {
-          items.addItem(object[target]);
-        }
-        object[local][attribute] = items;      
+          if (!object.hasOwnProperty(local)) continue;
+          
+          var items:ModelsCollection = object[local][attribute];
+          if (items == null) {
+            items = new ModelsCollection;
+          }
+          if (items.hasItem(object[target])) {
+            items.setItem(object[target]);
+          } else {
+            items.addItem(object[target]);
+          }
+          object[local][attribute] = items;
+        } 
       }
     }
     

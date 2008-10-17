@@ -129,7 +129,7 @@ package org.ruboss.models {
         
         // this is what model names would look like after 
         // camel-casing variable names we get from RoR
-        var localName:String = modelName.charAt(0).toLowerCase() + modelName.slice(1);
+        var localName:String = RubossUtils.lowerCaseFirst(modelName);
         
         var controller:String = RubossUtils.getResourceName(model);
         
@@ -206,13 +206,21 @@ package org.ruboss.models {
         // set of nodes and there's no point in going over every single accessor of every single model twice   
         for each (var relationship:XML in RubossUtils.getAttributeAnnotation(node, "HasMany")) {
           var value:String = relationship.arg.(@key == "through").@value.toString();
-          if (!RubossUtils.isEmpty(value)) {
+          var dependsOn:String = relationship.arg.(@key == "dependsOn").@value.toString();
+          if (!RubossUtils.isEmpty(dependsOn) && !RubossUtils.isEmpty(value)) {
+            var dependsOnTarget:String = controllers[RubossUtils.lowerCaseFirst(dependsOn)];
+            var indirect:String = RubossUtils.toSnakeCase(value);
+            if (relationships[dependsOnTarget] == null) {
+              relationships[dependsOnTarget] = new Array;
+            }
+            (relationships[dependsOnTarget] as Array).push({name: fqn, attribute: node.@name.toString(), indirect: indirect});
+          } else if (!RubossUtils.isEmpty(value)) {
             var target:String = RubossUtils.toSnakeCase(value);
             if (relationships[target] == null) {
               relationships[target] = new Array;
             }
             (relationships[target] as Array).push({name: fqn, attribute: node.@name.toString()});
-          }        
+          }       
         }
         
         if (!RubossUtils.isBelongsTo(node) || RubossUtils.isIgnored(node)) continue;
