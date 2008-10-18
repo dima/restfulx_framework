@@ -16,14 +16,11 @@ package org.ruboss.collections {
 
   /**
    * Adds a few handy, frequently used methods to ArrayCollection class.
-   * 
-   * Multiple Filter Implementation based on: 
-   * http://blog.rotundu.eu/flex/arraycollection-with-multiple-filter-functions/
    */
   public class RubossCollection extends ArrayCollection {
 
     // allows us to store multiple filter functions for the collection
-    private var _filterFunctions:Array;
+    private var _filters:Array;
 
     /** 
      * @see mx.collections.ArrayCollection
@@ -81,35 +78,34 @@ package org.ruboss.collections {
       }
       return retval;
     }
-    
-    /** 
-     * @see mx.collections.ArrayCollection
-     */
-    public function set filterFunctions(filtersArray:Array):void {
-      _filterFunctions = filtersArray;
-      this.filterFunction = complexFilter;
-    }
 
     /** 
      * @see mx.collections.ArrayCollection
      */
     public function get filterFunctions():Array {
-      return _filterFunctions;
+      return _filters;
+    }
+    
+    /** 
+     * @see mx.collections.ArrayCollection
+     */
+    public function set filterFunctions(filters:Array):void {
+      _filters = filters;
+      filterFunction = chainedFilter;
     }
     
     /**
-     * Applies a complex filter (= multiple filters) to the collection 
+     * Applies a chained filter (several filter functions chained together) 
+     * to the collection 
      * @param item item to filter
-     * @return true if item passes the filter, false otherwise
+     * @return true or false based on the result of individual filter 
+     *  function results
      */
-    protected function complexFilter(item:Object):Boolean {
-      var filterFlag:Boolean = true;
-      var filter:Function;
-      for each (filter in filterFunctions) {
-        filterFlag = filter(item);
-        if (!filterFlag) break;
+    private function chainedFilter(item:Object):Boolean {
+      for each (var filter:Function in filterFunctions) {
+        if (!filter(item)) return false;
       }
-      return filterFlag;
+      return true;
     }
   }
 }
