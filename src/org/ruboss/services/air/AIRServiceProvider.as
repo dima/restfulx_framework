@@ -29,6 +29,7 @@ package org.ruboss.services.air {
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.RubossModelsController;
+  import org.ruboss.models.ModelsArray;
   import org.ruboss.models.ModelsCollection;
   import org.ruboss.models.ModelsStateMetadata;
   import org.ruboss.services.IServiceProvider;
@@ -448,7 +449,8 @@ package org.ruboss.services.air {
             
       statement.execute();
       
-      var result:Array  = new Array;
+      var result:ModelsArray  = new ModelsArray;
+      result.modelsType = fqn;
       for each (var object:Object in statement.getResult().data) {
         // if we already have something with this fqn and id in cache attempt to reuse it
         // this will ensure that whatever is doing comparison by reference should still be happy
