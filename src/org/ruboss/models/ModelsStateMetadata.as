@@ -29,7 +29,7 @@ package org.ruboss.models {
     /** currently registered model classes */
     public var models:Array;
     
-    /** maps FQNs and local model names to controllers */
+    /** maps FQNs (Fully Qualified Names) and local model names to controllers */
     public var controllers:Dictionary;
     
     /** a list of all registered controllers mapped to fqns */
@@ -235,6 +235,24 @@ package org.ruboss.models {
             if (key != null) {
               types.push(key);
             }
+          }
+        }
+
+        // see if we are having non standard reference names or foreign key changes
+        var foreignKey:String = descriptor.arg.(@key == "foreignKey").@value.toString();
+        if (descriptor) {
+          var modelName:String = node.@type.split("::")[1] as String;
+          var localName:String = RubossUtils.lowerCaseFirst(modelName);
+          var keyName:String = "";
+        
+          if (foreignKey) {
+            keyName = RubossUtils.toSnakeCase(foreignKey).replace(/_id$/, "");
+          } else {
+            keyName = node.@name;
+          }
+        
+          if (keyName != localName) {
+            keys[fqn + "." + keyName] = node.@type;
           }
         }
 

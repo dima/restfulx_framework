@@ -346,6 +346,7 @@ package org.ruboss.services.http {
       var localName:String = RubossUtils.toCamelCase(node.localName());
       var fqn:String = state.keys[localName];
       var addToIntermediateCache:Boolean = false;
+      var updatingExistingInstance:Boolean = false;
       var nodeId:int = parseInt(node.id);
       if (fqn == null || nodeId == 0) 
         throw new Error("cannot unmarshall " + node.localName() + 
@@ -365,6 +366,8 @@ package org.ruboss.services.http {
           object = new clazz;
         }
         object["id"] = nodeId;
+      } else {
+        updatingExistingInstance = true;
       }
                         
       // TODO: needs to handle arrays too?
@@ -401,6 +404,10 @@ package org.ruboss.services.http {
               targetName = camelCheckName;
               referenceTargetName = targetName;
               isRef = true;
+            } else if (state.keys[fqn + "." + camelCheckName]) {
+              targetName = camelCheckName;
+              referenceTargetName = fqn + "." + camelCheckName;
+              isRef = true;
             }
           }
         } else {
@@ -423,6 +430,10 @@ package org.ruboss.services.http {
               ref = findParentReference(element, node, intermediateCache);
             } else {
               ref = inferReference(element, referenceTargetName, implicitReference, implicitReferenceName);
+            }
+
+            if (updatingExistingInstance && object[targetName] != ref) {
+              Ruboss.models.cleanupModelReferences(fqn, object);
             }
                             
             // collectionName should be the same as the camel-cased name of the controller for the current node

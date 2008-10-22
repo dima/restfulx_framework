@@ -158,6 +158,37 @@ package org.ruboss {
       items.refresh();
       return items;
     }
+    
+    /**
+     * Applies a composite filter to a given RubossCollection with no side effects, a new ruboss 
+     * array collection is created that the filters are applied on.
+     *  
+     * @param items RubossCollection instance to filter
+     * @param filters an Array of filter functions
+     * 
+     * @return new filtered RubossCollection instance
+     */
+    public static function filters(items:RubossCollection, filters:Array = null):RubossCollection {
+      var results:RubossCollection = new RubossCollection(items.source.slice(0));
+      results.filterFunctions = filters;
+      results.refresh();
+      return results;
+    }
+    
+    /** 
+     * Applies a composite filter to a given RubossCollection in place, this version actually modifies 
+     * the instance passed in as the argument.
+     * 
+     * @param items RubossCollection to filter (will be motified in place)
+     * @param filter an Array of filter functions to apply
+     *  
+     * @return original array collection with the filters applied 
+     */
+    public static function filters$(items:RubossCollection, filters:Array = null):RubossCollection {
+      items.filterFunctions = filters;
+      items.refresh();
+      return items;
+    }
 
     /**
      * Returns a default object of some kind if the first argument is null

@@ -84,9 +84,13 @@ package org.ruboss.utils {
         var cloned:Object = new clazz;
         cloned["id"] = object["id"];
         for each (var node:XML in describeType(object)..accessor) {
-          if (!isInvalidPropertyName(node.@name)) {
-            var name:String = node.@name;
-            cloned[name] = object[name];
+          if (!isInvalidPropertyName(node.@name) && !RubossUtils.isIgnored(node)) {
+            try {
+              var name:String = node.@name;
+              cloned[name] = object[name];
+            } catch (e:Error) {
+              // we can fail cloning if the property is read-only, etc.
+            }
           }
         }
         return cloned;
