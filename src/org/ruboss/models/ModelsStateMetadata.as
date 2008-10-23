@@ -19,6 +19,7 @@ package org.ruboss.models {
   
   import mx.collections.ArrayCollection;
   
+  import org.ruboss.Ruboss;
   import org.ruboss.utils.RubossUtils;
   
   /**
@@ -237,16 +238,34 @@ package org.ruboss.models {
             }
           }
         }
-
-        // see if we have non standard reference names or foreign key changes
-        var foreignKey:String = descriptor.arg.(@key == "foreignKey").@value.toString();
-        if (foreignKey) {
-          var localName:String = RubossUtils.lowerCaseFirst(node.@type.split("::")[1] as String);
-          var keyName:String = RubossUtils.toSnakeCase(foreignKey).replace(/_id$/, "");
         
+        try {
+          // determine what a well-formed reference name should look like, this is typically
+          // driven by class name = declarations of type project:Project are well-formed
+          // in other words if localName == keyName, then it's well-formed
+          var localName:String = RubossUtils.lowerCaseFirst(node.@type.split("::")[1] as String);
+          var keyName:String = node.@name;
+          
+          // if we have several references to some other class then normal mapping between
+          // class types and key names is no longer sufficient, hence we store fqn.keyName to
+          // qualify keys. this allows for relationships such as:
+          //  foo:Project
+          //  bar:Project
+          // to co-exist in the same model, this will assume that foo_id and bar_id are the keys
+  
+          // it's also possible to override what the keys are entirely by using
+          // [BelongsTo(foreignKey="keyName")] annotation.        
+          var foreignKey:String = descriptor.arg.(@key == "foreignKey").@value.toString();
+          if (foreignKey) {
+            keyName = RubossUtils.toSnakeCase(foreignKey).replace(/_id$/, "");
+          }
+          
           if (keyName != localName) {
             keys[fqn + "." + keyName] = node.@type;
           }
+        } catch (e:Error) {
+          Ruboss.log.error("Failed to configure [BelongsTo] relationships for: " + fqn + ". " +
+            "and reference: " + keyName + " of type: " + node.@type.toString + "(" + localName + ")");
         }
 
         for each (var type:String in types) {
