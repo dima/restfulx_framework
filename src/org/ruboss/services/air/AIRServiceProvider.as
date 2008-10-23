@@ -165,7 +165,7 @@ package org.ruboss.services.air {
       var statement:SQLStatement = getSQLStatement(sql[fqn]["select"] + " WHERE id=" + object["id"]);
       statement.execute();
       
-      processModel(fqn, object, statement.getResult().data[0]);
+      processModel(fqn, object, statement.getResult().data[0], true);
       invokeResponder(responder, object);
     }
     
@@ -363,7 +363,7 @@ package org.ruboss.services.air {
       }
     }
     
-    private function processModel(fqn:String, model:Object, source:Object):void {
+    private function processModel(fqn:String, model:Object, source:Object, existingReference:Boolean = false):void {
       var metadata:XML = describeType(model);        
       for (var property:String in source) {
         if (property == "id") continue;
@@ -393,6 +393,10 @@ package org.ruboss.services.air {
             targetName = camelCheckName;
             referenceTargetName = targetName;
             isRef = true;
+          } else if (state.keys[fqn + "." + camelCheckName]) {
+            targetName = camelCheckName;
+            referenceTargetName = fqn + "." + camelCheckName;
+            isRef = true;
           }
         } else {
           targetName = RubossUtils.toCamelCase(targetName);
@@ -406,6 +410,10 @@ package org.ruboss.services.air {
             var key:String = state.keys[referenceTargetName];
             // key should be fqn for the targetName;
             ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId);
+          }
+          
+          if (existingReference && model[targetName] != ref) {
+            Ruboss.models.cleanupModelReferences(fqn, model);
           }
 
           // collectionName should be the same as the camel-cased name of the controller for the current node
