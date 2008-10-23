@@ -48,7 +48,8 @@ package org.ruboss.controllers {
     public var cache:Dictionary;
     
     /**
-     * maps model class names to their FQNs, saves us from having to do getQualifiedClassName calls.
+     * maps model class names to their FQNs, saves us from 
+     * having to do getQualifiedClassName calls.
      */
     public var names:Dictionary;
     
