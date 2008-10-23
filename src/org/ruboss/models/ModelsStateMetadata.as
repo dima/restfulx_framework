@@ -240,16 +240,10 @@ package org.ruboss.models {
 
         // see if we are having non standard reference names or foreign key changes
         var foreignKey:String = descriptor.arg.(@key == "foreignKey").@value.toString();
-        if (descriptor) {
+        if (foreignKey) {
           var modelName:String = node.@type.split("::")[1] as String;
           var localName:String = RubossUtils.lowerCaseFirst(modelName);
-          var keyName:String = "";
-        
-          if (foreignKey) {
-            keyName = RubossUtils.toSnakeCase(foreignKey).replace(/_id$/, "");
-          } else {
-            keyName = node.@name;
-          }
+          var keyName:String = RubossUtils.toSnakeCase(foreignKey).replace(/_id$/, "");
         
           if (keyName != localName) {
             keys[fqn + "." + keyName] = node.@type;
