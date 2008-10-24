@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" xmlns:flexunit="flexunit.flexui.*"
+  creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
+	<mx:Script>
+		<![CDATA[
+		  import ruboss.test.flex.HelloTest;
+			import flexunit.framework.TestSuite;
+			
+			// After everything is built, configure the test
+			// runner to use the appropriate test suite and
+			// kick off the unit tests
+			private function onCreationComplete():void {
+ 				testRunner.test = createSuite();
+ 				testRunner.startTest();
+ 			}
+			
+			// Creates the test suite to run
+			private function createSuite():TestSuite {
+ 				var ts:TestSuite = new TestSuite();
+ 				ts.addTest(new HelloTest("testHello"));
+ 				return ts; 				
+ 			}
+			
+		]]>
+	</mx:Script>
+	<flexunit:TestRunnerBase id="testRunner" width="100%" height="100%" />
+</mx:Application>

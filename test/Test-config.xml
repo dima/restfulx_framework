@@ -1,0 +1,17 @@
+<flex-config>
+  <benchmark>false</benchmark>
+  <default-background-color>#FFFFFF</default-background-color>
+  <compiler>
+    <optimize>true</optimize>
+    <keep-generated-actionscript>false</keep-generated-actionscript>
+    <warn-no-constructor>false</warn-no-constructor>
+    <warn-no-explicit-super-call-in-constructor>false</warn-no-explicit-super-call-in-constructor>
+  </compiler>
+  <metadata>
+    <title>Ruboss Framework Tests</title>
+    <description></description>
+    <publisher>Ruboss</publisher>
+    <creator>Dima Berastau</creator>
+    <language>EN</language>
+  </metadata>
+</flex-config>
