@@ -2,13 +2,24 @@
   <benchmark>false</benchmark>
   <default-background-color>#FFFFFF</default-background-color>
   <compiler>
+    <incremental>false</incremental>
+    <keep-as3-metadata append="true">
+       <name>Resource</name>
+       <name>HasOne</name>
+       <name>HasMany</name>
+       <name>BelongsTo</name>
+       <name>DateTime</name>
+       <name>Lazy</name>
+       <name>Ignored</name>
+    </keep-as3-metadata>
     <optimize>true</optimize>
     <keep-generated-actionscript>false</keep-generated-actionscript>
     <warn-no-constructor>false</warn-no-constructor>
     <warn-no-explicit-super-call-in-constructor>false</warn-no-explicit-super-call-in-constructor>
+    <debug>true</debug>
   </compiler>
   <metadata>
-    <title>Ruboss Framework Tests</title>
+    <title>PomodoOnRails</title>
     <description></description>
     <publisher>Ruboss</publisher>
     <creator>Dima Berastau</creator>

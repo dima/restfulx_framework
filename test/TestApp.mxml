@@ -3,13 +3,19 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
-		  import ruboss.test.flex.HelloTest;
+		  import org.ruboss.Ruboss;
+      import ruboss.test.controllers.RubossTestController;
+		  import ruboss.test.flex.SimplePropertiesTest;
+      import ruboss.test.services.PhonyHTTPServiceProvider;
 			import flexunit.framework.TestSuite;
 			
 			// After everything is built, configure the test
 			// runner to use the appropriate test suite and
 			// kick off the unit tests
 			private function onCreationComplete():void {
+			  Ruboss.enableLogging();
+			  RubossTestController.initialize([PhonyHTTPServiceProvider], PhonyHTTPServiceProvider.ID);
+			  
  				testRunner.test = createSuite();
  				testRunner.startTest();
  			}
@@ -17,11 +23,12 @@
 			// Creates the test suite to run
 			private function createSuite():TestSuite {
  				var ts:TestSuite = new TestSuite();
- 				ts.addTest(new HelloTest("testHello"));
+ 				ts.addTest(new SimplePropertiesTest("testSimpleModelIndex"));
+ 				
  				return ts; 				
  			}
-			
 		]]>
 	</mx:Script>
+	<mx:XML source="ruboss/test/responses/addresses.xml" id="addresses"/>
 	<flexunit:TestRunnerBase id="testRunner" width="100%" height="100%" />
 </mx:Application>

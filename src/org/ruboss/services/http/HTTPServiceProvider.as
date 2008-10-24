@@ -46,7 +46,7 @@ package org.ruboss.services.http {
     /** service id */
     public static const ID:int = ServiceManager.generateId();
         
-    private var state:ModelsStateMetadata;
+    protected var state:ModelsStateMetadata;
     
     /**
      * @param controller reference to RubossModelsController instance

@@ -34,8 +34,8 @@
 
   <!-- Settings for the application's initial window. Required. -->
   <initialWindow>
-    <content>bin/Test.swf</content>
-    <title>Test</title>
+    <content>bin/TestApp.swf</content>
+    <title>TestApp</title>
     <systemChrome>standard</systemChrome>
     <transparent>false</transparent>
     <visible>true</visible>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addresses type="array">
+  <address>
+    <city>Address1CityString</city>
+    <country>Address1CountryString</country>
+    <created_at type="datetime">2008/10/24 07:25:34</created_at>
+    <id type="integer">709692881</id>
+    <line_one>Address1LineOneString</line_one>
+    <line_two>Address1LineTwoString</line_two>
+    <postcode>Address1PostcodeString</postcode>
+    <province>Address1ProvinceString</province>
+    <updated_at type="datetime">2008/10/24 07:25:34</updated_at>
+  </address>
+  <address>
+    <city>Address2CityString</city>
+    <country>Address2CountryString</country>
+    <created_at type="datetime">2008/10/24 07:25:34</created_at>
+    <id type="integer">752900118</id>
+    <line_one>Address2LineOneString</line_one>
+    <line_two>Address2LineTwoString</line_two>
+    <postcode>Address2PostcodeString</postcode>
+    <province>Address2ProvinceString</province>
+    <updated_at type="datetime">2008/10/24 07:25:34</updated_at>
+  </address>
+</addresses>
