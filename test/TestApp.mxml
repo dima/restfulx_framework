@@ -24,6 +24,8 @@
 			private function createSuite():TestSuite {
  				var ts:TestSuite = new TestSuite();
  				ts.addTest(new SimplePropertiesTest("testSimpleModelIndex"));
+ 				ts.addTest(new SimplePropertiesTest("testSimpleModelCreate"));
+ 				ts.addTest(new SimplePropertiesTest("testSimpleModelCreateFollowedByUpdate"));
  				
  				return ts; 				
  			}
