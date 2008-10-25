@@ -3,10 +3,11 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
-		  import ruboss.test.services.PhonyAIRServiceProvider;
+		  import ruboss.test.cases.RubossUtilTest;
 		  import org.ruboss.Ruboss;
       import ruboss.test.controllers.RubossTestController;
-		  import ruboss.test.flex.SimplePropertiesTest;
+		  import ruboss.test.cases.SimplePropertiesTest;
+      import ruboss.test.services.PhonyAIRServiceProvider;
       import ruboss.test.services.PhonyHTTPServiceProvider;
 			import flexunit.framework.TestSuite;
 			
@@ -18,18 +19,23 @@
         PhonyAIRServiceProvider(Ruboss.services.getServiceProvider(PhonyAIRServiceProvider.ID)).loadTestData();
 			  
 			  var testSuite:TestSuite = new TestSuite;
-			  addTests(testSuite, PhonyHTTPServiceProvider.ID);
-			  addTests(testSuite, PhonyAIRServiceProvider.ID);
+			  addServiceDependentTests(testSuite, PhonyHTTPServiceProvider.ID);
+			  addServiceDependentTests(testSuite, PhonyAIRServiceProvider.ID);
+			  addNonServiceDependentTests(testSuite);
  				testRunner.test = testSuite;
  				testRunner.startTest();
  				
  				
  			}
 			
-			private function addTests(ts:TestSuite, serviceProviderId:int):void {
+			private function addServiceDependentTests(ts:TestSuite, serviceProviderId:int):void {
  				ts.addTest(new SimplePropertiesTest("testSimpleModelIndex", serviceProviderId));
  				ts.addTest(new SimplePropertiesTest("testSimpleModelCreate", serviceProviderId));
  				ts.addTest(new SimplePropertiesTest("testSimpleModelCreateFollowedByUpdate", serviceProviderId));			
+ 			}
+ 			
+ 			private function addNonServiceDependentTests(ts:TestSuite):void {
+ 			  ts.addTest(new RubossUtilTest("testResourceNesting"));
  			}
 		]]>
 	</mx:Script>

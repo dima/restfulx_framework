@@ -1,4 +1,4 @@
-package ruboss.test.flex {
+package ruboss.test.cases {
   import org.ruboss.Ruboss;
   
   import ruboss.test.RubossTestCase;

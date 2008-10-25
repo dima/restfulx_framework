@@ -159,7 +159,7 @@ package org.ruboss.services.http {
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.GET;
-      httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
+      httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object);
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
@@ -187,7 +187,7 @@ package org.ruboss.services.http {
       httpService.method = URLRequestMethod.POST;
       httpService.request = marshallToVO(object, metadata);
       httpService.request["_method"] = "PUT";
-      httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
+      httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object);
       sendOrUpload(httpService, object, responder); 
     }
     
@@ -206,21 +206,6 @@ package org.ruboss.services.http {
       }
       
       invokeHTTPService(httpService, responder);
-    }
-
-    private function nestResource(object:Object, nestedBy:Array = null):String {
-      var result:String = "";
-      if (nestedBy == null || nestedBy.length == 0) 
-        return RubossUtils.getResourcePathPrefix(object) + state.controllers[getQualifiedClassName(object)] + ".fxml";
-      
-      for each (var resource:Object in nestedBy) {
-        result += RubossUtils.getResourcePathPrefix(resource) + 
-          state.controllers[getQualifiedClassName(resource)] + "/" + resource["id"];
-      }
-      
-      result += "/" + RubossUtils.getResourcePathPrefix(object) + 
-        state.controllers[getQualifiedClassName(object)] + ".fxml";
-      return result;
     }
 
     private function urlEncodeMetadata(metadata:Object = null):String {
@@ -620,7 +605,7 @@ package org.ruboss.services.http {
       service.resultFormat = "e4x";
       service.useProxy = false;
       service.contentType = "application/x-www-form-urlencoded";
-      service.url = Ruboss.httpRootUrl + nestResource(object, nestedBy);
+      service.url = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
       return service;
     }
     

@@ -36,9 +36,13 @@ package ruboss.test.services {
         
         var httpServiceProvider:IServiceProvider = 
           Ruboss.services.getServiceProvider(PhonyHTTPServiceProvider.ID);
-        for each (var instance:Object in 
-          httpServiceProvider.unmarshall(TestApp(Application.application)[controllerName])) {
-          create(instance, null);    
+        
+        if (TestApp(Application.application).hasOwnProperty(controllerName)) {
+          Ruboss.log.debug("loading data for :" + controllerName);
+          for each (var instance:Object in 
+            httpServiceProvider.unmarshall(TestApp(Application.application)[controllerName])) {
+            create(instance, null);    
+          }
         }
       }
     }

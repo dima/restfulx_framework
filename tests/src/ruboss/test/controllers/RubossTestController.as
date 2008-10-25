@@ -1,15 +1,15 @@
 package ruboss.test.controllers {
-  import ruboss.test.models.*;
-  import ruboss.test.commands.*;
-	
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.RubossCommandsController;
   import org.ruboss.utils.RubossUtils;
+  
+  import ruboss.test.commands.*;
+  import ruboss.test.models.*;
 
   public class RubossTestController extends RubossCommandsController {
     private static var controller:RubossTestController;
     
-    public static var models:Array = [Address]; /* Models */
+    public static var models:Array = [Address, Article, Section]; /* Models */
     
     public function RubossTestController(enforcer:SingletonEnforcer, extraServices:Array,
       defaultServiceId:int = -1) {
