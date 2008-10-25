@@ -1,20 +1,20 @@
 ---
-mxml_path: "test/TestApp.mxml"
-appxml_path: "test/TestApp-app.xml"
+mxml_path: "tests/src/TestApp.mxml"
+appxml_path: "tests/src/TestApp-app.xml"
 
-src_dirs: [ 'src', 'test' ]
-lib_dir: lib
+src_dirs: [ 'framework/src', 'tests/src' ]
+lib_dir: tests/lib
 
-air_path: bin/TestApp.air
-swf_path: bin/TestApp.swf
-assets: test/assets
+air_path: tests/bin/TestApp.air
+swf_path: tests/bin/TestApp.swf
+assets: tests/src/assets
 
 development:
   debug: true
 
 test:
-  swf_path: bin/TestApp.swf
-  mxml_path: test/TestApp.mxml
-  appxml_path: test/TestApp-app.xml
-  src_dirs: [ 'src', 'test' ]
+  swf_path: tests/bin/TestApp.swf
+  mxml_path: tests/src/TestApp.mxml
+  appxml_path: tests/src/TestApp-app.xml
+  src_dirs: [ 'framework/src', 'tests/src' ]
   debug: true

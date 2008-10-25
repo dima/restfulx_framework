@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<actionScriptProperties mainApplicationPath="test/Test.mxml" version="3">
+<actionScriptProperties mainApplicationPath="ruboss.as" version="3">
 <compiler additionalCompilerArguments="-locale en_US -source-path+=locale/{locale} -allow-source-path-overlap=true" copyDependentFiles="false" enableModuleDebug="true" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="false" htmlHistoryManagement="false" htmlPlayerVersion="9.0.28" htmlPlayerVersionCheck="true" outputFolderPath="bin" sourceFolderPath="src" strict="true" useApolloConfig="true" verifyDigests="true" warn="true">
-<compilerSourcePath>
-<compilerSourcePathEntry kind="1" linkType="1" path="test"/>
-</compilerSourcePath>
+<compilerSourcePath/>
 <libraryPath defaultLinkType="1">
 <libraryPathEntry kind="4" path=""/>
 <libraryPathEntry kind="1" linkType="1" path="lib"/>
 </libraryPath>
-<sourceAttachmentPath>
-<sourceAttachmentPathEntry kind="3" linkType="1" path="lib/flexunit-0.9.swc" sourcepath="${DOCUMENTS}/review/flexunit/FlexUnitLib/src" useDefaultLinkType="false"/>
-</sourceAttachmentPath>
+<sourceAttachmentPath/>
 </compiler>
 <applications/>
 <modules/>

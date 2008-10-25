@@ -7,7 +7,7 @@ ENV["AIRAKE_ENV"] ||= "development"
 task :default => [:build]
 
 task :build do
-  system("compc +configname=air -load-config+=ruboss-config.xml")
+  system("compc +configname=air -load-config+=framework/ruboss-config.xml")
 end
 
 task :test => ["air:test"]
