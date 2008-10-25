@@ -54,7 +54,7 @@ package org.ruboss.services.air {
       "DateTime" : "DATETIME"
     }
     
-    private var state:ModelsStateMetadata;
+    protected var state:ModelsStateMetadata;
     
     private var pending:Array;
     

@@ -1,29 +1,29 @@
 package ruboss.test.flex {
-  import flexunit.flexui.patterns.AssertEqualsPattern;
-  import flexunit.framework.TestCase;
-  
   import org.ruboss.Ruboss;
   
+  import ruboss.test.RubossTestCase;
   import ruboss.test.models.Address;
 
-  public class SimplePropertiesTest extends TestCase {
-    public function SimplePropertiesTest(methodName:String) {
-      super(methodName);
+  public class SimplePropertiesTest extends RubossTestCase {
+    public function SimplePropertiesTest(methodName:String, serviceProviderId:int) {
+      super(methodName, serviceProviderId);
     }
     
     public function testSimpleModelIndex():void {
+      establishService();
+      Ruboss.models.reset(Address);
       Ruboss.models.index(Address, function(addresses:Array):void {
         // verify strings are set
         assertEquals("Address1CityString", Address(addresses[0]).city);
         assertEquals("Address2CityString", Address(addresses[1]).city);
         
-        // verify integers are set
-        assertEquals(709692881, Address(addresses[0]).id);
-        assertEquals(752900118, Address(addresses[1]).id);       
+        assertTrue(Address(addresses[0]).id);
+        assertTrue(Address(addresses[1]).id);       
       });
     }
     
     public function testSimpleModelCreate():void {
+      establishService();
       var address:Address = getNewAddress();
       address.create(function(result:Address):void {
         assertTrue(result.id);
@@ -33,6 +33,7 @@ package ruboss.test.flex {
     }
     
     public function testSimpleModelCreateFollowedByUpdate():void {
+      establishService();
       var address:Address = getNewAddress();
       address.create(function(result:Address):void {
         var resultId:int = result.id;

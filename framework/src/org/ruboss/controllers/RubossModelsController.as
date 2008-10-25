@@ -58,8 +58,6 @@ package org.ruboss.controllers {
 
     // maps service ids to service instances (local reference)
     private var services:Dictionary;
-    
-    private var defaultServiceId:int;
 
     /**
      * Creates a new instance of the controller.
@@ -92,12 +90,6 @@ package org.ruboss.controllers {
       for each (var extraService:Class in extraServices) {
         var service:IServiceProvider = new extraService(this) as IServiceProvider;
         services[service.id] = service;
-      }
-      
-      if (targetServiceId == -1) {
-        defaultServiceId = Ruboss.defaultServiceId;
-      } else {
-        defaultServiceId = targetServiceId;
       }
 
       // initialize service manager
@@ -396,7 +388,7 @@ package org.ruboss.controllers {
     }
 
     private function getServiceProvider(serviceId:int = -1):IServiceProvider {
-      if (serviceId == -1) serviceId = defaultServiceId;
+      if (serviceId == -1) serviceId = Ruboss.defaultServiceId;
       return IServiceProvider(services[serviceId]);
     }
     
