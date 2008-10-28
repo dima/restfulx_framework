@@ -3,6 +3,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.RubossCommandTest;
 		  import ruboss.test.cases.RubossUtilTest;
 		  import org.ruboss.Ruboss;
       import ruboss.test.controllers.RubossTestController;
@@ -36,6 +37,8 @@
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
+ 			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
+        ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
  			}
 		]]>
 	</mx:Script>

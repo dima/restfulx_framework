@@ -245,6 +245,9 @@ package org.ruboss {
     }
     
     public static function reset():void {
+      commands = null;
+      models = null;
+      services = null;
       errors = null;
       defaultMetadata = null;
       sessionToken = null;

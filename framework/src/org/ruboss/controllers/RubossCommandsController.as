@@ -105,7 +105,7 @@ package org.ruboss.controllers {
      * @param targetServiceId indicates which service the command should use (if any)
      */
     public function execute(cmd:Object, data:Object = null, targetServiceId:int = -1):void {
-      var cmdName:String = commands[cmd];
+      var cmdName:String = (cmd is String) ? String(cmd) : commands[cmd];
       if (!commands[cmdName]) {
         throw new Error("command " + cmdName + " is unknown. Commands have to be registered via addCommand() or " +
           "addCommandByName() before execution.");

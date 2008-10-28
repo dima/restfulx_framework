@@ -9,11 +9,13 @@ package ruboss.test.controllers {
   public class RubossTestController extends RubossCommandsController {
     private static var controller:RubossTestController;
     
+    public var testCommandData:String;
+    
     public static var models:Array = [Address, Article, Section]; /* Models */
     
     public function RubossTestController(enforcer:SingletonEnforcer, extraServices:Array,
       defaultServiceId:int = -1) {
-      super([] /* Commands */, 
+      super([TestCommand] /* Commands */, 
         models, extraServices, defaultServiceId);
     }
     
