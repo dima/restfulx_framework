@@ -8,37 +8,39 @@
     </library-path>
   </compiler>
   <include-classes>
-    <class>org.ruboss.components.MoneyTextInput</class>
-    <class>org.ruboss.components.DateTextInput</class>
-    <class>org.ruboss.services.http.HTTPServiceProvider</class>
-    <class>org.ruboss.events.ServiceCallStopEvent</class>
-    <class>org.ruboss.services.ServiceManager</class>
-    <class>org.ruboss.services.air.AIRServiceProvider</class>
-    <class>org.ruboss.collections.RubossCollection</class>
-    <class>org.ruboss.services.http.HTTPServiceErrors</class>
-    <class>org.ruboss.controllers.RubossCommandsEventDispatcher</class>
     <class>org.ruboss.Ruboss</class>
-    <class>org.ruboss.controllers.ICommand</class>
-    <class>org.ruboss.services.ServiceResponder</class>
-    <class>org.ruboss.models.ModelsArray</class>
-    <class>org.ruboss.services.IServiceErrors</class>
-    <class>org.ruboss.services.GenericServiceErrors</class>
-    <class>org.ruboss.controllers.RubossCommandsController</class>
-    <class>org.ruboss.models.RubossModel</class>
-    <class>org.ruboss.models.ModelsStateMetadata</class>
-    <class>org.ruboss.events.CacheUpdateEvent</class>
-    <class>org.ruboss.models.RubossFileReference</class>
-    <class>org.ruboss.validators.ServiceErrorValidator</class>
-    <class>org.ruboss.utils.RubossUtils</class>
-    <class>org.ruboss.models.RubossTreeModel</class>
-    <class>org.ruboss.events.ServiceCallStartEvent</class>
-    <class>org.ruboss.services.IServiceProvider</class>
-    <class>org.ruboss.controllers.RubossModelsController</class>
-    <class>org.ruboss.events.RubossEvent</class>
-    <class>org.ruboss.controllers.SimpleHTTPController</class>
-    <class>org.ruboss.models.ModelsCollection</class>
+    <class>org.ruboss.collections.RubossCollection</class>
+    <class>org.ruboss.components.DateTextInput</class>
     <class>org.ruboss.components.DateTimeTextInput</class>
+    <class>org.ruboss.components.MoneyTextInput</class>
     <class>org.ruboss.components.RadioComboBox</class>
+    <class>org.ruboss.controllers.ICommand</class>
+    <class>org.ruboss.controllers.RubossCommandsController</class>
+    <class>org.ruboss.controllers.RubossCommandsEventDispatcher</class>
+    <class>org.ruboss.controllers.RubossModelsController</class>
+    <class>org.ruboss.controllers.SimpleHTTPController</class>
+    <class>org.ruboss.events.CacheUpdateEvent</class>
+    <class>org.ruboss.events.RubossEvent</class>
+    <class>org.ruboss.events.ServiceCallStartEvent</class>
+    <class>org.ruboss.events.ServiceCallStopEvent</class>
+    <class>org.ruboss.models.ModelsArray</class>
+    <class>org.ruboss.models.ModelsCollection</class>
+    <class>org.ruboss.models.ModelsStateMetadata</class>
+    <class>org.ruboss.models.RubossFileReference</class>
+    <class>org.ruboss.models.RubossModel</class>
+    <class>org.ruboss.models.RubossTreeModel</class>
+    <class>org.ruboss.services.GenericServiceErrors</class>
+    <class>org.ruboss.services.IServiceErrors</class>
+    <class>org.ruboss.services.IServiceProvider</class>
+    <class>org.ruboss.services.ServiceManager</class>
+    <class>org.ruboss.services.ServiceResponder</class>
+    <class>org.ruboss.services.air.AIRServiceProvider</class>
+    <class>org.ruboss.services.http.HTTPServiceErrors</class>
+    <class>org.ruboss.services.http.HTTPServiceProvider</class>
+    <class>org.ruboss.services.mock.MockAIRServiceProvider</class>
+    <class>org.ruboss.services.mock.MockHTTPServiceProvider</class>
+    <class>org.ruboss.utils.RubossUtils</class>
+    <class>org.ruboss.validators.ServiceErrorValidator</class>
   </include-classes>
   <metadata>
     <creator>Dima Berastau</creator>

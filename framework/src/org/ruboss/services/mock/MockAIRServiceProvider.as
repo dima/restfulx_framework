@@ -1,8 +1,7 @@
-package ruboss.test.services {
+package org.ruboss.services.mock {
   import flash.filesystem.File;
+  import flash.utils.Dictionary;
   import flash.utils.getQualifiedClassName;
-  
-  import mx.core.Application;
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.RubossModelsController;
@@ -10,7 +9,7 @@ package ruboss.test.services {
   import org.ruboss.services.ServiceManager;
   import org.ruboss.services.air.AIRServiceProvider;
 
-  public class PhonyAIRServiceProvider extends AIRServiceProvider {
+  public class MockAIRServiceProvider extends AIRServiceProvider {
 
     public static const ID:int = ServiceManager.generateId();
             
@@ -18,7 +17,7 @@ package ruboss.test.services {
       return ID;
     }
     
-    public function PhonyAIRServiceProvider(controller:RubossModelsController) {
+    public function MockAIRServiceProvider(controller:RubossModelsController) {
       var databaseName:String = Ruboss.airDatabaseName;
       var dbFile:File = File.userDirectory.resolvePath(databaseName + ".db");
       if (dbFile.exists) {
@@ -28,19 +27,19 @@ package ruboss.test.services {
       super(controller);
     }
     
-    public function loadTestData():void {
-      Ruboss.log.debug("loading test data for the PhonyAIRServiceProvider");
+    public function loadTestData(dataSets:Object):void {
+      Ruboss.log.debug("loading test data for MockAIRServiceProvider");
       for each (var model:Class in state.models) {
         var fqn:String = getQualifiedClassName(model);
         var controllerName:String = state.controllers[fqn];
         
         var httpServiceProvider:IServiceProvider = 
-          Ruboss.services.getServiceProvider(PhonyHTTPServiceProvider.ID);
-        
-        if (TestApp(Application.application).hasOwnProperty(controllerName)) {
-          Ruboss.log.debug("loading data for :" + controllerName);
+          Ruboss.services.getServiceProvider(MockHTTPServiceProvider.ID);
+          
+        for (var dataSetName:String in dataSets) {        
+          Ruboss.log.debug("loading test data for :" + dataSetName);
           for each (var instance:Object in 
-            httpServiceProvider.unmarshall(TestApp(Application.application)[controllerName])) {
+            httpServiceProvider.unmarshall(dataSets[dataSetName])) {
             create(instance, null);    
           }
         }

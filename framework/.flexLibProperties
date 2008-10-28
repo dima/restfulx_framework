@@ -30,6 +30,8 @@
 <classEntry path="org.ruboss.services.air.AIRServiceProvider"/>
 <classEntry path="org.ruboss.services.http.HTTPServiceErrors"/>
 <classEntry path="org.ruboss.services.http.HTTPServiceProvider"/>
+<classEntry path="org.ruboss.services.mock.MockAIRServiceProvider"/>
+<classEntry path="org.ruboss.services.mock.MockHTTPServiceProvider"/>
 <classEntry path="org.ruboss.utils.RubossUtils"/>
 <classEntry path="org.ruboss.validators.ServiceErrorValidator"/>
 </includeClasses>

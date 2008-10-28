@@ -3,25 +3,30 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
-		  import ruboss.test.cases.RubossCommandTest;
-		  import ruboss.test.cases.RubossUtilTest;
 		  import org.ruboss.Ruboss;
+      import org.ruboss.services.mock.MockAIRServiceProvider;
+      import org.ruboss.services.mock.MockHTTPServiceProvider;
       import ruboss.test.controllers.RubossTestController;
 		  import ruboss.test.cases.SimplePropertiesTest;
-      import ruboss.test.services.PhonyAIRServiceProvider;
-      import ruboss.test.services.PhonyHTTPServiceProvider;
+      import ruboss.test.cases.RubossCommandTest;
+      import ruboss.test.cases.RubossUtilTest;
 			import flexunit.framework.TestSuite;
 			
 			private function onCreationComplete():void {
 			  Ruboss.enableLogging();
-        RubossTestController.initialize([PhonyHTTPServiceProvider, PhonyAIRServiceProvider], 
-          PhonyHTTPServiceProvider.ID, "ruboss-tests");
+        RubossTestController.initialize([MockHTTPServiceProvider, MockAIRServiceProvider], 
+          MockHTTPServiceProvider.ID, "ruboss-tests");
           
-        PhonyAIRServiceProvider(Ruboss.services.getServiceProvider(PhonyAIRServiceProvider.ID)).loadTestData();
+        var testData:Object = {
+          addresses: addresses
+        }
+
+        MockHTTPServiceProvider(Ruboss.services.getServiceProvider(MockHTTPServiceProvider.ID)).loadTestData(testData);
+        MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
 			  
 			  var testSuite:TestSuite = new TestSuite;
-			  addServiceDependentTests(testSuite, PhonyHTTPServiceProvider.ID);
-			  addServiceDependentTests(testSuite, PhonyAIRServiceProvider.ID);
+			  addServiceDependentTests(testSuite, MockHTTPServiceProvider.ID);
+			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
 			  addNonServiceDependentTests(testSuite);
  				testRunner.test = testSuite;
  				testRunner.startTest();

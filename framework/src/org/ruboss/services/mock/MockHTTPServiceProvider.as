@@ -1,4 +1,5 @@
-package ruboss.test.services {
+package org.ruboss.services.mock {
+  import flash.utils.Dictionary;
   import flash.utils.getQualifiedClassName;
   
   import mx.core.Application;
@@ -10,24 +11,35 @@ package ruboss.test.services {
   import org.ruboss.services.ServiceManager;
   import org.ruboss.services.http.HTTPServiceProvider;
   
-  public class PhonyHTTPServiceProvider extends HTTPServiceProvider {
+  public class MockHTTPServiceProvider extends HTTPServiceProvider {
 
     public static const ID:int = ServiceManager.generateId();
+    
+    private static var data:Dictionary;
             
     public override function get id():int {
       return ID;
     }
 	
-  	public function PhonyHTTPServiceProvider(controller:RubossModelsController) {
+  	public function MockHTTPServiceProvider(controller:RubossModelsController) {
   	  super(controller);
+  	  data = new Dictionary;
   	}
+
+    public function loadTestData(dataSets:Object):void {
+      Ruboss.log.debug("loading test data for MockHTTPServiceProvider");
+      for (var dataSetName:String in dataSets) {
+        Ruboss.log.debug("loading test data for :" + dataSetName);
+        data[dataSetName] = dataSets[dataSetName];
+      }  
+    }
 
     public override function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
       var controllerName:String = state.controllers[fqn];
       
       Ruboss.log.debug("attempting to index: " + fqn + ", mapped to: " + controllerName);
-      responder.result(new ResultEvent(ResultEvent.RESULT, false, false, TestApp(Application.application)[controllerName]));
+      responder.result(new ResultEvent(ResultEvent.RESULT, false, false, data[controllerName]));
     }
 
     public override function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
