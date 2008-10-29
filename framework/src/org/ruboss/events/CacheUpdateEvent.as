@@ -13,6 +13,8 @@
  ******************************************************************************/
 package org.ruboss.events {
   import flash.events.Event;
+  
+  import org.ruboss.Ruboss;
 
   /**
    * This event is dispatched Ruboss Models cache gets updated and can be
@@ -23,12 +25,69 @@ package org.ruboss.events {
     /** Event identifier */
     public static var ID:String = "cacheUpdate";
     
+    public static var INDEX:int = 1;
+    
+    public static var SHOW:int = 2;
+    
+    public static var CREATE:int = 3;
+    
+    public static var UPDATE:int = 4;
+    
+    public static var DESTROY:int = 5;
+    
     /** Fully qualified name of the model class that got updated */
     public var fqn:String;
     
-    public function CacheUpdateEvent(fqn:String) {
+    public var opType:int;
+    
+    public function CacheUpdateEvent(fqn:String, opType:int) {
       super(ID, false, false);
       this.fqn = fqn;
+      this.opType = opType;
+    }
+    
+    public function isFor(model:Class):Boolean {
+      return fqn == Ruboss.models.names[model];
+    }
+    
+    public function isIndex():Boolean {
+      return opType == INDEX;
+    }
+    
+    public function isIndexFor(model:Class):Boolean {
+      return isIndex() && isFor(model);
+    }
+    
+    public function isShow():Boolean {
+      return opType == SHOW;
+    }
+    
+    public function isShowFor(model:Class):Boolean {
+      return isShow() && isFor(model);
+    }
+    
+    public function isCreate():Boolean {
+      return opType == CREATE;
+    }
+    
+    public function isCreateFor(model:Class):Boolean {
+      return isCreate() && isFor(model);
+    }
+    
+    public function isUpdate():Boolean {
+      return opType == UPDATE;
+    }
+    
+    public function isUpdateFor(model:Class):Boolean {
+      return isUpdate() && isFor(model);
+    }
+    
+    public function isDestroy():Boolean {
+      return opType == DESTROY;
+    }
+    
+    public function isDestroyFor(model:Class):Boolean {
+      return isDestroy() && isFor(model);
     }
   }
 }

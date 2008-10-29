@@ -107,6 +107,20 @@ package org.ruboss.controllers {
     }
     
     /**
+     * Checks to see if all of the models have been requested and cached successfully.
+     * 
+     * @param classes Array an array of model classes to be checked
+     */
+    public function containsAll(... classes):Boolean {
+      for each (var clazz:Class in classes) {
+        if (!contains(clazz)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    
+    /**
      * Resets model metadata.
      *  
      * @see org.ruboss.models.ModelsStateMetadata#reset
@@ -563,7 +577,7 @@ package org.ruboss.controllers {
         name = toCache.modelsType;
       }
       
-      dispatchEvent(new CacheUpdateEvent(name));      
+      dispatchEvent(new CacheUpdateEvent(name, CacheUpdateEvent.INDEX));      
     }
     
     public function onPage(models:Object):void {
@@ -607,7 +621,7 @@ package org.ruboss.controllers {
         name = toCache.modelsType;
       }
       
-      dispatchEvent(new CacheUpdateEvent(name));      
+      dispatchEvent(new CacheUpdateEvent(name, CacheUpdateEvent.INDEX));      
     }
     
     public function onShow(model:Object):void {
@@ -619,7 +633,7 @@ package org.ruboss.controllers {
         items.addItem(model);
       }
       processNtoNRelationships(model);
-      dispatchEvent(new CacheUpdateEvent(fqn));      
+      dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW));      
     }
     
     public function onCreate(model:Object):void {
@@ -628,7 +642,7 @@ package org.ruboss.controllers {
       items.addItem(model);
       processNtoNRelationships(model);
       Ruboss.errors = new GenericServiceErrors;
-      dispatchEvent(new CacheUpdateEvent(fqn));     
+      dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.CREATE));     
     }
     
     public function onUpdate(model:Object):void {
@@ -639,7 +653,7 @@ package org.ruboss.controllers {
       }
       processNtoNRelationships(model);
       Ruboss.errors = new GenericServiceErrors;
-      dispatchEvent(new CacheUpdateEvent(fqn));      
+      dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.UPDATE));      
     }
     
     public function onDestroy(model:Object):void {
@@ -649,7 +663,7 @@ package org.ruboss.controllers {
         cleanupModelReferences(fqn, model);
         items.removeItem(model);
       }
-      dispatchEvent(new CacheUpdateEvent(fqn));        
+      dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.DESTROY));        
     }
 
     public function cleanupModelReferences(fqn:String, model:Object):void {
