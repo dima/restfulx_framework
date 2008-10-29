@@ -60,6 +60,27 @@ package org.ruboss.models {
     }
 
     /**
+     * Force reload of a particular model instance or the entire model cache.
+     *  
+     * @param object model instance or model Class reference to reload
+     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     *  clober the value of any subsequent parameters.
+     * @param nestedBy an array of model instances that should used to nest this request under
+     * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
+     * @param fetchDependencies if true model dependencies will be recursively fetched as well
+     * @param useLazyModel if true dependencies marked with [Lazy] will be skipped (not fetched)
+     * @param page page to request (only used by index method)
+     * @param targetServiceId service provider to use
+     */
+    public function reload(optsOrAfterCallback:Object = null, nestedBy:Array = null,
+      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true,
+      targetServiceId:int = -1):void {
+      Ruboss.models.reload(this, optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode,
+        -1, targetServiceId);
+    }
+
+    /**
      * Wrapper around Ruboss.models.create
      *
      * @see org.ruboss.controllers.RubossModelsController#create
