@@ -197,7 +197,7 @@ package org.ruboss.controllers {
       }  
     }
         
-    private function unmarshall(data:Object):Object {
+    protected function unmarshall(data:Object):Object {
       try {
         return Ruboss.services.getServiceProvider(HTTPServiceProvider.ID).unmarshall(data.result);
       } catch (e:Error) {
@@ -206,22 +206,22 @@ package org.ruboss.controllers {
       return null;
     }
     
-    private function unmarshallResultHandler(data:Object, token:Object = null):void {
+    protected function unmarshallResultHandler(data:Object, token:Object = null):void {
       var result:Object = unmarshall(data);
       if (result && resultHandler != null) resultHandler(result);
     }
     
-    private function unmarshallAndCacheResultHandler(data:Object, token:Object = null):void {
+    protected function unmarshallAndCacheResultHandler(data:Object, token:Object = null):void {
       var result:Object = unmarshall(data);
       if (result) cacheHandler(result);
       if (result && resultHandler != null) resultHandler(result);
     }
     
-    private function defaultResultHandler(data:Object, token:Object = null):void {
+    protected function defaultResultHandler(data:Object, token:Object = null):void {
       if (resultHandler != null) resultHandler(data.result);
     }
     
-    private function defaultFaultHandler(info:Object, token:Object = null):void {
+    protected function defaultFaultHandler(info:Object, token:Object = null):void {
       if (faultHandler != null) { 
         faultHandler(info);
       } else {

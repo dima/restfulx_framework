@@ -57,6 +57,19 @@ package org.ruboss {
     
     /** default service provider to use */
     public static var defaultServiceId:int = HTTPServiceProvider.ID;
+    
+    /** default http controller implementation to use */
+    public static var httpController:Class = SimpleHTTPController;
+    
+    /** 
+     * If http controller handler function is set, it allows you to override 
+     * behaviour of the send() function in the controller.
+     * 
+     * The signature for the function is 
+     * (controller:SimpleHTTPController, url:String, data:Object = null, 
+     *  method:int = SimpleHTTPController.GET)
+     */
+    public static var httpControllerHandler:Function;
 
     /** 
      * metadata allows us to tag arbitrary data along with any provider requests
@@ -110,7 +123,7 @@ package org.ruboss {
      */
     public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, 
       contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null):SimpleHTTPController {
-      return new SimpleHTTPController(optsOrResultHandler, faultHandler, contentType, rootUrl);    
+      return new httpController(optsOrResultHandler, faultHandler, contentType, rootUrl);    
     }
 
     /**

@@ -19,6 +19,7 @@
     <class>org.ruboss.controllers.RubossCommandsEventDispatcher</class>
     <class>org.ruboss.controllers.RubossModelsController</class>
     <class>org.ruboss.controllers.SimpleHTTPController</class>
+    <class>org.ruboss.controllers.mock.MockSimpleHTTPController</class>
     <class>org.ruboss.events.CacheUpdateEvent</class>
     <class>org.ruboss.events.RubossEvent</class>
     <class>org.ruboss.events.ServiceCallStartEvent</class>
