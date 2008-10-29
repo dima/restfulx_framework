@@ -36,7 +36,7 @@ namespace :test do
     end
   end
   
-  desc "Run the application"
+  desc "Run test application"
   task :run do
     project_path = File.join(ROOT_DIR, "tests/src", TEST_APP_NAME)
     target_project_air_descriptor = project_path.sub(/.mxml$/, '-app.xml')
