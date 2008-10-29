@@ -14,7 +14,7 @@ task :default => [:build]
 
 desc "Build the framework"
 task :build do
-  system("compc +configname=air -load-config+=framework/ruboss-config.xml")
+  system("#{get_executable('compc')} +configname=air -load-config+=framework/ruboss-config.xml")
 end
 
 desc "Compile and run test application"
