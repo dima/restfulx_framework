@@ -72,7 +72,7 @@ package org.ruboss.controllers {
       super();
       cache = new Dictionary;
       names = new Dictionary;
-
+      
       // set-up model cache
       for each (var model:Class in models) {
         var fqn:String = getQualifiedClassName(model);
@@ -94,6 +94,15 @@ package org.ruboss.controllers {
 
       // initialize service manager
       Ruboss.services = new ServiceManager(services);
+      
+      // ensure that the targetServiceId is valid = we have a service for it
+      if (Ruboss.services.getServiceProvider(targetServiceId)) {
+        Ruboss.defaultServiceId = targetServiceId;
+      } else if (targetServiceId != -1) {
+        // -1 is the default in case nothing is specified and default service provider is 
+        // exactly what's required
+        Ruboss.log.error("requested service provider doesn't exist, defaulting to: HTTPServiceProvider");
+      }
     }
     
     /**
@@ -215,6 +224,18 @@ package org.ruboss.controllers {
           targetServiceId);
       }
       return ModelsCollection(cache[fqn]);
+    }
+    
+    /**
+     * A shortcut to index multiple models at once. Useful if you don't want to define any special options,
+     * such as callbacks, metadata, etc.
+     * 
+     * @param models a list of models to index
+     */    
+    public function indexAll(... models):void {
+      for each (var model:Class in models) {
+        index(model);
+      }
     }
     
     /**
