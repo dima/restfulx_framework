@@ -29,19 +29,14 @@ package org.ruboss.services.mock {
     
     public function loadTestData(dataSets:Object):void {
       Ruboss.log.debug("loading test data for MockAIRServiceProvider");
-      for each (var model:Class in state.models) {
-        var fqn:String = getQualifiedClassName(model);
-        var controllerName:String = state.controllers[fqn];
+      var httpServiceProvider:IServiceProvider = 
+        Ruboss.services.getServiceProvider(MockHTTPServiceProvider.ID);
         
-        var httpServiceProvider:IServiceProvider = 
-          Ruboss.services.getServiceProvider(MockHTTPServiceProvider.ID);
-          
-        for (var dataSetName:String in dataSets) {        
-          Ruboss.log.debug("loading test data for :" + dataSetName);
-          for each (var instance:Object in 
-            httpServiceProvider.unmarshall(dataSets[dataSetName])) {
-            create(instance, null);    
-          }
+      for (var dataSetName:String in dataSets) {        
+        Ruboss.log.debug("loading test data for :" + dataSetName);
+        for each (var instance:Object in 
+          httpServiceProvider.unmarshall(dataSets[dataSetName])) {
+          create(instance, null);    
         }
       }
     }
