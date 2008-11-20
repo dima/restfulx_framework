@@ -32,8 +32,6 @@
 			  addNonServiceDependentTests(testSuite);
  				testRunner.test = testSuite;
  				testRunner.startTest();
- 				
- 				
  			}
 			
 			private function addServiceDependentTests(ts:TestSuite, serviceProviderId:int):void {
@@ -48,6 +46,7 @@
         ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
         ts.addTest(new JSONServiceProviderTest("testSimpleObjectUnmarshalling"));
         ts.addTest(new JSONServiceProviderTest("testObjectUnmarshallingWithRelationships"));
+        ts.addTest(new JSONServiceProviderTest("testObjectMarshallingWithRelationships"));
  			}
 		]]>
 	</mx:Script>
