@@ -144,12 +144,12 @@ package org.ruboss.utils {
      * @param nestedBy an array of model instances that should be used to nest this resource
      * @return string representation of the URL for this model resource 
      */
-    public static function nestResource(object:Object, nestedBy:Array = null):String {
+    public static function nestResource(object:Object, nestedBy:Array = null, suffix:String = "fxml"):String {
       var result:String = "";
       var fqn:String = getQualifiedClassName(object);
       if (nestedBy == null || nestedBy.length == 0) 
         return RubossUtils.getResourcePathPrefix(object) + 
-          Ruboss.models.state.controllers[fqn] + ".fxml";
+          Ruboss.models.state.controllers[fqn] + "." + suffix;
       
       for each (var resource:Object in nestedBy) {
         result += Ruboss.models.state.controllers[getQualifiedClassName(resource)] + 
@@ -157,7 +157,7 @@ package org.ruboss.utils {
       }
       
       return RubossUtils.getResourcePathPrefix(object) + result +
-        Ruboss.models.state.controllers[fqn] + ".fxml";
+        Ruboss.models.state.controllers[fqn] + "." + suffix;
     }
     
     /**
@@ -169,8 +169,8 @@ package org.ruboss.utils {
      * @return url suitable for being used with update/destroy requests on models
      * 
      */
-    public static function addObjectIdToResourceURL(url:String, object:Object):String {
-      return url.replace(".fxml", "") + "/" + object["id"] + ".fxml"
+    public static function addObjectIdToResourceURL(url:String, object:Object, suffix:String = "fxml"):String {
+      return url.replace("." + suffix, "") + "/" + object["id"] + "." + suffix;
     }
         
     /**

@@ -409,7 +409,7 @@ package org.ruboss.services.air {
           if (elementId != 0 && !isNaN(elementId)) {
             var key:String = state.keys[referenceTargetName];
             // key should be fqn for the targetName;
-            ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId);
+            ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId.toString());
           }
           
           if (existingReference && model[targetName] != ref) {

@@ -34,7 +34,7 @@ package org.ruboss.models {
      * @return model object with a given id
      */
     [Bindable("collectionChange")]
-    public function withId(id:int):Object {
+    public function withId(id:String):Object {
       var index:int = indexOfId(id);
       return (index == -1) ? null : getItemAt(index);
     }
@@ -84,7 +84,7 @@ package org.ruboss.models {
      * @param id of the model to find
      * @return index offset
      */
-    public function indexOfId(id:int):int {
+    public function indexOfId(id:String):int {
       return indexOfPropertyValue("id", id);
     }
   }

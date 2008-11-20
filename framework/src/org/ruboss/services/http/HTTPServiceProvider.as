@@ -506,7 +506,7 @@ package org.ruboss.services.http {
           var elementId:int = parseInt(element.toString());
                 
           if (elementId != 0 && !isNaN(elementId)) {
-            ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId);
+            ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId.toString());
             // even if this reference is not in the cache, we still want to keep some 
             // information about it (in particular it's id)
             if (ref == null) {
@@ -527,7 +527,7 @@ package org.ruboss.services.http {
       if (elementId != 0 && !isNaN(elementId)) {
         var parentRef:Object = null;
         if (Ruboss.models.cache[fqn]) {
-          parentRef = ModelsCollection(Ruboss.models.cache[fqn]).withId(elementId);
+          parentRef = ModelsCollection(Ruboss.models.cache[fqn]).withId(elementId.toString());
           if (parentRef) return parentRef;
         }
 

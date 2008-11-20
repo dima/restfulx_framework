@@ -47,6 +47,7 @@
  			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
         ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
         ts.addTest(new JSONServiceProviderTest("testSimpleObjectUnmarshalling"));
+        ts.addTest(new JSONServiceProviderTest("testObjectUnmarshallingWithRelationships"));
  			}
 		]]>
 	</mx:Script>

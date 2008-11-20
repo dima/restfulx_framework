@@ -122,7 +122,7 @@ package org.ruboss.services.json {
     private function processModel(fqn:String, model:Object, source:Object, existingReference:Boolean = false):void {
       var metadata:XML = describeType(model);        
       for (var property:String in source) {
-        if (property == "_id") continue;
+        if (property == "_id" || property == "_rev") continue;
           
         var targetName:String = property;
         var referenceTargetName:String = targetName;
@@ -132,7 +132,7 @@ package org.ruboss.services.json {
         
         // if we got a node with a name that terminates in "_id" we check to see if
         // it's a model reference       
-        if (targetName.search(/.+_id$/) != -1) {
+        if (targetName.search(/.*_id$/) != -1) {
           var checkName:String = targetName.replace(/_id$/, "");
           var camelCheckName:String = RubossUtils.toCamelCase(checkName);
           
@@ -159,10 +159,10 @@ package org.ruboss.services.json {
         }
 
         if (isRef && value != null) {
-          var elementId:int = parseInt(value.toString());
+          var elementId:String = value.toString();
             
           var ref:Object = null; 
-          if (elementId != 0 && !isNaN(elementId)) {
+          if (!RubossUtils.isEmpty(elementId)) {
             var key:String = state.keys[referenceTargetName];
             // key should be fqn for the targetName;
             ref = ModelsCollection(Ruboss.models.cache[key]).withId(elementId);
@@ -198,6 +198,7 @@ package org.ruboss.services.json {
             ObjectUtil.hasMetadata(ref, state.keys[fqn], "HasOne")) {
             ref[state.keys[fqn]] = model;
           }
+          
           // and the reverse
           model[targetName] = ref;
         } else if (!isRef && model.hasOwnProperty(targetName)) {
@@ -211,7 +212,7 @@ package org.ruboss.services.json {
       var type:String = node.@type;
       var result:String = types[type];
       if (state.fqns[type]) {
-        return types["int"];
+        return types["String"];
       } else if (RubossUtils.isDateTime(node)) {
         return types["DateTime"];
       } else {
