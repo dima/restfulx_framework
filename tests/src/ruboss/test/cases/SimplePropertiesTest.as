@@ -36,7 +36,7 @@ package ruboss.test.cases {
       establishService();
       var address:Address = getNewAddress();
       address.create(function(result:Address):void {
-        var resultId:int = result.id;
+        var resultId:String = result.id;
         
         assertTrue(resultId);
         assertEquals("Vancouver", address.city);

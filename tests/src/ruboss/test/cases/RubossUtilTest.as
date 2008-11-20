@@ -15,10 +15,10 @@ package ruboss.test.cases {
     
     public function testResourceNesting():void {
       var article:Article = new Article;
-      article.id = 1;
+      article.id = "1";
       
       var section:Section = new Section;
-      section.id = 2;
+      section.id = "2";
       
       var articleUrl:String = Ruboss.httpRootUrl + RubossUtils.nestResource(article);
       assertEquals("/admin/articles.fxml", articleUrl);
@@ -28,7 +28,7 @@ package ruboss.test.cases {
       assertEquals("/admin/sections/2/articles/1.fxml", articleUrlNestedBySection);
       
       var address:Address = new Address;
-      address.id = 3;
+      address.id = "3";
       
       var addressUrl:String = Ruboss.httpRootUrl +
         RubossUtils.nestResource(address);

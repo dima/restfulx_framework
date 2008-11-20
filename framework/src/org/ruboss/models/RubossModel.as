@@ -23,7 +23,10 @@ package org.ruboss.models {
     private var _label:String;
 
     /** all models have an id. this is typically unique per class of models */
-    public var id:int;
+    public var id:String;
+    
+    /** some models have a revision number */
+    public var rev:String;
 
     /** true if this model has been *fully* fetched as opposed to just stubbed out */
     public var fetched:Boolean;

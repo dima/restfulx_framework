@@ -3,6 +3,8 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.JSONServiceProviderTest;
+		  import org.ruboss.services.json.JSONServiceProvider;
 		  import org.ruboss.Ruboss;
       import org.ruboss.services.mock.MockAIRServiceProvider;
       import org.ruboss.services.mock.MockHTTPServiceProvider;
@@ -14,7 +16,7 @@
 			
 			private function onCreationComplete():void {
 			  Ruboss.enableLogging();
-        RubossTestController.initialize([MockHTTPServiceProvider, MockAIRServiceProvider], 
+        RubossTestController.initialize([MockHTTPServiceProvider, MockAIRServiceProvider, JSONServiceProvider], 
           MockHTTPServiceProvider.ID, "ruboss-tests");
           
         var testData:Object = {
@@ -44,6 +46,7 @@
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
  			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
         ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
+        ts.addTest(new JSONServiceProviderTest("testSimpleObjectUnmarshalling"));
  			}
 		]]>
 	</mx:Script>
