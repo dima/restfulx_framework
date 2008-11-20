@@ -40,6 +40,7 @@
     <class>org.ruboss.services.http.HTTPServiceProvider</class>
     <class>org.ruboss.services.mock.MockAIRServiceProvider</class>
     <class>org.ruboss.services.mock.MockHTTPServiceProvider</class>
+    <class>org.ruboss.services.json.JSONServiceProvider</class>
     <class>org.ruboss.utils.RubossUtils</class>
     <class>org.ruboss.validators.ServiceErrorValidator</class>
   </include-classes>

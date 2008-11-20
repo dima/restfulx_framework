@@ -14,7 +14,8 @@ task :default => [:build]
 
 desc "Build the framework"
 task :build do
-  system("#{get_executable('compc')} +configname=air -load-config+=framework/ruboss-config.xml")
+  libs = Dir.glob(File.join(ROOT_DIR, 'tests/lib', '*.swc'))
+  system("#{get_executable('compc')} +configname=air -load-config+=framework/ruboss-config.xml -library-path+=#{libs.join(',')}")
 end
 
 desc "Compile and run test application"
@@ -27,6 +28,7 @@ namespace :test do
     target_project_path = File.join(ROOT_DIR, "tests/bin", TEST_APP_NAME.sub(/.mxml$/, '.swf'))
     source_path = [File.join(ROOT_DIR, "framework/src"), File.join(ROOT_DIR, "tests/src")]
     libs = Dir.glob(File.join(ROOT_DIR, 'tests/lib', '*.swc'))
+    libs << Dir.glob(File.join(ROOT_DIR, 'framework/lib', '*.swc'))
     
     cmd = "#{get_executable('mxmlc')} +configname=air -library-path+=#{libs.join(',')} " << 
       "-output #{target_project_path} -debug=true -source-path=#{source_path.join(',')}" <<
