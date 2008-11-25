@@ -318,6 +318,7 @@ package org.ruboss.controllers {
         var serviceResponder:ServiceResponder = new ServiceResponder(onShow, service, this, fetchDependencies, afterCallback);
 
         invokeService(service.show, service, object, serviceResponder, metadata, nestedBy);
+        return null;
       }
       
       return ModelsCollection(cache[fqn]).getItem(object);
