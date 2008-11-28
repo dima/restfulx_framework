@@ -11,8 +11,7 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
-package org.ruboss.models {
-  import org.ruboss.collections.RubossCollection;
+package org.ruboss.collections {
 
   /**
    * Adds a few handy methods to ArrayCollection class to simplify working 

@@ -13,6 +13,7 @@
  ******************************************************************************/
 package org.ruboss.models {
   import org.ruboss.Ruboss;
+  import org.ruboss.utils.RubossFileReference;
 
   /**
    * Encapsulates properties common to all model objects and wraps around a few

@@ -24,22 +24,20 @@ package org.ruboss.controllers {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.collections.ModelsCollection;
   import org.ruboss.events.CacheUpdateEvent;
   import org.ruboss.events.ServiceCallStartEvent;
-  import org.ruboss.models.ModelsArray;
-  import org.ruboss.models.ModelsCollection;
-  import org.ruboss.models.ModelsStateMetadata;
   import org.ruboss.services.GenericServiceErrors;
   import org.ruboss.services.IServiceProvider;
-  import org.ruboss.services.ServiceManager;
   import org.ruboss.services.ServiceResponder;
-  import org.ruboss.services.http.HTTPServiceProvider;
+  import org.ruboss.utils.ModelsStateMetadata;
   import org.ruboss.utils.RubossUtils;
+  import org.ruboss.utils.TypedArray;
 
   /**
    * Provides high level CRUD functionality.
    */
-  public class RubossModelsController extends EventDispatcher {
+  public class ModelsController extends EventDispatcher {
     
     /**
      * internal cache of fetched model instances maps model 
@@ -56,19 +54,12 @@ package org.ruboss.controllers {
     /** encapsulates models control metadata and state */
     public var state:ModelsStateMetadata;
 
-    // maps service ids to service instances (local reference)
-    private var services:Dictionary;
-
     /**
      * Creates a new instance of the controller.
      *  
      * @param models the array of model classes to register e.g. [Model1, Model2]
-     * @param extraServices the array of services to use (HTTPServiceProvider is registered
-     *  by default. All other providers (e.g. AIR) must be registered here)
-     * @param targetServiceId default service to use for operations (by default HTTPServiceProvider.ID)
      */
-    public function RubossModelsController(models:Array, extraServices:Array, 
-      targetServiceId:int = -1) {
+    public function ModelsController(models:Array) {
       super();
       cache = new Dictionary;
       names = new Dictionary;
@@ -81,28 +72,6 @@ package org.ruboss.controllers {
       }
       
       state = new ModelsStateMetadata(models);
-      
-      services = new Dictionary;
-      // initialize default service
-      services[HTTPServiceProvider.ID] = new HTTPServiceProvider(this);
-
-      // hook up extra services (e.g. AIR, AMF, SimpleDB)
-      for each (var extraService:Class in extraServices) {
-        var service:IServiceProvider = new extraService(this) as IServiceProvider;
-        services[service.id] = service;
-      }
-
-      // initialize service manager
-      Ruboss.services = new ServiceManager(services);
-      
-      // ensure that the targetServiceId is valid = we have a service for it
-      if (Ruboss.services.getServiceProvider(targetServiceId)) {
-        Ruboss.defaultServiceId = targetServiceId;
-      } else if (targetServiceId != -1) {
-        // -1 is the default in case nothing is specified and default service provider is 
-        // exactly what's required
-        Ruboss.log.error("requested service provider doesn't exist, defaulting to: HTTPServiceProvider");
-      }
     }
     
     /**
@@ -424,7 +393,7 @@ package org.ruboss.controllers {
 
     private function getServiceProvider(serviceId:int = -1):IServiceProvider {
       if (serviceId == -1) serviceId = Ruboss.defaultServiceId;
-      return IServiceProvider(services[serviceId]);
+      return IServiceProvider(Ruboss.services.getServiceProvider(serviceId));
     }
     
     private function setServiceMetadata(metadata:Object):Object {
@@ -577,9 +546,9 @@ package org.ruboss.controllers {
     }
 
     public function onIndex(models:Object):void {
-      var toCache:ModelsArray = new ModelsArray;
-      if (models is ModelsArray) {
-        toCache = models as ModelsArray;
+      var toCache:TypedArray = new TypedArray;
+      if (models is TypedArray) {
+        toCache = models as TypedArray;
       } else {
         toCache.push(models);
       }
@@ -602,10 +571,10 @@ package org.ruboss.controllers {
     }
     
     public function onPage(models:Object):void {
-      var toCache:ModelsArray = new ModelsArray;
+      var toCache:TypedArray = new TypedArray;
       
-      if (models is ModelsArray) {
-        toCache = models as ModelsArray;
+      if (models is TypedArray) {
+        toCache = models as TypedArray;
       } else {
         toCache.push(models);
       }

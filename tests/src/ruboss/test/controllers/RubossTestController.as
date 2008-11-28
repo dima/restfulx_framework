@@ -1,12 +1,12 @@
 package ruboss.test.controllers {
   import org.ruboss.Ruboss;
-  import org.ruboss.controllers.RubossCommandsController;
+  import org.ruboss.controllers.RubossApplicationController;
   import org.ruboss.utils.RubossUtils;
   
   import ruboss.test.commands.*;
   import ruboss.test.models.*;
 
-  public class RubossTestController extends RubossCommandsController {
+  public class RubossTestController extends RubossApplicationController {
     private static var controller:RubossTestController;
     
     public var testCommandData:String;
@@ -29,7 +29,6 @@ package ruboss.test.controllers {
       if (!RubossUtils.isEmpty(airDatabaseName)) Ruboss.airDatabaseName = airDatabaseName;
       controller = new RubossTestController(new SingletonEnforcer, extraServices,
         defaultServiceId);
-      Ruboss.commands = controller;
     }
   }
 }

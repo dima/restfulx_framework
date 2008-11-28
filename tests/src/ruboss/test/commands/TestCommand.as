@@ -1,5 +1,5 @@
 package ruboss.test.commands {  
-  import org.ruboss.controllers.ICommand;
+  import org.ruboss.commands.ICommand;
   import org.ruboss.events.RubossEvent;
   
   import ruboss.test.controllers.RubossTestController;

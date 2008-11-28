@@ -11,7 +11,7 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
-package org.ruboss.models {
+package org.ruboss.utils {
   import flash.net.registerClassAlias;
   import flash.utils.Dictionary;
   import flash.utils.describeType;

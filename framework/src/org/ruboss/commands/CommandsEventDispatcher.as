@@ -11,7 +11,7 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
-package org.ruboss.controllers {
+package org.ruboss.commands {
   import flash.events.EventDispatcher;
   import flash.events.IEventDispatcher;
   
@@ -20,21 +20,21 @@ package org.ruboss.controllers {
   /**
    * Singleton. Manages ruboss command related event registration.
    */
-  public class RubossCommandsEventDispatcher extends EventDispatcher {
-    private static var instance:RubossCommandsEventDispatcher;
+  public class CommandsEventDispatcher extends EventDispatcher {
+    private static var instance:CommandsEventDispatcher;
 
     /** 
     * @param target IEventDispatcher implementation
     */
-    public function RubossCommandsEventDispatcher(target:IEventDispatcher = null) {
+    public function CommandsEventDispatcher(target:IEventDispatcher = null) {
       super(target);
     }
     
     /**
      * @return current dispatcher instance.
      */
-    public static function getInstance():RubossCommandsEventDispatcher {
-      if (instance == null) instance = new RubossCommandsEventDispatcher;
+    public static function getInstance():CommandsEventDispatcher {
+      if (instance == null) instance = new CommandsEventDispatcher;
       return instance;
     }
   }

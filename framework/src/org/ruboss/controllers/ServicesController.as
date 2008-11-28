@@ -11,13 +11,17 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
-package org.ruboss.services {
+package org.ruboss.controllers {
   import flash.utils.Dictionary;
+  
+  import org.ruboss.Ruboss;
+  import org.ruboss.services.IServiceProvider;
+  import org.ruboss.services.http.HTTPServiceProvider;
   
   /**
    * Provides centralized access to currently available services.
    */
-  public class ServiceManager {
+  public class ServicesController {
     
     private static var idGenerator:int = 1;
     
@@ -25,10 +29,30 @@ package org.ruboss.services {
     private var services:Dictionary;
     
     /**
-     * @param services a dictionary that maps service ids to service instances
+     * @param avalable the array of services to use (HTTPServiceProvider is registered
+     *  by default. All other providers (e.g. AIR) must be registered here)
+     * @param targetServiceId default service to use for operations (by default HTTPServiceProvider.ID)
      */
-    public function ServiceManager(services:Dictionary) {
-      this.services = services;
+    public function ServicesController(availableServices:Array, targetServiceId:int = -1) {
+      services = new Dictionary;
+      
+      // initialize default service
+      services[HTTPServiceProvider.ID] = new HTTPServiceProvider;
+
+      // hook up available services (e.g. AIR, AMF, SimpleDB)
+      for each (var availableService:Class in availableServices) {
+        var service:IServiceProvider = new availableService() as IServiceProvider;
+        services[service.id] = service;
+      }
+      
+      // ensure that the targetServiceId is valid = we have a service for it
+      if (getServiceProvider(targetServiceId)) {
+        Ruboss.defaultServiceId = targetServiceId;
+      } else if (targetServiceId != -1) {
+        // -1 is the default in case nothing is specified and default service provider is 
+        // exactly what's required
+        Ruboss.log.error("requested service provider doesn't exist, defaulting to: HTTPServiceProvider");
+      }
     }
     
     /**

@@ -29,14 +29,13 @@ package org.ruboss.services.http {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.controllers.RubossModelsController;
-  import org.ruboss.models.ModelsArray;
-  import org.ruboss.models.ModelsCollection;
-  import org.ruboss.models.ModelsStateMetadata;
-  import org.ruboss.models.RubossFileReference;
+  import org.ruboss.collections.ModelsCollection;
+  import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.IServiceProvider;
-  import org.ruboss.services.ServiceManager;
+  import org.ruboss.utils.ModelsStateMetadata;
+  import org.ruboss.utils.RubossFileReference;
   import org.ruboss.utils.RubossUtils;
+  import org.ruboss.utils.TypedArray;
 
   /**
    * XML-over-HTTP service provider.
@@ -44,15 +43,15 @@ package org.ruboss.services.http {
   public class HTTPServiceProvider implements IServiceProvider {
     
     /** service id */
-    public static const ID:int = ServiceManager.generateId();
+    public static const ID:int = ServicesController.generateId();
         
     protected var state:ModelsStateMetadata;
     
     /**
      * @param controller reference to RubossModelsController instance
      */
-    public function HTTPServiceProvider(controller:RubossModelsController) {
-      state = controller.state;
+    public function HTTPServiceProvider() {
+      state = Ruboss.models.state;
     }
     
     /**
@@ -112,7 +111,7 @@ package org.ruboss.services.http {
         Ruboss.log.debug("unmarshalling response:\n" + xmlFragment.toXMLString());
 
         var objectName:String = xmlFragment.localName();
-        var results:ModelsArray = new ModelsArray;
+        var results:TypedArray = new TypedArray;
         // if the object name is the same as the controller specified 
         // on the model (which are typically plural) we know we got back 
         // a collection of "known" model elements

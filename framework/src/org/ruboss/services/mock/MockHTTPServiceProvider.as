@@ -2,18 +2,16 @@ package org.ruboss.services.mock {
   import flash.utils.Dictionary;
   import flash.utils.getQualifiedClassName;
   
-  import mx.core.Application;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.controllers.RubossModelsController;
-  import org.ruboss.services.ServiceManager;
+  import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.http.HTTPServiceProvider;
   
   public class MockHTTPServiceProvider extends HTTPServiceProvider {
 
-    public static const ID:int = ServiceManager.generateId();
+    public static const ID:int = ServicesController.generateId();
     
     private static var data:Dictionary;
             
@@ -21,8 +19,8 @@ package org.ruboss.services.mock {
       return ID;
     }
 	
-  	public function MockHTTPServiceProvider(controller:RubossModelsController) {
-  	  super(controller);
+  	public function MockHTTPServiceProvider() {
+  	  super();
   	  data = new Dictionary;
   	}
 

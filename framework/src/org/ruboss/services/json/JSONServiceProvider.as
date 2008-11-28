@@ -17,19 +17,18 @@ package org.ruboss.services.json {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.controllers.RubossModelsController;
-  import org.ruboss.models.ModelsArray;
-  import org.ruboss.models.ModelsCollection;
-  import org.ruboss.models.ModelsStateMetadata;
-  import org.ruboss.models.RubossFileReference;
+  import org.ruboss.collections.ModelsCollection;
+  import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.IServiceProvider;
-  import org.ruboss.services.ServiceManager;
+  import org.ruboss.utils.ModelsStateMetadata;
+  import org.ruboss.utils.RubossFileReference;
   import org.ruboss.utils.RubossUtils;
+  import org.ruboss.utils.TypedArray;
 
   public class JSONServiceProvider implements IServiceProvider {
 
     /** service id */
-    public static const ID:int = ServiceManager.generateId();
+    public static const ID:int = ServicesController.generateId();
 
     private static var types:Object = {
       "int" : "integer",
@@ -43,8 +42,8 @@ package org.ruboss.services.json {
 
     protected var state:ModelsStateMetadata;
     
-    public function JSONServiceProvider(controller:RubossModelsController) {
-      state = controller.state;
+    public function JSONServiceProvider() {
+      state = Ruboss.models.state;
     }
 
     /**
@@ -96,7 +95,7 @@ package org.ruboss.services.json {
         fqn = state.keys[localName];
         clazz = getDefinitionByName(fqn) as Class;
         
-        var result:ModelsArray  = new ModelsArray;
+        var result:TypedArray  = new TypedArray;
         result.modelsType = fqn;
         for each (var instance:Object in unmarshalled) {
           // if we already have something with this fqn and id in cache attempt to reuse it

@@ -11,7 +11,7 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
-package org.ruboss.controllers {
+package org.ruboss.commands {
   import org.ruboss.events.RubossEvent;
   
   /**

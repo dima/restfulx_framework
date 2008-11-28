@@ -16,13 +16,15 @@ package org.ruboss.controllers {
   import flash.utils.getQualifiedClassName;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.commands.CommandsEventDispatcher;
+  import org.ruboss.commands.ICommand;
   import org.ruboss.events.RubossEvent;
   
   /**
    * Manages registered commands (classes that implement org.ruboss.controllers.ICommand)
    * and wraps around RubossModelsController initialization for convenience.
    */
-  public class RubossCommandsController {
+  public class CommandsController {
     
     // maps command classes to event names
     private var commands:Dictionary = new Dictionary;
@@ -36,17 +38,10 @@ package org.ruboss.controllers {
      *  by default. All other providers (e.g. AIR) must be registered here)
      * @param targetServiceId default service to use for operations (by default HTTPServiceProvider.ID)
      */
-    public function RubossCommandsController(commands:Array, models:Array, 
-      extraServices:Array = null, targetServiceId:int = -1) {
+    public function CommandsController(commands:Array) {
       for each (var cmd:Class in commands) {
         addCommand(cmd);
       }
-      
-      if (extraServices == null) extraServices = new Array;
-      
-      // set up models controller
-      Ruboss.models = new RubossModelsController(models, extraServices, 
-        targetServiceId);
     }
 
     /**
@@ -70,7 +65,7 @@ package org.ruboss.controllers {
     public function addCommandByName(cmdName:String, cmd:Class, useWeakReference:Boolean = true):void {
       commands[cmdName] = cmd;
       commands[cmd] = cmdName;
-      RubossCommandsEventDispatcher.getInstance().addEventListener(cmdName, executeCommand, 
+      CommandsEventDispatcher.getInstance().addEventListener(cmdName, executeCommand, 
         false, 0, useWeakReference);      
     }
     
@@ -93,7 +88,7 @@ package org.ruboss.controllers {
      * @see addCommandByName
      */
     public function removeCommandByName(cmdName:String):void {
-      RubossCommandsEventDispatcher.getInstance().removeEventListener(cmdName, executeCommand);
+      CommandsEventDispatcher.getInstance().removeEventListener(cmdName, executeCommand);
       delete commands[cmdName];      
     }
 

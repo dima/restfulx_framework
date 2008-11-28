@@ -12,6 +12,8 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.models {
+  import org.ruboss.collections.ModelsCollection;
+  
   
   /**
    * Allows tree representation (parent->children) relationship between instances

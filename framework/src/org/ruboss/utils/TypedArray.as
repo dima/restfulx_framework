@@ -11,20 +11,20 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
-package org.ruboss.models {
+package org.ruboss.utils {
 
   /**
    * An array of model items where we know what type of models it contains.
    */
-  public dynamic class ModelsArray extends Array {
+  public dynamic class TypedArray extends Array {
     
     /**
-     * Fully Qualified Name (fqn) of the model class that this array contains.
+     * Fully Qualified Name (fqn) of the class instances that this array contains.
      */
     [Bindable]
-    public var modelsType:String;
+    public var itemType:String;
     
-    public function ModelsArray(numElements:int = 0) {
+    public function TypedArray(numElements:int = 0) {
       super(numElements);
     }
   }

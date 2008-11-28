@@ -14,7 +14,7 @@
 package org.ruboss.events {
   import flash.events.Event;
   
-  import org.ruboss.controllers.RubossCommandsEventDispatcher;
+  import org.ruboss.commands.CommandsEventDispatcher;
   
   /**
    * Generic Ruboss event (used by commands).
@@ -45,7 +45,7 @@ package org.ruboss.events {
      * @return boolean indicating if event was dispatched successfully
      */
     public function dispatch():Boolean {
-      return RubossCommandsEventDispatcher.getInstance().dispatchEvent(this);
+      return CommandsEventDispatcher.getInstance().dispatchEvent(this);
     }
   }
 }

@@ -21,11 +21,11 @@ package org.ruboss {
   import mx.logging.targets.TraceTarget;
   
   import org.ruboss.collections.RubossCollection;
-  import org.ruboss.controllers.RubossCommandsController;
-  import org.ruboss.controllers.RubossModelsController;
+  import org.ruboss.controllers.CommandsController;
+  import org.ruboss.controllers.ModelsController;
+  import org.ruboss.controllers.ServicesController;
   import org.ruboss.controllers.SimpleHTTPController;
   import org.ruboss.services.IServiceErrors;
-  import org.ruboss.services.ServiceManager;
   import org.ruboss.services.http.HTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
   
@@ -38,13 +38,13 @@ package org.ruboss {
     public static var log:ILogger = Log.getLogger("org.ruboss");
 
     /** centralized access to RESTful CRUD operations on models */
-    public static var models:RubossModelsController;
+    public static var models:ModelsController;
     
     /** auxiliary (non-CRUD) commands controller */
-    public static var commands:RubossCommandsController;
+    public static var commands:CommandsController;
     
     /** exposes available service providers */
-    public static var services:ServiceManager;
+    public static var services:ServicesController;
     
     /** exposes errors reported by a given service provider */
     public static var errors:IServiceErrors;

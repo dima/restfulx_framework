@@ -16,7 +16,7 @@ package org.ruboss.services {
   import mx.rpc.IResponder;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.controllers.RubossModelsController;
+  import org.ruboss.controllers.ModelsController;
   import org.ruboss.events.ServiceCallStopEvent;
 
   /**
@@ -26,7 +26,7 @@ package org.ruboss.services {
 
     private var handler:Function;
     private var service:IServiceProvider;
-    private var controller:RubossModelsController;
+    private var controller:ModelsController;
     private var afterCallback:Object;
     private var checkOrder:Boolean;
 
@@ -39,7 +39,7 @@ package org.ruboss.services {
      *  everything has been *successfully* processed
      */
     public function ServiceResponder(handler:Function, service:IServiceProvider, 
-      controller:RubossModelsController, checkOrder:Boolean, afterCallback:Object = null) {
+      controller:ModelsController, checkOrder:Boolean, afterCallback:Object = null) {
       this.handler = handler;
       this.service = service;
       this.controller = controller;

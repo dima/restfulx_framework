@@ -28,13 +28,12 @@ package org.ruboss.services.air {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.controllers.RubossModelsController;
-  import org.ruboss.models.ModelsArray;
-  import org.ruboss.models.ModelsCollection;
-  import org.ruboss.models.ModelsStateMetadata;
+  import org.ruboss.collections.ModelsCollection;
+  import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.IServiceProvider;
-  import org.ruboss.services.ServiceManager;
+  import org.ruboss.utils.ModelsStateMetadata;
   import org.ruboss.utils.RubossUtils;
+  import org.ruboss.utils.TypedArray;
 
   /**
    * AIR Service Provider implementation.
@@ -42,7 +41,7 @@ package org.ruboss.services.air {
   public class AIRServiceProvider implements IServiceProvider {
     
     /** service id */
-    public static const ID:int = ServiceManager.generateId();
+    public static const ID:int = ServicesController.generateId();
     
     private static var types:Object = {
       "int" : "INTEGER",
@@ -69,11 +68,11 @@ package org.ruboss.services.air {
     /**
      * @param controller reference to RubossModelsController instance
      */
-    public function AIRServiceProvider(controller:RubossModelsController) {
+    public function AIRServiceProvider() {
       var databaseName:String = Ruboss.airDatabaseName;
       var dbFile:File = File.userDirectory.resolvePath(databaseName + ".db");
       
-      state = controller.state;
+      state = Ruboss.models.state;
       
       pending = new Array;
       indexing = new Dictionary;
@@ -467,7 +466,7 @@ package org.ruboss.services.air {
             
       statement.execute();
       
-      var result:ModelsArray  = new ModelsArray;
+      var result:TypedArray  = new TypedArray;
       result.modelsType = fqn;
       for each (var object:Object in statement.getResult().data) {
         // if we already have something with this fqn and id in cache attempt to reuse it
