@@ -12,7 +12,7 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.commands {
-  import org.ruboss.events.RubossEvent;
+  import org.ruboss.events.CommandExecutionEvent;
   
   /**
    * Must be implemented by commands
@@ -24,6 +24,6 @@ package org.ruboss.commands {
      *  
      * @param event RubossEvent instance that will be passed to the command.
      */
-    function execute(event:RubossEvent):void;
+    function execute(event:CommandExecutionEvent):void;
   }
 }

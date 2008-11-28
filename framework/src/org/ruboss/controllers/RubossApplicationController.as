@@ -16,6 +16,8 @@ package org.ruboss.controllers {
         
       // set up commands controller
       Ruboss.commands = new CommandsController(commands);
+      
+      Ruboss.serializers = new SerializersController;
 
       // The order is important. ModelsController must be initialized before ServicesController
       

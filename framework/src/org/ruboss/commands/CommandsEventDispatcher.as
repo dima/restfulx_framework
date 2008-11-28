@@ -15,8 +15,6 @@ package org.ruboss.commands {
   import flash.events.EventDispatcher;
   import flash.events.IEventDispatcher;
   
-  import org.ruboss.events.RubossEvent;
-
   /**
    * Singleton. Manages ruboss command related event registration.
    */

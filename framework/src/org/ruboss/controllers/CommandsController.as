@@ -18,7 +18,7 @@ package org.ruboss.controllers {
   import org.ruboss.Ruboss;
   import org.ruboss.commands.CommandsEventDispatcher;
   import org.ruboss.commands.ICommand;
-  import org.ruboss.events.RubossEvent;
+  import org.ruboss.events.CommandExecutionEvent;
   
   /**
    * Manages registered commands (classes that implement org.ruboss.controllers.ICommand)
@@ -106,13 +106,13 @@ package org.ruboss.controllers {
           "addCommandByName() before execution.");
       }
       
-      var event:RubossEvent = new RubossEvent(cmdName);
+      var event:CommandExecutionEvent = new CommandExecutionEvent(cmdName);
       event.data = (data == null) ? {} : data;
       event.targetServiceId = (targetServiceId == -1) ? Ruboss.defaultServiceId : targetServiceId;
       event.dispatch();        
     }
 
-    private function executeCommand(event:RubossEvent):void {
+    private function executeCommand(event:CommandExecutionEvent):void {
       var cmd:ICommand = new commands[event.type];
       cmd.execute(event);
     }

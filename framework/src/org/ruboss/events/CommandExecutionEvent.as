@@ -17,9 +17,9 @@ package org.ruboss.events {
   import org.ruboss.commands.CommandsEventDispatcher;
   
   /**
-   * Generic Ruboss event (used by commands).
+   * Generic execution event (used by commands).
    */
-  public class RubossEvent extends Event {
+  public class CommandExecutionEvent extends Event {
 
     /** command data */
     public var data:*;
@@ -33,7 +33,7 @@ package org.ruboss.events {
     /**
      * @see flash.events.Event
      */
-    public function RubossEvent(type:String, bubbles:Boolean = false, 
+    public function CommandExecutionEvent(type:String, bubbles:Boolean = false, 
       cancelable:Boolean = false) {
       super(type, bubbles, cancelable);
     }

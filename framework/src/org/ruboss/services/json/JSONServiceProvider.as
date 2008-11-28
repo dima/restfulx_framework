@@ -168,7 +168,7 @@ package org.ruboss.services.json {
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
-      httpService.request = marshallToVO(object, metadata);
+      httpService.request = Ruboss.serializers.vo.marshall(object, metadata);
       sendOrUpload(httpService, object, responder);   
     }
     
@@ -178,7 +178,7 @@ package org.ruboss.services.json {
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
-      httpService.request = marshallToVO(object, metadata);
+      httpService.request = Ruboss.serializers.vo.marshall(object, metadata);
       httpService.request["_method"] = "PUT";
       httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object);
       sendOrUpload(httpService, object, responder); 
@@ -209,46 +209,6 @@ package org.ruboss.services.json {
         result += tag + "=" + encodeURI(RubossUtils.uncast(metadata, tag)) + "&";
       }
       return result.replace(/&$/, "");
-    }
-
-    private function marshallToVO(object:Object, metadata:Object = null):Object {        
-      var fqn:String = getQualifiedClassName(object);
-      var localName:String = RubossUtils.toSnakeCase(state.keys[fqn]);
-      
-      var result:Object = new Object;
-      for each (var node:XML in describeType(object)..accessor) {
-        if (RubossUtils.isIgnored(node) || RubossUtils.isHasOne(node) || RubossUtils.isHasMany(node)) continue;
-          
-        var nodeName:String = node.@name;
-        var type:String = node.@type;
-        var snakeName:String = RubossUtils.toSnakeCase(nodeName);
-        
-        if (isInvalidPropertyType(type) || isInvalidPropertyName(nodeName) || object[nodeName] == null) continue;
-        
-        // treat model objects specially (we are only interested in serializing
-        // the [BelongsTo] end of the relationship
-        if (RubossUtils.isBelongsTo(node)) {
-          var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
-          var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
-
-          result[(localName + "[" + snakeName + "_id]")] = object[nodeName]["id"]; 
-          if (polymorphic) {
-            result[(localName + "[" + snakeName + "_type]")] = getQualifiedClassName(object[nodeName]).split("::")[1];
-          }
-        } else {
-          result[(localName + "[" + snakeName + "]")] = 
-            RubossUtils.uncast(object, nodeName);
-        }
-      }
-      
-      if (metadata != null) {
-        for (var elm:String in metadata) {
-          var elmName:String = RubossUtils.toSnakeCase(elm);
-          result["_metadata[" + elmName + "]"] = RubossUtils.uncast(metadata, elm); 
-        }
-      }
-            
-      return result;
     }
 
     private function marshallToJSON(object:Object, metadata:Object = null):String {        

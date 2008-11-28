@@ -23,6 +23,7 @@ package org.ruboss {
   import org.ruboss.collections.RubossCollection;
   import org.ruboss.controllers.CommandsController;
   import org.ruboss.controllers.ModelsController;
+  import org.ruboss.controllers.SerializersController;
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.controllers.SimpleHTTPController;
   import org.ruboss.services.IServiceErrors;
@@ -45,6 +46,9 @@ package org.ruboss {
     
     /** exposes available service providers */
     public static var services:ServicesController;
+    
+    /** exposes available serializers */
+    public static var serializers:SerializersController;
     
     /** exposes errors reported by a given service provider */
     public static var errors:IServiceErrors;

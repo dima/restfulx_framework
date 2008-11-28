@@ -81,7 +81,7 @@ package org.ruboss.models {
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true,
       targetServiceId:int = -1):void {
       Ruboss.models.reload(this, optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode,
-        -1, targetServiceId);
+        targetServiceId);
     }
 
     /**
