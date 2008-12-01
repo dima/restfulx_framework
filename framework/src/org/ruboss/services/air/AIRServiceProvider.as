@@ -467,7 +467,7 @@ package org.ruboss.services.air {
       statement.execute();
       
       var result:TypedArray  = new TypedArray;
-      result.modelsType = fqn;
+      result.itemType = fqn;
       for each (var object:Object in statement.getResult().data) {
         // if we already have something with this fqn and id in cache attempt to reuse it
         // this will ensure that whatever is doing comparison by reference should still be happy

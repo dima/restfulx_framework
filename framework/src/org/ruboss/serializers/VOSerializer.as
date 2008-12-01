@@ -73,18 +73,12 @@ package org.ruboss.serializers {
       // if not in cache, we need to create a new instance
       if (model == null) {
         model = new clazz;
-        model["id"] = source["id"];
-        if (source.hasOwnProperty("rev")) {
-          model["rev"] = source["rev"];
-        }
       } else {
         updatingExistingInstance = true;  
       }
           
       var metadata:XML = describeType(model);        
-      for (var property:String in source) {
-        if (property == "id" || property == "rev") continue;
-          
+      for (var property:String in source) {          
         var targetName:String = property;
         var referenceTargetName:String = targetName;
         var value:Object = source[property];
@@ -172,7 +166,6 @@ package org.ruboss.serializers {
 
     private function marshallToVO(object:Object, metadata:Object = null):Object {        
       var fqn:String = getQualifiedClassName(object);
-      var localName:String = RubossUtils.toSnakeCase(state.keys[fqn]);
       
       var result:Object = new Object;
       for each (var node:XML in describeType(object)..accessor) {
@@ -182,8 +175,7 @@ package org.ruboss.serializers {
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(nodeName);
         
-        if (RubossUtils.isInvalidPropertyType(type) || RubossUtils.isInvalidPropertyName(nodeName) 
-          || object[nodeName] == null) continue;
+        if (RubossUtils.isInvalidPropertyType(type) || RubossUtils.isInvalidPropertyName(nodeName)) continue;
         
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
@@ -191,21 +183,26 @@ package org.ruboss.serializers {
           var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
           var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
 
-          result[(localName + "[" + snakeName + "_id]")] = object[nodeName]["id"]; 
-          if (polymorphic) {
-            result[(localName + "[" + snakeName + "_type]")] = getQualifiedClassName(object[nodeName]).split("::")[1];
+          if (object[nodeName]) {
+            result[snakeName + "_id"] = object[nodeName]["id"]; 
+            if (polymorphic) {
+              result[snakeName + "_type"] = getQualifiedClassName(object[nodeName]).split("::")[1];
+            }
+          } else {
+            result[snakeName + "_id"] = null;
           }
         } else {
-          result[(localName + "[" + snakeName + "]")] = 
-            RubossUtils.uncast(object, nodeName);
+          if (object[nodeName]) {
+            result[snakeName] = 
+              RubossUtils.uncast(object, nodeName);
+          }
         }
       }
+
+      result["clazz"] = fqn.split("::")[1];
       
       if (metadata != null) {
-        for (var elm:String in metadata) {
-          var elmName:String = RubossUtils.toSnakeCase(elm);
-          result["_metadata[" + elmName + "]"] = RubossUtils.uncast(metadata, elm); 
-        }
+        result["_metadata"] = metadata;
       }
             
       return result;

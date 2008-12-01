@@ -1,9 +1,8 @@
-package ruboss.test.cases {
+package ruboss.test.cases.serializers {
   import flexunit.framework.TestCase;
   
   import org.ruboss.Ruboss;
   import org.ruboss.serializers.JSONSerializer;
-  import org.ruboss.services.*;
   import org.ruboss.utils.TypedArray;
   
   import ruboss.test.models.CouchAddress;
@@ -42,7 +41,7 @@ package ruboss.test.cases {
       var addresses:TypedArray = json.unmarshall(marshalledAddresses) as TypedArray;
 
       var marshalledBack:String = json.marshall(addresses[0]) as String;
-      trace(marshalledBack);
+      assertTrue(marshalledBack.indexOf("ruby_class"));
     }
   }
 }

@@ -13,7 +13,10 @@ package org.ruboss.serializers {
     }
     
     public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      var marshalled:Object = Ruboss.serializers.vo.marshall(object, recursive, metadata);      
+      var marshalled:Object = Ruboss.serializers.vo.marshall(object, recursive, metadata);
+      marshalled["ruby_class"] = marshalled["clazz"];
+      delete marshalled["clazz"];
+            
       return JSON.encode(marshalled);  
     }
 

@@ -81,7 +81,7 @@ package org.ruboss.services.http {
      * @see org.ruboss.services.IServiceProvider#marshall
      */
     public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      return Ruboss.serializers.xml.marshall(object, recursive, metadata);
+      return marshallToVO(object, recursive, metadata);
     }
 
     /**
@@ -141,7 +141,7 @@ package org.ruboss.services.http {
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
-      httpService.request = Ruboss.serializers.vo.marshall(object, metadata);
+      httpService.request = marshallToVO(object, false, metadata);
       sendOrUpload(httpService, object, responder);   
     }
     
@@ -151,7 +151,7 @@ package org.ruboss.services.http {
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
-      httpService.request = Ruboss.serializers.vo.marshall(object, metadata);
+      httpService.request = marshallToVO(object, false, metadata);
       httpService.request["_method"] = "PUT";
       httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object);
       sendOrUpload(httpService, object, responder); 
@@ -238,6 +238,24 @@ package org.ruboss.services.http {
       if (responder != null) {
         call.addResponder(responder);
       }
+    }
+    
+    private function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
+      var vo:Object = Ruboss.serializers.vo.marshall(object, false, metadata);
+      var result:Object = new Object;
+      var localName:String = RubossUtils.toSnakeCase(vo["clazz"]);
+      delete vo["clazz"];
+      for (var property:String in vo) {
+        if (property == "_metadata") {
+          for (var elm:String in vo[property]) {
+            var elmName:String = RubossUtils.toSnakeCase(elm);
+            result["_metadata[" + elmName + "]"] = RubossUtils.uncast(metadata, elm);
+          }
+        } else {
+          result[localName + "[" + property + "]"] = vo[property];
+        }
+      }
+      return result;
     }
   }
 }

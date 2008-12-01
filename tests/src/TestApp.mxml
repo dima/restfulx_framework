@@ -3,7 +3,8 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
-		  import ruboss.test.cases.JSONSerializerTest;
+		  import ruboss.test.cases.serializers.VOSerializerTest;
+		  import ruboss.test.cases.serializers.JSONSerializerTest;
 		  import org.ruboss.Ruboss;
       import org.ruboss.services.mock.MockXMLHTTPServiceProvider;
       import org.ruboss.services.mock.MockAIRServiceProvider;
@@ -46,6 +47,7 @@
         ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));
         ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
         ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
+        ts.addTest(new VOSerializerTest("testObjectMarshallingWithRelationships"));
  			}
 		]]>
 	</mx:Script>
