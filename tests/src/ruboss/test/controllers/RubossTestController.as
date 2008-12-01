@@ -11,7 +11,8 @@ package ruboss.test.controllers {
     
     public var testCommandData:String;
     
-    public static var models:Array = [Address, Article, Section, CouchUser, CouchAddress]; /* Models */
+    public static var models:Array = [Address, Article, Section, CouchUser, CouchAddress,
+      Contact, Key, Kv, User, UserGroup]; /* Models */
     
     public function RubossTestController(enforcer:SingletonEnforcer, extraServices:Array,
       defaultServiceId:int = -1) {

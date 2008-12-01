@@ -28,7 +28,9 @@ package org.ruboss.services.as3http {
   import org.ruboss.utils.RubossUtils;
 
   /**
-   * XML-over-HTTP service provider.
+   * AS3 HTTP Client based XML-over-HTTP service provider.
+   * 
+   * TODO: needs to be able to upload files as well.
    */
   public class AS3XMLHTTPServiceProvider extends XMLHTTPServiceProvider {
     
@@ -132,7 +134,6 @@ package org.ruboss.services.as3http {
 
       var data:ByteArray = new ByteArray();
       data.writeUTFBytes(XML(Ruboss.serializers.xml.marshall(object, false, metadata)).toXMLString());
-      data.position = 0;
       
       client.post(uri, data, "application/xml");
       
@@ -164,7 +165,6 @@ package org.ruboss.services.as3http {
 
       var data:ByteArray = new ByteArray();
       data.writeUTFBytes(XML(Ruboss.serializers.xml.marshall(object, false, metadata)).toXMLString());
-      data.position = 0;
       
       client.put(uri, data, "application/xml"); 
 

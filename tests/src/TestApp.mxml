@@ -3,6 +3,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.Bug26Test;
 		  import ruboss.test.cases.integration.AS3XMLHTTPServiceProviderTest;
 		  import org.ruboss.services.as3http.AS3XMLHTTPServiceProvider;
 		  import ruboss.test.cases.serializers.VOSerializerTest;
@@ -51,6 +52,7 @@
         ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
         ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
         ts.addTest(new VOSerializerTest("testObjectMarshallingWithRelationships"));
+        ts.addTest(new Bug26Test("testUserShow"));
  			}
  			
  			private function addIntegrationTests(ts:TestSuite):void {
@@ -60,6 +62,9 @@
  			}
 		]]>
 	</mx:Script>
-	<mx:XML source="ruboss/test/responses/addresses.xml" id="addresses"/>
+	<mx:XML id="addresses" source="ruboss/test/responses/addresses.xml"/>
+	<mx:XML id="bug26user" source="ruboss/test/responses/bug26/user.xml"/>
+	<mx:XML id="bug26contactA" source="ruboss/test/responses/bug26/contactA.xml"/>
+	<mx:XML id="bug26contactB" source="ruboss/test/responses/bug26/contactB.xml"/>
 	<flexunit:TestRunnerBase id="testRunner" width="100%" height="100%"/>
 </mx:Application>
