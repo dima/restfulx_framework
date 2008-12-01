@@ -20,5 +20,34 @@ package ruboss.test.cases.integration {
     private function onAddressIndex(result:Object):void {
       trace(result);
     }
+    
+    public function testCreate():void {
+      var address:Address = new Address;
+      address.lineOne = "line1";
+      address.lineTwo = "line2";
+      
+      address.create({afterCallback: onAddressCreate, targetServiceId: AS3XMLHTTPServiceProvider.ID});
+    }
+    
+    private function onAddressCreate(result:Address):void {
+      trace(result);
+    }
+
+    public function testCreateAndUpdate():void {
+      var address:Address = new Address;
+      address.lineOne = "line100";
+      address.lineTwo = "line200";
+      
+      address.create({afterCallback: onAddressCreateUpdate, targetServiceId: AS3XMLHTTPServiceProvider.ID});
+    }
+    
+    private function onAddressCreateUpdate(result:Address):void {
+      result.lineOne = "foobar";
+      result.update({afterCallback: onAddressUpdate, targetServiceId: AS3XMLHTTPServiceProvider.ID});
+    }
+    
+    private function onAddressUpdate(result:Address):void {
+      trace(result);
+    }
   }
 }

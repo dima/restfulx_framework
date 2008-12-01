@@ -14,17 +14,10 @@
 package org.ruboss.services.as3http {
   import com.adobe.net.URI;
   
-  import flash.events.DataEvent;
-  import flash.events.IOErrorEvent;
-  import flash.net.URLRequest;
-  import flash.net.URLRequestMethod;
-  import flash.net.URLVariables;
-  import flash.utils.getQualifiedClassName;
+  import flash.utils.ByteArray;
   
-  import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
-  import mx.rpc.http.HTTPService;
   
   import org.httpclient.HttpClient;
   import org.httpclient.events.HttpDataEvent;
@@ -32,7 +25,6 @@ package org.ruboss.services.as3http {
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.http.XMLHTTPServiceProvider;
-  import org.ruboss.utils.RubossFileReference;
   import org.ruboss.utils.RubossUtils;
 
   /**
@@ -137,8 +129,14 @@ package org.ruboss.services.as3http {
       trace("sending create request to: " + url);
 
       var uri:URI = new URI(url);
+
+      var data:ByteArray = new ByteArray();
+      data.writeUTFBytes(XML(Ruboss.serializers.xml.marshall(object, false, metadata)).toXMLString());
+      data.position = 0;
       
-      client.postFormData(uri, [marshallToVO(object, false, metadata)]);
+      client.post(uri, data, "application/xml");
+      
+      //client.postFormData(uri, [marshallToVO(object, false, metadata)]);  
     }
     
     /**
@@ -164,7 +162,13 @@ package org.ruboss.services.as3http {
 
       var uri:URI = new URI(url);
 
-      client.putFormData(uri, [marshallToVO(object, false, metadata)]);
+      var data:ByteArray = new ByteArray();
+      data.writeUTFBytes(XML(Ruboss.serializers.xml.marshall(object, false, metadata)).toXMLString());
+      data.position = 0;
+      
+      client.put(uri, data, "application/xml"); 
+
+      //client.putFormData(uri, [marshallToVO(object, false, metadata)]);
     }
     
     /**

@@ -32,7 +32,7 @@
 			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
 			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
 			  addNonServiceDependentTests(testSuite);
-        //addIntegrationTests(testSuite);
+//        addIntegrationTests(testSuite);
  				testRunner.test = testSuite;
  				testRunner.startTest();
  			}
@@ -55,6 +55,8 @@
  			
  			private function addIntegrationTests(ts:TestSuite):void {
  			  ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
+        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
+        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));
  			}
 		]]>
 	</mx:Script>
