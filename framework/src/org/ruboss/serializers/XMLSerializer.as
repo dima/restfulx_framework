@@ -43,7 +43,7 @@ package org.ruboss.serializers {
         if (xmlFragment.@type == "array") {
           // we are only going to specifically unmarshall known relationships
           if (state.fqns[objectName]) {
-            results.modelsType = state.fqns[objectName];
+            results.itemType = state.fqns[objectName];
             var intermediateCache:Dictionary = new Dictionary;
             for each (var node:XML in xmlFragment.children()) {
               results.push(unmarshallNode(node, null, null, intermediateCache));

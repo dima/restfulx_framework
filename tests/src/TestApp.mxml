@@ -3,11 +3,10 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
-		  import ruboss.test.cases.JSONServiceProviderTest;
-		  import org.ruboss.services.json.JSONServiceProvider;
+		  import ruboss.test.cases.JSONSerializerTest;
 		  import org.ruboss.Ruboss;
+      import org.ruboss.services.mock.MockXMLHTTPServiceProvider;
       import org.ruboss.services.mock.MockAIRServiceProvider;
-      import org.ruboss.services.mock.MockHTTPServiceProvider;
       import ruboss.test.controllers.RubossTestController;
 		  import ruboss.test.cases.SimplePropertiesTest;
       import ruboss.test.cases.RubossCommandTest;
@@ -16,18 +15,18 @@
 			
 			private function onCreationComplete():void {
 			  Ruboss.enableLogging();
-        RubossTestController.initialize([MockHTTPServiceProvider, MockAIRServiceProvider, JSONServiceProvider], 
-          MockHTTPServiceProvider.ID, "ruboss-tests");
+        RubossTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider], 
+          MockXMLHTTPServiceProvider.ID, "ruboss-tests");
           
         var testData:Object = {
           addresses: addresses
         }
 
-        MockHTTPServiceProvider(Ruboss.services.getServiceProvider(MockHTTPServiceProvider.ID)).loadTestData(testData);
+        MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
         MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
 			  
 			  var testSuite:TestSuite = new TestSuite;
-			  addServiceDependentTests(testSuite, MockHTTPServiceProvider.ID);
+			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
 			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
 			  addNonServiceDependentTests(testSuite);
  				testRunner.test = testSuite;
@@ -44,9 +43,9 @@
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
  			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
         ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
-        ts.addTest(new JSONServiceProviderTest("testSimpleObjectUnmarshalling"));
-        ts.addTest(new JSONServiceProviderTest("testObjectUnmarshallingWithRelationships"));
-        ts.addTest(new JSONServiceProviderTest("testObjectMarshallingWithRelationships"));
+        ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));
+        ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
+        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
  			}
 		]]>
 	</mx:Script>

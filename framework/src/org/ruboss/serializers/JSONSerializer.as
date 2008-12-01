@@ -13,19 +13,13 @@ package org.ruboss.serializers {
     }
     
     public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      var marshalled:Object = Ruboss.serializers.vo.marshall(object, recursive, metadata);
-      marshalled["_id"] = marshalled["id"];
-      delete marshalled["id"];
-      marshalled["_rev"] = marshalled["rev"];
-      delete marshalled["rev"];
-      
+      var marshalled:Object = Ruboss.serializers.vo.marshall(object, recursive, metadata);      
       return JSON.encode(marshalled);  
     }
 
     public function unmarshall(object:Object):Object {
       try {
-      var source:Object = JSON.decode(object as String);
-
+        var source:Object = JSON.decode(object as String);
         if (source is Array) {
           return unmarshallArray(source as Array);
         } else {

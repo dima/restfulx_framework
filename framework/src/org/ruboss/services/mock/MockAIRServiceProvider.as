@@ -26,13 +26,11 @@ package org.ruboss.services.mock {
     
     public function loadTestData(dataSets:Object):void {
       Ruboss.log.debug("loading test data for MockAIRServiceProvider");
-      var httpServiceProvider:IServiceProvider = 
-        Ruboss.services.getServiceProvider(MockHTTPServiceProvider.ID);
         
       for (var dataSetName:String in dataSets) {        
         Ruboss.log.debug("loading test data for :" + dataSetName);
         for each (var instance:Object in 
-          httpServiceProvider.unmarshall(dataSets[dataSetName])) {
+          Ruboss.serializers.xml.unmarshall(dataSets[dataSetName])) {
           create(instance, null);    
         }
       }

@@ -7,9 +7,9 @@ package org.ruboss.services.mock {
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
-  import org.ruboss.services.http.HTTPServiceProvider;
+  import org.ruboss.services.http.XMLHTTPServiceProvider;
   
-  public class MockHTTPServiceProvider extends HTTPServiceProvider {
+  public class MockXMLHTTPServiceProvider extends XMLHTTPServiceProvider {
 
     public static const ID:int = ServicesController.generateId();
     
@@ -19,7 +19,7 @@ package org.ruboss.services.mock {
       return ID;
     }
 	
-  	public function MockHTTPServiceProvider() {
+  	public function MockXMLHTTPServiceProvider() {
   	  super();
   	  data = new Dictionary;
   	}

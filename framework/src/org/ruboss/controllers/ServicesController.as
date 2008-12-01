@@ -16,7 +16,7 @@ package org.ruboss.controllers {
   
   import org.ruboss.Ruboss;
   import org.ruboss.services.IServiceProvider;
-  import org.ruboss.services.http.HTTPServiceProvider;
+  import org.ruboss.services.http.XMLHTTPServiceProvider;
   
   /**
    * Provides centralized access to currently available services.
@@ -37,7 +37,7 @@ package org.ruboss.controllers {
       services = new Dictionary;
       
       // initialize default service
-      services[HTTPServiceProvider.ID] = new HTTPServiceProvider;
+      services[XMLHTTPServiceProvider.ID] = new XMLHTTPServiceProvider;
 
       // hook up available services (e.g. AIR, AMF, SimpleDB)
       for each (var availableService:Class in availableServices) {

@@ -19,14 +19,13 @@ package org.ruboss.controllers {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.services.http.HTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
   
   /**
    * Custom HTTP controller that allows sending arbitrary data (as 
    * opposed to models) over HTTP faking PUT and DELETE
    */
-  public class SimpleHTTPController {
+  public class AuxHTTPController {
     public static const GET:int = 1;
     public static const POST:int = 2;
     public static const PUT:int = 3;
@@ -45,7 +44,7 @@ package org.ruboss.controllers {
      * @param contentType content type for the request
      * @param rootUrl the URL to prefix to requests
      */
-    public function SimpleHTTPController(optsOrOnResult:Object = null, onFault:Function = null, 
+    public function AuxHTTPController(optsOrOnResult:Object = null, onFault:Function = null, 
       contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null) {
       if (optsOrOnResult == null) optsOrOnResult = {};
       this.faultHandler = onFault;
@@ -74,7 +73,7 @@ package org.ruboss.controllers {
      * @param cache boolean indicating if the response should be cached (this implicitly assumes
      *  the response will be unmarshalled first)
      */
-    public function invoke(optsOrURL:Object, data:Object = null, method:* = SimpleHTTPController.GET, 
+    public function invoke(optsOrURL:Object, data:Object = null, method:* = AuxHTTPController.GET, 
       unmarshall:Boolean = false, cacheBy:String = null):void {
       var url:String = null;
       if (optsOrURL is String) {
@@ -91,16 +90,16 @@ package org.ruboss.controllers {
         data = {};
       }
       
-      var httpVerb:int = SimpleHTTPController.GET;
+      var httpVerb:int = GET;
       if (method is String) {
         if (method == "GET") {
-          httpVerb = SimpleHTTPController.GET;
+          httpVerb = GET;
         } else if (method == "POST") {
-          httpVerb = SimpleHTTPController.POST;
+          httpVerb = POST;
         } else if (method == "PUT") {
-          httpVerb = SimpleHTTPController.PUT;
+          httpVerb = PUT;
         } else if (method == "DELETE") {
-          httpVerb = SimpleHTTPController.DELETE;
+          httpVerb = DELETE;
         }
       } else if (method is int) {
         httpVerb = method;
@@ -148,7 +147,7 @@ package org.ruboss.controllers {
      * @param responder IResponder implementation to callback.
      *  
      */
-    public function send(url:String, data:Object = null, method:int = SimpleHTTPController.GET,
+    public function send(url:String, data:Object = null, method:int = AuxHTTPController.GET,
       responder:IResponder = null):void {
       var service:HTTPService = new HTTPService();
             
@@ -199,7 +198,7 @@ package org.ruboss.controllers {
         
     protected function unmarshall(data:Object):Object {
       try {
-        return Ruboss.services.getServiceProvider(HTTPServiceProvider.ID).unmarshall(data.result);
+        return Ruboss.serializers.xml.unmarshall(data.result);
       } catch (e:Error) {
         defaultFaultHandler(data.result);
       }

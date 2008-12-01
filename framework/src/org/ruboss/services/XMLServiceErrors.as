@@ -11,7 +11,7 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
-package org.ruboss.services.http {
+package org.ruboss.services {
   import org.ruboss.Ruboss;
   import org.ruboss.services.GenericServiceErrors;
   import org.ruboss.utils.RubossUtils;
@@ -19,14 +19,14 @@ package org.ruboss.services.http {
   /**
    * HTTPServiceProvider specific IServiceErrors implementation.
    */
-  public class HTTPServiceErrors extends GenericServiceErrors {
+  public class XMLServiceErrors extends GenericServiceErrors {
     /**
      * Transforms XML encoded errors into an array of Validation results
      * mapped by field name.
      *  
      * @param result XML errors response
      */   
-    public function HTTPServiceErrors(result:XML) {
+    public function XMLServiceErrors(result:XML) {
       super();
       for each (var error:XML in result.error) {
         var field:String = error.@field;

@@ -1,4 +1,4 @@
-package org.ruboss.services.json {
+package org.ruboss.services.http {
   import com.adobe.serialization.json.JSON;
   
   import flash.events.DataEvent;
@@ -25,7 +25,7 @@ package org.ruboss.services.json {
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
 
-  public class JSONServiceProvider implements IServiceProvider {
+  public class JSONHTTPServiceProvider implements IServiceProvider {
 
     /** service id */
     public static const ID:int = ServicesController.generateId();
@@ -42,7 +42,7 @@ package org.ruboss.services.json {
 
     protected var state:ModelsStateMetadata;
     
-    public function JSONServiceProvider() {
+    public function JSONHTTPServiceProvider() {
       state = Ruboss.models.state;
     }
 

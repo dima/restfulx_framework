@@ -17,30 +17,25 @@ package org.ruboss.services.http {
   import flash.net.URLRequest;
   import flash.net.URLRequestMethod;
   import flash.net.URLVariables;
-  import flash.utils.Dictionary;
-  import flash.utils.describeType;
-  import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
   
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
   import mx.rpc.http.HTTPService;
-  import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.collections.ModelsCollection;
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.IServiceProvider;
+  import org.ruboss.services.XMLServiceErrors;
   import org.ruboss.utils.ModelsStateMetadata;
   import org.ruboss.utils.RubossFileReference;
   import org.ruboss.utils.RubossUtils;
-  import org.ruboss.utils.TypedArray;
 
   /**
    * XML-over-HTTP service provider.
    */
-  public class HTTPServiceProvider implements IServiceProvider {
+  public class XMLHTTPServiceProvider implements IServiceProvider {
     
     /** service id */
     public static const ID:int = ServicesController.generateId();
@@ -50,7 +45,7 @@ package org.ruboss.services.http {
     /**
      * @param controller reference to RubossModelsController instance
      */
-    public function HTTPServiceProvider() {
+    public function XMLHTTPServiceProvider() {
       state = Ruboss.models.state;
     }
     
@@ -69,7 +64,7 @@ package org.ruboss.services.http {
       var xmlFragmentName:String = response.localName().toString();
       if (xmlFragmentName == "errors" && RubossUtils.isEmpty(response.@type)) {
         Ruboss.log.debug("received service error response, terminating processing:\n" + response.toXMLString());
-        Ruboss.errors = new HTTPServiceErrors(response);
+        Ruboss.errors = new XMLServiceErrors(response);
         return true;
       }
       return false;

@@ -21,13 +21,13 @@ package org.ruboss {
   import mx.logging.targets.TraceTarget;
   
   import org.ruboss.collections.RubossCollection;
+  import org.ruboss.controllers.AuxHTTPController;
   import org.ruboss.controllers.CommandsController;
   import org.ruboss.controllers.ModelsController;
   import org.ruboss.controllers.SerializersController;
   import org.ruboss.controllers.ServicesController;
-  import org.ruboss.controllers.SimpleHTTPController;
   import org.ruboss.services.IServiceErrors;
-  import org.ruboss.services.http.HTTPServiceProvider;
+  import org.ruboss.services.http.XMLHTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
   
   /**
@@ -60,10 +60,10 @@ package org.ruboss {
     public static var amfChannelId:String = "rubyamf";
     
     /** default service provider to use */
-    public static var defaultServiceId:int = HTTPServiceProvider.ID;
+    public static var defaultServiceId:int = XMLHTTPServiceProvider.ID;
     
     /** default http controller implementation to use */
-    public static var httpController:Class = SimpleHTTPController;
+    public static var httpController:Class = AuxHTTPController;
     
     /** 
      * If http controller handler function is set, it allows you to override 
@@ -126,7 +126,7 @@ package org.ruboss {
      * @return SimpleHTTPController instance
      */
     public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, 
-      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null):SimpleHTTPController {
+      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null):AuxHTTPController {
       return new httpController(optsOrResultHandler, faultHandler, contentType, rootUrl);    
     }
 
