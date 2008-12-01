@@ -3,6 +3,8 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.integration.AS3XMLHTTPServiceProviderTest;
+		  import org.ruboss.services.as3http.AS3XMLHTTPServiceProvider;
 		  import ruboss.test.cases.serializers.VOSerializerTest;
 		  import ruboss.test.cases.serializers.JSONSerializerTest;
 		  import org.ruboss.Ruboss;
@@ -16,9 +18,9 @@
 			
 			private function onCreationComplete():void {
 			  Ruboss.enableLogging();
-        RubossTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider], 
+        RubossTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider, AS3XMLHTTPServiceProvider], 
           MockXMLHTTPServiceProvider.ID, "ruboss-tests");
-          
+                    
         var testData:Object = {
           addresses: addresses
         }
@@ -30,6 +32,7 @@
 			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
 			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
 			  addNonServiceDependentTests(testSuite);
+        //addIntegrationTests(testSuite);
  				testRunner.test = testSuite;
  				testRunner.startTest();
  			}
@@ -48,6 +51,10 @@
         ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
         ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
         ts.addTest(new VOSerializerTest("testObjectMarshallingWithRelationships"));
+ 			}
+ 			
+ 			private function addIntegrationTests(ts:TestSuite):void {
+ 			  ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
  			}
 		]]>
 	</mx:Script>

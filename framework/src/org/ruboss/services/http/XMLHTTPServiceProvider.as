@@ -174,7 +174,7 @@ package org.ruboss.services.http {
       invokeHTTPService(httpService, responder);
     }
 
-    private function urlEncodeMetadata(metadata:Object = null):String {
+    protected function urlEncodeMetadata(metadata:Object = null):String {
       var result:String = "";
       if (metadata == null) return result;
       
@@ -184,7 +184,7 @@ package org.ruboss.services.http {
       return result.replace(/&$/, "");
     }
 
-    private function uploadFile(httpService:HTTPService, object:Object, responder:IResponder):void {      
+    protected function uploadFile(httpService:HTTPService, object:Object, responder:IResponder):void {      
       var fqn:String = getQualifiedClassName(object);
       var localName:String = RubossUtils.toSnakeCase(state.keys[fqn]);
       var file:RubossFileReference = RubossFileReference(object["attachment"]);
@@ -211,7 +211,7 @@ package org.ruboss.services.http {
       file.upload(request, localName + "[" + file.keyName + "]");
     }
     
-    private function sendOrUpload(httpService:HTTPService, object:Object, responder:IResponder):void {
+    protected function sendOrUpload(httpService:HTTPService, object:Object, responder:IResponder):void {
       if (object["attachment"] == null) {
         invokeHTTPService(httpService, responder);
       } else {
@@ -219,7 +219,7 @@ package org.ruboss.services.http {
       }       
     }
 
-    private function getHTTPService(object:Object, nestedBy:Array = null):HTTPService {
+    protected function getHTTPService(object:Object, nestedBy:Array = null):HTTPService {
       var service:HTTPService = new HTTPService();
       service.resultFormat = "e4x";
       service.useProxy = false;
@@ -228,7 +228,7 @@ package org.ruboss.services.http {
       return service;
     }
     
-    private function invokeHTTPService(service:HTTPService, 
+    protected function invokeHTTPService(service:HTTPService, 
       responder:IResponder):void {
       Ruboss.log.debug("sending request to URL:" + service.url + 
         " with method: " + service.method + " and content:" + 
@@ -240,7 +240,7 @@ package org.ruboss.services.http {
       }
     }
     
-    private function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
+    protected function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       var vo:Object = Ruboss.serializers.vo.marshall(object, false, metadata);
       var result:Object = new Object;
       var localName:String = RubossUtils.toSnakeCase(vo["clazz"]);
