@@ -7,9 +7,9 @@ package org.ruboss.services.mock {
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
-  import org.ruboss.services.http.XMLHTTPServiceProvider;
+  import org.ruboss.services.http.JSONHTTPServiceProvider;
   
-  public class MockXMLHTTPServiceProvider extends XMLHTTPServiceProvider {
+  public class MockJSONHTTPServiceProvider extends JSONHTTPServiceProvider {
 
     public static const ID:int = ServicesController.generateId();
     
@@ -18,14 +18,14 @@ package org.ruboss.services.mock {
     public override function get id():int {
       return ID;
     }
-	
-  	public function MockXMLHTTPServiceProvider() {
-  	  super();
-  	  data = new Dictionary;
-  	}
+  
+    public function MockJSONHTTPServiceProvider() {
+      super();
+      data = new Dictionary;
+    }
 
     public function loadTestData(dataSets:Object):void {
-      Ruboss.log.debug("loading test data for MockXMLHTTPServiceProvider");
+      Ruboss.log.debug("loading test data for MockJSONHTTPServiceProvider");
       for (var dataSetName:String in dataSets) {
         Ruboss.log.debug("loading test data for :" + dataSetName);
         data[dataSetName] = dataSets[dataSetName];
@@ -45,8 +45,8 @@ package org.ruboss.services.mock {
 
       Ruboss.log.debug("attempting to show :" + fqn);
       
-      var marshalled:XML = XML(Ruboss.serializers.xml.marshall(object));
-      marshalled.appendChild(<id>{object["id"]}</id>);
+      var marshalled:String = serializer.marshall(object) as String;
+      //marshalled.appendChild(<id>{object["id"]}</id>);
       responder.result(new ResultEvent(ResultEvent.RESULT, false, false, marshalled));
     }
   
@@ -55,9 +55,9 @@ package org.ruboss.services.mock {
       
       Ruboss.log.debug("attempting to create :" + fqn);
       
-      var marshalled:XML = XML(Ruboss.serializers.xml.marshall(object));
+      var marshalled:String = serializer.marshall(object) as String;
       // IDs are not serialized but are required in responses
-      marshalled.appendChild(<id>{int(Math.abs(Math.random() * 100) + Math.abs(Math.random()) + 1)}</id>);      
+      //marshalled.appendChild(<id>{int(Math.abs(Math.random() * 100) + Math.abs(Math.random()) + 1)}</id>);      
       responder.result(new ResultEvent(ResultEvent.RESULT, false, false, marshalled));
     }
     
@@ -66,8 +66,8 @@ package org.ruboss.services.mock {
 
       Ruboss.log.debug("attempting to update :" + fqn);
       
-      var marshalled:XML = XML(Ruboss.serializers.xml.marshall(object));
-      marshalled.appendChild(<id>{object["id"]}</id>);
+      var marshalled:String = serializer.marshall(object) as String;
+      //marshalled.appendChild(<id>{object["id"]}</id>);
       responder.result(new ResultEvent(ResultEvent.RESULT, false, false, marshalled));
     }
     
@@ -76,8 +76,8 @@ package org.ruboss.services.mock {
 
       Ruboss.log.debug("attempting to destroy :" + fqn);
       
-      var marshalled:XML = XML(Ruboss.serializers.xml.marshall(object));
-      marshalled.appendChild(<id>{object["id"]}</id>);
+      var marshalled:String = serializer.marshall(object) as String;
+      //marshalled.appendChild(<id>{object["id"]}</id>);
       responder.result(new ResultEvent(ResultEvent.RESULT, false, false, marshalled));     
     }
   }

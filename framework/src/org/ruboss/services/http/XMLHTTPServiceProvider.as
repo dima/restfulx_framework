@@ -42,11 +42,14 @@ package org.ruboss.services.http {
         
     protected var state:ModelsStateMetadata;
     
+    protected var suffix:String;
+    
     /**
      * @param controller reference to RubossModelsController instance
      */
     public function XMLHTTPServiceProvider() {
       state = Ruboss.models.state;
+      suffix = "fxml";
     }
     
     /**
@@ -125,7 +128,7 @@ package org.ruboss.services.http {
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.GET;
-      httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object);
+      httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object, suffix);
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
@@ -153,7 +156,7 @@ package org.ruboss.services.http {
       httpService.method = URLRequestMethod.POST;
       httpService.request = marshallToVO(object, false, metadata);
       httpService.request["_method"] = "PUT";
-      httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object);
+      httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object, suffix);
       sendOrUpload(httpService, object, responder); 
     }
     
@@ -164,7 +167,7 @@ package org.ruboss.services.http {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
       httpService.request["_method"] = "DELETE";
-      httpService.url = httpService.url.replace(".fxml", "") + "/" + object["id"] + ".fxml";
+      httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object, suffix);
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
@@ -224,7 +227,7 @@ package org.ruboss.services.http {
       service.resultFormat = "e4x";
       service.useProxy = false;
       service.contentType = "application/x-www-form-urlencoded";
-      service.url = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
+      service.url = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy, suffix);
       return service;
     }
     

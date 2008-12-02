@@ -14,6 +14,8 @@ package ruboss.test.cases {
     }
     
     public function testResourceNesting():void {
+      Ruboss.httpRootUrl = "/";
+
       var article:Article = new Article;
       article.id = "1";
       

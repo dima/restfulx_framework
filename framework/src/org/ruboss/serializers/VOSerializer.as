@@ -7,6 +7,7 @@ package org.ruboss.serializers {
   
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
+  import org.ruboss.models.RubossModel;
   import org.ruboss.utils.ModelsStateMetadata;
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
@@ -34,6 +35,9 @@ package org.ruboss.serializers {
     }
 
     public function unmarshall(object:Object):Object {
+      if (object is TypedArray || object is RubossModel) {
+        return object;
+      }
       try {
         if (object is Array) {
           return unmarshallArray(object as Array);

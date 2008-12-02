@@ -2,7 +2,9 @@ package org.ruboss.serializers {
   import com.adobe.serialization.json.JSON;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.models.RubossModel;
   import org.ruboss.utils.ModelsStateMetadata;
+  import org.ruboss.utils.TypedArray;
   
   public class JSONSerializer implements ISerializer {
 
@@ -21,6 +23,9 @@ package org.ruboss.serializers {
     }
 
     public function unmarshall(object:Object):Object {
+      if (object is TypedArray || object is RubossModel) {
+        return object;
+      }
       try {
         var source:Object = JSON.decode(object as String);
         if (source is Array) {

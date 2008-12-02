@@ -63,6 +63,10 @@
  			  ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
         ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
         ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testIndex"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testCreate"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testUpdate"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testDestroy"));
  			}
 		]]>
 	</mx:Script>
