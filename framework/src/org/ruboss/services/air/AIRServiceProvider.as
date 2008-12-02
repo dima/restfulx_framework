@@ -125,14 +125,14 @@ package org.ruboss.services.air {
      * @see org.ruboss.services.IServiceProvider#marshall
      */
     public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      return object;
+      return Ruboss.serializers.vo.marshall(object, recursive, metadata);
     }
 
     /**
      * @see org.ruboss.services.IServiceProvider#unmarshall
      */
     public function unmarshall(object:Object):Object {
-      return object;
+      return Ruboss.serializers.vo.unmarshall(object);
     }
     
     /**

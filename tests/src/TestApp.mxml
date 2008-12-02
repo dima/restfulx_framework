@@ -3,6 +3,8 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import org.ruboss.services.http.JSONHTTPServiceProvider;
+		  import ruboss.test.cases.providers.JSONHTTPServiceProviderTest;
 		  import ruboss.test.cases.Bug26Test;
 		  import ruboss.test.cases.integration.AS3XMLHTTPServiceProviderTest;
 		  import org.ruboss.services.as3http.AS3XMLHTTPServiceProvider;
@@ -19,7 +21,8 @@
 			
 			private function onCreationComplete():void {
 			  Ruboss.enableLogging();
-        RubossTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider, AS3XMLHTTPServiceProvider], 
+        RubossTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider, AS3XMLHTTPServiceProvider,
+          JSONHTTPServiceProvider], 
           MockXMLHTTPServiceProvider.ID, "ruboss-tests");
                     
         var testData:Object = {
@@ -53,6 +56,7 @@
         ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
         ts.addTest(new VOSerializerTest("testObjectMarshallingWithRelationships"));
         ts.addTest(new Bug26Test("testUserShow"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testPeek"));
  			}
  			
  			private function addIntegrationTests(ts:TestSuite):void {

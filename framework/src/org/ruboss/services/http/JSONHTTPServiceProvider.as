@@ -57,6 +57,7 @@ package org.ruboss.services.http {
      * @see org.ruboss.services.IServiceProvider#hasErrors
      */
     public function hasErrors(object:Object):Boolean {
+      // TODO: what are we doing about the errors sent over in JSON?
       return false;
     }
 
@@ -64,13 +65,20 @@ package org.ruboss.services.http {
      * @see org.ruboss.services.IServiceProvider#canLazyLoad
      */
     public function canLazyLoad():Boolean {
-      return false;
+      return true;
     }
 
     /**
      * @see org.ruboss.services.IServiceProvider#peek
      */
     public function peek(object:Object):String {
+      try {
+        var objectName:String = (object as String).match(/"ruby_class":"(\w+)"/)[1];
+        Ruboss.log.debug("peeking at: " + objectName);
+        return state.keys[RubossUtils.lowerCaseFirst(objectName)];
+      } catch (e:Error) {
+        Ruboss.log.error("failed to peek into JSON response. ruby_class property is missing.");
+      }
       return null;
     }
     
