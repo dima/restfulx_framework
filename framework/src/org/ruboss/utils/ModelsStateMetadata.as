@@ -20,12 +20,15 @@ package org.ruboss.utils {
   import mx.collections.ArrayCollection;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.utils.RubossUtils;
   
   /**
    * Centralized store for model related metadata.
    */
   public class ModelsStateMetadata {
+    
+    public var types:Dictionary;
+    
+    public var refs:Dictionary;
     
     /** currently registered model classes */
     public var models:Array;
@@ -103,6 +106,8 @@ package org.ruboss.utils {
     public function ModelsStateMetadata(models:Array) {
       this.models = models;
       
+      refs = new Dictionary;
+      
       controllers = new Dictionary;
       fqns = new Dictionary;
       keys = new Dictionary;
@@ -125,6 +130,8 @@ package org.ruboss.utils {
       // set-up model data structures
       for each (var model:Class in models) {
         var fqn:String = getQualifiedClassName(model);
+        
+        refs[fqn] = new Dictionary;
         
         var modelName:String = fqn.split("::")[1] as String;
         
@@ -194,7 +201,10 @@ package org.ruboss.utils {
     private function computeDependecyTree(model:Object):void {
       var fqn:String = getQualifiedClassName(model);
       // don't compute dependencies for a model that doesn't have a controller
-      if (RubossUtils.isEmpty(RubossUtils.getResourceName(model))) return;
+      if (RubossUtils.isEmpty(RubossUtils.getResourceName(model))) {
+        Ruboss.log.error("resource name is undefined for " + model + " with FQN: " + fqn);
+        return; 
+      }
       
       for each (var node:XML in describeType(model)..accessor) {
         var types:Array = new Array;

@@ -5,6 +5,38 @@
   <name>Matt Mukati</name>
   <user_group_id type="integer">477749732</user_group_id>
   <user_phone>14085551212</user_phone>
+  <user_datagrid_prefs type="array">
+    <user_datagrid_pref>
+      <datagrid>ToCall</datagrid>
+      <id type="integer">10606985</id>
+      <key_id type="integer">669672822</key_id>
+      <user_id type="integer">981972180</user_id>
+    </user_datagrid_pref>
+    <user_datagrid_pref>
+      <datagrid>ToCall</datagrid>
+      <id type="integer">640242378</id>
+      <key_id type="integer">669672824</key_id>
+      <user_id type="integer">981972180</user_id>
+    </user_datagrid_pref>
+    <user_datagrid_pref>
+      <datagrid>ToCall</datagrid>
+      <id type="integer">692383400</id>
+      <key_id type="integer">669672825</key_id>
+      <user_id type="integer">981972180</user_id>
+    </user_datagrid_pref>
+    <user_datagrid_pref>
+      <datagrid>ToCall</datagrid>
+      <id type="integer">735590636</id>
+      <key_id type="integer">412777239</key_id>
+      <user_id type="integer">981972180</user_id>
+    </user_datagrid_pref>
+    <user_datagrid_pref>
+      <datagrid>Inbox</datagrid>
+      <id type="integer">735590637</id>
+      <key_id type="integer">669672822</key_id>
+      <user_id type="integer">981972180</user_id>
+    </user_datagrid_pref>
+  </user_datagrid_prefs>
   <user_group>
     <address1>4030 Moorpark Ave, Suite 114</address1>
     <address2/>
@@ -263,36 +295,4 @@
       </kvs>
     </contact>
   </contacts>
-  <user_datagrid_prefs type="array">
-    <user_datagrid_pref>
-      <datagrid>ToCall</datagrid>
-      <id type="integer">10606985</id>
-      <key_id type="integer">669672822</key_id>
-      <user_id type="integer">981972180</user_id>
-    </user_datagrid_pref>
-    <user_datagrid_pref>
-      <datagrid>ToCall</datagrid>
-      <id type="integer">640242378</id>
-      <key_id type="integer">669672824</key_id>
-      <user_id type="integer">981972180</user_id>
-    </user_datagrid_pref>
-    <user_datagrid_pref>
-      <datagrid>ToCall</datagrid>
-      <id type="integer">692383400</id>
-      <key_id type="integer">669672825</key_id>
-      <user_id type="integer">981972180</user_id>
-    </user_datagrid_pref>
-    <user_datagrid_pref>
-      <datagrid>ToCall</datagrid>
-      <id type="integer">735590636</id>
-      <key_id type="integer">412777239</key_id>
-      <user_id type="integer">981972180</user_id>
-    </user_datagrid_pref>
-    <user_datagrid_pref>
-      <datagrid>Inbox</datagrid>
-      <id type="integer">735590637</id>
-      <key_id type="integer">669672822</key_id>
-      <user_id type="integer">981972180</user_id>
-    </user_datagrid_pref>
-  </user_datagrid_prefs>
 </user>

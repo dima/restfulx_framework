@@ -30,6 +30,7 @@ package org.ruboss.controllers {
   import org.ruboss.services.GenericServiceErrors;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ServiceResponder;
+  import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.ModelsStateMetadata;
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
@@ -53,6 +54,8 @@ package org.ruboss.controllers {
     
     /** encapsulates models control metadata and state */
     public var state:ModelsStateMetadata;
+    
+    public var metastate:ModelsMetadata;
 
     /**
      * Creates a new instance of the controller.
@@ -72,78 +75,7 @@ package org.ruboss.controllers {
       }
       
       state = new ModelsStateMetadata(models);
-    }
-    
-    /**
-     * Checks to see if a particular model has been requested and cached successfully.
-     * 
-     * @param clazz Class reference of the model to be checked
-     */
-    public function contains(clazz:Class):Boolean {
-      var fqn:String = names[clazz];
-      return state.indexed[fqn] && !state.waiting[fqn];
-    }
-    
-    /**
-     * Checks to see if all of the models have been requested and cached successfully.
-     * 
-     * @param classes Array an array of model classes to be checked
-     */
-    public function containsAll(... classes):Boolean {
-      for each (var clazz:Class in classes) {
-        if (!contains(clazz)) {
-          return false;
-        }
-      }
-      return true;
-    }
-    
-    /**
-     * Resets model metadata.
-     *  
-     * @see org.ruboss.models.ModelsStateMetadata#reset
-     * @param object can be a model class or specific model instance
-     */
-    public function reset(object:Object = null):void {
-      state.reset(object);   
-    }
-
-    /**
-     * Force reload of a particular model instance or the entire model cache.
-     *  
-     * @param object model instance or model Class reference to reload
-     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     *  clober the value of any subsequent parameters.
-     * @param nestedBy an array of model instances that should used to nest this request under
-     * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
-     * @param fetchDependencies if true model dependencies will be recursively fetched as well
-     * @param useLazyModel if true dependencies marked with [Lazy] will be skipped (not fetched)
-     * @param page page to request (only used by index method)
-     * @param targetServiceId service provider to use
-     */
-    public function reload(object:Object, optsOrAfterCallback:Object = null, nestedBy:Array = null,
-      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, page:int = -1,
-      targetServiceId:int = -1):void {
-      reset(object);      
-      if (object is Class) {
-        index(Class(object), optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode, page,
-          targetServiceId);
-      } else {
-        show(object, optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode, 
-          targetServiceId);
-      }
-    }
-    
-    /**
-     * Get current cache representation for a particular model class.
-     * 
-     * @param clazz model class to look up
-     */
-    [Bindable(event="cacheUpdate")]
-    public function cached(clazz:Class):ModelsCollection {
-      var fqn:String = names[clazz];
-      return ModelsCollection(cache[fqn]);      
+      metastate = new ModelsMetadata(models);
     }
 
     /**
@@ -168,8 +100,8 @@ package org.ruboss.controllers {
      */
     [Bindable(event="cacheUpdate")]
     public function index(clazz:Class, optsOrAfterCallback:Object = null, nestedBy:Array = null,
-      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, page:int = -1,
-      targetServiceId:int = -1):ModelsCollection {
+      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, 
+      page:int = -1, targetServiceId:int = -1):ModelsCollection {
       var afterCallback:Object = null;
       if (optsOrAfterCallback != null) {
         if (optsOrAfterCallback is Function || optsOrAfterCallback is IResponder) {
@@ -180,6 +112,7 @@ package org.ruboss.controllers {
           if (optsOrAfterCallback['metadata']) metadata = optsOrAfterCallback['metadata'];
           if (optsOrAfterCallback['fetchDependencies']) fetchDependencies = optsOrAfterCallback['fetchDependencies'];
           if (optsOrAfterCallback['useLazyMode']) useLazyMode = optsOrAfterCallback['useLazyMode'];
+          if (optsOrAfterCallback['append']) append = optsOrAfterCallback['append'];
           if (optsOrAfterCallback['page']) page = optsOrAfterCallback['page'];
           if (optsOrAfterCallback['targetServiceId']) targetServiceId = optsOrAfterCallback['targetServiceId'];
         }
@@ -391,6 +324,79 @@ package org.ruboss.controllers {
       invokeService(service.destroy, service, object, serviceResponder, metadata, nestedBy);
     }
 
+    
+    /**
+     * Checks to see if a particular model has been requested and cached successfully.
+     * 
+     * @param clazz Class reference of the model to be checked
+     */
+    public function contains(clazz:Class):Boolean {
+      var fqn:String = names[clazz];
+      return state.indexed[fqn] && !state.waiting[fqn];
+    }
+    
+    /**
+     * Checks to see if all of the models have been requested and cached successfully.
+     * 
+     * @param classes Array an array of model classes to be checked
+     */
+    public function containsAll(... classes):Boolean {
+      for each (var clazz:Class in classes) {
+        if (!contains(clazz)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    
+    /**
+     * Resets model metadata.
+     *  
+     * @see org.ruboss.models.ModelsStateMetadata#reset
+     * @param object can be a model class or specific model instance
+     */
+    public function reset(object:Object = null):void {
+      state.reset(object);   
+    }
+
+    /**
+     * Force reload of a particular model instance or the entire model cache.
+     *  
+     * @param object model instance or model Class reference to reload
+     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     *  clober the value of any subsequent parameters.
+     * @param nestedBy an array of model instances that should used to nest this request under
+     * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
+     * @param fetchDependencies if true model dependencies will be recursively fetched as well
+     * @param useLazyModel if true dependencies marked with [Lazy] will be skipped (not fetched)
+     * @param page page to request (only used by index method)
+     * @param targetServiceId service provider to use
+     */
+    public function reload(object:Object, optsOrAfterCallback:Object = null, nestedBy:Array = null,
+      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, 
+      page:int = -1, targetServiceId:int = -1):void {
+      reset(object);      
+      if (object is Class) {
+        index(Class(object), optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode, append, page,
+          targetServiceId);
+      } else {
+        show(object, optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode, 
+          targetServiceId);
+      }
+    }
+    
+    /**
+     * Get current cache representation for a particular model class.
+     * 
+     * @param clazz model class to look up
+     */
+    [Bindable(event="cacheUpdate")]
+    public function cached(clazz:Class):ModelsCollection {
+      var fqn:String = names[clazz];
+      return ModelsCollection(cache[fqn]);      
+    }
+
     private function getServiceProvider(serviceId:int = -1):IServiceProvider {
       if (serviceId == -1) serviceId = Ruboss.defaultServiceId;
       return IServiceProvider(Ruboss.services.getServiceProvider(serviceId));
@@ -564,7 +570,7 @@ package org.ruboss.controllers {
           items.addItem(item);
         }
       } else {
-        name = toCache.modelsType;
+        name = toCache.itemType;
       }
       
       dispatchEvent(new CacheUpdateEvent(name, CacheUpdateEvent.INDEX));      

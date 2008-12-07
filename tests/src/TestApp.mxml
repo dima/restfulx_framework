@@ -3,6 +3,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.ModelsMetadataTest;
 		  import org.ruboss.services.http.JSONHTTPServiceProvider;
 		  import ruboss.test.cases.providers.JSONHTTPServiceProviderTest;
 		  import ruboss.test.cases.Bug26Test;
@@ -29,14 +30,14 @@
           addresses: addresses
         }
 
-        MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
-        MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
+//        MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
+//        MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
 			  
 			  var testSuite:TestSuite = new TestSuite;
-			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
-			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
-			  addNonServiceDependentTests(testSuite);
-//        addIntegrationTests(testSuite);
+//			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
+//			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
+//			  addNonServiceDependentTests(testSuite);
+        addIntegrationTests(testSuite);
  				testRunner.test = testSuite;
  				testRunner.startTest();
  			}
@@ -60,13 +61,14 @@
  			}
  			
  			private function addIntegrationTests(ts:TestSuite):void {
- 			  ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
-        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
-        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));
-        ts.addTest(new JSONHTTPServiceProviderTest("testIndex"));
-        ts.addTest(new JSONHTTPServiceProviderTest("testCreate"));
-        ts.addTest(new JSONHTTPServiceProviderTest("testUpdate"));
-        ts.addTest(new JSONHTTPServiceProviderTest("testDestroy"));
+// 			  ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
+//        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
+//        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));
+//        ts.addTest(new JSONHTTPServiceProviderTest("testIndex"));
+//        ts.addTest(new JSONHTTPServiceProviderTest("testCreate"));
+//        ts.addTest(new JSONHTTPServiceProviderTest("testUpdate"));
+//        ts.addTest(new JSONHTTPServiceProviderTest("testDestroy"));
+          ts.addTest(new ModelsMetadataTest("testMetadataExtraction"));
  			}
 		]]>
 	</mx:Script>

@@ -79,8 +79,8 @@ package org.ruboss.models {
      */
     public function reload(optsOrAfterCallback:Object = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true,
-      targetServiceId:int = -1):void {
-      Ruboss.models.reload(this, optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode,
+      append:Boolean = false, targetServiceId:int = -1):void {
+      Ruboss.models.reload(this, optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode, append,
         targetServiceId);
     }
 

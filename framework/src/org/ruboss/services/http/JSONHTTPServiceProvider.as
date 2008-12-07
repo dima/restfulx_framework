@@ -16,7 +16,7 @@ package org.ruboss.services.http {
     public function JSONHTTPServiceProvider() {
       state = Ruboss.models.state;
       serializer = new JSONSerializer;
-      suffix = "json";
+      urlSuffix = "json";
     }
 
     /**
@@ -74,7 +74,7 @@ package org.ruboss.services.http {
       service.resultFormat = "text";
       service.useProxy = false;
       service.contentType = "application/x-www-form-urlencoded";
-      service.url = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy, suffix);
+      service.url = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy, urlSuffix);
       return service;
     }
   }

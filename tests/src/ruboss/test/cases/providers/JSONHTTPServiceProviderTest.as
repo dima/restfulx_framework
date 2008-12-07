@@ -2,15 +2,19 @@ package ruboss.test.cases.providers {
   import flexunit.framework.TestCase;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.collections.ModelsCollection;
   import org.ruboss.services.http.JSONHTTPServiceProvider;
   
   import ruboss.test.models.Address;
 
   public class JSONHTTPServiceProviderTest extends TestCase {
     
+    public var addresses:ModelsCollection;
+    
     public function JSONHTTPServiceProviderTest(methodName:String) {
       super(methodName);
       Ruboss.httpRootUrl = "http://localhost:3000/";
+      addresses = new ModelsCollection;
     }
     
     public function testPeek():void {
