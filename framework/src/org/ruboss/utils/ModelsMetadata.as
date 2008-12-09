@@ -201,12 +201,13 @@ package org.ruboss.utils {
     private function extractDependencies(dependencies:Array, node:XML, descriptor:XML, defaultRefType:String):void {
       if (RubossUtils.isPolymorphicBelongsTo(node)) {
         for each (var shortName:String in descriptor.arg.(@key == "dependsOn").@value.toString().split(",")) {
+          shortName = shortName.replace(/\s*/, "");
           var key:String = fqns[shortName];
-          if (key != null && dependencies.indexOf(key) == -1) {
+          if (key != null) {
             dependencies.push(key);
           }
         }
-      } else if (dependencies.indexOf(defaultRefType) == -1) {
+      } else {
         dependencies.push(defaultRefType);
       }      
     }

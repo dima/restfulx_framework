@@ -10,6 +10,7 @@ package ruboss.test.cases.serializers {
   import org.ruboss.utils.TypedArray;
   
   import ruboss.test.models.Contractor;
+  import ruboss.test.models.Location;
   import ruboss.test.models.Project;
   import ruboss.test.models.Task;
 
@@ -32,7 +33,7 @@ package ruboss.test.cases.serializers {
     
     public function testBasicRelationships():void {
       Ruboss.models.addEventListener(CacheUpdateEvent.ID, onIndex);
-      Ruboss.models.indexAll(Project, Contractor, Task);
+      Ruboss.models.indexAll(Project, Contractor, Task, Location);
     }
     
     private function onIndex(event:CacheUpdateEvent):void {

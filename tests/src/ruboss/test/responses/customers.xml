@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<customers type="array">
+  <customer>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">589916620</id>
+    <name>Customer1NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </customer>
+  <customer>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">633123856</id>
+    <name>Customer2NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </customer>
+  <customer>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">776178605</id>
+    <name>Customer4NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </customer>
+  <customer>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">1021826650</id>
+    <name>Customer3NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </customer>
+</customers>

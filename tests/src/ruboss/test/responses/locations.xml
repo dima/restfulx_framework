@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations type="array">
+  <location>
+    <city>Location1CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">361020393</id>
+    <line_one>Location1LineOneString</line_one>
+    <line_two>Location1LineTwoString</line_two>
+    <owner_id type="integer">589916620</owner_id>
+    <owner_type>Customer</owner_type>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </location>
+  <location>
+    <city>Location2CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">404227630</id>
+    <line_one>Location2LineOneString</line_one>
+    <line_two>Location2LineTwoString</line_two>
+    <owner_id type="integer">112767383</owner_id>
+    <owner_type>Employee</owner_type>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </location>
+  <location>
+    <city>Location4CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">944988579</id>
+    <line_one>Location4LineOneString</line_one>
+    <line_two>Location4LineTwoString</line_two>
+    <owner_id type="integer">69560147</owner_id>
+    <owner_type>Employee</owner_type>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </location>
+  <location>
+    <city>Location3CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">962364700</id>
+    <line_one>Location3LineOneString</line_one>
+    <line_two>Location3LineTwoString</line_two>
+    <owner_id type="integer">633123856</owner_id>
+    <owner_type>Customer</owner_type>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </location>
+</locations>

@@ -32,7 +32,10 @@
           addresses: addresses,
           projects: projects,
           tasks: tasks,
-          contractors: contractors
+          contractors: contractors,
+          locations: locations,
+          employees: employees,
+          customers: customers
         }
 
         MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
@@ -86,6 +89,10 @@
   <mx:XML id="projects" source="ruboss/test/responses/projects.xml"/>
   <mx:XML id="tasks" source="ruboss/test/responses/tasks.xml"/>
   <mx:XML id="contractors" source="ruboss/test/responses/contractors.xml"/>
+  <mx:XML id="locations" source="ruboss/test/responses/locations.xml"/>
+  <mx:XML id="customers" source="ruboss/test/responses/customers.xml"/>
+  <mx:XML id="employees" source="ruboss/test/responses/employees.xml"/>
+
 
 	<mx:XML id="addresses" source="ruboss/test/responses/addresses.xml"/>
 	<mx:XML id="bug26user" source="ruboss/test/responses/bug26/user.xml"/>

@@ -12,7 +12,7 @@ package ruboss.test.models {
 
     public var city:String;
     
-    [BelongsTo(polymorphic="true")]
+    [BelongsTo(polymorphic="true", dependsOn="Employee, Customer")]
     public var owner:Object;
 
     public function Location() {
