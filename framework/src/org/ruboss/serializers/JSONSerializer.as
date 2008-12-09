@@ -3,7 +3,6 @@ package org.ruboss.serializers {
   
   import org.ruboss.Ruboss;
   import org.ruboss.models.RubossModel;
-  import org.ruboss.utils.ModelsStateMetadata;
   import org.ruboss.utils.TypedArray;
   
   public class JSONSerializer extends GenericSerializer {

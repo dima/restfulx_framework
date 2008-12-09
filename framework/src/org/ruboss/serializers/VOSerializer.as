@@ -8,7 +8,6 @@ package org.ruboss.serializers {
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
   import org.ruboss.models.RubossModel;
-  import org.ruboss.utils.ModelsStateMetadata;
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
   

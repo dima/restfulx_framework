@@ -30,7 +30,6 @@ package org.ruboss.controllers {
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ServiceResponder;
   import org.ruboss.utils.ModelsMetadata;
-  import org.ruboss.utils.ModelsStateMetadata;
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
 
