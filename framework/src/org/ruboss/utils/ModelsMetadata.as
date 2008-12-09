@@ -210,25 +210,20 @@ package org.ruboss.utils {
         }
       } else {
         dependencies.push(defaultRefType);
-      }      
+      }
     }
     
     private function extractHasManyThroughRelationships(node:XML, descriptor:XML, fqn:String):void {
       var value:String = descriptor.arg.(@key == "through").@value.toString();
-      var dependsOn:String = descriptor.arg.(@key == "dependsOn").@value.toString();
-      if (!RubossUtils.isEmpty(dependsOn) && !RubossUtils.isEmpty(value)) {
-        var dependsOnTarget:String = fqns[dependsOn];
-        var indirect:String = RubossUtils.toSnakeCase(value);
-        if (hmts[dependsOnTarget] == null) {
-          hmts[dependsOnTarget] = new Array;
-        }
-        (hmts[dependsOnTarget] as Array).push({name: fqn, attribute: node.@name.toString(), indirect: indirect});
-      } else if (!RubossUtils.isEmpty(value)) {
+      if (!RubossUtils.isEmpty(value)) {
+        var refType:String = fqns[value];
         var target:String = RubossUtils.toSnakeCase(value);
+        var attribute:String = node.@name;
+
         if (hmts[target] == null) {
           hmts[target] = new Array;
         }
-        (hmts[target] as Array).push({name: fqn, attribute: node.@name.toString()});
+        (hmts[target] as Array).push({type: fqn, attribute: attribute});
       }
     }
   }

@@ -12,7 +12,7 @@ package ruboss.test.models {
     [HasMany]
     public var books:ModelsCollection;
     
-    [HasMany(through="Books", dependsOn="Book")]
+    [HasMany(through="books")]
     public var authors:ModelsCollection;
     
     public function Store() {

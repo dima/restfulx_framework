@@ -14,10 +14,10 @@ package ruboss.test.models {
     [HasMany]
     public var billableWeeks:ModelsCollection;
     
-    [HasMany(through="BillableWeeks")]
+    [HasMany(through="billableWeeks")]
     public var timesheets:ModelsCollection;
     
-    [HasMany(type="Timesheet", through="BillableWeeks")]
+    [HasMany(type="Timesheet", through="billableWeeks")]
     public var incompleteTimesheets:ModelsCollection;
     
     public function Client() {

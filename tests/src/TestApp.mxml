@@ -118,6 +118,8 @@
   <!-- STI -->
   <mx:XML id="payable_accounts" source="ruboss/test/responses/payable_accounts.xml"/>
   <mx:XML id="receivable_accounts" source="ruboss/test/responses/receivable_accounts.xml"/>
+  
+  <!-- TODO: generic STI (e.g. accounts) returns XML with records, which won't be parsed -->
 
   <!-- HasMany(through) form 1 -->
   <mx:XML id="billable_weeks" source="ruboss/test/responses/billable_weeks.xml"/>

@@ -14,7 +14,7 @@ package ruboss.test.models {
     [HasMany]
     public var billableWeeks:ModelsCollection;
     
-    [HasMany(through="BillableWeeks")]
+    [HasMany(through="billableWeeks")]
     public var clients:ModelsCollection;
     
     public function Timesheet() {

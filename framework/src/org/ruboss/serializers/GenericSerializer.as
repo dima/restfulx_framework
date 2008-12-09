@@ -22,48 +22,48 @@ package org.ruboss.serializers {
       return object;
     }
 
-    // TODO: this sucks, needs to be reworked
     protected function processHasManyThroughRelationships(object:Object, fqn:String):void {
       for each (var relationship:Object in state.hmts[state.controllers[fqn]]) {
         try {
-          var name:String = relationship["name"]; // fqn
-          var attribute:String = relationship["attribute"]; // plural name
-          var local:String = state.names[name]["single"];//state.keys[name];        
-          var target:String = state.names[state.fqns[attribute]]["single"];//state.keys[state.fqns[attribute]];
+          // relationship["type"] = fqn (e.g. package::Client)
+          // relationship["attribute"] = plural name of the reference (e.g. timesheets)
+          var relType:String = relationship["type"];
+
+          var localSingleName:String = state.names[relType]["single"];
+          var localPluralName:String = state.names[relType]["plural"];
+
+          var refType:String = state.fqns[relationship["attribute"]];
+          var refName:String = state.names[refType]["single"];
+  
+          // e.g. object[client][timesheets]
+          var items:ModelsCollection = object[localSingleName][relationship["attribute"]];
+          if (items == null) {
+            items = new ModelsCollection;
+          }
           
-          if (relationship.hasOwnProperty("indirect")) {
-            var indirect:String = relationship["indirect"];
-            var indirectRef:String = "";//state.keys[state.fqns[indirect]];
-            var indirectItems:ModelsCollection = object[indirectRef][local][attribute];
-            if (indirectItems == null) {
-              indirectItems = new ModelsCollection;
-              if (indirectItems.hasItem(object)) {
-                indirectItems.setItem(object);
-              } else {
-                indirectItems.addItem(object);
-              }
-            }
-            object[indirectRef][local][attribute] = indirectItems;
-          } else {
-            if (!object.hasOwnProperty(local)) continue;
-            
-            var items:ModelsCollection = object[local][attribute];
-            if (items == null) {
-              items = new ModelsCollection;
-            }
-            if (items.hasItem(object[target])) {
-              items.setItem(object[target]);
+          // form 1, e.g. object[timesheet]
+          if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refName)) {
+            if (items.hasItem(object[refName])) {
+              items.setItem(object[refName]);
             } else {
-              items.addItem(object[target]);
+              items.addItem(object[refName]);
             }
-            object[local][attribute] = items;
+            object[localSingleName][relationship["attribute"]] = items;
+            
+          // form 2 e.g. object[authors]
+          } else if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(relationship["attribute"])) {
+            if (object[relationship["attribute"]] == null) {
+              object[relationship["attribute"]] = new ModelsCollection;
+            }
+            object[localSingleName][relationship["attribute"]] = object[relationship["attribute"]];          
           }
         } catch (e:Error) {
-          // dosomething
+          // do something
         }
       }
     }
 
+    // needs some testing too
     protected function cleanupModelReferences(model:Object, fqn:String):void {
       var property:String = RubossUtils.toCamelCase(state.controllers[fqn]);
       var localName:String = state.names[fqn]["single"];
