@@ -37,7 +37,8 @@ package org.ruboss.serializers {
           var localPluralName:String = state.names[relType]["plural"];
 
           var refType:String = state.fqns[refKey];
-          var refName:String = state.names[refType]["single"];
+          var refNameSingle:String = state.names[refType]["single"];
+          var refNamePlural:String = state.names[refType]["plural"];
   
           // e.g. object[client][timesheets]
           var items:ModelsCollection = object[localSingleName][relationship["attribute"]];
@@ -46,20 +47,20 @@ package org.ruboss.serializers {
           }
           
           // form 1, e.g. object[timesheet]
-          if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refName)) {
-            if (items.hasItem(object[refName])) {
-              items.setItem(object[refName]);
+          if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refNameSingle)) {
+            if (items.hasItem(object[refNameSingle])) {
+              items.setItem(object[refNameSingle]);
             } else {
-              items.addItem(object[refName]);
+              items.addItem(object[refNameSingle]);
             }
             object[localSingleName][relationship["attribute"]] = items;
             
           // form 2 e.g. object[authors]
-          } else if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(relationship["attribute"])) {
-            if (object[relationship["attribute"]] == null) {
-              object[relationship["attribute"]] = new ModelsCollection;
+          } else if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refNamePlural)) {
+            if (object[refNamePlural] == null) {
+              object[refNamePlural] = new ModelsCollection;
             }
-            object[localSingleName][relationship["attribute"]] = object[relationship["attribute"]];          
+            object[localSingleName][relationship["attribute"]] = object[refNamePlural];          
           }
         } catch (e:Error) {
           // do something

@@ -15,6 +15,9 @@ package ruboss.test.models {
     [HasMany(through="books")]
     public var authors:ModelsCollection;
     
+    [HasMany(type="Author", through="books")]
+    public var randomAuthors:ModelsCollection;
+    
     public function Store() {
       super(LABEL);
     }
