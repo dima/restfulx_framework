@@ -29,9 +29,6 @@ package org.ruboss.models {
     /** some models have a revision number */
     public var rev:String;
 
-    /** true if this model has been *fully* fetched as opposed to just stubbed out */
-    public var fetched:Boolean;
-
     /** any model can have one attachment */
     public var attachment:RubossFileReference;
 

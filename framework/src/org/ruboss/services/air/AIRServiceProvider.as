@@ -111,13 +111,6 @@ package org.ruboss.services.air {
     public function canLazyLoad():Boolean {
       return false;
     }
-
-    /**
-     * @see org.ruboss.services.IServiceProvider#peek
-     */
-    public function peek(object:Object):String {
-      return null;
-    }
     
     /**
      * @see org.ruboss.services.IServiceProvider#marshall

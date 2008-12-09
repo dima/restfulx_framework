@@ -251,7 +251,6 @@ package org.ruboss.serializers {
         }
       }
       
-      object["fetched"] = true;
       addItemToCache(object, fqn);
       processHasManyThroughRelationships(object, fqn);
 

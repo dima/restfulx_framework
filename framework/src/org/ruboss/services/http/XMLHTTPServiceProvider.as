@@ -93,15 +93,6 @@ package org.ruboss.services.http {
     public function unmarshall(object:Object):Object {
       return Ruboss.serializers.xml.unmarshall(object);
     }
-
-    /**
-     * @see org.ruboss.services.IServiceProvider#peek
-     */
-    public function peek(object:Object):String {
-      var xmlFragmentName:String = XML(object).localName().toString();
-      Ruboss.log.debug("peeking at: " + xmlFragmentName);
-      return state.fqns[xmlFragmentName];
-    }
     
     /**
      * @see org.ruboss.services.IServiceProvider#index

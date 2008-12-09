@@ -54,14 +54,6 @@ package org.ruboss.services {
      * @return true if the service provider can lazy load, false otherwise
      */
     function canLazyLoad():Boolean;
-
-    /**
-     * Allows ServiceResponder to preview the response without triggering entire unmarshall processing.
-     *  
-     * @param object the object that received by service responder
-     * @result fully qualified name of the model class that maps to the object being processed
-     */
-    function peek(object:Object):String;
     
     /**
      * Produces service provider specific model representation suitable for being serialized. For example,

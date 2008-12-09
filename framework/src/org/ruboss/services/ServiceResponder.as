@@ -12,12 +12,15 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.services {
+  import flash.utils.getQualifiedClassName;
+  
   import mx.managers.CursorManager;
   import mx.rpc.IResponder;
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ModelsController;
   import org.ruboss.events.ServiceCallStopEvent;
+  import org.ruboss.utils.TypedArray;
 
   /**
    * Central response manager for RESTful CRUD operations.
@@ -55,13 +58,18 @@ package org.ruboss.services {
       controller.dispatchEvent(new ServiceCallStopEvent);
       if (handler != null) {
         if (!service.hasErrors(event.result)) {
-          var fqn:String = service.peek(event.result);
-          if (fqn != null) {
-            Ruboss.log.debug("handling response for: " + fqn);
-            delete controller.state.waiting[fqn];
+          var result:Object = service.unmarshall(event.result);
+          
+          var resultType:String;
+          if (result is TypedArray) {
+            resultType = TypedArray(result).itemType;
+          } else {
+            resultType = getQualifiedClassName(result);
           }
           
-          var result:Object = service.unmarshall(event.result);
+          Ruboss.log.debug("handled response for: " + resultType);
+          delete controller.state.waiting[resultType];
+          
           handler(result);
           
           // and fire user's callback responder here

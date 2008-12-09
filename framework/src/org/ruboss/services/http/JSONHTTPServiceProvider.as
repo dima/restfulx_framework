@@ -40,20 +40,6 @@ package org.ruboss.services.http {
     public override function canLazyLoad():Boolean {
       return true;
     }
-
-    /**
-     * @see org.ruboss.services.IServiceProvider#peek
-     */
-    public override function peek(object:Object):String {
-      try {
-        var objectName:String = (object as String).match(/"ruby_class":"(\w+)"/)[1];
-        Ruboss.log.debug("peeking at: " + objectName);
-        return state.fqns[objectName];
-      } catch (e:Error) {
-        Ruboss.log.error("failed to peek into JSON response. ruby_class property is missing.");
-      }
-      return null;
-    }
     
     /**
      * @see org.ruboss.services.IServiceProvider#marshall
