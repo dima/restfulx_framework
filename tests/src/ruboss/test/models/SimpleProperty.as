@@ -20,6 +20,9 @@ package ruboss.test.models {
 
     [DateTime]
     public var soldOn:Date;
+    
+    [DateTime]
+    public var createdAt:Date;
 
     public function SimpleProperty() {
       super(LABEL);

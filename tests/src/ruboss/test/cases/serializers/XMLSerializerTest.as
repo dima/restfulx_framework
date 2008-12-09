@@ -3,8 +3,15 @@ package ruboss.test.cases.serializers {
   
   import mx.core.Application;
   
+  import org.ruboss.Ruboss;
+  import org.ruboss.controllers.ModelsController;
+  import org.ruboss.events.CacheUpdateEvent;
   import org.ruboss.serializers.XMLSerializer;
   import org.ruboss.utils.TypedArray;
+  
+  import ruboss.test.models.Contractor;
+  import ruboss.test.models.Project;
+  import ruboss.test.models.Task;
 
   public class XMLSerializerTest extends TestCase {
     
@@ -15,10 +22,22 @@ package ruboss.test.cases.serializers {
       xml = new XMLSerializer;
     }
     
-    public function testSimplePropertyUnmarshalling():void {
+    public function testSimpleProperties():void {
       var simplePropertiesSource:XML = TestApp(Application.application).simple_properties;
       var simpleProperties:TypedArray = xml.unmarshall(simplePropertiesSource) as TypedArray;
+      
+      var models:ModelsController = Ruboss.models;
       trace(simpleProperties);
+    }
+    
+    public function testBasicRelationships():void {
+      Ruboss.models.addEventListener(CacheUpdateEvent.ID, onIndex);
+      Ruboss.models.indexAll(Project, Contractor, Task);
+    }
+    
+    private function onIndex(event:CacheUpdateEvent):void {
+      var models:ModelsController = Ruboss.models;
+      trace(event);
     }
   }
 }

@@ -28,17 +28,21 @@
           MockXMLHTTPServiceProvider.ID, "ruboss-tests");
                     
         var testData:Object = {
-          simple_properties: simple_properties
+          simple_properties: simple_properties,
+          addresses: addresses,
+          projects: projects,
+          tasks: tasks,
+          contractors: contractors
         }
 
-//        MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
+        MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
 //        MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
 			  
 			  var testSuite:TestSuite = new TestSuite;
-//			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
+			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
 //			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
-//			  addNonServiceDependentTests(testSuite);
-        addIntegrationTests(testSuite);
+			  addNonServiceDependentTests(testSuite);
+//        addIntegrationTests(testSuite);
  				testRunner.test = testSuite;
  				testRunner.startTest();
  			}
@@ -53,12 +57,16 @@
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
  			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
         ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
-        ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));
-        ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
-        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
-        ts.addTest(new VOSerializerTest("testObjectMarshallingWithRelationships"));
-        ts.addTest(new Bug26Test("testUserShow"));
-        ts.addTest(new JSONHTTPServiceProviderTest("testPeek"));
+        ts.addTest(new XMLSerializerTest("testSimpleProperties"));
+        ts.addTest(new XMLSerializerTest("testBasicRelationships"));
+
+
+//        ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));
+//        ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
+//        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
+//        ts.addTest(new VOSerializerTest("testObjectMarshallingWithRelationships"));
+//        ts.addTest(new Bug26Test("testUserShow"));
+//        ts.addTest(new JSONHTTPServiceProviderTest("testPeek"));
  			}
  			
  			private function addIntegrationTests(ts:TestSuite):void {
@@ -70,11 +78,15 @@
 //        ts.addTest(new JSONHTTPServiceProviderTest("testUpdate"));
 //        ts.addTest(new JSONHTTPServiceProviderTest("testDestroy"));
 //          ts.addTest(new ModelsMetadataTest("testMetadataExtraction"));
-          ts.addTest(new XMLSerializerTest("testSimplePropertyUnmarshalling"));
+          //ts.addTest(new XMLSerializerTest("testBasicRelationships"));
  			}
 		]]>
 	</mx:Script>
   <mx:XML id="simple_properties" source="ruboss/test/responses/simple_properties.xml"/>
+  <mx:XML id="projects" source="ruboss/test/responses/projects.xml"/>
+  <mx:XML id="tasks" source="ruboss/test/responses/tasks.xml"/>
+  <mx:XML id="contractors" source="ruboss/test/responses/contractors.xml"/>
+
 	<mx:XML id="addresses" source="ruboss/test/responses/addresses.xml"/>
 	<mx:XML id="bug26user" source="ruboss/test/responses/bug26/user.xml"/>
 	<mx:XML id="bug26contactA" source="ruboss/test/responses/bug26/contactA.xml"/>

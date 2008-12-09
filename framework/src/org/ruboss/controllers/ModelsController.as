@@ -345,7 +345,7 @@ package org.ruboss.controllers {
      * @param object can be a model class or specific model instance
      */
     public function reset(object:Object = null):void {
-      //state.reset(object);   
+      state.reset(object);   
     }
 
     /**

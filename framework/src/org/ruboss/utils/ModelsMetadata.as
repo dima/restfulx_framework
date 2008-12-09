@@ -4,6 +4,8 @@ package org.ruboss.utils {
   import flash.utils.describeType;
   import flash.utils.getQualifiedClassName;
   
+  import mx.collections.ArrayCollection;
+  
   public class ModelsMetadata {
     
     public var models:Array;
@@ -29,6 +31,8 @@ package org.ruboss.utils {
     public var eager:Dictionary;
 
     public var lazy:Dictionary;
+    
+    public var hmts:Dictionary;
 
     public function ModelsMetadata(models:Array) {
       this.models = models;
@@ -43,8 +47,11 @@ package org.ruboss.utils {
       shown = new Dictionary;
       waiting = new Dictionary;
       
+      pages = new Dictionary;
+      
       eager = new Dictionary;
       lazy = new Dictionary;
+      hmts = new Dictionary;
       
       for each (var model:Class in models) {
         var controllerName:String = RubossUtils.getResourceName(model);
@@ -53,7 +60,7 @@ package org.ruboss.utils {
         // don't store any metadata for a model that doesn't have a controller
         if (RubossUtils.isEmpty(controllerName)) {
           throw new Error("model: " + model + " with qualified name: " + fqn +
-            " doesn't have a valid [Resource(name='*'] annotation.");
+            " doesn't have a valid [Resource(name='*')] annotation.");
         }
         
         var modelName:String = fqn.split("::")[1] as String;
@@ -75,6 +82,13 @@ package org.ruboss.utils {
         names[fqn] = {single: defaultSingleName, plural: defaultPluralName};
         
         controllers[fqn] = controllerName;
+        
+        lazy[fqn] = new Array;
+        eager[fqn] = new Array;
+
+        pages[fqn] = -1;
+        
+        shown[fqn] = new ArrayCollection;
 
         registerClassAlias(fqn.replace("::","."), model);
       }
@@ -84,6 +98,31 @@ package org.ruboss.utils {
       models.forEach(function(elm:Class, index:int, array:Array):void {
         extractMetadata(elm);
       });
+    }
+
+    /**
+     * Resets model metadata.
+     *  
+     * @param object can be a model class or specific model instance
+     */
+    public function reset(object:Object = null):void {
+      // if no argument is specified, reset everything
+      if (object == null) {
+        indexed = new Dictionary;
+        for (var model:String in shown) {
+          shown[model] = new ArrayCollection;
+        }
+      } else {
+        var fqn:String = getQualifiedClassName(object);
+
+        if (object is Class) {
+          indexed[fqn] = false;
+        } else {
+          var items:ArrayCollection = shown[fqn] as ArrayCollection;
+          var offset:int = items.getItemIndex(object["id"]);
+          if (offset > -1) items.removeItemAt(offset);     
+        }
+      }  
     }
     
     private function extractMetadata(model:Class):void {
@@ -101,25 +140,28 @@ package org.ruboss.utils {
           var refName:String = node.@name;
           var referAs:String;
           
+          var dependencies:Array = new Array;
+          var descriptor:XML;
+          
           if (!types[refType]) {
             // we can try to figure out the type by the name of the variable
             refType = fqns[refName];
             
             // it could be a ModelsCollection or a polymorphic type Object, or interface, etc.
             // we need more info to figure out what type of objects are represented by this variable
-            var descriptor:XML = null;
             if (RubossUtils.isBelongsTo(node)) {
               descriptor = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
               if (descriptor) {
                 referAs = descriptor.arg.(@key == "referAs").@value.toString();
               }
-              if (RubossUtils.isPolymorphicBelongsTo(node)) {
-                // it's a polymorphic [BelongsTo] relationship 
-              }
             } else if (RubossUtils.isHasOne(node)) {
               descriptor = RubossUtils.getAttributeAnnotation(node, "HasOne")[0];
             } else if (RubossUtils.isHasMany(node)) {
               descriptor = RubossUtils.getAttributeAnnotation(node, "HasMany")[0];
+              if (refName == "children") {
+                refType = fqn;
+              }
+              // hook up N-N = has_many(:through) relationships
             }
             
             if (descriptor) {
@@ -135,17 +177,38 @@ package org.ruboss.utils {
               if (descriptor) {
                 referAs = descriptor.arg.(@key == "referAs").@value.toString();
               }
-              if (RubossUtils.isPolymorphicBelongsTo(node)) {
-                // it's a polymorphic [BelongsTo] relationship 
-              }
             }       
           }
 
+          if (RubossUtils.isBelongsTo(node)) extractDependencies(dependencies, node, descriptor, refType);
+
           refs[fqn][refName] = {type: refType, referAs: referAs};
+          
+          for each (var dependency:String in dependencies) {
+            if (controllers[dependency] && dependency != fqn && (eager[fqn] as Array).indexOf(dependency) == -1) {
+              if (!RubossUtils.isLazy(node)) {
+                (lazy[fqn] as Array).push(dependency);
+              }
+              (eager[fqn] as Array).push(dependency);
+            }
+          }
         } catch (e:Error) {
           
         }
       } 
+    }
+    
+    private function extractDependencies(dependencies:Array, node:XML, descriptor:XML, defaultRefType:String):void {
+      if (RubossUtils.isPolymorphicBelongsTo(node)) {
+        for each (var shortName:String in descriptor.arg.(@key == "dependsOn").@value.toString().split(",")) {
+          var key:String = fqns[shortName];
+          if (key != null && dependencies.indexOf(key) == -1) {
+            dependencies.push(key);
+          }
+        }
+      } else if (dependencies.indexOf(defaultRefType) == -1) {
+        dependencies.push(defaultRefType);
+      }      
     }
   }
 }
