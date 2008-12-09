@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<authors type="array">
+  <author>
+    <book_id type="integer">404163108</book_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">25071052</id>
+    <name>Author4NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </author>
+  <author>
+    <book_id type="integer">968145068</book_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">342316368</id>
+    <name>Author2NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </author>
+  <author>
+    <book_id type="integer">1011352304</book_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">385523604</id>
+    <name>Author1NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </author>
+  <author>
+    <book_id type="integer">1023124237</book_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">790999879</id>
+    <name>Author3NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </author>
+</authors>

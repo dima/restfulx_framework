@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<billable_weeks type="array">
+  <billable_week>
+    <client_id type="integer">448453611</client_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">137599656</id>
+    <name>BillableWeek3NameString</name>
+    <timesheet_id type="integer">1043985544</timesheet_id>
+    <total type="decimal">9.99</total>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </billable_week>
+  <billable_week>
+    <client_id type="integer">186581976</client_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">144692243</id>
+    <name>BillableWeek4NameString</name>
+    <timesheet_id type="integer">413913277</timesheet_id>
+    <total type="decimal">9.99</total>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </billable_week>
+  <billable_week>
+    <client_id type="integer">823597740</client_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">736260131</id>
+    <name>BillableWeek2NameString</name>
+    <timesheet_id type="integer">846481651</timesheet_id>
+    <total type="decimal">9.99</total>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </billable_week>
+  <billable_week>
+    <client_id type="integer">866804976</client_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">779467367</id>
+    <name>BillableWeek1NameString</name>
+    <timesheet_id type="integer">889688887</timesheet_id>
+    <total type="decimal">9.99</total>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </billable_week>
+</billable_weeks>

@@ -201,7 +201,7 @@ package org.ruboss.serializers {
             }
 
             if (updatingExistingReference && object[targetName] != ref) {
-              cleanupModelReferences(fqn, object);
+              cleanupModelReferences(object, fqn);
             }
             
             var pluralName:String = state.refs[fqn][targetName]["referAs"];
@@ -244,7 +244,6 @@ package org.ruboss.serializers {
               ObjectUtil.hasMetadata(object, targetName, "BelongsTo")) {
               var nestedRef:Object = unmarshallNode(element, targetType);
               object[targetName] = nestedRef;
-              addItemToCache(nestedRef, targetType);
             }
           } else {
             object[targetName] = RubossUtils.cast(targetName, element.@type, element.toString());
@@ -254,6 +253,7 @@ package org.ruboss.serializers {
       
       object["fetched"] = true;
       addItemToCache(object, fqn);
+      processHasManyThroughRelationships(object, fqn);
 
       return object;        
     }
@@ -276,7 +276,7 @@ package org.ruboss.serializers {
     
     private function processNestedArray(element:XML, type:String):void {
       for each (var nestedElement:XML in element.children()) {
-        addItemToCache(unmarshallNode(nestedElement, type), type);
+        unmarshallNode(nestedElement, type);
       }     
     }
   }

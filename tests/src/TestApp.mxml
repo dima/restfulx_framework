@@ -40,7 +40,13 @@
           movies: movies,
           actors: actors,
           payable_accounts: payable_accounts,
-          receivable_accounts: receivable_accounts
+          receivable_accounts: receivable_accounts,
+          billable_weeks: billable_weeks,
+          clients: clients,
+          timesheets: timesheets,
+          stores: stores,
+          books: books,
+          authors: authors
         }
 
         MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
@@ -90,18 +96,39 @@
  			}
 		]]>
 	</mx:Script>
+	<!-- basic properties -->
   <mx:XML id="simple_properties" source="ruboss/test/responses/simple_properties.xml"/>
+  
+  <!-- basic relationships -->
   <mx:XML id="projects" source="ruboss/test/responses/projects.xml"/>
   <mx:XML id="tasks" source="ruboss/test/responses/tasks.xml"/>
   <mx:XML id="contractors" source="ruboss/test/responses/contractors.xml"/>
+  
+  <!-- polymorphic relationships -->
   <mx:XML id="locations" source="ruboss/test/responses/locations.xml"/>
   <mx:XML id="customers" source="ruboss/test/responses/customers.xml"/>
   <mx:XML id="employees" source="ruboss/test/responses/employees.xml"/>
+  
+  <!-- tree-like structures -->
   <mx:XML id="categories" source="ruboss/test/responses/categories.xml"/>
+  
+  <!-- different key relationships -->
   <mx:XML id="movies" source="ruboss/test/responses/movies.xml"/>
   <mx:XML id="actors" source="ruboss/test/responses/actors.xml"/>
+  
+  <!-- STI -->
   <mx:XML id="payable_accounts" source="ruboss/test/responses/payable_accounts.xml"/>
   <mx:XML id="receivable_accounts" source="ruboss/test/responses/receivable_accounts.xml"/>
+
+  <!-- HasMany(through) form 1 -->
+  <mx:XML id="billable_weeks" source="ruboss/test/responses/billable_weeks.xml"/>
+  <mx:XML id="clients" source="ruboss/test/responses/clients.xml"/>
+  <mx:XML id="timesheets" source="ruboss/test/responses/timesheets.xml"/>
+
+  <!-- HasMany(through) form 2 -->
+  <mx:XML id="stores" source="ruboss/test/responses/stores.xml"/>
+  <mx:XML id="books" source="ruboss/test/responses/books.xml"/>
+  <mx:XML id="authors" source="ruboss/test/responses/authors.xml"/>
 
 	<mx:XML id="addresses" source="ruboss/test/responses/addresses.xml"/>
 	<mx:XML id="bug26user" source="ruboss/test/responses/bug26/user.xml"/>

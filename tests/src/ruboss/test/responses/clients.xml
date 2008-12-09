@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clients type="array">
+  <client>
+    <city>Client4CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">186581976</id>
+    <name>Client4NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </client>
+  <client>
+    <city>Client3CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">448453611</id>
+    <name>Client3NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </client>
+  <client>
+    <city>Client2CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">823597740</id>
+    <name>Client2NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </client>
+  <client>
+    <city>Client1CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">866804976</id>
+    <name>Client1NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </client>
+</clients>
