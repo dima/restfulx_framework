@@ -4,9 +4,9 @@ package ruboss.test.cases {
   import org.ruboss.Ruboss;
   import org.ruboss.utils.RubossUtils;
   
-  import ruboss.test.models.Address;
   import ruboss.test.models.Article;
   import ruboss.test.models.Section;
+  import ruboss.test.models.SimpleProperty;
 
   public class RubossUtilTest extends TestCase {
     public function RubossUtilTest(methodName:String) {
@@ -29,23 +29,23 @@ package ruboss.test.cases {
         RubossUtils.addObjectIdToResourceURL(RubossUtils.nestResource(article, [section]), article);
       assertEquals("/admin/sections/2/articles/1.fxml", articleUrlNestedBySection);
       
-      var address:Address = new Address;
-      address.id = "3";
+      var simpleProperty:SimpleProperty = new SimpleProperty;
+      simpleProperty.id = "3";
       
-      var addressUrl:String = Ruboss.httpRootUrl +
-        RubossUtils.nestResource(address);
-      assertEquals("/addresses.fxml", addressUrl);
+      var simplePropertyUrl:String = Ruboss.httpRootUrl +
+        RubossUtils.nestResource(simpleProperty);
+      assertEquals("/simple_properties.fxml", simplePropertyUrl);
       
-      var addressUrlForUpdateDestroy:String = RubossUtils.addObjectIdToResourceURL(addressUrl, address);
+      var simplePropertyUrlForUpdateDestroy:String = RubossUtils.addObjectIdToResourceURL(simplePropertyUrl, simpleProperty);
         
-      assertEquals("/addresses/3.fxml", addressUrlForUpdateDestroy);
+      assertEquals("/simple_properties/3.fxml", simplePropertyUrlForUpdateDestroy);
       
       var multipleNestedArticleUrl:String = Ruboss.httpRootUrl + 
-        RubossUtils.nestResource(article, [section, address]);
+        RubossUtils.nestResource(article, [section, simpleProperty]);
         
-      assertEquals("/admin/sections/2/addresses/3/articles.fxml", multipleNestedArticleUrl);
+      assertEquals("/admin/sections/2/simple_properties/3/articles.fxml", multipleNestedArticleUrl);
       
-      assertEquals("/admin/sections/2/addresses/3/articles/1.fxml", 
+      assertEquals("/admin/sections/2/simple_properties/3/articles/1.fxml", 
         RubossUtils.addObjectIdToResourceURL(multipleNestedArticleUrl, article));
     }
   }
