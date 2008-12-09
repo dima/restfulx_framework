@@ -187,6 +187,14 @@ package org.ruboss.serializers {
           // reference and set up biderctional links between models
           if (isRef) {
             var refId:String = element.toString();
+            if (RubossUtils.isEmpty(refId)) {
+              if (isParentRef) {
+                continue;
+              } else {
+                throw new Error("error retrieving id from model: " + fqn + ", property: " + targetName);
+              }
+            }
+            
             var ref:Object = ModelsCollection(Ruboss.models.cache[targetType]).withId(refId);
             if (ref == null) {
               ref = initializeModel(refId, targetType);
