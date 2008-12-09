@@ -38,7 +38,9 @@
           customers: customers,
           categories: categories,
           movies: movies,
-          actors: actors
+          actors: actors,
+          payable_accounts: payable_accounts,
+          receivable_accounts: receivable_accounts
         }
 
         MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
@@ -98,7 +100,8 @@
   <mx:XML id="categories" source="ruboss/test/responses/categories.xml"/>
   <mx:XML id="movies" source="ruboss/test/responses/movies.xml"/>
   <mx:XML id="actors" source="ruboss/test/responses/actors.xml"/>
-
+  <mx:XML id="payable_accounts" source="ruboss/test/responses/payable_accounts.xml"/>
+  <mx:XML id="receivable_accounts" source="ruboss/test/responses/receivable_accounts.xml"/>
 
 	<mx:XML id="addresses" source="ruboss/test/responses/addresses.xml"/>
 	<mx:XML id="bug26user" source="ruboss/test/responses/bug26/user.xml"/>

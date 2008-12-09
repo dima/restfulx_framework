@@ -13,7 +13,9 @@ package ruboss.test.cases.serializers {
   import ruboss.test.models.Category;
   import ruboss.test.models.Contractor;
   import ruboss.test.models.Location;
+  import ruboss.test.models.PayableAccount;
   import ruboss.test.models.Project;
+  import ruboss.test.models.ReceivableAccount;
   import ruboss.test.models.Task;
 
   public class XMLSerializerTest extends TestCase {
@@ -35,7 +37,7 @@ package ruboss.test.cases.serializers {
     
     public function testBasicRelationships():void {
       Ruboss.models.addEventListener(CacheUpdateEvent.ID, onIndex);
-      Ruboss.models.indexAll(Project, Contractor, Task, Location, Category, Actor);
+      Ruboss.models.indexAll(Project, Contractor, Task, Location, Category, Actor, PayableAccount, ReceivableAccount);
     }
     
     private function onIndex(event:CacheUpdateEvent):void {
