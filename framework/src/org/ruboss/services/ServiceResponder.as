@@ -56,26 +56,18 @@ package org.ruboss.services {
       if (handler != null) {
         if (!service.hasErrors(event.result)) {
           var fqn:String = service.peek(event.result);
-          if (checkResultOrder(fqn, event)) {
-            if (fqn != null) Ruboss.log.debug("handling response for: " + fqn);
-            var checkedResult:Object = service.unmarshall(event.result);
-            handler(checkedResult);
-            for each (var dependant:Object in controller.state.queue[fqn]) {
-              var target:Object = dependant["target"];
-              var targetEvent:Object = dependant["event"];
-              IResponder(target).result(targetEvent);
-            }
-            // OK so we notified all the dependants, need to clean up
-            controller.state.queue[fqn] = new Array;
-            controller.state.fetching[fqn] = new Array;
-            // and fire user's callback responder here
-            if (afterCallback != null) {
-              invokeAfterCallback(checkedResult);
-            }     
+          if (fqn != null) {
+            Ruboss.log.debug("handling response for: " + fqn);
+            delete controller.state.waiting[fqn];
           }
           
-          //reset the standalone flag
-          delete controller.state.standalone[fqn];
+          var result:Object = service.unmarshall(event.result);
+          handler(result);
+          
+          // and fire user's callback responder here
+          if (afterCallback != null) {
+            invokeAfterCallback(result);     
+          }
         }
       }
     }
@@ -89,43 +81,6 @@ package org.ruboss.services {
       controller.dispatchEvent(new ServiceCallStopEvent);
       invokeAfterCallbackErrorHandler(error);
       Ruboss.log.error(error.toString());
-    }
-
-    private function checkResultOrder(fqn:String, event:Object):Boolean {
-      // if we didn't get an fqn from the service provider or we explicitly don't need to do
-      // checking then just return true
-      if (!fqn || !checkOrder) return true;
-      
-      var dependencies:Array = controller.state.fetching[fqn];
-            
-      if (!controller.state.standalone[fqn]) {
-        for each (var dependency:String in dependencies) {
-          // if we are waintg for this dependency and it's still missing, queue this response 
-          // for later 
-          if (controller.state.waiting[dependency]) {
-            Ruboss.log.debug("missing dependency: " + dependency + " of: " + fqn + 
-              " queuing this response until the dependency is received.");
-            (Ruboss.models.state.queue[dependency] as Array).push({"target":this, 
-              "event":event});
-            return false;
-          }
-        }
-      }
-
-      // if we didn't need to queue this response we should go through the current
-      // fetching stack and remove this fqn, so that the other models don't need to wait
-      // for it
-      for (var name:String in controller.state.fetching) {
-        var fetching:Array = controller.state.fetching[name] as Array;
-        var toRemove:int = fetching.indexOf(fqn);
-        if (toRemove > -1) {
-          fetching.splice(toRemove, 1);
-        }
-      }
-      
-      // OK, so looks like we have all the dependencies
-      delete controller.state.waiting[fqn];
-      return true;
     }
     
     private function invokeAfterCallback(result:Object):void {

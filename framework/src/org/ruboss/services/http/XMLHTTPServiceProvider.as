@@ -28,7 +28,7 @@ package org.ruboss.services.http {
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.XMLServiceErrors;
-  import org.ruboss.utils.ModelsStateMetadata;
+  import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.RubossFileReference;
   import org.ruboss.utils.RubossUtils;
 
@@ -40,7 +40,7 @@ package org.ruboss.services.http {
     /** service id */
     public static const ID:int = ServicesController.generateId();
         
-    protected var state:ModelsStateMetadata;
+    protected var state:ModelsMetadata;
     
     protected var urlSuffix:String;
     
@@ -100,11 +100,7 @@ package org.ruboss.services.http {
     public function peek(object:Object):String {
       var xmlFragmentName:String = XML(object).localName().toString();
       Ruboss.log.debug("peeking at: " + xmlFragmentName);
-            
-      var objectName:String = RubossUtils.toCamelCase(xmlFragmentName);
-      
-      return (state.fqns[xmlFragmentName] == null) ? state.keys[objectName] : 
-        state.fqns[xmlFragmentName];
+      return state.fqns[xmlFragmentName];
     }
     
     /**
@@ -189,7 +185,7 @@ package org.ruboss.services.http {
 
     protected function uploadFile(httpService:HTTPService, object:Object, responder:IResponder):void {      
       var fqn:String = getQualifiedClassName(object);
-      var localName:String = RubossUtils.toSnakeCase(state.keys[fqn]);
+      var localName:String = RubossUtils.toSnakeCase(fqn.split("::")[1]);
       var file:RubossFileReference = RubossFileReference(object["attachment"]);
       
       var payload:URLVariables = new URLVariables;

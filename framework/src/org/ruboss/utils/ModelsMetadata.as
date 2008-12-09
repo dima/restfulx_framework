@@ -1,9 +1,14 @@
 package org.ruboss.utils {
+  import flash.net.registerClassAlias;
   import flash.utils.Dictionary;
   import flash.utils.describeType;
   import flash.utils.getQualifiedClassName;
   
   public class ModelsMetadata {
+    
+    public var models:Array;
+    
+    public var controllers:Dictionary;
     
     public var refs:Dictionary;
 
@@ -12,12 +17,34 @@ package org.ruboss.utils {
     public var types:Dictionary;
     
     public var names:Dictionary;
+    
+    public var indexed:Dictionary;
+    
+    public var shown:Dictionary;
+    
+    public var waiting:Dictionary;
+    
+    public var pages:Dictionary;
+
+    public var eager:Dictionary;
+
+    public var lazy:Dictionary;
 
     public function ModelsMetadata(models:Array) {
+      this.models = models;
+      
+      controllers = new Dictionary;
       refs = new Dictionary;
       fqns = new Dictionary;
       types = new Dictionary;
       names = new Dictionary;
+      
+      indexed = new Dictionary;
+      shown = new Dictionary;
+      waiting = new Dictionary;
+      
+      eager = new Dictionary;
+      lazy = new Dictionary;
       
       for each (var model:Class in models) {
         var controllerName:String = RubossUtils.getResourceName(model);
@@ -46,6 +73,10 @@ package org.ruboss.utils {
         fqns[defaultPluralName] = fqn;
         
         names[fqn] = {single: defaultSingleName, plural: defaultPluralName};
+        
+        controllers[fqn] = controllerName;
+
+        registerClassAlias(fqn.replace("::","."), model);
       }
       
       // once we have set up the core data structures we need another pass to compute 
@@ -70,7 +101,6 @@ package org.ruboss.utils {
           var refName:String = node.@name;
           var referAs:String;
           
-          // it's a [BelongsTo] or [HasOne] annotation that explicitly specifies the type
           if (!types[refType]) {
             // we can try to figure out the type by the name of the variable
             refType = fqns[refName];
@@ -80,6 +110,9 @@ package org.ruboss.utils {
             var descriptor:XML = null;
             if (RubossUtils.isBelongsTo(node)) {
               descriptor = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+              if (descriptor) {
+                referAs = descriptor.arg.(@key == "referAs").@value.toString();
+              }
               if (RubossUtils.isPolymorphicBelongsTo(node)) {
                 // it's a polymorphic [BelongsTo] relationship 
               }
@@ -94,9 +127,20 @@ package org.ruboss.utils {
               if (fqns[implicitType]) {
                 refType = fqns[implicitType];
               }
-              referAs = descriptor.arg.(@key == "name").@value.toString();
+            }       
+          } else {
+            // it's a [BelongsTo] or [HasOne] annotation that explicitly specifies the type
+            if (RubossUtils.isBelongsTo(node)) {
+              descriptor = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+              if (descriptor) {
+                referAs = descriptor.arg.(@key == "referAs").@value.toString();
+              }
+              if (RubossUtils.isPolymorphicBelongsTo(node)) {
+                // it's a polymorphic [BelongsTo] relationship 
+              }
             }       
           }
+
           refs[fqn][refName] = {type: refType, referAs: referAs};
         } catch (e:Error) {
           

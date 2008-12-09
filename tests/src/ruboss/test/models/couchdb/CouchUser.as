@@ -1,4 +1,4 @@
-package ruboss.test.models {
+package ruboss.test.models.couchdb {
   import org.ruboss.models.RubossModel;
 
   [Bindable]

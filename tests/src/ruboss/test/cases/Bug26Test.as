@@ -6,8 +6,8 @@ package ruboss.test.cases {
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ModelsController;
   
-  import ruboss.test.models.Contact;
-  import ruboss.test.models.User;
+  import ruboss.test.models.bug26.Contact;
+  import ruboss.test.models.bug26.User;
 
   public class Bug26Test extends TestCase {
     public function Bug26Test(methodName:String) {

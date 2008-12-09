@@ -1,4 +1,4 @@
-package ruboss.test.models {
+package ruboss.test.models.bug26 {
   import org.ruboss.models.RubossModel;
 
   [Bindable]

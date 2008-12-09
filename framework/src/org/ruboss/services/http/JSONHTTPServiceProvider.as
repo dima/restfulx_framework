@@ -48,7 +48,7 @@ package org.ruboss.services.http {
       try {
         var objectName:String = (object as String).match(/"ruby_class":"(\w+)"/)[1];
         Ruboss.log.debug("peeking at: " + objectName);
-        return state.keys[RubossUtils.lowerCaseFirst(objectName)];
+        return state.fqns[objectName];
       } catch (e:Error) {
         Ruboss.log.error("failed to peek into JSON response. ruby_class property is missing.");
       }

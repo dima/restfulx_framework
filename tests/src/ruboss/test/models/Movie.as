@@ -2,20 +2,20 @@ package ruboss.test.models {
   import org.ruboss.collections.ModelsCollection;
   import org.ruboss.models.RubossModel;
   
-  [Resource(name="projects")]
+  [Resource(name="movies")]
   [Bindable]
-  public class Project extends RubossModel {
+  public class Movie extends RubossModel {
     public static const LABEL:String = "name";
 
     public var name:String;
 
     [HasOne]
-    public var contractor:Contractor;
-        
-    [HasMany]
-    public var tasks:ModelsCollection;
+    public var leadActor:Actor;
     
-    public function Project() {
+    [HasMany]
+    public var actors:ModelsCollection;
+    
+    public function Movie() {
       super(LABEL);
     }
   }

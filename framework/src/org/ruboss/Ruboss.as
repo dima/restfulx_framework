@@ -64,7 +64,7 @@ package org.ruboss {
     
     /** default http controller implementation to use */
     public static var httpController:Class = AuxHTTPController;
-    
+            
     /** 
      * If http controller handler function is set, it allows you to override 
      * behaviour of the send() function in the controller.
@@ -74,7 +74,7 @@ package org.ruboss {
      *  method:int = SimpleHTTPController.GET)
      */
     public static var httpControllerHandler:Function;
-
+    
     /** 
      * metadata allows us to tag arbitrary data along with any provider requests
      * this is typically useful with HTTP provider (but may be useful with other providers too).
@@ -234,7 +234,7 @@ package org.ruboss {
      * @param maxItems maximum number of items
      */
     public static function setCacheThreshold(clazz:Class, maxItems:int):void {
-      cacheThreshold[Ruboss.models.names[clazz]] = maxItems;
+      cacheThreshold[Ruboss.models.state.types[clazz]] = maxItems;
     }
     
     /**
@@ -242,7 +242,7 @@ package org.ruboss {
      * @see setCacheThreshold
      */
     public static function resetCacheThreshold(clazz:Class):void {
-      delete cacheThreshold[Ruboss.models.names[clazz]];
+      delete cacheThreshold[Ruboss.models.state.types[clazz]];
     }
 
     /**

@@ -6,15 +6,9 @@ package org.ruboss.serializers {
   import org.ruboss.utils.ModelsStateMetadata;
   import org.ruboss.utils.TypedArray;
   
-  public class JSONSerializer implements ISerializer {
-
-    protected var state:ModelsStateMetadata;
-
-    public function JSONSerializer() {
-      state = Ruboss.models.state;
-    }
+  public class JSONSerializer extends GenericSerializer {
     
-    public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
+    public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       var marshalled:Object = Ruboss.serializers.vo.marshall(object, recursive, metadata);
       marshalled["ruby_class"] = marshalled["clazz"];
       delete marshalled["clazz"];
@@ -22,7 +16,7 @@ package org.ruboss.serializers {
       return JSON.encode(marshalled);  
     }
 
-    public function unmarshall(object:Object):Object {
+    public override function unmarshall(object:Object):Object {
       if (object is TypedArray || object is RubossModel) {
         return object;
       }

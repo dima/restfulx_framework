@@ -2,20 +2,20 @@ package ruboss.test.models {
   import org.ruboss.collections.ModelsCollection;
   import org.ruboss.models.RubossModel;
   
-  [Resource(name="projects")]
+  [Resource(name="books")]
   [Bindable]
-  public class Project extends RubossModel {
+  public class Book extends RubossModel {
     public static const LABEL:String = "name";
 
     public var name:String;
 
-    [HasOne]
-    public var contractor:Contractor;
-        
+    [BelongsTo]
+    public var store:Store;
+
     [HasMany]
-    public var tasks:ModelsCollection;
+    public var authors:ModelsCollection;
     
-    public function Project() {
+    public function Book() {
       super(LABEL);
     }
   }

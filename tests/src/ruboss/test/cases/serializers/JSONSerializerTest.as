@@ -5,7 +5,7 @@ package ruboss.test.cases.serializers {
   import org.ruboss.serializers.JSONSerializer;
   import org.ruboss.utils.TypedArray;
   
-  import ruboss.test.models.CouchAddress;
+  import ruboss.test.models.couchdb.CouchAddress;
 
   public class JSONSerializerTest extends TestCase {
     

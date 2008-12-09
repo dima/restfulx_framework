@@ -4,21 +4,21 @@ package ruboss.test.cases {
   import mx.core.Application;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.serializers.XML2Serializer;
+  import org.ruboss.serializers.XMLSerializer;
   import org.ruboss.utils.ModelsMetadata;
   
-  import ruboss.test.models.User;
+  import ruboss.test.models.bug26.User;
 
   public class ModelsMetadataTest extends TestCase {
-    public var serializer:XML2Serializer;
+    public var serializer:XMLSerializer;
     
     public function ModelsMetadataTest(methodName:String) {
       super(methodName);
-      serializer = new XML2Serializer;
+      serializer = new XMLSerializer;
     }
     
     public function testMetadataExtraction():void {
-      var state:ModelsMetadata = Ruboss.models.metastate;
+      var state:ModelsMetadata = Ruboss.models.state;
       
       trace(state);
 

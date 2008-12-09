@@ -5,14 +5,18 @@ package ruboss.test.controllers {
   
   import ruboss.test.commands.*;
   import ruboss.test.models.*;
+  import ruboss.test.models.bug26.*;
+  import ruboss.test.models.couchdb.*;
+
 
   public class RubossTestController extends RubossApplicationController {
     private static var controller:RubossTestController;
     
     public var testCommandData:String;
     
-    public static var models:Array = [Address, Article, Section, CouchUser, CouchAddress,
-      Contact, Key, Kv, User, UserGroup, Project, Task]; /* Models */
+    public static var models:Array = [Account, Actor, Author, BillableWeek, Book, Category, Client, Contractor, Customer,
+     Employee, Location, Movie, PayableAccount, Project, ReceivableAccount, SimpleProperty, Store, Task, Timesheet,
+     Address, Article, Section, CouchUser, CouchAddress, Contact, Key, Kv, User, UserGroup]; /* Models */
     
     public function RubossTestController(enforcer:SingletonEnforcer, extraServices:Array,
       defaultServiceId:int = -1) {

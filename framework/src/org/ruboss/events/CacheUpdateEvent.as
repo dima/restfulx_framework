@@ -47,7 +47,7 @@ package org.ruboss.events {
     }
     
     public function isFor(model:Class):Boolean {
-      return fqn == Ruboss.models.names[model];
+      return fqn == Ruboss.models.state.types[model];
     }
     
     public function isIndex():Boolean {

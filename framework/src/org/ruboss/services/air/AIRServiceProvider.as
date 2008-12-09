@@ -29,7 +29,7 @@ package org.ruboss.services.air {
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.IServiceProvider;
-  import org.ruboss.utils.ModelsStateMetadata;
+  import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
 
@@ -51,7 +51,7 @@ package org.ruboss.services.air {
       "DateTime" : "DATETIME"
     }
     
-    protected var state:ModelsStateMetadata;
+    protected var state:ModelsMetadata;
     
     private var pending:Array;
     
@@ -137,7 +137,7 @@ package org.ruboss.services.air {
      * @see org.ruboss.services.IServiceProvider#index
      */
     public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var fqn:String = Ruboss.models.names[clazz];
+      var fqn:String = Ruboss.models.state.types[clazz];
       if (indexing[fqn]) return;
       
       var statement:SQLStatement = getSQLStatement(sql[fqn]["select"]);
@@ -388,7 +388,6 @@ package org.ruboss.services.air {
       
       delete indexing[fqn];
       delete state.waiting[fqn];
-      state.fetching[fqn] = new Array;
       invokeResponder(token.responders[0], result);    
     }
   }

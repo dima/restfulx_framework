@@ -1,17 +1,17 @@
 package ruboss.test.models {
   import org.ruboss.models.RubossModel;
   
-  [Resource(name="tasks")]
+  [Resource(name="customers")]
   [Bindable]
-  public class Task extends RubossModel {
+  public class Customer extends RubossModel {
     public static const LABEL:String = "name";
 
     public var name:String;
 
-    [BelongsTo]
-    public var project:Project;
+    [HasOne]
+    public var location:Location;
 
-    public function Task() {
+    public function Customer() {
       super(LABEL);
     }
   }
