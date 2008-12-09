@@ -215,15 +215,15 @@ package org.ruboss.utils {
     
     private function extractHasManyThroughRelationships(node:XML, descriptor:XML, fqn:String):void {
       var value:String = descriptor.arg.(@key == "through").@value.toString();
+      var refType:String = descriptor.arg.(@key == "type").@value.toString();
       if (!RubossUtils.isEmpty(value)) {
-        var refType:String = fqns[value];
         var target:String = RubossUtils.toSnakeCase(value);
         var attribute:String = node.@name;
 
         if (hmts[target] == null) {
           hmts[target] = new Array;
         }
-        (hmts[target] as Array).push({type: fqn, attribute: attribute});
+        (hmts[target] as Array).push({type: fqn, attribute: attribute, refType: refType});
       }
     }
   }

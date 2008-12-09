@@ -9,9 +9,9 @@ package ruboss.test.cases.serializers {
   import org.ruboss.serializers.XMLSerializer;
   import org.ruboss.utils.TypedArray;
   
-  import ruboss.test.models.Author;
-  import ruboss.test.models.Book;
-  import ruboss.test.models.Store;
+  import ruboss.test.models.BillableWeek;
+  import ruboss.test.models.Client;
+  import ruboss.test.models.Timesheet;
 
   public class XMLSerializerTest extends TestCase {
     
@@ -33,7 +33,7 @@ package ruboss.test.cases.serializers {
     public function testBasicRelationships():void {
       Ruboss.models.addEventListener(CacheUpdateEvent.ID, onIndex);
       //Ruboss.models.indexAll(Project, Contractor, Task, Location, Category, Actor, PayableAccount, ReceivableAccount);
-      Ruboss.models.indexAll(Author, Store, Book);
+      Ruboss.models.indexAll(BillableWeek, Client, Timesheet);
     }
     
     private function onIndex(event:CacheUpdateEvent):void {

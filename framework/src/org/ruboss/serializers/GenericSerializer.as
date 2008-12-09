@@ -28,11 +28,15 @@ package org.ruboss.serializers {
           // relationship["type"] = fqn (e.g. package::Client)
           // relationship["attribute"] = plural name of the reference (e.g. timesheets)
           var relType:String = relationship["type"];
+          
+          // if the relationship attribute is called something other than the plural of the class name
+          // refType will specify what it is
+          var refKey:String = (!RubossUtils.isEmpty(relationship["refType"])) ? relationship["refType"] : relationship["attribute"];
 
           var localSingleName:String = state.names[relType]["single"];
           var localPluralName:String = state.names[relType]["plural"];
 
-          var refType:String = state.fqns[relationship["attribute"]];
+          var refType:String = state.fqns[refKey];
           var refName:String = state.names[refType]["single"];
   
           // e.g. object[client][timesheets]
