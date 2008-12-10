@@ -1,6 +1,5 @@
 package org.ruboss.serializers {
   import flash.utils.describeType;
-  import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
   
   import mx.utils.ObjectUtil;
@@ -117,7 +116,8 @@ package org.ruboss.serializers {
       return new XML(result);
     }
     
-    private function unmarshallNode(node:XML, type:String = null):Object {
+    protected override function unmarshallNode(source:Object, type:String = null):Object {
+      var node:XML = XML(source);
       var localName:String = RubossUtils.toCamelCase(node.localName());
       var fqn:String = (!type) ? state.fqns[localName] : type;
       var nodeId:String = node.id;
@@ -126,7 +126,7 @@ package org.ruboss.serializers {
         throw new Error("cannot unmarshall " + node.localName() + " no mapping exists or received a node with invalid id");
       }
       
-      var object:Object = ModelsCollection(Ruboss.models.cache[fqn]).withId(nodeId);
+      var object:Object = ModelsCollection(Ruboss.models.cache.data[fqn]).withId(nodeId);
       
       if (object == null) {
         object = initializeModel(nodeId, fqn);
@@ -136,126 +136,8 @@ package org.ruboss.serializers {
             
       for each (var element:XML in node.elements()) {
         var targetName:String = element.localName();
-        var targetType:String = null;
-        var isRef:Boolean = false;
-        var isParentRef:Boolean = false;
-        var isNestedArray:Boolean = false;
-        var isNestedObject:Boolean = false;
-        
-        // if we got a node with a name that terminates in "_id" we check to see if
-        // it's a model reference       
-        if (targetName.search(/.*_id$/) != -1) {
-          // name to check on the ruboss model object
-          var checkName:String = targetName.replace(/_id$/, "");
-          targetName = RubossUtils.toCamelCase(checkName);
-          if (checkName == "parent") {
-            targetType = fqn;
-            isRef = true;
-            isParentRef = true;
-          } else {
-            // check to see if it's a polymorphic association
-            var polymorphicRef:String = node[checkName + "_type"];
-            if (!RubossUtils.isEmpty(polymorphicRef)) {
-              var polymorphicRefName:String = RubossUtils.lowerCaseFirst(polymorphicRef);
-              if (state.fqns[polymorphicRefName]) {
-                targetType = state.fqns[polymorphicRefName];
-                isRef = true;
-              } else {
-                throw new Error("Polymorphic type: " + polymorphicRef + " is not a valid Ruboss Model type.");
-              }
-            } else if (state.refs[fqn][targetName]) {
-              targetType = state.refs[fqn][targetName]["type"];
-              isRef = true;
-            }
-          }
-        } else {
-          targetName = RubossUtils.toCamelCase(targetName);
-          try {
-            targetType = state.refs[fqn][targetName]["type"];
-            if (element.@type == "array") {
-              isNestedArray = true;
-            } else {
-              isNestedObject = true;
-              if (RubossUtils.isEmpty(targetType)) {
-                // we potentially have a nested polymorphic relationship here
-                var nestedPolymorphicRef:String = node[RubossUtils.toSnakeCase(targetName) + "_type"];
-                if (!RubossUtils.isEmpty(nestedPolymorphicRef)) {
-                  targetType = state.fqns[nestedPolymorphicRef];
-                }
-              }
-            }
-          } catch (e:Error) {
-            // normal property, a-la String
-          }
-        }
-        
-        if (object.hasOwnProperty(targetName)) {
-          // if this property is a reference, try to resolve the 
-          // reference and set up biderctional links between models
-          if (isRef) {
-            var refId:String = element.toString();
-            if (RubossUtils.isEmpty(refId)) {
-              if (isParentRef) {
-                continue;
-              } else {
-                throw new Error("error retrieving id from model: " + fqn + ", property: " + targetName);
-              }
-            }
-            
-            var ref:Object = ModelsCollection(Ruboss.models.cache[targetType]).withId(refId);
-            if (ref == null) {
-              ref = initializeModel(refId, targetType);
-            }
-
-            if (updatingExistingReference && object[targetName] != ref) {
-              cleanupModelReferences(object, fqn);
-            }
-            
-            var pluralName:String = state.refs[fqn][targetName]["referAs"];
-            var singleName:String = pluralName;
-            if (RubossUtils.isEmpty(pluralName)) {
-              pluralName = (isParentRef) ? "children" : state.names[fqn]["plural"];
-              singleName = state.names[fqn]["single"];
-            }
-                
-            // if we've got a plural definition which is annotated with [HasMany] 
-            // it's got to be a 1->N relationship           
-            if (ref != null && ref.hasOwnProperty(pluralName) && 
-              ObjectUtil.hasMetadata(ref, pluralName, "HasMany")) {
-              var items:ModelsCollection = ModelsCollection(ref[pluralName]);
-              if (items == null) {
-                items = new ModelsCollection;
-              }
-              
-              // add (or replace) the current item to the reference collection
-              if (items.hasItem(object)) {
-                items.setItem(object);
-              } else {
-                items.addItem(object);
-              }
-              
-              ref[pluralName] = items;
-
-            // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
-            // link them up
-            } else if (ref != null && ref.hasOwnProperty(singleName) && 
-              ObjectUtil.hasMetadata(ref, singleName, "HasOne")) {
-              ref[singleName] = object;
-            }
-            // and the reverse
-            object[targetName] = ref;
-          } else if (isNestedArray) {
-            object[targetName] = processNestedArray(element, targetType);
-          } else if (isNestedObject) {
-            if (ObjectUtil.hasMetadata(object, targetName, "HasOne") ||
-              ObjectUtil.hasMetadata(object, targetName, "BelongsTo")) {
-              var nestedRef:Object = unmarshallNode(element, targetType);
-              object[targetName] = nestedRef;
-            }
-          } else {
-            object[targetName] = RubossUtils.cast(targetName, element.@type, element.toString());
-          }
-        }
+        unmarshallElement(node, object, element, targetName, RubossUtils.cast(targetName, element.@type, element.toString()), 
+        fqn, updatingExistingReference); 
       }
       
       addItemToCache(object, fqn);
@@ -263,24 +145,9 @@ package org.ruboss.serializers {
 
       return object;        
     }
-
-    private function initializeModel(id:String, fqn:String):Object {
-      var model:Object = new (getDefinitionByName(fqn) as Class);
-      ModelsCollection(Ruboss.models.cache[fqn]).addItem(model);
-      model["id"] = id;
-      return model;
-    }
     
-    private function addItemToCache(item:Object, type:String):void {
-      var cached:ModelsCollection = ModelsCollection(Ruboss.models.cache[type]);
-      if (cached.hasItem(item)) {
-        cached.setItem(item);
-      } else {
-        cached.addItem(item);
-      }      
-    }
-    
-    private function processNestedArray(element:XML, type:String):ModelsCollection {
+    protected override function processNestedArray(array:Object, type:String):ModelsCollection {
+      var element:XML = XML(array);
       var result:ModelsCollection = new ModelsCollection;
       for each (var nestedElement:XML in element.children()) {
         result.addItem(unmarshallNode(nestedElement, type));

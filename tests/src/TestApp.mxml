@@ -72,7 +72,7 @@
         ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
         ts.addTest(new XMLSerializerTest("testSimpleProperties"));
         ts.addTest(new XMLSerializerTest("testComplexProperties"));
-       // ts.addTest(new XMLSerializerTest("testBasicRelationships"));
+        ts.addTest(new XMLSerializerTest("testBasicRelationships"));
 
 
 //        ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));

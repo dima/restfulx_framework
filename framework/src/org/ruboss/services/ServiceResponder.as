@@ -18,7 +18,6 @@ package org.ruboss.services {
   import mx.rpc.IResponder;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.controllers.ModelsController;
   import org.ruboss.events.ServiceCallStopEvent;
   import org.ruboss.utils.TypedArray;
 
@@ -29,25 +28,22 @@ package org.ruboss.services {
 
     private var handler:Function;
     private var service:IServiceProvider;
-    private var controller:ModelsController;
-    private var afterCallback:Object;
-    private var checkOrder:Boolean;
+    private var onSuccess:Object;
+    private var onFailure:Function;
 
     /**
      * @param handler function to call with the unmarshalled result
      * @param service IServiceProvider instance that we are dealing with
-     * @param controller reference to RubossModelsController instance
      * @param checkOrder true if ServiceResponder should enforce order on responses
      * @param afterCallback optional user callback function or IResponder to call when
      *  everything has been *successfully* processed
      */
-    public function ServiceResponder(handler:Function, service:IServiceProvider, 
-      controller:ModelsController, checkOrder:Boolean, afterCallback:Object = null) {
+    public function ServiceResponder(handler:Function, service:IServiceProvider, onSuccess:Object = null, 
+      onFailure:Function = null) {
       this.handler = handler;
       this.service = service;
-      this.controller = controller;
-      this.checkOrder = checkOrder;
-      this.afterCallback = afterCallback;
+      this.onSuccess = onSuccess;
+      this.onFailure = onFailure;
     }
 
     /**
@@ -55,7 +51,7 @@ package org.ruboss.services {
      */
     public function result(event:Object):void {
       CursorManager.removeBusyCursor();
-      controller.dispatchEvent(new ServiceCallStopEvent);
+      Ruboss.models.dispatchEvent(new ServiceCallStopEvent);
       if (handler != null) {
         if (!service.hasErrors(event.result)) {
           var result:Object = service.unmarshall(event.result);
@@ -68,13 +64,13 @@ package org.ruboss.services {
           }
           
           Ruboss.log.debug("handled response for: " + resultType);
-          delete controller.state.waiting[resultType];
+          delete Ruboss.models.state.waiting[resultType];
           
           handler(result);
           
           // and fire user's callback responder here
-          if (afterCallback != null) {
-            invokeAfterCallback(result);     
+          if (onSuccess != null) {
+            invokeOnSuccess(result);     
           }
         }
       }
@@ -86,22 +82,24 @@ package org.ruboss.services {
      */
     public function fault(error:Object):void {
       CursorManager.removeBusyCursor();
-      controller.dispatchEvent(new ServiceCallStopEvent);
-      invokeAfterCallbackErrorHandler(error);
+      Ruboss.models.dispatchEvent(new ServiceCallStopEvent);
+      invokeOnFailure(error);
       Ruboss.log.error(error.toString());
     }
     
-    private function invokeAfterCallback(result:Object):void {
-      if (afterCallback is IResponder) {
-        IResponder(afterCallback).result(result);
-      } else if (afterCallback is Function) {
-        (afterCallback as Function)(result);
+    private function invokeOnSuccess(result:Object):void {
+      if (onSuccess is IResponder) {
+        IResponder(onSuccess).result(result);
+      } else if (onSuccess is Function) {
+        (onSuccess as Function)(result);
       }
     }
     
-    private function invokeAfterCallbackErrorHandler(info:Object):void {
-      if (afterCallback is IResponder) {
-        IResponder(afterCallback).fault(info);
+    private function invokeOnFailure(info:Object):void {
+      if (onSuccess is IResponder) {
+        IResponder(onSuccess).fault(info);
+      } else if (onFailure != null) {
+        onFailure(info);
       } else {
         throw new Error("An error has occured while invoking service provider with id: " + service.id + 
           " :" + info.toString());        

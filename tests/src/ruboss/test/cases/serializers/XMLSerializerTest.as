@@ -60,6 +60,7 @@ package ruboss.test.cases.serializers {
     }
     
     private function onIndex(event:CacheUpdateEvent):void {
+      var models:ModelsController = Ruboss.models;
 
       trace(event);
     }

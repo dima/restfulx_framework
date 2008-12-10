@@ -108,15 +108,15 @@ package org.ruboss.controllers {
       var responder:ItemResponder = null;
       if (!RubossUtils.isEmpty(cacheBy)) {
         if (cacheBy == "create") {
-          cacheHandler = Ruboss.models.onCreate;
+          cacheHandler = Ruboss.models.cache.create;
         } else if (cacheBy == "update") {
-          cacheHandler = Ruboss.models.onUpdate;
+          cacheHandler = Ruboss.models.cache.update;
         } else if (cacheBy == "index") {
-          cacheHandler = Ruboss.models.onIndex;
-        } else if (cacheBy == "page") {
-          cacheHandler = Ruboss.models.onPage;
+          cacheHandler = Ruboss.models.cache.index;
+        } else if (cacheBy == "show") {
+          cacheHandler = Ruboss.models.cache.show;
         } else if (cacheBy == "destroy") {
-          cacheHandler = Ruboss.models.onDestroy;
+          cacheHandler = Ruboss.models.cache.destroy;
         }
         responder = new ItemResponder(unmarshallAndCacheResultHandler, defaultFaultHandler);
       } else if (unmarshall) {

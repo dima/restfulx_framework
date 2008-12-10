@@ -54,10 +54,14 @@ package org.ruboss.models {
      * @param targetServiceId service provider to use
      */
     [Bindable(event="propertyChange")]
-    public function show(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,
+    public function show(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
       fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1):Object {
-      return Ruboss.models.show(this, optionsHashOrAfterCallback, nestedBy, metadata, 
+      return Ruboss.models.show(this, optsOrOnSuccess, onFailure, nestedBy, metadata, 
         fetchDependencies, useLazyMode, targetServiceId);
+    }
+    
+    public function shown():Boolean {
+      return Ruboss.models.shown(this);
     }
 
     /**
@@ -74,10 +78,9 @@ package org.ruboss.models {
      * @param page page to request (only used by index method)
      * @param targetServiceId service provider to use
      */
-    public function reload(optsOrAfterCallback:Object = null, nestedBy:Array = null,
-      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true,
-      append:Boolean = false, targetServiceId:int = -1):void {
-      Ruboss.models.reload(this, optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode, append,
+    public function reload(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
+      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, targetServiceId:int = -1):void {
+      Ruboss.models.reload(this, optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, false,
         targetServiceId);
     }
 
@@ -93,9 +96,9 @@ package org.ruboss.models {
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
      */
-    public function create(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,
+    public function create(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
       targetServiceId:int = -1):void {
-      Ruboss.models.create(this, optionsHashOrAfterCallback, nestedBy, metadata, targetServiceId);
+      Ruboss.models.create(this, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId);
     }
 
     /**
@@ -110,9 +113,9 @@ package org.ruboss.models {
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
      */
-    public function update(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,
+    public function update(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
       targetServiceId:int = -1):void {
-      Ruboss.models.update(this, optionsHashOrAfterCallback, nestedBy, metadata, targetServiceId);
+      Ruboss.models.update(this, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId);
     }
 
     /**
@@ -127,9 +130,9 @@ package org.ruboss.models {
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
      */
-    public function destroy(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,
+    public function destroy(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
       targetServiceId:int = -1):void {
-      Ruboss.models.destroy(this, optionsHashOrAfterCallback, nestedBy, metadata, targetServiceId);
+      Ruboss.models.destroy(this, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId);
     }
 
     /**
