@@ -176,6 +176,13 @@ package org.ruboss.serializers {
               isNestedArray = true;
             } else {
               isNestedObject = true;
+              if (RubossUtils.isEmpty(targetType)) {
+                // we potentially have a nested polymorphic relationship here
+                var nestedPolymorphicRef:String = node[RubossUtils.toSnakeCase(targetName) + "_type"];
+                if (!RubossUtils.isEmpty(nestedPolymorphicRef)) {
+                  targetType = state.fqns[nestedPolymorphicRef];
+                }
+              }
             }
           } catch (e:Error) {
             // normal property, a-la String
@@ -238,7 +245,7 @@ package org.ruboss.serializers {
             // and the reverse
             object[targetName] = ref;
           } else if (isNestedArray) {
-            processNestedArray(element, targetType);
+            object[targetName] = processNestedArray(element, targetType);
           } else if (isNestedObject) {
             if (ObjectUtil.hasMetadata(object, targetName, "HasOne") ||
               ObjectUtil.hasMetadata(object, targetName, "BelongsTo")) {
@@ -273,10 +280,12 @@ package org.ruboss.serializers {
       }      
     }
     
-    private function processNestedArray(element:XML, type:String):void {
+    private function processNestedArray(element:XML, type:String):ModelsCollection {
+      var result:ModelsCollection = new ModelsCollection;
       for each (var nestedElement:XML in element.children()) {
-        unmarshallNode(nestedElement, type);
-      }     
+        result.addItem(unmarshallNode(nestedElement, type));
+      }
+      return result;
     }
   }
 }
