@@ -153,13 +153,17 @@ package org.ruboss.services.air {
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:SQLStatement = getSQLStatement(sql[fqn]["select"] + " WHERE id=" + object["id"]);
-      statement.execute();
+      try {
+        statement.execute();
       
-      var vo:Object = statement.getResult().data[0];
-      vo["clazz"] = fqn.split("::")[1];
-      object = unmarshall(vo);
+        var vo:Object = statement.getResult().data[0];
+        vo["clazz"] = fqn.split("::")[1];
+        object = unmarshall(vo);
       
-      invokeResponder(responder, object);
+        invokeResponderResult(responder, object);
+      } catch (e:Error) {
+        responder.fault(e);
+      }
     }
     
     /**
@@ -192,9 +196,14 @@ package org.ruboss.services.air {
           }
         }
       }
-      statement.execute();
-      object["id"] = statement.getResult().lastInsertRowID;
-      invokeResponder(responder, object);
+      
+      try {
+        statement.execute();
+        object["id"] = statement.getResult().lastInsertRowID;
+        invokeResponderResult(responder, object);
+      } catch (e:Error) {
+        responder.fault(e);
+      }
     }
 
     /**
@@ -227,8 +236,12 @@ package org.ruboss.services.air {
           }
         }
       }
-      sqlStatement.execute();
-      show(object, responder, metadata, nestedBy);
+      try {
+        sqlStatement.execute();
+        show(object, responder, metadata, nestedBy);
+      } catch (e:Error) {
+        responder.fault(e);
+      }
     }
     
     /**
@@ -238,8 +251,12 @@ package org.ruboss.services.air {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["delete"];
       statement = statement.replace("{id}", object["id"]);
-      getSQLStatement(statement).execute();
-      invokeResponder(responder, object);
+      try {
+        getSQLStatement(statement).execute();
+        invokeResponderResult(responder, object);
+      } catch (e:Error) {
+        responder.fault(e);
+      }
     }
     
     private function isInvalidPropertyType(type:String):Boolean {
@@ -348,14 +365,14 @@ package org.ruboss.services.air {
       return sqlStatement;     
     }
     
-    private function invokeResponder(responder:IResponder, result:Object):void {
+    private function invokeResponderResult(responder:IResponder, result:Object):void {
       var event:ResultEvent = new ResultEvent(ResultEvent.RESULT, false, 
         false, result);
       if (responder != null) {
         responder.result(event);
       }
     }
-    
+        
     private function executePendindIndex(event:TimerEvent):void {
       if (pending.length == 0) {
         timer.stop();
@@ -364,24 +381,30 @@ package org.ruboss.services.air {
       
       var query:Object = pending.shift();
       if (!query) return;
-      
+        
       var statement:SQLStatement = SQLStatement(query['statement']);
       var token:AsyncToken = AsyncToken(query['token']);
       var fqn:String = query['fqn'];
       var clazz:Class = getDefinitionByName(fqn) as Class;
-            
-      statement.execute();
-      
-      var data:Array = statement.getResult().data;
-      if (data.length > 0) {
-        data[0]["clazz"] = fqn.split("::")[1];
+              
+      try {   
+        statement.execute();
+        
+        var data:Array = statement.getResult().data;
+        if (data.length > 0) {
+          data[0]["clazz"] = fqn.split("::")[1];
+        }
+        
+        var result:TypedArray = unmarshall(data) as TypedArray;
+        
+        delete indexing[fqn];
+        delete state.waiting[fqn];
+        invokeResponderResult(token.responders[0], result);
+      } catch (e:Error) {
+        delete indexing[fqn];
+        delete state.waiting[fqn];
+        IResponder(token.responders[0]).fault(e);
       }
-      
-      var result:TypedArray = unmarshall(data) as TypedArray;
-      
-      delete indexing[fqn];
-      delete state.waiting[fqn];
-      invokeResponder(token.responders[0], result);    
     }
   }
 }

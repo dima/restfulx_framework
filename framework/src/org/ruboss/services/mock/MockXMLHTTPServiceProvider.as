@@ -36,8 +36,13 @@ package org.ruboss.services.mock {
       var fqn:String = getQualifiedClassName(object);
       var controllerName:String = state.controllers[fqn];
       
-      Ruboss.log.debug("attempting to index: " + fqn + ", mapped to: " + controllerName);
-      responder.result(new ResultEvent(ResultEvent.RESULT, false, false, data[controllerName]));
+      if (data[controllerName]) {
+        Ruboss.log.debug("attempting to index: " + fqn + ", mapped to: " + controllerName);
+        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, data[controllerName]));
+      } else {
+        Ruboss.log.debug("failed to index: " + fqn + ", mapped to: " + controllerName + " no data available.");
+        responder.fault({info: "no data"});
+      }
     }
 
     public override function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {

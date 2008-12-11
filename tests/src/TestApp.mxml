@@ -16,7 +16,7 @@
       import org.ruboss.services.mock.MockXMLHTTPServiceProvider;
       import org.ruboss.services.mock.MockAIRServiceProvider;
       import ruboss.test.controllers.RubossTestController;
-		  import ruboss.test.cases.SimplePropertiesTest;
+		  import ruboss.test.cases.models.SimplePropertiesTest;
       import ruboss.test.cases.RubossCommandTest;
       import ruboss.test.cases.RubossUtilTest;
 			import flexunit.framework.TestSuite;
@@ -49,11 +49,11 @@
         }
 
         MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
-//        MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
+        MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
 			  
 			  var testSuite:TestSuite = new TestSuite;
 			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
-//			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
+			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
 			  addNonServiceDependentTests(testSuite);
 //        addIntegrationTests(testSuite);
  				testRunner.test = testSuite;
@@ -61,18 +61,18 @@
  			}
 			
 			private function addServiceDependentTests(ts:TestSuite, serviceProviderId:int):void {
-// 				ts.addTest(new SimplePropertiesTest("testSimpleModelIndex", serviceProviderId));
-// 				ts.addTest(new SimplePropertiesTest("testSimpleModelCreate", serviceProviderId));
-// 				ts.addTest(new SimplePropertiesTest("testSimpleModelCreateFollowedByUpdate", serviceProviderId));			
+			  ts.addTest(new SimplePropertiesTest("testIndexWithEventListener", serviceProviderId));
+			  ts.addTest(new SimplePropertiesTest("testIndexWithOnSuccessFunction", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testIndexWithOnFailureFunction", serviceProviderId));  
  			}
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
  			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
         ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
-        ts.addTest(new XMLSerializerTest("testSimpleProperties"));
-        ts.addTest(new XMLSerializerTest("testComplexProperties"));
-        ts.addTest(new XMLSerializerTest("testBasicRelationships"));
+//        ts.addTest(new XMLSerializerTest("testSimpleProperties"));
+//        ts.addTest(new XMLSerializerTest("testComplexProperties"));
+//        ts.addTest(new XMLSerializerTest("testBasicRelationships"));
 
 
 //        ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));

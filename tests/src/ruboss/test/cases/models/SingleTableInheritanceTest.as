@@ -1,10 +1,10 @@
-package ruboss.test.cases {
+package ruboss.test.cases.models {
   import org.ruboss.Ruboss;
   
   import ruboss.test.RubossTestCase;
 
-  public class SimplePropertiesTest extends RubossTestCase {
-    public function SimplePropertiesTest(methodName:String, serviceProviderId:int) {
+  public class SingleTableInheritanceTest extends RubossTestCase {
+    public function SingleTableInheritanceTest(methodName:String, serviceProviderId:int) {
       super(methodName, serviceProviderId);
     }
     

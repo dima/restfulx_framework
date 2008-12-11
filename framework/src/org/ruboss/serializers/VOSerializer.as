@@ -74,8 +74,10 @@ package org.ruboss.serializers {
       
       var metadata:XML = describeType(getDefinitionByName(fqn));
       for (var property:String in source) {
+        if (property == "clazz") continue;
         var targetName:String = property;
-        var targetType:String = getType(XMLList(metadata..accessor.(@name == targetName))[0]).toLowerCase();
+        var camelTargetName:String = RubossUtils.toCamelCase(targetName);
+        var targetType:String = getType(XMLList(metadata..accessor.(@name == camelTargetName))[0]).toLowerCase();
         var defaultValue:* = RubossUtils.cast(targetName, targetType, source[property]);
         unmarshallAttribute(source, object, source[property], fqn, targetName, defaultValue, updatingExistingReference);
       }  
