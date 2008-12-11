@@ -57,9 +57,9 @@ package org.ruboss.services.air {
     
     private var indexing:Dictionary;
     
-    private var sql:Dictionary;
+    protected var sql:Dictionary;
         
-    private var connection:SQLConnection;
+    protected var connection:SQLConnection;
     
     private var timer:Timer;
 
@@ -259,15 +259,15 @@ package org.ruboss.services.air {
       }
     }
     
-    private function isInvalidPropertyType(type:String):Boolean {
+    protected function isInvalidPropertyType(type:String):Boolean {
       return RubossUtils.isInvalidPropertyType(type);
     }
     
-    private function isInvalidPropertyName(name:String):Boolean {
+    protected function isInvalidPropertyName(name:String):Boolean {
       return RubossUtils.isInvalidPropertyName(name);
     }
 
-    private function getSQLType(node:XML):String {
+    protected function getSQLType(node:XML):String {
       var type:String = node.@type;
       var result:String = types[type];
       if (sql[type]) {
@@ -340,7 +340,7 @@ package org.ruboss.services.air {
       sql[modelName]["select"] = selectStatement;
     }
     
-    private function initializeConnection(databaseName:String, 
+    protected function initializeConnection(databaseName:String, 
       databaseFile:File):void {
       connection.open(databaseFile);
       for (var modelName:String in sql) {
@@ -349,14 +349,14 @@ package org.ruboss.services.air {
       }
     }
     
-    private function getSQLStatement(statement:String):SQLStatement {
+    protected function getSQLStatement(statement:String):SQLStatement {
       var sqlStatement:SQLStatement = new SQLStatement;
       sqlStatement.sqlConnection = connection;
       sqlStatement.text = statement;
       return sqlStatement;     
     }
     
-    private function invokeResponderResult(responder:IResponder, result:Object):void {
+    protected function invokeResponderResult(responder:IResponder, result:Object):void {
       var event:ResultEvent = new ResultEvent(ResultEvent.RESULT, false, 
         false, result);
       if (responder != null) {

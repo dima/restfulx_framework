@@ -37,6 +37,7 @@ package ruboss.test.cases.models {
       assertTrue(event.isIndex());
       assertTrue(event.isIndexFor(SimpleProperty));
       onTestIndex(Ruboss.models.cached(SimpleProperty));
+      Ruboss.models.removeEventListener(CacheUpdateEvent.ID, onTestIndexWithEvent);
     }
     
     private function onTestIndexWithCallback(results:TypedArray):void {
@@ -68,9 +69,7 @@ package ruboss.test.cases.models {
       // date
       assertEquals(2008, firstModel.deliveredOn.getFullYear());
       assertEquals(11, firstModel.deliveredOn.getMonth());
-      assertEquals(8, firstModel.deliveredOn.getDate());
-      
-      Ruboss.models.removeEventListener(CacheUpdateEvent.ID, onTestIndexWithEvent);
+      assertEquals(8, firstModel.deliveredOn.getDate());      
     }
     
     private function onTestIndexFail(info:Object):void {

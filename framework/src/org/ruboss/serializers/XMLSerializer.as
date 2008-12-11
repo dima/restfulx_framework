@@ -136,7 +136,10 @@ package org.ruboss.serializers {
             
       for each (var element:XML in node.elements()) {
         var targetName:String = element.localName();
-        var defaultValue:* = RubossUtils.cast(element.@type, element.toString());
+        var defaultValue:* = null;
+        if (targetName.search(/.*_id$/) == -1) {
+          defaultValue = RubossUtils.cast(element.@type, element.toString());
+        }
         unmarshallAttribute(node, object, element, fqn, targetName, defaultValue, 
           updatingExistingReference); 
       }

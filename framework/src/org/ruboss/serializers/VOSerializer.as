@@ -77,8 +77,11 @@ package org.ruboss.serializers {
         if (property == "clazz") continue;
         var targetName:String = property;
         var camelTargetName:String = RubossUtils.toCamelCase(targetName);
-        var targetType:String = getType(XMLList(metadata..accessor.(@name == camelTargetName))[0]).toLowerCase();
-        var defaultValue:* = RubossUtils.cast(targetType, source[property]);
+        var defaultValue:* = null;
+        if (targetName.search(/.*_id$/) == -1) {
+          var targetType:String = getType(XMLList(metadata..accessor.(@name == camelTargetName))[0]).toLowerCase();
+          defaultValue = RubossUtils.cast(targetType, source[property]);
+        }
         unmarshallAttribute(source, object, source[property], fqn, targetName, defaultValue, updatingExistingReference);
       }  
       

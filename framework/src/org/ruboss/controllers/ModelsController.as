@@ -349,9 +349,12 @@ package org.ruboss.controllers {
       invokeService(service.destroy, service, object, serviceResponder, metadata, nestedBy);
     }
     
-    public function indexed(clazz:Class):Boolean {
-      var fqn:String = state.types[clazz];
-      return state.indexed[fqn] && !state.waiting[fqn];
+    public function indexed(... models):Boolean {
+      for each (var model:Class in models) {
+        var fqn:String = state.types[model];
+        if (!state.indexed[fqn] || state.waiting[fqn]) return false;
+      }
+      return true;
     }
     
     public function shown(object:Object, id:* = null):Boolean {

@@ -3,6 +3,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.models.BasicRelationshipsTest;
 		  import ruboss.test.cases.serializers.XMLSerializerTest;
 		  import ruboss.test.cases.ModelsMetadataTest;
 		  import org.ruboss.services.http.JSONHTTPServiceProvider;
@@ -66,6 +67,8 @@
         ts.addTest(new SimplePropertiesTest("testIndexWithOnFailureFunction", serviceProviderId));
         ts.addTest(new SimplePropertiesTest("testCreate", serviceProviderId));
         ts.addTest(new SimplePropertiesTest("testCreateFollowedByUpdate", serviceProviderId));
+        
+        ts.addTest(new BasicRelationshipsTest("testBasicRelationshipsIndex", serviceProviderId));
  			}
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {
