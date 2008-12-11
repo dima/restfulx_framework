@@ -1,61 +1,37 @@
 package ruboss.test.cases.models {
   import org.ruboss.Ruboss;
+  import org.ruboss.collections.ModelsCollection;
+  import org.ruboss.utils.TypedArray;
   
   import ruboss.test.RubossTestCase;
+  import ruboss.test.models.Actor;
+  import ruboss.test.models.Movie;
 
   public class NonStandardKeyRelationshipsTest extends RubossTestCase {
     public function NonStandardKeyRelationshipsTest(methodName:String, serviceProviderId:int) {
       super(methodName, serviceProviderId);
     }
     
-//    public function testSimpleModelIndex():void {
-//      establishService();
-//      Ruboss.models.reset(Address);
-//      Ruboss.models.index(Address, function(addresses:Array):void {
-//        // verify strings are set
-//        assertEquals("Address1CityString", Address(addresses[0]).city);
-//        assertEquals("Address2CityString", Address(addresses[1]).city);
-//        
-//        assertTrue(Address(addresses[0]).id);
-//        assertTrue(Address(addresses[1]).id);       
-//      });
-//    }
-//    
-//    public function testSimpleModelCreate():void {
-//      establishService();
-//      var address:Address = getNewAddress();
-//      address.create(function(result:Address):void {
-//        assertTrue(result.id);
-//        assertEquals("Vancouver", address.city);
-//        assertEquals("Canada", address.country);
-//      });
-//    }
-//    
-//    public function testSimpleModelCreateFollowedByUpdate():void {
-//      establishService();
-//      var address:Address = getNewAddress();
-//      address.create(function(result:Address):void {
-//        var resultId:String = result.id;
-//        
-//        assertTrue(resultId);
-//        assertEquals("Vancouver", address.city);
-//        assertEquals("Canada", address.country);
-//        
-//        result.city = "New York";
-//        result.update(function(updated:Address):void {
-//          assertEquals(resultId, updated.id);
-//          assertEquals("New York", updated.city);
-//          assertEquals("Canada", updated.country);
-//        });
-//      });      
-//    }
-//    
-//    private function getNewAddress():Address {
-//      var address:Address = new Address;
-//      address.city = "Vancouver";
-//      address.country = "Canada";
-//      
-//      return address;      
-//    }
+    public function testNonStandardKeyRelationshipsIndex():void {
+      establishService();
+      Ruboss.models.index(Actor, onIndex);
+    }
+    
+    private function onIndex(result:TypedArray):void {
+      var movies:ModelsCollection = Ruboss.models.cached(Movie);
+      var actors:ModelsCollection = Ruboss.models.cached(Actor);
+      
+      assertEquals(4, movies.length);
+      assertEquals(4, actors.length);
+      
+      var firstActor:Actor = actors.getItemAt(0) as Actor;
+      assertEquals("Actor2NameString", firstActor.name);
+      assertEquals("Movie1NameString", firstActor.actionMovie.name);
+      assertEquals(4, firstActor.actionMovie.actors.length);
+      assertEquals("Movie4NameString", firstActor.documentary.name);
+      assertEquals(2, firstActor.documentary.actors.length);
+      assertEquals("Movie2NameString", firstActor.movie.name);
+      assertEquals(4, firstActor.movie.actors.length);
+    }
   }
 }
