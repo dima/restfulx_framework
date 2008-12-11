@@ -264,7 +264,7 @@ package org.ruboss.utils {
      * Casts a variable to specific type from a string, while trying to do the right thing
      * based on targetType description.
      */
-    public static function cast(targetName:String, targetType:String, value:Object):* {
+    public static function cast(targetType:String, value:Object):* {
       if (value == null) return null;
       
       if (targetType == "boolean") {

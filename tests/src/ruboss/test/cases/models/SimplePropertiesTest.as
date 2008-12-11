@@ -2,6 +2,7 @@ package ruboss.test.cases.models {
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
   import org.ruboss.events.CacheUpdateEvent;
+  import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
   
   import ruboss.test.RubossTestCase;
@@ -69,50 +70,49 @@ package ruboss.test.cases.models {
       assertEquals(11, firstModel.deliveredOn.getMonth());
       assertEquals(8, firstModel.deliveredOn.getDate());
       
-      Ruboss.models.removeEventListener(CacheUpdateEvent.ID, onTestIndex);
+      Ruboss.models.removeEventListener(CacheUpdateEvent.ID, onTestIndexWithEvent);
     }
     
     private function onTestIndexFail(info:Object):void {
       assertTrue(info);
     }
     
+    public function testCreate():void {
+      establishService();
+      var model:SimpleProperty = getNewSimpleProperty();
+      model.create(function(result:SimpleProperty):void {
+        assertTrue(result.id);
+        assertEquals(2, result.amount);
+        assertTrue(result.available);
+        assertEquals("Foobar", result.name);
+      });
+    }
+    
+    public function testCreateFollowedByUpdate():void {
+      establishService();
+      var model:SimpleProperty = getNewSimpleProperty();
+      model.create(function(result:SimpleProperty):void {
+        assertTrue(result.id);
+        assertEquals(2, result.amount);
+        assertTrue(result.available);
+        assertEquals("Foobar", result.name);
+        
+        result.name = "Hello";
+        result.update(function(updated:SimpleProperty):void {
+          assertEquals(result.id, updated.id);
+          assertEquals("Hello", updated.name);
+        });
+      });            
+    }
 
-//    
-//    public function testSimpleModelCreate():void {
-//      establishService();
-//      var address:Address = getNewAddress();
-//      address.create(function(result:Address):void {
-//        assertTrue(result.id);
-//        assertEquals("Vancouver", address.city);
-//        assertEquals("Canada", address.country);
-//      });
-//    }
-//    
-//    public function testSimpleModelCreateFollowedByUpdate():void {
-//      establishService();
-//      var address:Address = getNewAddress();
-//      address.create(function(result:Address):void {
-//        var resultId:String = result.id;
-//        
-//        assertTrue(resultId);
-//        assertEquals("Vancouver", address.city);
-//        assertEquals("Canada", address.country);
-//        
-//        result.city = "New York";
-//        result.update(function(updated:Address):void {
-//          assertEquals(resultId, updated.id);
-//          assertEquals("New York", updated.city);
-//          assertEquals("Canada", updated.country);
-//        });
-//      });      
-//    }
-//    
-//    private function getNewAddress():Address {
-//      var address:Address = new Address;
-//      address.city = "Vancouver";
-//      address.country = "Canada";
-//      
-//      return address;      
-//    }
+    private function getNewSimpleProperty():SimpleProperty {
+      var model:SimpleProperty = new SimpleProperty;
+      model.amount = 2;
+      model.available = true;
+      model.name = "Foobar";
+      model.price = 1.7;
+      model.quantity = 10.05;
+      return model;      
+    }
   }
 }

@@ -63,7 +63,9 @@
 			private function addServiceDependentTests(ts:TestSuite, serviceProviderId:int):void {
 			  ts.addTest(new SimplePropertiesTest("testIndexWithEventListener", serviceProviderId));
 			  ts.addTest(new SimplePropertiesTest("testIndexWithOnSuccessFunction", serviceProviderId));
-        ts.addTest(new SimplePropertiesTest("testIndexWithOnFailureFunction", serviceProviderId));  
+        ts.addTest(new SimplePropertiesTest("testIndexWithOnFailureFunction", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testCreate", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testCreateFollowedByUpdate", serviceProviderId));
  			}
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {
