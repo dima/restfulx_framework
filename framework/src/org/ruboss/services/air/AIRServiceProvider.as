@@ -310,15 +310,6 @@ package org.ruboss.services.air {
           }
          
           snakeName = snakeName + "_id";
-
-          var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
-          var foreignKey:String = descriptor.arg.(@key == "foreignKey").@value.toString();
-          if (foreignKey) {
-            snakeName = RubossUtils.toSnakeCase(foreignKey);
-            if (snakeName.search(/_id$/) == -1) {
-              snakeName = snakeName + "_id";
-            }
-          }
           
           createStatement += snakeName + " " +  types["int"] + ", ";
         } else {   
