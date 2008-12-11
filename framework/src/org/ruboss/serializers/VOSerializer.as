@@ -132,6 +132,14 @@ package org.ruboss.serializers {
       return result;
     }
 
+    protected override function processNestedArray(array:Object, type:String):ModelsCollection {
+      var result:ModelsCollection = new ModelsCollection;
+      for each (var nestedObject:Object in array) {
+        result.addItem(unmarshallObject(nestedObject, type));
+      }
+      return result;
+    }
+
     private function getType(node:XML):String {
       var type:String = node.@type;
       var result:String = types[type];
