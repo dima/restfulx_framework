@@ -1,61 +1,49 @@
 package ruboss.test.cases.models {
   import org.ruboss.Ruboss;
+  import org.ruboss.collections.ModelsCollection;
+  import org.ruboss.events.CacheUpdateEvent;
   
   import ruboss.test.RubossTestCase;
+  import ruboss.test.models.Customer;
+  import ruboss.test.models.Employee;
+  import ruboss.test.models.Location;
 
   public class PolymorphicRelationshipsTest extends RubossTestCase {
     public function PolymorphicRelationshipsTest(methodName:String, serviceProviderId:int) {
       super(methodName, serviceProviderId);
     }
     
-//    public function testSimpleModelIndex():void {
-//      establishService();
-//      Ruboss.models.reset(Address);
-//      Ruboss.models.index(Address, function(addresses:Array):void {
-//        // verify strings are set
-//        assertEquals("Address1CityString", Address(addresses[0]).city);
-//        assertEquals("Address2CityString", Address(addresses[1]).city);
-//        
-//        assertTrue(Address(addresses[0]).id);
-//        assertTrue(Address(addresses[1]).id);       
-//      });
-//    }
-//    
-//    public function testSimpleModelCreate():void {
-//      establishService();
-//      var address:Address = getNewAddress();
-//      address.create(function(result:Address):void {
-//        assertTrue(result.id);
-//        assertEquals("Vancouver", address.city);
-//        assertEquals("Canada", address.country);
-//      });
-//    }
-//    
-//    public function testSimpleModelCreateFollowedByUpdate():void {
-//      establishService();
-//      var address:Address = getNewAddress();
-//      address.create(function(result:Address):void {
-//        var resultId:String = result.id;
-//        
-//        assertTrue(resultId);
-//        assertEquals("Vancouver", address.city);
-//        assertEquals("Canada", address.country);
-//        
-//        result.city = "New York";
-//        result.update(function(updated:Address):void {
-//          assertEquals(resultId, updated.id);
-//          assertEquals("New York", updated.city);
-//          assertEquals("Canada", updated.country);
-//        });
-//      });      
-//    }
-//    
-//    private function getNewAddress():Address {
-//      var address:Address = new Address;
-//      address.city = "Vancouver";
-//      address.country = "Canada";
-//      
-//      return address;      
-//    }
+    public function testPolymorphicRelationshipsIndex():void {
+      establishService();
+      Ruboss.models.addEventListener(CacheUpdateEvent.ID, onIndex);
+      Ruboss.models.index(Location);
+    }
+    
+    private function onIndex(event:CacheUpdateEvent):void {
+      if (Ruboss.models.indexed(Customer, Employee, Location)) {
+        var customers:ModelsCollection = Ruboss.models.cached(Customer);
+        var employees:ModelsCollection = Ruboss.models.cached(Employee);
+        var locations:ModelsCollection = Ruboss.models.cached(Location);
+        
+        assertEquals(4, customers.length);
+        assertEquals(4, employees.length);
+        assertEquals(4, locations.length);
+        
+        var firstCustomer:Customer = customers.getItemAt(0) as Customer;
+        var firstEmployee:Employee = employees.getItemAt(0) as Employee;
+        var firstLocation:Location = locations.getItemAt(0) as Location;
+        
+        assertEquals("Customer1NameString", firstCustomer.name);
+        assertEquals("Location1CityString", firstCustomer.location.city);
+        assertTrue(firstCustomer.location.owner is Customer);
+        assertEquals("Employee2NameString", firstEmployee.name);
+        assertEquals("Location4CityString", firstEmployee.location.city);
+        assertTrue(firstEmployee.location.owner is Employee);
+        
+        assertEquals("Location1CityString", firstLocation.city);
+        assertEquals("Customer1NameString", Customer(firstLocation.owner).name);
+        Ruboss.models.removeEventListener(CacheUpdateEvent.ID, onIndex);
+      }
+    }
   }
 }

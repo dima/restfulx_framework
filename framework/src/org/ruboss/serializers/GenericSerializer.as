@@ -120,13 +120,10 @@ package org.ruboss.serializers {
         // if this property is a reference, try to resolve the 
         // reference and set up biderctional links between models
         if (isRef) {
-          var refId:String = attribute.toString();
+          var refId:String = (attribute) ? attribute.toString() : "";
           if (RubossUtils.isEmpty(refId)) {
-            if (isParentRef) {
-              return;
-            } else {
-              throw new Error("error retrieving id from model: " + fqn + ", property: " + targetName);
-            }
+            Ruboss.log.warn("reference id :" + fqn + "." + targetName + " is empty, skipping this relationship.");
+            return;
           }
           
           var ref:Object = ModelsCollection(Ruboss.models.cache.data[targetType]).withId(refId);

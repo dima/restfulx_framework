@@ -144,6 +144,8 @@ package org.ruboss.serializers {
     }
 
     private function getType(node:XML):String {
+      if (node == null) return types["String"];
+      
       var type:String = node.@type;
       var result:String = types[type];
       if (state.fqns[type]) {

@@ -3,6 +3,8 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.models.TreeModelsTest;
+		  import ruboss.test.cases.models.PolymorphicRelationshipsTest;
 		  import ruboss.test.cases.models.BasicRelationshipsTest;
 		  import ruboss.test.cases.serializers.XMLSerializerTest;
 		  import ruboss.test.cases.ModelsMetadataTest;
@@ -69,6 +71,10 @@
         ts.addTest(new SimplePropertiesTest("testCreateFollowedByUpdate", serviceProviderId));
         
         ts.addTest(new BasicRelationshipsTest("testBasicRelationshipsIndex", serviceProviderId));
+        
+        ts.addTest(new PolymorphicRelationshipsTest("testPolymorphicRelationshipsIndex", serviceProviderId));
+        
+        ts.addTest(new TreeModelsTest("testTreeModelIndex", serviceProviderId));
  			}
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {

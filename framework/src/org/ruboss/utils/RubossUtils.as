@@ -34,6 +34,8 @@ package org.ruboss.utils {
       "mx.collections::ArrayCollection",
       "flash.net::FileReference",
       "flash.net::FileReferenceList",
+      "org.ruboss.collections::ModelsCollection",
+      "org.ruboss.collections::RubossCollection",
       "org.ruboss.models::RubossFileReference"
     ];
     
