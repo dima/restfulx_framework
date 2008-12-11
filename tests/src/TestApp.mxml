@@ -3,6 +3,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.models.HasManyThroughRelationshipsTest;
 		  import ruboss.test.cases.models.NonStandardKeyRelationshipsTest;
 		  import ruboss.test.cases.models.TreeModelsTest;
 		  import ruboss.test.cases.models.PolymorphicRelationshipsTest;
@@ -78,22 +79,15 @@
         ts.addTest(new TreeModelsTest("testTreeModelIndex", serviceProviderId));
         
         ts.addTest(new NonStandardKeyRelationshipsTest("testNonStandardKeyRelationshipsIndex", serviceProviderId));
+        
+        ts.addTest(new HasManyThroughRelationshipsTest("testHasManyThroughForm1Index", serviceProviderId));
+        ts.addTest(new HasManyThroughRelationshipsTest("testHasManyThroughForm2Index", serviceProviderId));
  			}
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
  			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
         ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
-//        ts.addTest(new XMLSerializerTest("testSimpleProperties"));
-//        ts.addTest(new XMLSerializerTest("testComplexProperties"));
-//        ts.addTest(new XMLSerializerTest("testBasicRelationships"));
-
-
-//        ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));
-//        ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
-//        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
-//        ts.addTest(new VOSerializerTest("testObjectMarshallingWithRelationships"));
-//        ts.addTest(new Bug26Test("testUserShow"));
  			}
  			
  			private function addIntegrationTests(ts:TestSuite):void {
