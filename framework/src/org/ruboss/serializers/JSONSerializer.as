@@ -5,10 +5,10 @@ package org.ruboss.serializers {
   import org.ruboss.models.RubossModel;
   import org.ruboss.utils.TypedArray;
   
-  public class JSONSerializer extends GenericSerializer {
+  public class JSONSerializer extends VOSerializer {
     
     public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      var marshalled:Object = Ruboss.serializers.vo.marshall(object, recursive, metadata);
+      var marshalled:Object = super.marshall(object, recursive, metadata);
       marshalled["ruby_class"] = marshalled["clazz"];
       delete marshalled["clazz"];
             
@@ -22,9 +22,9 @@ package org.ruboss.serializers {
       try {
         var source:Object = JSON.decode(object as String);
         if (source is Array) {
-          return unmarshallArray(source as Array);
+          return unmarshallJSONArray(source as Array);
         } else {
-          return unmarshallObject(source);
+          return unmarshallJSONObject(source);
         }
       } catch (e:Error) {
         throw new Error("could not unmarshall provided object");
@@ -32,7 +32,7 @@ package org.ruboss.serializers {
       return null;    
     }
     
-    private function unmarshallArray(instances:Array):Array {
+    private function unmarshallJSONArray(instances:Array):TypedArray {
       for each (var instance:Object in instances) {
         instance["id"] = instance["_id"];
         delete instance["_id"];
@@ -43,10 +43,10 @@ package org.ruboss.serializers {
         delete instance["ruby_class"];
       }
       
-      return Ruboss.serializers.vo.unmarshall(instances) as Array;
+      return TypedArray(super.unmarshall(instances));
     }
     
-    private function unmarshallObject(source:Object):Object {
+    private function unmarshallJSONObject(source:Object):Object {
       source["id"] = source["_id"];
       delete source["_id"];
       source["rev"] = source["_rev"];
@@ -55,7 +55,7 @@ package org.ruboss.serializers {
       source["clazz"] = source["ruby_class"];
       delete source["ruby_class"];
       
-      return Ruboss.serializers.vo.unmarshall(source);
+      return super.unmarshall(source);
     }
   }
 }

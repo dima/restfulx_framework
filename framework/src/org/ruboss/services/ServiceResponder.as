@@ -35,8 +35,9 @@ package org.ruboss.services {
      * @param handler function to call with the unmarshalled result
      * @param service IServiceProvider instance that we are dealing with
      * @param checkOrder true if ServiceResponder should enforce order on responses
-     * @param afterCallback optional user callback function or IResponder to call when
+     * @param onSuccess optional user callback function or IResponder to call when
      *  everything has been *successfully* processed
+     * @param onFailure
      */
     public function ServiceResponder(handler:Function, service:IServiceProvider, onSuccess:Object = null, 
       onFailure:Function = null) {
@@ -98,7 +99,7 @@ package org.ruboss.services {
     private function invokeOnFailure(info:Object):void {
       if (onSuccess is IResponder) {
         IResponder(onSuccess).fault(info);
-      } else if (onFailure != null) {
+      } else if (onFailure != null && onFailure is Function) {
         onFailure(info);
       } else {
         throw new Error("An error has occured while invoking service provider with id: " + service.id + 

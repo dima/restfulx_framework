@@ -85,12 +85,6 @@ package org.ruboss {
     /** default database name to use for AIR applications (if nothing else is provided) */
     public static var airDatabaseName:String = "rubossdb";
     
-    /** 
-     * stores maximum allowed number of instances per model type in the cache
-     * used when paging to determine when to start throwing things out 
-     */
-    public static var cacheThreshold:Dictionary = new Dictionary;
-    
     /**
      * stores current session id for use by URLRequest
      */
@@ -225,24 +219,6 @@ package org.ruboss {
      */
     public static function preventNullProperty(obj:Object, property:String, defaultObj:Object):Object {
       return (obj == null || obj[property] == null) ? defaultObj : obj[property];
-    }
-    
-    /**
-     * Set a max number of instances to be kept in cache for a given model class
-     *
-     * @param clazz the model class to set the threshold on
-     * @param maxItems maximum number of items
-     */
-    public static function setCacheThreshold(clazz:Class, maxItems:int):void {
-      cacheThreshold[Ruboss.models.state.types[clazz]] = maxItems;
-    }
-    
-    /**
-     * Removes any constraints on the number of items for a particular model in cache.
-     * @see setCacheThreshold
-     */
-    public static function resetCacheThreshold(clazz:Class):void {
-      delete cacheThreshold[Ruboss.models.state.types[clazz]];
     }
 
     /**

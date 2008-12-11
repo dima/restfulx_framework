@@ -40,13 +40,13 @@ package org.ruboss.serializers {
           if (state.fqns[objectName]) {
             results.itemType = state.fqns[objectName];
             for each (var node:XML in xmlFragment.children()) {
-              results.push(unmarshallNode(node, state.fqns[objectName]));
+              results.push(unmarshallObject(node, state.fqns[objectName]));
             }
           }
           return results;
         } else {
           // otherwise treat it as a single element (treat it as a show)
-          return unmarshallNode(xmlFragment);
+          return unmarshallObject(xmlFragment);
         }
       } catch(e:Error) {
         Ruboss.log.error("'" + object + "' has not been unmarshalled. it is not an XML element: Error: " + 
@@ -116,7 +116,7 @@ package org.ruboss.serializers {
       return new XML(result);
     }
     
-    protected override function unmarshallNode(source:Object, type:String = null):Object {
+    protected override function unmarshallObject(source:Object, type:String = null):Object {
       var node:XML = XML(source);
       var localName:String = RubossUtils.toCamelCase(node.localName());
       var fqn:String = (!type) ? state.fqns[localName] : type;
@@ -136,8 +136,9 @@ package org.ruboss.serializers {
             
       for each (var element:XML in node.elements()) {
         var targetName:String = element.localName();
-        unmarshallElement(node, object, element, targetName, RubossUtils.cast(targetName, element.@type, element.toString()), 
-        fqn, updatingExistingReference); 
+        var defaultValue:* = RubossUtils.cast(targetName, element.@type, element.toString());
+        unmarshallAttribute(node, object, element, fqn, targetName, defaultValue, 
+          updatingExistingReference); 
       }
       
       addItemToCache(object, fqn);
@@ -150,7 +151,7 @@ package org.ruboss.serializers {
       var element:XML = XML(array);
       var result:ModelsCollection = new ModelsCollection;
       for each (var nestedElement:XML in element.children()) {
-        result.addItem(unmarshallNode(nestedElement, type));
+        result.addItem(unmarshallObject(nestedElement, type));
       }
       return result;
     }

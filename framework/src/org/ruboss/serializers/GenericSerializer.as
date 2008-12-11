@@ -25,62 +25,44 @@ package org.ruboss.serializers {
       return object;
     }
 
-    protected function processHasManyThroughRelationships(object:Object, fqn:String):void {
-      for each (var relationship:Object in state.hmts[state.controllers[fqn]]) {
-        try {
-          // relationship["type"] = fqn (e.g. package::Client)
-          // relationship["attribute"] = plural name of the reference (e.g. timesheets)
-          var relType:String = relationship["type"];
-          
-          // if the relationship attribute is called something other than the plural of the class name
-          // refType will specify what it is
-          var refKey:String = (!RubossUtils.isEmpty(relationship["refType"])) ? relationship["refType"] : relationship["attribute"];
-
-          var localSingleName:String = state.names[relType]["single"];
-          var localPluralName:String = state.names[relType]["plural"];
-
-          var refType:String = state.fqns[refKey];
-          var refNameSingle:String = state.names[refType]["single"];
-          var refNamePlural:String = state.names[refType]["plural"];
-  
-          // e.g. object[client][timesheets]
-          var items:ModelsCollection = object[localSingleName][relationship["attribute"]];
-          if (items == null) {
-            items = new ModelsCollection;
+    // needs some testing too
+    public function cleanupModelReferences(model:Object, fqn:String):void {
+      var property:String = RubossUtils.toCamelCase(state.controllers[fqn]);
+      var localName:String = state.names[fqn]["single"];
+      for each (var dependency:String in state.eager[fqn]) {
+        for each (var item:Object in Ruboss.models.cache.data[dependency]) {
+          if (ObjectUtil.hasMetadata(item, property, "HasMany") && item[property] != null) {
+            var items:ModelsCollection = ModelsCollection(item[property]);
+            if (items.hasItem(model)) {
+              items.removeItem(model);
+            } 
           }
-          
-          // form 1, e.g. object[timesheet]
-          if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refNameSingle)) {
-            if (items.hasItem(object[refNameSingle])) {
-              items.setItem(object[refNameSingle]);
-            } else {
-              items.addItem(object[refNameSingle]);
-            }
-            object[localSingleName][relationship["attribute"]] = items;
-            
-          // form 2 e.g. object[authors]
-          } else if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refNamePlural)) {
-            if (object[refNamePlural] == null) {
-              object[refNamePlural] = new ModelsCollection;
-            }
-            object[localSingleName][relationship["attribute"]] = object[refNamePlural];          
+          if (ObjectUtil.hasMetadata(item, localName, "HasOne") && item[localName] != null) {
+            item[localName] = null;
           }
-        } catch (e:Error) {
-          // do something
         }
       }
+      if (model.hasOwnProperty("parent") && model["parent"] != null && model["parent"].hasOwnProperty("children") &&
+        model["parent"]["children"] != null) {
+        var parentChildren:ModelsCollection = ModelsCollection(model["parent"]["children"]);
+        if (parentChildren.hasItem(model)) {
+          parentChildren.removeItem(model);
+        }
+      }
+      if (model.hasOwnProperty("children") && model["children"] != null) {
+        var children:ModelsCollection = ModelsCollection(model["children"]);
+        for each (var child:Object in children) {
+          Ruboss.models.cache.destroy(RubossModel(child));
+        }  
+      }
     }
-    
-    protected function processNestedArray(array:Object, type:String):ModelsCollection {
-      return new ModelsCollection;
-    }
-    
-    protected function unmarshallNode(source:Object, type:String = null):Object {
+
+    protected function unmarshallObject(source:Object, type:String = null):Object {
       return source;
     }
 
-    protected function unmarshallElement(node:Object, object:Object, element:Object, targetName:String, 
-      defaultValue:*, fqn:String, updatingExistingReference:Boolean):void {
+    protected function unmarshallAttribute(source:Object, object:Object, attribute:Object, fqn:String, 
+      targetName:String, defaultValue:*, updatingExistingReference:Boolean):void {
       var targetType:String = null;
       var isRef:Boolean = false;
       var isParentRef:Boolean = false;
@@ -99,7 +81,7 @@ package org.ruboss.serializers {
           isParentRef = true;
         } else {
           // check to see if it's a polymorphic association
-          var polymorphicRef:String = node[checkName + "_type"];
+          var polymorphicRef:String = source[checkName + "_type"];
           if (!RubossUtils.isEmpty(polymorphicRef)) {
             var polymorphicRefName:String = RubossUtils.lowerCaseFirst(polymorphicRef);
             if (state.fqns[polymorphicRefName]) {
@@ -117,13 +99,13 @@ package org.ruboss.serializers {
         targetName = RubossUtils.toCamelCase(targetName);
         try {
           targetType = state.refs[fqn][targetName]["type"];
-          if (element.@type == "array") {
+          if (attribute is Array || (attribute is XML && XML(attribute).@type == "array")) {
             isNestedArray = true;
           } else {
             isNestedObject = true;
             if (RubossUtils.isEmpty(targetType)) {
               // we potentially have a nested polymorphic relationship here
-              var nestedPolymorphicRef:String = node[RubossUtils.toSnakeCase(targetName) + "_type"];
+              var nestedPolymorphicRef:String = source[RubossUtils.toSnakeCase(targetName) + "_type"];
               if (!RubossUtils.isEmpty(nestedPolymorphicRef)) {
                 targetType = state.fqns[nestedPolymorphicRef];
               }
@@ -138,7 +120,7 @@ package org.ruboss.serializers {
         // if this property is a reference, try to resolve the 
         // reference and set up biderctional links between models
         if (isRef) {
-          var refId:String = element.toString();
+          var refId:String = attribute.toString();
           if (RubossUtils.isEmpty(refId)) {
             if (isParentRef) {
               return;
@@ -190,17 +172,21 @@ package org.ruboss.serializers {
           // and the reverse
           object[targetName] = ref;
         } else if (isNestedArray) {
-          object[targetName] = processNestedArray(element, targetType);
+          object[targetName] = processNestedArray(attribute, targetType);
         } else if (isNestedObject) {
           if (ObjectUtil.hasMetadata(object, targetName, "HasOne") ||
             ObjectUtil.hasMetadata(object, targetName, "BelongsTo")) {
-            var nestedRef:Object = unmarshallNode(element, targetType);
+            var nestedRef:Object = unmarshallObject(attribute, targetType);
             object[targetName] = nestedRef;
           }
         } else {
           object[targetName] = defaultValue;
         }
       }      
+    }
+    
+    protected function processNestedArray(array:Object, type:String):ModelsCollection {
+      return new ModelsCollection;
     }
 
     protected function initializeModel(id:String, fqn:String):Object {
@@ -219,35 +205,50 @@ package org.ruboss.serializers {
       }      
     }
 
-    // needs some testing too
-    public function cleanupModelReferences(model:Object, fqn:String):void {
-      var property:String = RubossUtils.toCamelCase(state.controllers[fqn]);
-      var localName:String = state.names[fqn]["single"];
-      for each (var dependency:String in state.eager[fqn]) {
-        for each (var item:Object in Ruboss.models.cache.data[dependency]) {
-          if (ObjectUtil.hasMetadata(item, property, "HasMany") && item[property] != null) {
-            var items:ModelsCollection = ModelsCollection(item[property]);
-            if (items.hasItem(model)) {
-              items.removeItem(model);
-            } 
+
+    protected function processHasManyThroughRelationships(object:Object, fqn:String):void {
+      for each (var relationship:Object in state.hmts[state.controllers[fqn]]) {
+        try {
+          // relationship["type"] = fqn (e.g. package::Client)
+          // relationship["attribute"] = plural name of the reference (e.g. timesheets)
+          var relType:String = relationship["type"];
+          
+          // if the relationship attribute is called something other than the plural of the class name
+          // refType will specify what it is
+          var refKey:String = (!RubossUtils.isEmpty(relationship["refType"])) ? relationship["refType"] : relationship["attribute"];
+
+          var localSingleName:String = state.names[relType]["single"];
+          var localPluralName:String = state.names[relType]["plural"];
+
+          var refType:String = state.fqns[refKey];
+          var refNameSingle:String = state.names[refType]["single"];
+          var refNamePlural:String = state.names[refType]["plural"];
+  
+          // e.g. object[client][timesheets]
+          var items:ModelsCollection = object[localSingleName][relationship["attribute"]];
+          if (items == null) {
+            items = new ModelsCollection;
           }
-          if (ObjectUtil.hasMetadata(item, localName, "HasOne") && item[localName] != null) {
-            item[localName] = null;
+          
+          // form 1, e.g. object[timesheet]
+          if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refNameSingle)) {
+            if (items.hasItem(object[refNameSingle])) {
+              items.setItem(object[refNameSingle]);
+            } else {
+              items.addItem(object[refNameSingle]);
+            }
+            object[localSingleName][relationship["attribute"]] = items;
+            
+          // form 2 e.g. object[authors]
+          } else if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refNamePlural)) {
+            if (object[refNamePlural] == null) {
+              object[refNamePlural] = new ModelsCollection;
+            }
+            object[localSingleName][relationship["attribute"]] = object[refNamePlural];          
           }
+        } catch (e:Error) {
+          // do something
         }
-      }
-      if (model.hasOwnProperty("parent") && model["parent"] != null && model["parent"].hasOwnProperty("children") &&
-        model["parent"]["children"] != null) {
-        var parentChildren:ModelsCollection = ModelsCollection(model["parent"]["children"]);
-        if (parentChildren.hasItem(model)) {
-          parentChildren.removeItem(model);
-        }
-      }
-      if (model.hasOwnProperty("children") && model["children"] != null) {
-        var children:ModelsCollection = ModelsCollection(model["children"]);
-        for each (var child:Object in children) {
-          Ruboss.models.cache.destroy(RubossModel(child));
-        }  
       }
     }
   }

@@ -34,8 +34,7 @@ package org.ruboss.serializers {
           return unmarshallArray(object as Array);
         } else {
           var fqn:String = state.fqns[object["clazz"]];
-          var clazz:Class = getDefinitionByName(fqn) as Class;
-          return unmarshallNode(object, fqn);
+          return unmarshallObject(object, fqn);
         }
       } catch (e:Error) {
         throw new Error("could not unmarshall provided object");
@@ -48,27 +47,27 @@ package org.ruboss.serializers {
       
       var results:TypedArray = new TypedArray;
       var fqn:String = state.fqns[instances[0]["clazz"]];
-      var clazz:Class = getDefinitionByName(fqn) as Class;
         
       results.itemType = fqn;
       for each (var instance:Object in instances) {
-        results.push(unmarshallNode(instance, fqn));
+        results.push(unmarshallObject(instance, fqn));
       }
       return results;
     }
     
-    protected override function unmarshallNode(source:Object, type:String = null):Object {
+    protected override function unmarshallObject(source:Object, type:String = null):Object {
       var fqn:String = type;
-      var nodeId:String = source["id"];
+      var objectId:String = source["id"];
       var updatingExistingReference:Boolean = false;
-      if (!fqn || !nodeId) {
-        throw new Error("cannot unmarshall " + source + " no mapping exists or received a node with invalid id");
+      if (!fqn || !objectId) {
+        throw new Error("cannot unmarshall " + source + 
+          " no mapping exists or received serialized object with invalid id");
       }
       
-      var object:Object = ModelsCollection(Ruboss.models.cache.data[fqn]).withId(nodeId);
+      var object:Object = ModelsCollection(Ruboss.models.cache.data[fqn]).withId(objectId);
       
       if (object == null) {
-        object = initializeModel(nodeId, fqn);
+        object = initializeModel(objectId, fqn);
       } else {
         updatingExistingReference = true; 
       }
@@ -76,10 +75,9 @@ package org.ruboss.serializers {
       var metadata:XML = describeType(getDefinitionByName(fqn));
       for (var property:String in source) {
         var targetName:String = property;
-        var value:String = source[property];
         var targetType:String = getType(XMLList(metadata..accessor.(@name == targetName))[0]).toLowerCase();
-        unmarshallElement(source, object, source[property], targetName, RubossUtils.cast(targetName, targetType, value),
-        fqn, updatingExistingReference);
+        var defaultValue:* = RubossUtils.cast(targetName, targetType, source[property]);
+        unmarshallAttribute(source, object, source[property], fqn, targetName, defaultValue, updatingExistingReference);
       }  
       
       addItemToCache(object, fqn);

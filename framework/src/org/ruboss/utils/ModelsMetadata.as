@@ -26,8 +26,6 @@ package org.ruboss.utils {
     
     public var waiting:Dictionary;
     
-    public var pages:Dictionary;
-
     public var eager:Dictionary;
 
     public var lazy:Dictionary;
@@ -46,9 +44,7 @@ package org.ruboss.utils {
       indexed = new Dictionary;
       shown = new Dictionary;
       waiting = new Dictionary;
-      
-      pages = new Dictionary;
-      
+            
       eager = new Dictionary;
       lazy = new Dictionary;
       hmts = new Dictionary;
@@ -85,8 +81,6 @@ package org.ruboss.utils {
         
         lazy[fqn] = new Array;
         eager[fqn] = new Array;
-
-        pages[fqn] = -1;
         
         shown[fqn] = new ArrayCollection;
 
@@ -116,7 +110,7 @@ package org.ruboss.utils {
         var fqn:String = getQualifiedClassName(object);
 
         if (object is Class) {
-          indexed[fqn] = false;
+          delete indexed[fqn];
         } else {
           var items:ArrayCollection = shown[fqn] as ArrayCollection;
           var offset:int = items.getItemIndex(object["id"]);

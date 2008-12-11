@@ -73,11 +73,11 @@ package org.ruboss.controllers {
      *   Ruboss.models.index(Project);
      * 
      * Note that the following two method calls are equivalent:
-     *   Ruboss.models.index(Project, myAfterCallbackFunction, [company]);
-     *   Ruboss.models.index(Project, {afterCallback:myAfterCallbackFunction, nestedBy:[company]});
+     *   Ruboss.models.index(Project, myOnSuccess, [company]);
+     *   Ruboss.models.index(Project, {onSuccess:myOnSuccessFunction, nestedBy:[company]});
      * 
      * @param clazz the Class to index
-     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * @param optsOrOnSuccess if this is a Function or an IResponder, we treat it as a callback to invoke
      *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
      *  clober the value of any subsequent parameters.
      * @param nestedBy an array of model instances that should used to nest this request under
