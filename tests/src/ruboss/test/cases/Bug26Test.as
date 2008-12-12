@@ -18,21 +18,13 @@ package ruboss.test.cases {
       var userSource:XML = TestApp(Application.application).bug26user;
       
       var user:User = Ruboss.serializers.xml.unmarshall(userSource) as User;
-      
-      Ruboss.models.onShow(user);
-      
+            
       var contactASource:XML = TestApp(Application.application).bug26contactA;
       var contactBSource:XML = TestApp(Application.application).bug26contactB;
 
       
       var contactA:Contact = Ruboss.serializers.xml.unmarshall(contactASource) as Contact;
       var contactB:Contact = Ruboss.serializers.xml.unmarshall(contactBSource) as Contact;
-      
-      Ruboss.models.onShow(contactA);
-      Ruboss.models.onShow(contactB);
-     
-      var cachedModels:ModelsController = Ruboss.models; 
-      trace(contactA);
     }
   }
 }

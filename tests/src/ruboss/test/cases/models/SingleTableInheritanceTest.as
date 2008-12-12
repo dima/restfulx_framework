@@ -1,61 +1,37 @@
 package ruboss.test.cases.models {
   import org.ruboss.Ruboss;
+  import org.ruboss.collections.ModelsCollection;
+  import org.ruboss.events.CacheUpdateEvent;
   
   import ruboss.test.RubossTestCase;
+  import ruboss.test.models.Account;
+  import ruboss.test.models.PayableAccount;
+  import ruboss.test.models.ReceivableAccount;
 
   public class SingleTableInheritanceTest extends RubossTestCase {
     public function SingleTableInheritanceTest(methodName:String, serviceProviderId:int) {
       super(methodName, serviceProviderId);
     }
     
-//    public function testSimpleModelIndex():void {
-//      establishService();
-//      Ruboss.models.reset(Address);
-//      Ruboss.models.index(Address, function(addresses:Array):void {
-//        // verify strings are set
-//        assertEquals("Address1CityString", Address(addresses[0]).city);
-//        assertEquals("Address2CityString", Address(addresses[1]).city);
-//        
-//        assertTrue(Address(addresses[0]).id);
-//        assertTrue(Address(addresses[1]).id);       
-//      });
-//    }
-//    
-//    public function testSimpleModelCreate():void {
-//      establishService();
-//      var address:Address = getNewAddress();
-//      address.create(function(result:Address):void {
-//        assertTrue(result.id);
-//        assertEquals("Vancouver", address.city);
-//        assertEquals("Canada", address.country);
-//      });
-//    }
-//    
-//    public function testSimpleModelCreateFollowedByUpdate():void {
-//      establishService();
-//      var address:Address = getNewAddress();
-//      address.create(function(result:Address):void {
-//        var resultId:String = result.id;
-//        
-//        assertTrue(resultId);
-//        assertEquals("Vancouver", address.city);
-//        assertEquals("Canada", address.country);
-//        
-//        result.city = "New York";
-//        result.update(function(updated:Address):void {
-//          assertEquals(resultId, updated.id);
-//          assertEquals("New York", updated.city);
-//          assertEquals("Canada", updated.country);
-//        });
-//      });      
-//    }
-//    
-//    private function getNewAddress():Address {
-//      var address:Address = new Address;
-//      address.city = "Vancouver";
-//      address.country = "Canada";
-//      
-//      return address;      
-//    }
+    public function testSTIIndex():void {
+      establishService();
+      Ruboss.models.addEventListener(CacheUpdateEvent.ID, onIndex);
+      Ruboss.models.indexAll(PayableAccount, ReceivableAccount);
+    }
+    
+    private function onIndex(event:CacheUpdateEvent):void {
+      if (Ruboss.models.indexed(PayableAccount, ReceivableAccount)) {
+        var payable:ModelsCollection = Ruboss.models.cached(PayableAccount);
+        var receivable:ModelsCollection = Ruboss.models.cached(ReceivableAccount);
+        
+        assertEquals(2, payable.length);
+        assertEquals(2, receivable.length);
+        assertTrue(payable.getItemAt(0) is Account);
+        assertEquals("Account1NameString", PayableAccount(payable.getItemAt(0)).name);
+        assertTrue(receivable.getItemAt(0) is Account);
+        assertEquals("Account2NameString", ReceivableAccount(receivable.getItemAt(0)).name);
+        
+      }
+    }
   }
 }
