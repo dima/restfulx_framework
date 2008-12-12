@@ -97,7 +97,7 @@ package org.ruboss.controllers {
           onSuccess = optsOrOnSuccess;
         } else {
           if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFaiure']) onFailure = optsOrOnSuccess['onFailure'];
+          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
           if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
           if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
           if (optsOrOnSuccess['fetchDependencies']) fetchDependencies = optsOrOnSuccess['fetchDependencies'];
@@ -178,7 +178,7 @@ package org.ruboss.controllers {
           onSuccess = optsOrOnSuccess;
         } else {
           if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFaiure']) onFailure = optsOrOnSuccess['onFailure'];
+          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
           if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
           if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
           if (optsOrOnSuccess['fetchDependencies']) fetchDependencies = optsOrOnSuccess['fetchDependencies'];
@@ -270,7 +270,7 @@ package org.ruboss.controllers {
           onSuccess = optsOrOnSuccess;
         } else {
           if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFaiure']) onFailure = optsOrOnSuccess['onFailure'];
+          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
           if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
           if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
           if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
@@ -304,7 +304,7 @@ package org.ruboss.controllers {
           onSuccess = optsOrOnSuccess;
         } else {
           if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFaiure']) onFailure = optsOrOnSuccess['onFailure'];
+          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
           if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
           if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
           if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
@@ -338,7 +338,7 @@ package org.ruboss.controllers {
           onSuccess = optsOrOnSuccess;
         } else {
           if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFaiure']) onFailure = optsOrOnSuccess['onFailure'];
+          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
           if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
           if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
           if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
