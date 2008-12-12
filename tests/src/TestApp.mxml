@@ -22,7 +22,7 @@
       import org.ruboss.services.mock.MockAIRServiceProvider;
       import ruboss.test.controllers.RubossTestController;
 		  import ruboss.test.cases.models.SimplePropertiesTest;
-      import ruboss.test.cases.RubossCommandTest;
+      import ruboss.test.cases.CommandsControllerTest;
       import ruboss.test.cases.RubossUtilTest;
 			import flexunit.framework.TestSuite;
 			
@@ -89,25 +89,35 @@
  			private function addNonServiceDependentTests(ts:TestSuite):void {
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
  			  
- 			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
-        ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
+ 			  ts.addTest(new CommandsControllerTest("testCommandExecutionByClass"));
+        ts.addTest(new CommandsControllerTest("testCommandExecutionByName"));
         
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasOneAndHasManies"));
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasManyThroughs"));
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasOneAndHasManiesDiffNames"));
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicHasOne"));
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicBelongsTo"));
-        
-        // TODO: XML marshalling tests
-        
-        ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));
+        ts.addTest(new XMLSerializerTest("testObjectMarshalling"));
+        ts.addTest(new XMLSerializerTest("testObjectMarshallingWithMetadata"));
+        ts.addTest(new XMLSerializerTest("testObjectMarshallingWithSetRelationships"));
+        ts.addTest(new XMLSerializerTest("testObjectMarshallingWithNullRelationship"));
+        ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshalling"));
+                
+        ts.addTest(new JSONSerializerTest("testObjectUnmarshalling"));
         ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
-        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
+        ts.addTest(new JSONSerializerTest("testObjectMarshalling"));
+        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithMetadata"));
+        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithSetRelationships"));
+        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithNullRelationship"));
+        ts.addTest(new JSONSerializerTest("testRecursiveObjectMarshalling"));
         
-        // TODO: JSON marshalling tests and nested resources unmarshalling
+        // TODO: JSON nested resources unmarshalling
         
-        ts.addTest(new VOSerializerTest("testSimpleObjectMarshalling"));
-        ts.addTest(new VOSerializerTest("testSimpleObjectMarshallingWithMetadata"));
+        ts.addTest(new VOSerializerTest("testObjectMarshalling"));
+        ts.addTest(new VOSerializerTest("testObjectMarshallingWithMetadata"));
+        ts.addTest(new VOSerializerTest("testObjectMarshallingWithSetRelationships"));
+        ts.addTest(new VOSerializerTest("testObjectMarshallingWithNullRelationship"));
+        ts.addTest(new VOSerializerTest("testRecursiveObjectMarshalling"));
         
         // TODO: VO unmarshalling tests
         

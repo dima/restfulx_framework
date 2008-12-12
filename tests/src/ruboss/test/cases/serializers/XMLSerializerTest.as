@@ -77,5 +77,25 @@ package ruboss.test.cases.serializers {
       assertTrue(location.owner is Customer);
       assertEquals("Customer1NameString", Customer(location.owner).name);
     }
+    
+    public function testObjectMarshalling():void {
+      
+    }
+    
+    public function testObjectMarshallingWithMetadata():void {
+      
+    }
+    
+    public function testObjectMarshallingWithSetRelationships():void {
+      
+    }
+    
+    public function testObjectMarshallingWithNullRelationship():void {
+      
+    }
+    
+    public function testRecursiveObjectMarshalling():void {
+      
+    }
   }
 }

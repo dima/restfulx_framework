@@ -13,10 +13,23 @@ package ruboss.test.cases.serializers {
       vo = new VOSerializer;
     }
     
-    public function testSimpleObjectMarshalling():void {
+    public function testObjectMarshalling():void {
+      
     }
     
-    public function testSimpleObjectMarshallingWithMetadata():void {
+    public function testObjectMarshallingWithMetadata():void {
+      
+    }
+    
+    public function testObjectMarshallingWithSetRelationships():void {
+      
+    }
+    
+    public function testObjectMarshallingWithNullRelationship():void {
+      
+    }
+    
+    public function testRecursiveObjectMarshalling():void {
       
     }
   }

@@ -7,9 +7,9 @@ package ruboss.test.cases {
   import ruboss.test.commands.TestNameCommand;
   import ruboss.test.controllers.RubossTestController;
 
-  public class RubossCommandTest extends TestCase {
+  public class CommandsControllerTest extends TestCase {
     
-    public function RubossCommandTest(methodName:String) {
+    public function CommandsControllerTest(methodName:String) {
       super(methodName);
     }
     

@@ -13,6 +13,18 @@ package ruboss.test.cases {
       super(methodName);
     }
     
+    public function testCasting():void {
+      
+    }
+    
+    public function testUncasting():void {
+      
+    }
+    
+    public function testCloning():void {
+      
+    }
+    
     public function testResourceNesting():void {
       Ruboss.httpRootUrl = "/";
 
