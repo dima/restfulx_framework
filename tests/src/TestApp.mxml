@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" xmlns:flexunit="flexunit.flexui.*"
+  creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
+	<mx:Script>
+		<![CDATA[
+		  import org.ruboss.Ruboss;
+      import org.ruboss.services.mock.MockAIRServiceProvider;
+      import org.ruboss.services.mock.MockHTTPServiceProvider;
+      import ruboss.test.controllers.RubossTestController;
+		  import ruboss.test.cases.SimplePropertiesTest;
+      import ruboss.test.cases.RubossCommandTest;
+      import ruboss.test.cases.RubossUtilTest;
+			import flexunit.framework.TestSuite;
+			
+			private function onCreationComplete():void {
+			  Ruboss.enableLogging();
+        RubossTestController.initialize([MockHTTPServiceProvider, MockAIRServiceProvider], 
+          MockHTTPServiceProvider.ID, "ruboss-tests");
+          
+        var testData:Object = {
+          addresses: addresses
+        }
+
+        MockHTTPServiceProvider(Ruboss.services.getServiceProvider(MockHTTPServiceProvider.ID)).loadTestData(testData);
+        MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
+			  
+			  var testSuite:TestSuite = new TestSuite;
+			  addServiceDependentTests(testSuite, MockHTTPServiceProvider.ID);
+			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
+			  addNonServiceDependentTests(testSuite);
+ 				testRunner.test = testSuite;
+ 				testRunner.startTest();
+ 				
+ 				
+ 			}
+			
+			private function addServiceDependentTests(ts:TestSuite, serviceProviderId:int):void {
+ 				ts.addTest(new SimplePropertiesTest("testSimpleModelIndex", serviceProviderId));
+ 				ts.addTest(new SimplePropertiesTest("testSimpleModelCreate", serviceProviderId));
+ 				ts.addTest(new SimplePropertiesTest("testSimpleModelCreateFollowedByUpdate", serviceProviderId));			
+ 			}
+ 			
+ 			private function addNonServiceDependentTests(ts:TestSuite):void {
+ 			  ts.addTest(new RubossUtilTest("testResourceNesting"));
+ 			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
+        ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
+ 			}
+		]]>
+	</mx:Script>
+	<mx:XML source="ruboss/test/responses/addresses.xml" id="addresses"/>
+	<flexunit:TestRunnerBase id="testRunner" width="100%" height="100%"/>
+</mx:Application>
