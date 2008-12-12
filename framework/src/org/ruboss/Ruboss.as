@@ -21,12 +21,13 @@ package org.ruboss {
   import mx.logging.targets.TraceTarget;
   
   import org.ruboss.collections.RubossCollection;
-  import org.ruboss.controllers.RubossCommandsController;
-  import org.ruboss.controllers.RubossModelsController;
-  import org.ruboss.controllers.SimpleHTTPController;
+  import org.ruboss.controllers.AuxHTTPController;
+  import org.ruboss.controllers.CommandsController;
+  import org.ruboss.controllers.ModelsController;
+  import org.ruboss.controllers.SerializersController;
+  import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.IServiceErrors;
-  import org.ruboss.services.ServiceManager;
-  import org.ruboss.services.http.HTTPServiceProvider;
+  import org.ruboss.services.http.XMLHTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
   
   /**
@@ -38,13 +39,16 @@ package org.ruboss {
     public static var log:ILogger = Log.getLogger("org.ruboss");
 
     /** centralized access to RESTful CRUD operations on models */
-    public static var models:RubossModelsController;
+    public static var models:ModelsController;
     
     /** auxiliary (non-CRUD) commands controller */
-    public static var commands:RubossCommandsController;
+    public static var commands:CommandsController;
     
     /** exposes available service providers */
-    public static var services:ServiceManager;
+    public static var services:ServicesController;
+    
+    /** exposes available serializers */
+    public static var serializers:SerializersController;
     
     /** exposes errors reported by a given service provider */
     public static var errors:IServiceErrors;
@@ -56,11 +60,11 @@ package org.ruboss {
     public static var amfChannelId:String = "rubyamf";
     
     /** default service provider to use */
-    public static var defaultServiceId:int = HTTPServiceProvider.ID;
+    public static var defaultServiceId:int = XMLHTTPServiceProvider.ID;
     
     /** default http controller implementation to use */
-    public static var httpController:Class = SimpleHTTPController;
-    
+    public static var httpController:Class = AuxHTTPController;
+            
     /** 
      * If http controller handler function is set, it allows you to override 
      * behaviour of the send() function in the controller.
@@ -70,7 +74,7 @@ package org.ruboss {
      *  method:int = SimpleHTTPController.GET)
      */
     public static var httpControllerHandler:Function;
-
+    
     /** 
      * metadata allows us to tag arbitrary data along with any provider requests
      * this is typically useful with HTTP provider (but may be useful with other providers too).
@@ -80,12 +84,6 @@ package org.ruboss {
     
     /** default database name to use for AIR applications (if nothing else is provided) */
     public static var airDatabaseName:String = "rubossdb";
-    
-    /** 
-     * stores maximum allowed number of instances per model type in the cache
-     * used when paging to determine when to start throwing things out 
-     */
-    public static var cacheThreshold:Dictionary = new Dictionary;
     
     /**
      * stores current session id for use by URLRequest
@@ -122,7 +120,7 @@ package org.ruboss {
      * @return SimpleHTTPController instance
      */
     public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, 
-      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null):SimpleHTTPController {
+      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null):AuxHTTPController {
       return new httpController(optsOrResultHandler, faultHandler, contentType, rootUrl);    
     }
 
@@ -221,24 +219,6 @@ package org.ruboss {
      */
     public static function preventNullProperty(obj:Object, property:String, defaultObj:Object):Object {
       return (obj == null || obj[property] == null) ? defaultObj : obj[property];
-    }
-    
-    /**
-     * Set a max number of instances to be kept in cache for a given model class
-     *
-     * @param clazz the model class to set the threshold on
-     * @param maxItems maximum number of items
-     */
-    public static function setCacheThreshold(clazz:Class, maxItems:int):void {
-      cacheThreshold[Ruboss.models.names[clazz]] = maxItems;
-    }
-    
-    /**
-     * Removes any constraints on the number of items for a particular model in cache.
-     * @see setCacheThreshold
-     */
-    public static function resetCacheThreshold(clazz:Class):void {
-      delete cacheThreshold[Ruboss.models.names[clazz]];
     }
 
     /**

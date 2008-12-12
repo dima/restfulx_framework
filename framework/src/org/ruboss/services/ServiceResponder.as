@@ -12,12 +12,14 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss.services {
+  import flash.utils.getQualifiedClassName;
+  
   import mx.managers.CursorManager;
   import mx.rpc.IResponder;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.controllers.RubossModelsController;
   import org.ruboss.events.ServiceCallStopEvent;
+  import org.ruboss.utils.TypedArray;
 
   /**
    * Central response manager for RESTful CRUD operations.
@@ -26,25 +28,23 @@ package org.ruboss.services {
 
     private var handler:Function;
     private var service:IServiceProvider;
-    private var controller:RubossModelsController;
-    private var afterCallback:Object;
-    private var checkOrder:Boolean;
+    private var onSuccess:Object;
+    private var onFailure:Function;
 
     /**
      * @param handler function to call with the unmarshalled result
      * @param service IServiceProvider instance that we are dealing with
-     * @param controller reference to RubossModelsController instance
      * @param checkOrder true if ServiceResponder should enforce order on responses
-     * @param afterCallback optional user callback function or IResponder to call when
+     * @param onSuccess optional user callback function or IResponder to call when
      *  everything has been *successfully* processed
+     * @param onFailure
      */
-    public function ServiceResponder(handler:Function, service:IServiceProvider, 
-      controller:RubossModelsController, checkOrder:Boolean, afterCallback:Object = null) {
+    public function ServiceResponder(handler:Function, service:IServiceProvider, onSuccess:Object = null, 
+      onFailure:Function = null) {
       this.handler = handler;
       this.service = service;
-      this.controller = controller;
-      this.checkOrder = checkOrder;
-      this.afterCallback = afterCallback;
+      this.onSuccess = onSuccess;
+      this.onFailure = onFailure;
     }
 
     /**
@@ -52,30 +52,27 @@ package org.ruboss.services {
      */
     public function result(event:Object):void {
       CursorManager.removeBusyCursor();
-      controller.dispatchEvent(new ServiceCallStopEvent);
+      Ruboss.models.dispatchEvent(new ServiceCallStopEvent);
       if (handler != null) {
         if (!service.hasErrors(event.result)) {
-          var fqn:String = service.peek(event.result);
-          if (checkResultOrder(fqn, event)) {
-            if (fqn != null) Ruboss.log.debug("handling response for: " + fqn);
-            var checkedResult:Object = service.unmarshall(event.result);
-            handler(checkedResult);
-            for each (var dependant:Object in controller.state.queue[fqn]) {
-              var target:Object = dependant["target"];
-              var targetEvent:Object = dependant["event"];
-              IResponder(target).result(targetEvent);
-            }
-            // OK so we notified all the dependants, need to clean up
-            controller.state.queue[fqn] = new Array;
-            controller.state.fetching[fqn] = new Array;
-            // and fire user's callback responder here
-            if (afterCallback != null) {
-              invokeAfterCallback(checkedResult);
-            }     
+          var result:Object = service.unmarshall(event.result);
+          
+          var resultType:String;
+          if (result is TypedArray) {
+            resultType = TypedArray(result).itemType;
+          } else {
+            resultType = getQualifiedClassName(result);
           }
           
-          //reset the standalone flag
-          delete controller.state.standalone[fqn];
+          Ruboss.log.debug("handled response for: " + resultType);
+          delete Ruboss.models.state.waiting[resultType];
+          
+          handler(result);
+          
+          // and fire user's callback responder here
+          if (onSuccess != null) {
+            invokeOnSuccess(result);     
+          }
         }
       }
     }
@@ -86,59 +83,24 @@ package org.ruboss.services {
      */
     public function fault(error:Object):void {
       CursorManager.removeBusyCursor();
-      controller.dispatchEvent(new ServiceCallStopEvent);
-      invokeAfterCallbackErrorHandler(error);
+      Ruboss.models.dispatchEvent(new ServiceCallStopEvent);
+      invokeOnFailure(error);
       Ruboss.log.error(error.toString());
     }
-
-    private function checkResultOrder(fqn:String, event:Object):Boolean {
-      // if we didn't get an fqn from the service provider or we explicitly don't need to do
-      // checking then just return true
-      if (!fqn || !checkOrder) return true;
-      
-      var dependencies:Array = controller.state.fetching[fqn];
-            
-      if (!controller.state.standalone[fqn]) {
-        for each (var dependency:String in dependencies) {
-          // if we are waintg for this dependency and it's still missing, queue this response 
-          // for later 
-          if (controller.state.waiting[dependency]) {
-            Ruboss.log.debug("missing dependency: " + dependency + " of: " + fqn + 
-              " queuing this response until the dependency is received.");
-            (Ruboss.models.state.queue[dependency] as Array).push({"target":this, 
-              "event":event});
-            return false;
-          }
-        }
-      }
-
-      // if we didn't need to queue this response we should go through the current
-      // fetching stack and remove this fqn, so that the other models don't need to wait
-      // for it
-      for (var name:String in controller.state.fetching) {
-        var fetching:Array = controller.state.fetching[name] as Array;
-        var toRemove:int = fetching.indexOf(fqn);
-        if (toRemove > -1) {
-          fetching.splice(toRemove, 1);
-        }
-      }
-      
-      // OK, so looks like we have all the dependencies
-      delete controller.state.waiting[fqn];
-      return true;
-    }
     
-    private function invokeAfterCallback(result:Object):void {
-      if (afterCallback is IResponder) {
-        IResponder(afterCallback).result(result);
-      } else if (afterCallback is Function) {
-        (afterCallback as Function)(result);
+    private function invokeOnSuccess(result:Object):void {
+      if (onSuccess is IResponder) {
+        IResponder(onSuccess).result(result);
+      } else if (onSuccess is Function) {
+        (onSuccess as Function)(result);
       }
     }
     
-    private function invokeAfterCallbackErrorHandler(info:Object):void {
-      if (afterCallback is IResponder) {
-        IResponder(afterCallback).fault(info);
+    private function invokeOnFailure(info:Object):void {
+      if (onSuccess is IResponder) {
+        IResponder(onSuccess).fault(info);
+      } else if (onFailure != null && onFailure is Function) {
+        onFailure(info);
       } else {
         throw new Error("An error has occured while invoking service provider with id: " + service.id + 
           " :" + info.toString());        

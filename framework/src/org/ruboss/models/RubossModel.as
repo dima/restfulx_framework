@@ -13,6 +13,7 @@
  ******************************************************************************/
 package org.ruboss.models {
   import org.ruboss.Ruboss;
+  import org.ruboss.utils.RubossFileReference;
 
   /**
    * Encapsulates properties common to all model objects and wraps around a few
@@ -23,10 +24,10 @@ package org.ruboss.models {
     private var _label:String;
 
     /** all models have an id. this is typically unique per class of models */
-    public var id:int;
-
-    /** true if this model has been *fully* fetched as opposed to just stubbed out */
-    public var fetched:Boolean;
+    public var id:String;
+    
+    /** some models have a revision number */
+    public var rev:String;
 
     /** any model can have one attachment */
     public var attachment:RubossFileReference;
@@ -53,10 +54,61 @@ package org.ruboss.models {
      * @param targetServiceId service provider to use
      */
     [Bindable(event="propertyChange")]
-    public function show(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,
+    public function show(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
       fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1):Object {
-      return Ruboss.models.show(this, optionsHashOrAfterCallback, nestedBy, metadata, 
+      return Ruboss.models.show(this, optsOrOnSuccess, onFailure, nestedBy, metadata, 
         fetchDependencies, useLazyMode, targetServiceId);
+    }
+
+    /**
+     * Wrapper around Ruboss.models.create
+     *
+     * @see org.ruboss.controllers.RubossModelsController#create
+     * 
+     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     * clober the value of any subsequent parameters.
+     * @param nestedBy an array of model instances that should used to nest this request under
+     * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
+     * @param targetServiceId service provider to use
+     */
+    public function create(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
+      targetServiceId:int = -1):void {
+      Ruboss.models.create(this, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId);
+    }
+
+    /**
+     * Wrapper around Ruboss.models.update
+     *
+     * @see org.ruboss.controllers.RubossModelsController#update
+     * 
+     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     * clober the value of any subsequent parameters.
+     * @param nestedBy an array of model instances that should used to nest this request under
+     * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
+     * @param targetServiceId service provider to use
+     */
+    public function update(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
+      targetServiceId:int = -1):void {
+      Ruboss.models.update(this, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId);
+    }
+
+    /**
+     * Wrapper around Ruboss.models.destroy
+     *
+     * @see org.ruboss.controllers.RubossModelsController#destroy
+     * 
+     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+     * clober the value of any subsequent parameters.
+     * @param nestedBy an array of model instances that should used to nest this request under
+     * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
+     * @param targetServiceId service provider to use
+     */
+    public function destroy(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
+      targetServiceId:int = -1):void {
+      Ruboss.models.destroy(this, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId);
     }
 
     /**
@@ -73,62 +125,14 @@ package org.ruboss.models {
      * @param page page to request (only used by index method)
      * @param targetServiceId service provider to use
      */
-    public function reload(optsOrAfterCallback:Object = null, nestedBy:Array = null,
-      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true,
-      targetServiceId:int = -1):void {
-      Ruboss.models.reload(this, optsOrAfterCallback, nestedBy, metadata, fetchDependencies, useLazyMode,
-        -1, targetServiceId);
+    public function reload(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
+      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, targetServiceId:int = -1):void {
+      Ruboss.models.reload(this, optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, false,
+        targetServiceId);
     }
 
-    /**
-     * Wrapper around Ruboss.models.create
-     *
-     * @see org.ruboss.controllers.RubossModelsController#create
-     * 
-     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     * clober the value of any subsequent parameters.
-     * @param nestedBy an array of model instances that should used to nest this request under
-     * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
-     * @param targetServiceId service provider to use
-     */
-    public function create(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,
-      targetServiceId:int = -1):void {
-      Ruboss.models.create(this, optionsHashOrAfterCallback, nestedBy, metadata, targetServiceId);
-    }
-
-    /**
-     * Wrapper around Ruboss.models.update
-     *
-     * @see org.ruboss.controllers.RubossModelsController#update
-     * 
-     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     * clober the value of any subsequent parameters.
-     * @param nestedBy an array of model instances that should used to nest this request under
-     * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
-     * @param targetServiceId service provider to use
-     */
-    public function update(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,
-      targetServiceId:int = -1):void {
-      Ruboss.models.update(this, optionsHashOrAfterCallback, nestedBy, metadata, targetServiceId);
-    }
-
-    /**
-     * Wrapper around Ruboss.models.destroy
-     *
-     * @see org.ruboss.controllers.RubossModelsController#destroy
-     * 
-     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
-     * when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     * clober the value of any subsequent parameters.
-     * @param nestedBy an array of model instances that should used to nest this request under
-     * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
-     * @param targetServiceId service provider to use
-     */
-    public function destroy(optionsHashOrAfterCallback:Object = null, nestedBy:Array = null, metadata:Object = null,
-      targetServiceId:int = -1):void {
-      Ruboss.models.destroy(this, optionsHashOrAfterCallback, nestedBy, metadata, targetServiceId);
+    public function shown():Boolean {
+      return Ruboss.models.shown(this);
     }
 
     /**

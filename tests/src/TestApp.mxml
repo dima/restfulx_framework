@@ -3,50 +3,190 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.models.SingleTableInheritanceTest;
+		  import ruboss.test.cases.models.HasManyThroughRelationshipsTest;
+		  import ruboss.test.cases.models.NonStandardKeyRelationshipsTest;
+		  import ruboss.test.cases.models.TreeModelsTest;
+		  import ruboss.test.cases.models.PolymorphicRelationshipsTest;
+		  import ruboss.test.cases.models.BasicRelationshipsTest;
+		  import ruboss.test.cases.serializers.XMLSerializerTest;
+		  import org.ruboss.services.http.JSONHTTPServiceProvider;
+		  import ruboss.test.cases.bugs.Bug26Test;
+      import ruboss.test.cases.integration.JSONHTTPServiceProviderTest;
+		  import ruboss.test.cases.integration.AS3XMLHTTPServiceProviderTest;
+		  import org.ruboss.services.as3http.AS3XMLHTTPServiceProvider;
+		  import ruboss.test.cases.serializers.VOSerializerTest;
+		  import ruboss.test.cases.serializers.JSONSerializerTest;
 		  import org.ruboss.Ruboss;
+      import org.ruboss.services.mock.MockXMLHTTPServiceProvider;
       import org.ruboss.services.mock.MockAIRServiceProvider;
-      import org.ruboss.services.mock.MockHTTPServiceProvider;
       import ruboss.test.controllers.RubossTestController;
-		  import ruboss.test.cases.SimplePropertiesTest;
+		  import ruboss.test.cases.models.SimplePropertiesTest;
       import ruboss.test.cases.RubossCommandTest;
       import ruboss.test.cases.RubossUtilTest;
 			import flexunit.framework.TestSuite;
 			
 			private function onCreationComplete():void {
 			  Ruboss.enableLogging();
-        RubossTestController.initialize([MockHTTPServiceProvider, MockAIRServiceProvider], 
-          MockHTTPServiceProvider.ID, "ruboss-tests");
-          
+        RubossTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider, AS3XMLHTTPServiceProvider,
+          JSONHTTPServiceProvider], 
+          MockXMLHTTPServiceProvider.ID, "ruboss-tests");
+                    
         var testData:Object = {
-          addresses: addresses
+          simple_properties: simple_properties,
+          projects: projects,
+          tasks: tasks,
+          contractors: contractors,
+          locations: locations,
+          employees: employees,
+          customers: customers,
+          categories: categories,
+          movies: movies,
+          actors: actors,
+          payable_accounts: payable_accounts,
+          receivable_accounts: receivable_accounts,
+          billable_weeks: billable_weeks,
+          clients: clients,
+          timesheets: timesheets,
+          stores: stores,
+          books: books,
+          authors: authors
         }
 
-        MockHTTPServiceProvider(Ruboss.services.getServiceProvider(MockHTTPServiceProvider.ID)).loadTestData(testData);
+        MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
         MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
 			  
 			  var testSuite:TestSuite = new TestSuite;
-			  addServiceDependentTests(testSuite, MockHTTPServiceProvider.ID);
+			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
 			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
 			  addNonServiceDependentTests(testSuite);
+//        addIntegrationTests(testSuite);
  				testRunner.test = testSuite;
  				testRunner.startTest();
- 				
- 				
  			}
 			
 			private function addServiceDependentTests(ts:TestSuite, serviceProviderId:int):void {
- 				ts.addTest(new SimplePropertiesTest("testSimpleModelIndex", serviceProviderId));
- 				ts.addTest(new SimplePropertiesTest("testSimpleModelCreate", serviceProviderId));
- 				ts.addTest(new SimplePropertiesTest("testSimpleModelCreateFollowedByUpdate", serviceProviderId));			
+			  ts.addTest(new SimplePropertiesTest("testIndexWithEventListener", serviceProviderId));
+			  ts.addTest(new SimplePropertiesTest("testIndexWithOnSuccessFunction", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testIndexWithOnFailureFunction", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testCreate", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testCreateFollowedByUpdate", serviceProviderId));
+        
+        ts.addTest(new BasicRelationshipsTest("testBasicRelationshipsIndex", serviceProviderId));
+        
+        ts.addTest(new PolymorphicRelationshipsTest("testPolymorphicRelationshipsIndex", serviceProviderId));
+        
+        ts.addTest(new TreeModelsTest("testTreeModelIndex", serviceProviderId));
+        
+        ts.addTest(new NonStandardKeyRelationshipsTest("testNonStandardKeyRelationshipsIndex", serviceProviderId));
+        
+        ts.addTest(new HasManyThroughRelationshipsTest("testHasManyThroughForm1Index", serviceProviderId));
+        ts.addTest(new HasManyThroughRelationshipsTest("testHasManyThroughForm2Index", serviceProviderId));
+        
+        ts.addTest(new SingleTableInheritanceTest("testSTIIndex", serviceProviderId));
  			}
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
+ 			  
  			  ts.addTest(new RubossCommandTest("testCommandExecutionByClass"));
         ts.addTest(new RubossCommandTest("testCommandExecutionByName"));
+        
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasOneAndHasManies"));
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasManyThroughs"));
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasOneAndHasManiesDiffNames"));
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicHasOne"));
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicBelongsTo"));
+        
+        // TODO: XML marshalling tests
+        
+        ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));
+        ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
+        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
+        
+        // TODO: JSON marshalling tests and nested resources unmarshalling
+        
+        ts.addTest(new VOSerializerTest("testSimpleObjectMarshalling"));
+        ts.addTest(new VOSerializerTest("testSimpleObjectMarshallingWithMetadata"));
+        
+        // TODO: VO unmarshalling tests
+        
+        ts.addTest(new Bug26Test("testUserShow"));
+        ts.addTest(new Bug26Test("testContactAShow"));
+        ts.addTest(new Bug26Test("testContactBShow"));
+ 			}
+ 			
+ 			private function addIntegrationTests(ts:TestSuite):void {
+ 			  ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
+        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
+        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testIndex"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testCreate"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testUpdate"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testDestroy"));
  			}
 		]]>
 	</mx:Script>
-	<mx:XML source="ruboss/test/responses/addresses.xml" id="addresses"/>
+	<!-- basic properties -->
+  <mx:XML id="simple_properties" source="ruboss/test/responses/simple_properties.xml"/>
+  
+  <!-- basic relationships -->
+  <mx:XML id="projects" source="ruboss/test/responses/projects.xml"/>
+  <mx:XML id="tasks" source="ruboss/test/responses/tasks.xml"/>
+  <mx:XML id="contractors" source="ruboss/test/responses/contractors.xml"/>
+  
+  <!-- polymorphic relationships -->
+  <mx:XML id="locations" source="ruboss/test/responses/locations.xml"/>
+  <mx:XML id="customers" source="ruboss/test/responses/customers.xml"/>
+  <mx:XML id="employees" source="ruboss/test/responses/employees.xml"/>
+  
+  <!-- tree-like structures -->
+  <mx:XML id="categories" source="ruboss/test/responses/categories.xml"/>
+  
+  <!-- different key relationships -->
+  <mx:XML id="movies" source="ruboss/test/responses/movies.xml"/>
+  <mx:XML id="actors" source="ruboss/test/responses/actors.xml"/>
+  
+  <!-- STI -->
+  <mx:XML id="payable_accounts" source="ruboss/test/responses/payable_accounts.xml"/>
+  <mx:XML id="receivable_accounts" source="ruboss/test/responses/receivable_accounts.xml"/>
+  
+  <!-- TODO: generic STI (e.g. accounts) returns XML with records, which won't be parsed -->
+
+  <!-- HasMany(through) form 1 -->
+  <mx:XML id="billable_weeks" source="ruboss/test/responses/billable_weeks.xml"/>
+  <mx:XML id="clients" source="ruboss/test/responses/clients.xml"/>
+  <mx:XML id="timesheets" source="ruboss/test/responses/timesheets.xml"/>
+
+  <!-- HasMany(through) form 2 -->
+  <mx:XML id="stores" source="ruboss/test/responses/stores.xml"/>
+  <mx:XML id="books" source="ruboss/test/responses/books.xml"/>
+  <mx:XML id="authors" source="ruboss/test/responses/authors.xml"/>
+  
+  <!-- Standard named HasOne and HasMany includes -->
+  <mx:XML id="project_with_contractor_and_tasks" source="ruboss/test/responses/project_with_contractor_and_tasks.xml"/>
+ 
+  <!-- Non-standard named HasOne and HasMany includes -->
+  <mx:XML id="movie_with_lead_actor_and_actors" source="ruboss/test/responses/movie_with_lead_actor_and_actors.xml"/>
+
+  <!-- Polymorphic HasOne included -->
+  <mx:XML id="customer_with_location" source="ruboss/test/responses/customer_with_location.xml"/>
+  
+  <!-- Polymorphic BelongsTo included -->
+  <mx:XML id="location_with_owner" source="ruboss/test/responses/location_with_owner.xml"/>
+  
+  <!-- HasMany and HasMany(:through) form 1 included -->
+  <mx:XML id="timesheet_with_clients_and_billable_weeks" source="ruboss/test/responses/timesheet_with_clients_and_billable_weeks.xml"/>
+
+  <!-- HasMany(:through) form 1 with different names included -->
+  <mx:XML id="client_with_timesheets_and_incomplete_timesheets" source="ruboss/test/responses/client_with_timesheets_and_incomplete_timesheets.xml"/>
+
+  <!-- HasMany(:through) form 2 included -->
+  <mx:XML id="store_with_authors" source="ruboss/test/responses/store_with_authors.xml"/>
+  	
+	<!-- Reported Bugs -->
+	<mx:XML id="bug26user" source="ruboss/test/responses/bug26/user.xml"/>
+	<mx:XML id="bug26contactA" source="ruboss/test/responses/bug26/contactA.xml"/>
+	<mx:XML id="bug26contactB" source="ruboss/test/responses/bug26/contactB.xml"/>
 	<flexunit:TestRunnerBase id="testRunner" width="100%" height="100%"/>
 </mx:Application>

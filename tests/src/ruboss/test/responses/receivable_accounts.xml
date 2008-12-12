@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<receivable_accounts type="array">
+  <receivable_account>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">45555255</id>
+    <name>Account2NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </receivable_account>
+  <receivable_account>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">755684105</id>
+    <name>Account4NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </receivable_account>
+</receivable_accounts>

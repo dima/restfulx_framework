@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contractors type="array">
+  <contractor>
+    <address>Contractor1AddressString</address>
+    <city>Contractor1CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">31860404</id>
+    <name>Contractor1NameString</name>
+    <project_id type="integer">1060557696</project_id>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </contractor>
+  <contractor>
+    <address>Contractor2AddressString</address>
+    <city>Contractor2CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">59150087</id>
+    <name>Contractor2NameString</name>
+    <project_id type="integer">1043718716</project_id>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </contractor>
+  <contractor>
+    <address>Contractor3AddressString</address>
+    <city>Contractor3CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">744539545</id>
+    <name>Contractor3NameString</name>
+    <project_id type="integer">1063252898</project_id>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </contractor>
+  <contractor>
+    <address>Contractor4AddressString</address>
+    <city>Contractor4CityString</city>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">820532840</id>
+    <name>Contractor4NameString</name>
+    <project_id type="integer">490909803</project_id>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </contractor>
+</contractors>

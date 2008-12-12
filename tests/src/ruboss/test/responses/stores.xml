@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stores type="array">
+  <store>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">458237344</id>
+    <name>Store4NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </store>
+  <store>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">965566536</id>
+    <name>Store3NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </store>
+  <store>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">976752325</id>
+    <name>Store1NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </store>
+  <store>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">1019959561</id>
+    <name>Store2NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </store>
+</stores>

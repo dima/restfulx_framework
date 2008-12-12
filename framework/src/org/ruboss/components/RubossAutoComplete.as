@@ -92,7 +92,7 @@ package org.ruboss.components {
     private function invokeSearch(event:TimerEvent):void {
       if (RubossUtils.isEmpty(typedText)) return;
       Ruboss.http(onResourceSearch).invoke({URL:
-        RubossUtils.nestResource(resource), data: {search: typedText}, cacheBy: "page"});
+        RubossUtils.nestResource(resource), data: {search: typedText}, cacheBy: "index"});
     }
         
     private function onResourceSearch(results:Object):void {
@@ -172,7 +172,7 @@ package org.ruboss.components {
           dropdownClosed = true;
         } else if (event.keyCode == Keyboard.ENTER) {
           if (selectedItem != null) {
-            if (RubossModel(selectedItem).show({afterCallback: onResourceShow, useLazyMode: true})) {
+            if (RubossModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true})) {
               onResourceShow(selectedItem);
             }           
           }

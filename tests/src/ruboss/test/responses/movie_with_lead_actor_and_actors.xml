@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<movie>
+  <created_at type="datetime">2008/12/09 00:02:40</created_at>
+  <id type="integer">424007417</id>
+  <name>Movie3NameString</name>
+  <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  <actors type="array">
+    <actor>
+      <action_movie_id type="integer">771938308</action_movie_id>
+      <created_at type="datetime">2008/12/09 00:02:40</created_at>
+      <documentary_id type="integer">728731072</documentary_id>
+      <id type="integer">749893764</id>
+      <movie_id type="integer">424007417</movie_id>
+      <name>Actor3NameString</name>
+      <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+    </actor>
+  </actors>
+  <lead_actor>
+    <action_movie_id type="integer">771938308</action_movie_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <documentary_id type="integer">728731072</documentary_id>
+    <id type="integer">749893764</id>
+    <movie_id type="integer">424007417</movie_id>
+    <name>Actor3NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </lead_actor>
+</movie>
