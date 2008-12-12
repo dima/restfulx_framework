@@ -11,7 +11,7 @@
 		  import ruboss.test.cases.models.BasicRelationshipsTest;
 		  import ruboss.test.cases.serializers.XMLSerializerTest;
 		  import org.ruboss.services.http.JSONHTTPServiceProvider;
-		  import ruboss.test.cases.Bug26Test;
+		  import ruboss.test.cases.bugs.Bug26Test;
       import ruboss.test.cases.integration.JSONHTTPServiceProviderTest;
 		  import ruboss.test.cases.integration.AS3XMLHTTPServiceProviderTest;
 		  import org.ruboss.services.as3http.AS3XMLHTTPServiceProvider;
@@ -98,28 +98,32 @@
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicHasOne"));
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicBelongsTo"));
         
-        // add XML marshalling tests
+        // TODO: XML marshalling tests
         
         ts.addTest(new JSONSerializerTest("testSimpleObjectUnmarshalling"));
         ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
         ts.addTest(new JSONSerializerTest("testObjectMarshallingWithRelationships"));
         
-        // add JSON marshalling tests and nested resources unmarshalling
+        // TODO: JSON marshalling tests and nested resources unmarshalling
         
         ts.addTest(new VOSerializerTest("testSimpleObjectMarshalling"));
         ts.addTest(new VOSerializerTest("testSimpleObjectMarshallingWithMetadata"));
         
-        // add VO unmarshalling tests
+        // TODO: VO unmarshalling tests
+        
+        ts.addTest(new Bug26Test("testUserShow"));
+        ts.addTest(new Bug26Test("testContactAShow"));
+        ts.addTest(new Bug26Test("testContactBShow"));
  			}
  			
  			private function addIntegrationTests(ts:TestSuite):void {
-// 			  ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
-//        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
-//        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));
-//        ts.addTest(new JSONHTTPServiceProviderTest("testIndex"));
-//        ts.addTest(new JSONHTTPServiceProviderTest("testCreate"));
-//        ts.addTest(new JSONHTTPServiceProviderTest("testUpdate"));
-//        ts.addTest(new JSONHTTPServiceProviderTest("testDestroy"));
+ 			  ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
+        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
+        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testIndex"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testCreate"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testUpdate"));
+        ts.addTest(new JSONHTTPServiceProviderTest("testDestroy"));
  			}
 		]]>
 	</mx:Script>

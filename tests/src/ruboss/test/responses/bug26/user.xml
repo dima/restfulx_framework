@@ -37,68 +37,6 @@
       <user_id type="integer">981972180</user_id>
     </user_datagrid_pref>
   </user_datagrid_prefs>
-  <user_group>
-    <address1>4030 Moorpark Ave, Suite 114</address1>
-    <address2/>
-    <available_contacts type="integer">1000</available_contacts>
-    <available_minutes type="integer">1000</available_minutes>
-    <city>San Jose</city>
-    <id type="integer">477749732</id>
-    <state>CA</state>
-    <user_group_name>NeoAccel, Inc.</user_group_name>
-    <zip>95117</zip>
-    <keys type="array">
-      <key>
-        <id type="integer">330336108</id>
-        <key_comp_name>timeframe</key_comp_name>
-        <key_name>Timeframe</key_name>
-        <key_visible_on_contact_show type="boolean">true</key_visible_on_contact_show>
-        <user_group_id type="integer">477749732</user_group_id>
-      </key>
-      <key>
-        <id type="integer">412777239</id>
-        <key_comp_name>currentvpn</key_comp_name>
-        <key_name>Current VPN</key_name>
-        <key_visible_on_contact_show type="boolean">true</key_visible_on_contact_show>
-        <user_group_id type="integer">477749732</user_group_id>
-      </key>
-      <key>
-        <id type="integer">626465586</id>
-        <key_comp_name>email</key_comp_name>
-        <key_name>Email</key_name>
-        <key_visible_on_contact_show type="boolean">false</key_visible_on_contact_show>
-        <user_group_id type="integer">477749732</user_group_id>
-      </key>
-      <key>
-        <id type="integer">669672822</id>
-        <key_comp_name>name</key_comp_name>
-        <key_name>Name</key_name>
-        <key_visible_on_contact_show type="boolean">false</key_visible_on_contact_show>
-        <user_group_id type="integer">477749732</user_group_id>
-      </key>
-      <key>
-        <id type="integer">669672824</id>
-        <key_comp_name>title</key_comp_name>
-        <key_name>Title</key_name>
-        <key_visible_on_contact_show type="boolean">false</key_visible_on_contact_show>
-        <user_group_id type="integer">477749732</user_group_id>
-      </key>
-      <key>
-        <id type="integer">669672825</id>
-        <key_comp_name>company</key_comp_name>
-        <key_name>Company</key_name>
-        <key_visible_on_contact_show type="boolean">false</key_visible_on_contact_show>
-        <user_group_id type="integer">477749732</user_group_id>
-      </key>
-      <key>
-        <id type="integer">669672826</id>
-        <key_comp_name>vmware</key_comp_name>
-        <key_name>VMware</key_name>
-        <key_visible_on_contact_show type="boolean">true</key_visible_on_contact_show>
-        <user_group_id type="integer">477749732</user_group_id>
-      </key>
-    </keys>
-  </user_group>
   <contacts type="array">
     <contact>
       <id type="integer">118091363</id>
@@ -295,4 +233,66 @@
       </kvs>
     </contact>
   </contacts>
+  <user_group>
+    <address1>4030 Moorpark Ave, Suite 114</address1>
+    <address2/>
+    <available_contacts type="integer">1000</available_contacts>
+    <available_minutes type="integer">1000</available_minutes>
+    <city>San Jose</city>
+    <id type="integer">477749732</id>
+    <state>CA</state>
+    <user_group_name>NeoAccel, Inc.</user_group_name>
+    <zip>95117</zip>
+    <keys type="array">
+      <key>
+        <id type="integer">330336108</id>
+        <key_comp_name>timeframe</key_comp_name>
+        <key_name>Timeframe</key_name>
+        <key_visible_on_contact_show type="boolean">true</key_visible_on_contact_show>
+        <user_group_id type="integer">477749732</user_group_id>
+      </key>
+      <key>
+        <id type="integer">412777239</id>
+        <key_comp_name>currentvpn</key_comp_name>
+        <key_name>Current VPN</key_name>
+        <key_visible_on_contact_show type="boolean">true</key_visible_on_contact_show>
+        <user_group_id type="integer">477749732</user_group_id>
+      </key>
+      <key>
+        <id type="integer">626465586</id>
+        <key_comp_name>email</key_comp_name>
+        <key_name>Email</key_name>
+        <key_visible_on_contact_show type="boolean">false</key_visible_on_contact_show>
+        <user_group_id type="integer">477749732</user_group_id>
+      </key>
+      <key>
+        <id type="integer">669672822</id>
+        <key_comp_name>name</key_comp_name>
+        <key_name>Name</key_name>
+        <key_visible_on_contact_show type="boolean">false</key_visible_on_contact_show>
+        <user_group_id type="integer">477749732</user_group_id>
+      </key>
+      <key>
+        <id type="integer">669672824</id>
+        <key_comp_name>title</key_comp_name>
+        <key_name>Title</key_name>
+        <key_visible_on_contact_show type="boolean">false</key_visible_on_contact_show>
+        <user_group_id type="integer">477749732</user_group_id>
+      </key>
+      <key>
+        <id type="integer">669672825</id>
+        <key_comp_name>company</key_comp_name>
+        <key_name>Company</key_name>
+        <key_visible_on_contact_show type="boolean">false</key_visible_on_contact_show>
+        <user_group_id type="integer">477749732</user_group_id>
+      </key>
+      <key>
+        <id type="integer">669672826</id>
+        <key_comp_name>vmware</key_comp_name>
+        <key_name>VMware</key_name>
+        <key_visible_on_contact_show type="boolean">true</key_visible_on_contact_show>
+        <user_group_id type="integer">477749732</user_group_id>
+      </key>
+    </keys>
+  </user_group>
 </user>
