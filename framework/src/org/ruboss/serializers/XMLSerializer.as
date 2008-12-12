@@ -71,10 +71,10 @@ package org.ruboss.serializers {
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(nodeName);
         
-        if (RubossUtils.isInvalidPropertyName(nodeName) || RubossUtils.isInvalidPropertyType(type) || object[nodeName] == null) continue;
+        if (RubossUtils.isInvalidPropertyName(nodeName) || RubossUtils.isInvalidPropertyType(type)) continue;
         
         if (RubossUtils.isHasMany(node)) {
-          if (!recursive) continue;
+          if (!recursive || object[nodeName] == null) continue;
           var embedded:Array = new Array;
           for each (var item:Object in object[nodeName]) {
             if (item != parent) {
@@ -83,21 +83,29 @@ package org.ruboss.serializers {
           }
           vars.push("<" + snakeName + " type=\"array\">" + embedded.join("") + "</" + snakeName + ">");          
         } else if (RubossUtils.isHasOne(node)) {
-          if (!recursive) continue;
+          if (!recursive || object[nodeName] == null) continue;
           vars.push(marshallToXML(object[nodeName], recursive, metadata, object).toXMLString());          
         } else if (RubossUtils.isBelongsTo(node)) {
           if (recursive && object[nodeName] == parent) continue;
           var descriptor:XML = RubossUtils.getAttributeAnnotation(node, "BelongsTo")[0];
           var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
 
-          vars.push(("<" + snakeName + "_id>" + object[nodeName]["id"] + "</" + snakeName + "_id>"));
-          if (polymorphic) {
-            vars.push(("<" + snakeName + "_type>" + getQualifiedClassName(object[nodeName]).split("::")[1] + 
-              "</" + snakeName + "_type>"));
-          }            
+          if (object[nodeName]) {
+            vars.push(("<" + snakeName + "_id>" + object[nodeName]["id"] + "</" + snakeName + "_id>"));
+            if (polymorphic) {
+              vars.push(("<" + snakeName + "_type>" + getQualifiedClassName(object[nodeName]).split("::")[1] + 
+                "</" + snakeName + "_type>"));
+            } 
+          } else {
+            vars.push("<" + snakeName + "_id/>");
+          }
         } else {
-          vars.push(("<" + snakeName + ">" + 
-            RubossUtils.uncast(object, nodeName) + "</" + snakeName + ">"));               
+          if (object[nodeName]) {
+            vars.push(("<" + snakeName + ">" + 
+              RubossUtils.uncast(object, nodeName) + "</" + snakeName + ">"));
+          } else {
+            vars.push("<" + snakeName + "/>");
+          }
         }
       }
 
@@ -137,7 +145,8 @@ package org.ruboss.serializers {
       for each (var element:XML in node.elements()) {
         var targetName:String = element.localName();
         var defaultValue:* = null;
-        if (targetName.search(/.*_id$/) == -1) {
+        
+        if (targetName.search(/.+\_id$/) == -1 && element.text().length() == 1) {
           defaultValue = RubossUtils.cast(element.@type, element.toString());
         }
         unmarshallAttribute(node, object, element, fqn, targetName, defaultValue, 

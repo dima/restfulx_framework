@@ -78,7 +78,7 @@ package org.ruboss.serializers {
         var targetName:String = property;
         var camelTargetName:String = RubossUtils.toCamelCase(targetName);
         var defaultValue:* = null;
-        if (targetName.search(/.*_id$/) == -1) {
+        if (targetName.search(/.*_id$/) == -1 && source[property] != null) {
           var targetType:String = getType(XMLList(metadata..accessor.(@name == camelTargetName))[0]).toLowerCase();
           defaultValue = RubossUtils.cast(targetType, source[property]);
         }
@@ -120,8 +120,9 @@ package org.ruboss.serializers {
           }
         } else {
           if (object[nodeName]) {
-            result[snakeName] = 
-              RubossUtils.uncast(object, nodeName);
+            result[snakeName] = RubossUtils.uncast(object, nodeName);
+          } else {
+            result[snakeName] = null;
           }
         }
       }

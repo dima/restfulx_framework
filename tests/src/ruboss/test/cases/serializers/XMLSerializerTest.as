@@ -12,6 +12,7 @@ package ruboss.test.cases.serializers {
   import ruboss.test.models.Location;
   import ruboss.test.models.Movie;
   import ruboss.test.models.Project;
+  import ruboss.test.models.SimpleProperty;
   import ruboss.test.models.Task;
   import ruboss.test.models.Timesheet;
 
@@ -79,23 +80,86 @@ package ruboss.test.cases.serializers {
     }
     
     public function testObjectMarshalling():void {
-      
+      var simpleProperty:SimpleProperty = getNewSimpleProperty();
+      var marshalled:XML = xml.marshall(simpleProperty) as XML;
+      var marshalledText:String = 
+      "<simple_property>\n" + 
+      "  <quantity>10.05</quantity>\n" + 
+      "  <name>Foobar</name>\n" + 
+      "  <created_at/>\n" + 
+      "  <delivered_on/>\n" + 
+      "  <amount>2</amount>\n" + 
+      "  <price>1.7</price>\n" + 
+      "  <available>true</available>\n" + 
+      "  <sold_on/>\n" + 
+      "</simple_property>";
+      assertEquals(marshalledText, marshalled.toXMLString());
     }
     
     public function testObjectMarshallingWithMetadata():void {
-      
+      var simpleProperty:SimpleProperty = getNewSimpleProperty();
+      var metadata:Object = {foo: 'bar', hello: 'world'};
+      var marshalled:XML = xml.marshall(simpleProperty, false, metadata) as XML;
+      var marshalledText:String =
+        "<simple_property>\n" +
+        "  <quantity>10.05</quantity>\n" +
+        "  <name>Foobar</name>\n" +
+        "  <created_at/>\n" +
+        "  <delivered_on/>\n" +
+        "  <amount>2</amount>\n" +
+        "  <price>1.7</price>\n" +
+        "  <available>true</available>\n" +
+        "  <sold_on/>\n" +
+        "  <_metadata>\n" +
+        "    <hello>world</hello>\n" +
+        "    <foo>bar</foo>\n" +
+        "  </_metadata>\n" +
+        "</simple_property>";
+      assertEquals(marshalledText, marshalled.toXMLString());
     }
     
     public function testObjectMarshallingWithSetRelationships():void {
-      
+      var task:Task = new Task;
+      task.id = "21";
+      task.name = "Task1";
+      var project:Project = new Project;
+      project.id = "11";
+      project.name = "Task2";
+      task.project = project;
+      var marshalled:XML= xml.marshall(task) as XML;
+      var marshalledText:String =
+        "<task>\n" +
+        "  <project_id>11</project_id>\n" +
+        "  <name>Task1</name>\n" +
+        "</task>";
+      assertEquals(marshalledText, marshalled.toXMLString());
     }
     
     public function testObjectMarshallingWithNullRelationship():void {
-      
+      var task:Task = new Task;
+      task.id = "21";
+      task.name = "Task1";
+      var marshalled:XML= xml.marshall(task) as XML;
+      var marshalledText:String =
+        "<task>\n" +
+        "  <project_id/>\n" +
+        "  <name>Task1</name>\n" +
+        "</task>";
+      assertEquals(marshalledText, marshalled.toXMLString());          
     }
     
     public function testRecursiveObjectMarshalling():void {
       
+    }
+
+    private function getNewSimpleProperty():SimpleProperty {
+      var model:SimpleProperty = new SimpleProperty;
+      model.amount = 2;
+      model.available = true;
+      model.name = "Foobar";
+      model.price = 1.7;
+      model.quantity = 10.05;
+      return model;      
     }
   }
 }
