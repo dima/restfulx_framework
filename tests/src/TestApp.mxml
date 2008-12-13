@@ -3,6 +3,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.ReferenceCleanupTest;
 		  import ruboss.test.cases.models.SelfReferentialModelsTest;
 		  import ruboss.test.cases.models.SingleTableInheritanceTest;
 		  import ruboss.test.cases.models.HasManyThroughRelationshipsTest;
@@ -122,6 +123,10 @@
         ts.addTest(new VOSerializerTest("testObjectMarshallingWithSetRelationships"));
         ts.addTest(new VOSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new VOSerializerTest("testRecursiveObjectMarshalling"));
+        
+        ts.addTest(new ReferenceCleanupTest("testHasManyRelationshipCleanup"));
+        ts.addTest(new ReferenceCleanupTest("testHasOneRelationshipCleanup"));
+        ts.addTest(new ReferenceCleanupTest("testSelfReferentialModelCleanup"));
         
         // TODO: VO unmarshalling tests
         

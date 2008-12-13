@@ -45,7 +45,8 @@ package org.ruboss.services.mock {
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(localName);
   
-        if (isInvalidPropertyType(type) || isInvalidPropertyName(localName) || RubossUtils.isHasOne(node)) continue;
+        if (RubossUtils.isInvalidPropertyType(type) || RubossUtils.isInvalidPropertyName(localName) 
+          || RubossUtils.isHasOne(node)) continue;
                     
         if (RubossUtils.isBelongsTo(node)) {
           if (RubossUtils.isPolymorphicBelongsTo(node)) {

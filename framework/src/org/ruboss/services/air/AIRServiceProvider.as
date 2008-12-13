@@ -177,7 +177,8 @@ package org.ruboss.services.air {
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(localName);
   
-        if (isInvalidPropertyType(type) || isInvalidPropertyName(localName) || RubossUtils.isHasOne(node)) continue;
+        if (RubossUtils.isInvalidPropertyType(type) || RubossUtils.isInvalidPropertyName(localName) 
+          || RubossUtils.isHasOne(node)) continue;
                     
         if (RubossUtils.isBelongsTo(node)) {
           if (RubossUtils.isPolymorphicBelongsTo(node)) {
@@ -219,7 +220,8 @@ package org.ruboss.services.air {
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(localName);
   
-        if (isInvalidPropertyType(type) || isInvalidPropertyName(localName) || RubossUtils.isHasOne(node)) continue;
+        if (RubossUtils.isInvalidPropertyType(type) || RubossUtils.isInvalidPropertyName(localName) 
+          || RubossUtils.isHasOne(node)) continue;
   
         if (RubossUtils.isBelongsTo(node)) {
           if (RubossUtils.isPolymorphicBelongsTo(node)) {
@@ -258,14 +260,6 @@ package org.ruboss.services.air {
         responder.fault(e);
       }
     }
-    
-    protected function isInvalidPropertyType(type:String):Boolean {
-      return RubossUtils.isInvalidPropertyType(type);
-    }
-    
-    protected function isInvalidPropertyName(name:String):Boolean {
-      return RubossUtils.isInvalidPropertyName(name);
-    }
 
     protected function getSQLType(node:XML):String {
       var type:String = node.@type;
@@ -298,7 +292,8 @@ package org.ruboss.services.air {
         var snakeName:String = RubossUtils.toSnakeCase(node.@name);
         var type:String = node.@type;
         
-        if (isInvalidPropertyType(type) || isInvalidPropertyName(node.@name) || RubossUtils.isHasOne(node)) continue;
+        if (RubossUtils.isInvalidPropertyType(type) || RubossUtils.isInvalidPropertyName(node.@name) 
+          || RubossUtils.isHasOne(node)) continue;
         
         if (RubossUtils.isBelongsTo(node)) {
           if (RubossUtils.isPolymorphicBelongsTo(node)) {

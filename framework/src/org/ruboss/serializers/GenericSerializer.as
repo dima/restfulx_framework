@@ -5,7 +5,6 @@ package org.ruboss.serializers {
   
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
-  import org.ruboss.models.RubossModel;
   import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.RubossUtils;
   
@@ -27,33 +26,33 @@ package org.ruboss.serializers {
 
     // needs some testing too
     public function cleanupModelReferences(model:Object, fqn:String):void {
-      var property:String = RubossUtils.toCamelCase(state.controllers[fqn]);
-      var localName:String = state.names[fqn]["single"];
-      for each (var dependency:String in state.eager[fqn]) {
-        for each (var item:Object in Ruboss.models.cache.data[dependency]) {
-          if (ObjectUtil.hasMetadata(item, property, "HasMany") && item[property] != null) {
-            var items:ModelsCollection = ModelsCollection(item[property]);
+      for (var reference:String in state.refs[fqn]) {
+        var referAs:String = state.refs[fqn][reference]["referAs"];
+        var referAsPlural:String = referAs;
+        var referAsSingle:String = referAs;
+        
+        if (RubossUtils.isEmpty(referAs)) {
+          referAsPlural = state.names[fqn]["plural"];
+          referAsSingle = state.names[fqn]["single"];
+          if (reference == "parent") {
+            referAsPlural = "children";
+          }
+        }
+        
+        var type:String = state.refs[fqn][reference]["type"];
+        if (ObjectUtil.hasMetadata(model, reference, "BelongsTo") && model[reference] != null) {
+          // go into the reference and clean up any refs to this object from [HasMany] annotated
+          // properties
+          if (model[reference].hasOwnProperty(referAsPlural) && model[reference][referAsPlural] != null 
+            && model[reference][referAsPlural] is ModelsCollection) {
+            var items:ModelsCollection = ModelsCollection(model[reference][referAsPlural]);
             if (items.hasItem(model)) {
               items.removeItem(model);
-            } 
-          }
-          if (ObjectUtil.hasMetadata(item, localName, "HasOne") && item[localName] != null) {
-            item[localName] = null;
+            }
+          } else if (model[reference].hasOwnProperty(referAsSingle) && model[reference][referAsSingle] != null) {
+            model[reference][referAsSingle] = null;
           }
         }
-      }
-      if (model.hasOwnProperty("parent") && model["parent"] != null && model["parent"].hasOwnProperty("children") &&
-        model["parent"]["children"] != null) {
-        var parentChildren:ModelsCollection = ModelsCollection(model["parent"]["children"]);
-        if (parentChildren.hasItem(model)) {
-          parentChildren.removeItem(model);
-        }
-      }
-      if (model.hasOwnProperty("children") && model["children"] != null) {
-        var children:ModelsCollection = ModelsCollection(model["children"]);
-        for each (var child:Object in children) {
-          Ruboss.models.cache.destroy(RubossModel(child));
-        }  
       }
     }
 
@@ -122,7 +121,11 @@ package org.ruboss.serializers {
         if (isRef) {
           var refId:String = (attribute) ? attribute.toString() : "";
           if (RubossUtils.isEmpty(refId)) {
-            Ruboss.log.warn("reference id :" + fqn + "." + targetName + " is empty, skipping this relationship.");
+            Ruboss.log.warn("reference id :" + fqn + "." + targetName + " is empty, setting it to null.");
+            if (updatingExistingReference) {
+              cleanupModelReferences(object, fqn);
+            }
+            object[targetName] = null;
             return;
           }
           

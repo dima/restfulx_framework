@@ -1,6 +1,7 @@
 package ruboss.test.cases.models {
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
+  import org.ruboss.controllers.ModelsController;
   import org.ruboss.events.CacheUpdateEvent;
   
   import ruboss.test.RubossTestCase;
@@ -21,6 +22,7 @@ package ruboss.test.cases.models {
     
     private function onIndex(event:CacheUpdateEvent):void {
       if (Ruboss.models.indexed(Project, Task, Contractor)) {
+        var models:ModelsController = Ruboss.models;
         var projects:ModelsCollection = Ruboss.models.cached(Project);
         var contractors:ModelsCollection = Ruboss.models.cached(Contractor);
         var tasks:ModelsCollection = Ruboss.models.cached(Task);
