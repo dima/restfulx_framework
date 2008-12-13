@@ -3,6 +3,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.models.SelfReferentialModelsTest;
 		  import ruboss.test.cases.models.SingleTableInheritanceTest;
 		  import ruboss.test.cases.models.HasManyThroughRelationshipsTest;
 		  import ruboss.test.cases.models.NonStandardKeyRelationshipsTest;
@@ -50,7 +51,8 @@
           timesheets: timesheets,
           stores: stores,
           books: books,
-          authors: authors
+          authors: authors,
+          facebook_users: facebook_users
         }
 
         MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
@@ -77,6 +79,8 @@
         ts.addTest(new PolymorphicRelationshipsTest("testPolymorphicRelationshipsIndex", serviceProviderId));
         
         ts.addTest(new TreeModelsTest("testTreeModelIndex", serviceProviderId));
+        
+        ts.addTest(new SelfReferentialModelsTest("testModelsWithSelfReferenceIndex", serviceProviderId));
         
         ts.addTest(new NonStandardKeyRelationshipsTest("testNonStandardKeyRelationshipsIndex", serviceProviderId));
         
@@ -152,6 +156,9 @@
   
   <!-- tree-like structures -->
   <mx:XML id="categories" source="ruboss/test/responses/categories.xml"/>
+  
+  <!-- self-referential models -->
+  <mx:XML id="facebook_users" source="ruboss/test/responses/facebook_users.xml"/>
   
   <!-- different key relationships -->
   <mx:XML id="movies" source="ruboss/test/responses/movies.xml"/>

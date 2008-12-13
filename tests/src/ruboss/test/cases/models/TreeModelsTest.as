@@ -24,6 +24,7 @@ package ruboss.test.cases.models {
       assertNull(firstCategory.parent);
       assertEquals(2, firstCategory.children.length);
       assertEquals("Category1NameString", firstCategory.name);
+      assertEquals("Category2NameString", Category(firstCategory.children.getItemAt(0)).name);
     }
   }
 }

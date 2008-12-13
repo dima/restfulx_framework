@@ -82,40 +82,22 @@ package ruboss.test.cases.serializers {
     public function testObjectMarshalling():void {
       var simpleProperty:SimpleProperty = getNewSimpleProperty();
       var marshalled:XML = xml.marshall(simpleProperty) as XML;
-      var marshalledText:String = 
-      "<simple_property>\n" + 
-      "  <quantity>10.05</quantity>\n" + 
-      "  <name>Foobar</name>\n" + 
-      "  <created_at/>\n" + 
-      "  <delivered_on/>\n" + 
-      "  <amount>2</amount>\n" + 
-      "  <price>1.7</price>\n" + 
-      "  <available>true</available>\n" + 
-      "  <sold_on/>\n" + 
-      "</simple_property>";
-      assertEquals(marshalledText, marshalled.toXMLString());
+      assertEquals("10.05", marshalled.quantity);
+      assertEquals(0, XML(marshalled.created_at).text().length());
+      assertEquals("2", marshalled.amount);
+      assertEquals("true", marshalled.available);
     }
     
     public function testObjectMarshallingWithMetadata():void {
       var simpleProperty:SimpleProperty = getNewSimpleProperty();
       var metadata:Object = {foo: 'bar', hello: 'world'};
       var marshalled:XML = xml.marshall(simpleProperty, false, metadata) as XML;
-      var marshalledText:String =
-        "<simple_property>\n" +
-        "  <quantity>10.05</quantity>\n" +
-        "  <name>Foobar</name>\n" +
-        "  <created_at/>\n" +
-        "  <delivered_on/>\n" +
-        "  <amount>2</amount>\n" +
-        "  <price>1.7</price>\n" +
-        "  <available>true</available>\n" +
-        "  <sold_on/>\n" +
-        "  <_metadata>\n" +
-        "    <hello>world</hello>\n" +
-        "    <foo>bar</foo>\n" +
-        "  </_metadata>\n" +
-        "</simple_property>";
-      assertEquals(marshalledText, marshalled.toXMLString());
+      assertEquals("10.05", marshalled.quantity);
+      assertEquals(0, XML(marshalled.created_at).text().length());
+      assertEquals("2", marshalled.amount);
+      assertEquals("true", marshalled.available);
+      assertEquals("world", marshalled._metadata.hello);
+      assertEquals("bar", marshalled._metadata.foo);
     }
     
     public function testObjectMarshallingWithSetRelationships():void {
@@ -127,12 +109,8 @@ package ruboss.test.cases.serializers {
       project.name = "Task2";
       task.project = project;
       var marshalled:XML= xml.marshall(task) as XML;
-      var marshalledText:String =
-        "<task>\n" +
-        "  <project_id>11</project_id>\n" +
-        "  <name>Task1</name>\n" +
-        "</task>";
-      assertEquals(marshalledText, marshalled.toXMLString());
+      assertEquals("Task1", marshalled.name);
+      assertEquals("11", marshalled.project_id);
     }
     
     public function testObjectMarshallingWithNullRelationship():void {
@@ -140,12 +118,8 @@ package ruboss.test.cases.serializers {
       task.id = "21";
       task.name = "Task1";
       var marshalled:XML= xml.marshall(task) as XML;
-      var marshalledText:String =
-        "<task>\n" +
-        "  <project_id/>\n" +
-        "  <name>Task1</name>\n" +
-        "</task>";
-      assertEquals(marshalledText, marshalled.toXMLString());          
+      assertEquals("Task1", marshalled.name);
+      assertEquals(0, XML(marshalled.project_id).text().length());       
     }
     
     public function testRecursiveObjectMarshalling():void {

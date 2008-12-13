@@ -16,7 +16,7 @@ package ruboss.test.controllers {
     
     public static var models:Array = [Account, Actor, Author, BillableWeek, Book, Category, Client, Contractor, Customer,
      Employee, Location, Movie, PayableAccount, Project, ReceivableAccount, SimpleProperty, Store, Task, Timesheet,
-     Article, Section, CouchUser, CouchAddress, Contact, Key, Kv, User, UserGroup]; /* Models */
+     Article, Section, CouchUser, CouchAddress, Contact, Key, Kv, User, UserGroup, FacebookUser]; /* Models */
      
     public static var commands:Array = [TestCommand];
     
