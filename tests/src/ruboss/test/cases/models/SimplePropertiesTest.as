@@ -1,7 +1,6 @@
 package ruboss.test.cases.models {
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
-  import org.ruboss.controllers.ModelsController;
   import org.ruboss.events.CacheUpdateEvent;
   import org.ruboss.utils.TypedArray;
   
