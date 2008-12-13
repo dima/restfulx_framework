@@ -20,7 +20,7 @@ package ruboss.test.cases {
     }
     
     public function testHasManyRelationshipCleanup():void {
-      Ruboss.models.reset();
+      Ruboss.models.reset(null, true);
       var xmlForProject:XML = TestApp(Application.application).project_with_contractor_and_tasks;
       var project:Project = Ruboss.serializers.xml.unmarshall(xmlForProject) as Project;
       
@@ -43,7 +43,7 @@ package ruboss.test.cases {
     }
     
     public function testHasOneRelationshipCleanup():void {
-      Ruboss.models.reset();
+      Ruboss.models.reset(null, true);
       var xmlForProject:XML = TestApp(Application.application).project_with_contractor_and_tasks;
       var project:Project = Ruboss.serializers.xml.unmarshall(xmlForProject) as Project;
       
@@ -63,7 +63,7 @@ package ruboss.test.cases {
     }
     
     public function testSelfReferentialModelCleanup():void {
-      Ruboss.models.reset();
+      Ruboss.models.reset(null, true);
       var xmlForFacebookUsers:XML = TestApp(Application.application).facebook_users;
       var facebookUsers:TypedArray = Ruboss.serializers.xml.unmarshall(xmlForFacebookUsers) as TypedArray;
       

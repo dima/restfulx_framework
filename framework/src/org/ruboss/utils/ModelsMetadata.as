@@ -6,6 +6,8 @@ package org.ruboss.utils {
   
   import mx.collections.ArrayCollection;
   
+  import org.ruboss.collections.ModelsCollection;
+  
   public class ModelsMetadata {
     
     public var models:Array;

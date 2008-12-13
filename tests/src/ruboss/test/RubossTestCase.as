@@ -18,7 +18,7 @@ package ruboss.test {
       var service:IServiceProvider = Ruboss.services.getServiceProvider(Ruboss.defaultServiceId);
       Ruboss.log.debug("testing with :" + service);
       
-      Ruboss.models.reset();
+      Ruboss.models.reset(null, true);
     }
   }
 }

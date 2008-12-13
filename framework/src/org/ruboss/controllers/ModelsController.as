@@ -396,8 +396,18 @@ package org.ruboss.controllers {
      * @see org.ruboss.models.ModelsStateMetadata#reset
      * @param object can be a model class or specific model instance
      */
-    public function reset(object:Object = null):void {
-      state.reset(object);   
+    public function reset(object:Object = null, hard:Boolean = false):void {
+      state.reset(object);
+      if (hard) {
+        if (object == null) {
+          for each (var model:Class in state.models) {
+            cache.data[state.types[model]] = new ModelsCollection;
+          }
+        } else if (object is Class) {
+          cache.data[state.types[object]] = new ModelsCollection;
+        }
+        trace('foobar');
+      }
     }
 
     private function getServiceProvider(serviceId:int = -1):IServiceProvider {
