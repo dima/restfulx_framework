@@ -243,7 +243,7 @@ package org.ruboss.services.http {
             var elmName:String = RubossUtils.toSnakeCase(elm);
             result["_metadata[" + elmName + "]"] = RubossUtils.uncast(metadata, elm);
           }
-        } else {
+        } else if (vo[property]) {
           result[localName + "[" + property + "]"] = vo[property];
         }
       }
