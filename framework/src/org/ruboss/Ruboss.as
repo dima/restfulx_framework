@@ -12,9 +12,9 @@
  * commercial license, please go to http://ruboss.com.
  ******************************************************************************/
 package org.ruboss {
-  import flash.utils.Dictionary;
-  
   import mx.collections.ArrayCollection;
+  import mx.collections.Sort;
+  import mx.collections.SortField;
   import mx.logging.ILogger;
   import mx.logging.Log;
   import mx.logging.LogEventLevel;
@@ -140,7 +140,7 @@ package org.ruboss {
     }
     
     /**
-     * Filters a given ArrayCollection with no side effects, a new ruboss array collection is created
+     * Filters a given RubossCollection with no side effects, a new ruboss array collection is created
      * that the filter is applied on.
      *  
      * @param items ArrayCollection instance to filter
@@ -150,13 +150,11 @@ package org.ruboss {
      */
     public static function filter(items:ArrayCollection, filter:Function = null):RubossCollection {
       var results:RubossCollection = new RubossCollection(items.source.slice(0));
-      results.filterFunction = filter;
-      results.refresh();
-      return results;
+      return RubossCollection(filter$(results, filter));
     }
     
     /** 
-     * Filters a given ArrayCollection in place, this version actually modifies the instance passed
+     * Filters a given RubossCollection in place, this version actually modifies the instance passed
      * in as the argument.
      * 
      * @param items ArrayCollection to filter (will be motified in place)
@@ -164,7 +162,7 @@ package org.ruboss {
      *  
      * @return original array collection with the filter applied 
      */
-    public static function filter$(items:ArrayCollection, filter:Function = null):ArrayCollection {
+    public static function filter$(items:RubossCollection, filter:Function = null):RubossCollection {
       items.filterFunction = filter;
       items.refresh();
       return items;
@@ -181,9 +179,7 @@ package org.ruboss {
      */
     public static function filters(items:RubossCollection, filters:Array = null):RubossCollection {
       var results:RubossCollection = new RubossCollection(items.source.slice(0));
-      results.filterFunctions = filters;
-      results.refresh();
-      return results;
+      return filters$(results, filters);
     }
     
     /** 
@@ -197,6 +193,31 @@ package org.ruboss {
      */
     public static function filters$(items:RubossCollection, filters:Array = null):RubossCollection {
       items.filterFunctions = filters;
+      items.refresh();
+      return items;
+    }
+    
+    public static function sort(items:RubossCollection, fields:Array = null):RubossCollection {
+      var results:RubossCollection = new RubossCollection(items.source.slice(0));
+      return sort$(results, fields);
+    }
+    
+    public static function sort$(items:RubossCollection, fields:Array = null):RubossCollection {
+      var sort:Sort = new Sort;
+      sort.fields = new Array;
+      if (!fields) fields = [{name: 'id'}];
+      for each (var field:Object in fields) {
+        var sortField:SortField = new SortField;
+        if (field is SortField) {
+          sortField = SortField(field);
+        } else {
+          for (var property:String in fields[field]) {
+            sortField[property] = fields[field][property];
+          }
+        }
+        sort.fields.push(sortField);
+      }
+      items.sort = sort;
       items.refresh();
       return items;
     }

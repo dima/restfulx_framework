@@ -19,6 +19,7 @@ package org.ruboss.services {
   
   import org.ruboss.Ruboss;
   import org.ruboss.events.ServiceCallStopEvent;
+  import org.ruboss.events.ServiceErrorEvent;
   import org.ruboss.utils.TypedArray;
 
   /**
@@ -73,10 +74,17 @@ package org.ruboss.services {
           if (onSuccess != null) {
             invokeOnSuccess(result);     
           }
+        } else {
+          // route reported (e.g. server-side validations) to onFailure or fault handler
+          Ruboss.models.dispatchEvent(new ServiceErrorEvent(Ruboss.errors));
+          if (onSuccess is IResponder) {
+            IResponder(onSuccess).fault(Ruboss.errors);
+          } else if (onFailure != null && onFailure is Function) {
+            onFailure(Ruboss.errors);
+          }          
         }
       }
     }
-    
     
     /**
      * @see mx.rpc.IResponder#fault

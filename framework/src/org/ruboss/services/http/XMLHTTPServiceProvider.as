@@ -26,7 +26,6 @@ package org.ruboss.services.http {
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
-  import org.ruboss.events.ServiceErrorEvent;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.XMLServiceErrors;
   import org.ruboss.utils.ModelsMetadata;
@@ -69,7 +68,6 @@ package org.ruboss.services.http {
       if (xmlFragmentName == "errors" && RubossUtils.isEmpty(response.@type)) {
         Ruboss.log.debug("received service error response, terminating processing:\n" + response.toXMLString());
         Ruboss.errors = new XMLServiceErrors(response);
-        Ruboss.models.dispatchEvent(new ServiceErrorEvent(Ruboss.errors));
         return true;
       }
       return false;
