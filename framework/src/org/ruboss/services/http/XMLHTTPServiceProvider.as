@@ -241,7 +241,7 @@ package org.ruboss.services.http {
             var elmName:String = RubossUtils.toSnakeCase(elm);
             result["_metadata[" + elmName + "]"] = RubossUtils.uncast(metadata, elm);
           }
-        } else if (vo[property]) {
+        } else if (vo[property] != null) {
           result[localName + "[" + property + "]"] = vo[property];
         }
       }
