@@ -119,7 +119,7 @@ package org.ruboss.serializers {
             result[snakeName + "_id"] = null;
           }
         } else {
-          if (object[nodeName]) {
+          if (object[nodeName] != null) {
             result[snakeName] = RubossUtils.uncast(object, nodeName);
           } else {
             result[snakeName] = null;

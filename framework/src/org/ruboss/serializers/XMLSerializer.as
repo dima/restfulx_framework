@@ -100,7 +100,7 @@ package org.ruboss.serializers {
             vars.push("<" + snakeName + "_id/>");
           }
         } else {
-          if (object[nodeName]) {
+          if (object[nodeName] != null) {
             vars.push(("<" + snakeName + ">" + 
               RubossUtils.uncast(object, nodeName) + "</" + snakeName + ">"));
           } else {
