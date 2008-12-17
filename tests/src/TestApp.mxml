@@ -72,7 +72,8 @@
 			  ts.addTest(new SimplePropertiesTest("testIndexWithEventListener", serviceProviderId));
 			  ts.addTest(new SimplePropertiesTest("testIndexWithOnSuccessFunction", serviceProviderId));
         ts.addTest(new SimplePropertiesTest("testIndexWithOnFailureFunction", serviceProviderId));
-        ts.addTest(new SimplePropertiesTest("testCreate", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testCreateWithTrueBoolean", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testCreateWithFalseBoolean", serviceProviderId));
         ts.addTest(new SimplePropertiesTest("testCreateFollowedByUpdate", serviceProviderId));
         
         ts.addTest(new BasicRelationshipsTest("testBasicRelationshipsIndex", serviceProviderId));

@@ -75,13 +75,25 @@ package ruboss.test.cases.models {
       assertTrue(info);
     }
     
-    public function testCreate():void {
+    public function testCreateWithTrueBoolean():void {
       establishService();
       var model:SimpleProperty = getNewSimpleProperty();
       model.create(function(result:SimpleProperty):void {
         assertTrue(result.id);
         assertEquals(2, result.amount);
         assertTrue(result.available);
+        assertEquals("Foobar", result.name);
+      });
+    }
+    
+    public function testCreateWithFalseBoolean():void {
+      establishService();
+      var model:SimpleProperty = getNewSimpleProperty();
+      model.available = false;
+      model.create(function(result:SimpleProperty):void {
+        assertTrue(result.id);
+        assertEquals(2, result.amount);
+        assertFalse(result.available);
         assertEquals("Foobar", result.name);
       });
     }

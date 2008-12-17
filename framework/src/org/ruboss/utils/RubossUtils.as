@@ -23,6 +23,7 @@ package org.ruboss.utils {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.collections.ModelsCollection;
   import org.ruboss.collections.RubossCollection;
   import org.ruboss.models.RubossModel;
 
@@ -100,6 +101,38 @@ package org.ruboss.utils {
         return cloned;
       } else {
         return ObjectUtil.copy(object);
+      }
+    }
+
+    // needs some testing too
+    public static function cleanupModelReferences(model:Object, fqn:String):void {
+      for (var reference:String in Ruboss.models.state.refs[fqn]) {
+        var referAs:String = Ruboss.models.state.refs[fqn][reference]["referAs"];
+        var referAsPlural:String = referAs;
+        var referAsSingle:String = referAs;
+        
+        if (RubossUtils.isEmpty(referAs)) {
+          referAsPlural = Ruboss.models.state.names[fqn]["plural"];
+          referAsSingle = Ruboss.models.state.names[fqn]["single"];
+          if (reference == "parent") {
+            referAsPlural = "children";
+          }
+        }
+        
+        var type:String = Ruboss.models.state.refs[fqn][reference]["type"];
+        if (ObjectUtil.hasMetadata(model, reference, "BelongsTo") && model[reference] != null) {
+          // go into the reference and clean up any refs to this object from [HasMany] annotated
+          // properties
+          if (model[reference].hasOwnProperty(referAsPlural) && model[reference][referAsPlural] != null 
+            && model[reference][referAsPlural] is ModelsCollection) {
+            var items:ModelsCollection = ModelsCollection(model[reference][referAsPlural]);
+            if (items.hasItem(model)) {
+              items.removeItem(model);
+            }
+          } else if (model[reference].hasOwnProperty(referAsSingle) && model[reference][referAsSingle] != null) {
+            model[reference][referAsSingle] = null;
+          }
+        }
       }
     }
     

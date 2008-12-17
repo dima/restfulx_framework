@@ -7,9 +7,9 @@ package org.ruboss.controllers {
   import org.ruboss.collections.ModelsCollection;
   import org.ruboss.events.CacheUpdateEvent;
   import org.ruboss.models.RubossModel;
-  import org.ruboss.serializers.GenericSerializer;
   import org.ruboss.services.GenericServiceErrors;
   import org.ruboss.utils.ModelsMetadata;
+  import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
   
   public class CacheController extends EventDispatcher {
@@ -57,8 +57,7 @@ package org.ruboss.controllers {
     
     public function destroy(model:RubossModel):void {
       var fqn:String = getQualifiedClassName(model);
-      var serializer:GenericSerializer = new GenericSerializer;
-      serializer.cleanupModelReferences(model, fqn);
+      RubossUtils.cleanupModelReferences(model, fqn);
       ModelsCollection(data[fqn]).removeItem(model);
       Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.DESTROY));           
     }

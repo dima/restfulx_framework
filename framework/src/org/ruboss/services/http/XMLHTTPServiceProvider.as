@@ -243,6 +243,9 @@ package org.ruboss.services.http {
           }
         } else if (vo[property] != null) {
           result[localName + "[" + property + "]"] = vo[property];
+        } else {
+          /* we serialize nulls using empty strings for form-based submits */
+          result[localName + "[" + property + "]"] = "";
         }
       }
       return result;

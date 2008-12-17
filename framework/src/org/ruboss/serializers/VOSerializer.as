@@ -11,16 +11,6 @@ package org.ruboss.serializers {
   
   public class VOSerializer extends GenericSerializer {
 
-    private static var types:Object = {
-      "int" : "integer",
-      "uint" : "integer",
-      "Boolean" : "boolean",
-      "String" : "text",
-      "Number" : "double",
-      "Date" : "date",
-      "DateTime" : "datetime"
-    }
-
     public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       return marshallToVO(object, metadata);  
     }
@@ -142,20 +132,6 @@ package org.ruboss.serializers {
         result.addItem(unmarshallObject(nestedObject, type));
       }
       return result;
-    }
-
-    private function getType(node:XML):String {
-      if (node == null) return types["String"];
-      
-      var type:String = node.@type;
-      var result:String = types[type];
-      if (state.fqns[type]) {
-        return types["String"];
-      } else if (RubossUtils.isDateTime(node)) {
-        return types["DateTime"];
-      } else {
-        return (result == null) ? types["String"] : result; 
-      }
     }
   }
 }
