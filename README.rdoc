@@ -6,15 +6,9 @@ The Ruboss Framework brings the design principles and productivity of Rails to F
 
 == Getting Started
 
-Refer to 
+Refer to http://github.com/dima/ruboss4ruby/wikis/home[http://github.com/dima/ruboss4ruby/wikis/home] for details on how to get started with the Ruboss framework and Ruby Web Frameworks such as Ruby On Rails 2.1 and Merb 1.0
 
-    http://github.com/dima/ruboss4ruby/wikis/home 
-  
-for details on how to get started with the Ruboss framework and Ruby Web Frameworks such as Ruby On Rails 2.1 and Merb 1.0
-
-AS3 API docs are available at 
-
-    http://dima.github.com/ruboss_framework.
+AS3 API docs are available at http://dima.github.com/ruboss_framework[http://dima.github.com/ruboss_framework].
 
 == LICENSE
 
