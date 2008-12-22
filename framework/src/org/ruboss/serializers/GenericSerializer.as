@@ -171,16 +171,12 @@ package org.ruboss.serializers {
       var model:Object = new (getDefinitionByName(fqn) as Class);
       ModelsCollection(Ruboss.models.cache.data[fqn]).addItem(model);
       model["id"] = id;
+      
+      for each (var superclass:String in state.parents[fqn]) {
+        ModelsCollection(Ruboss.models.cache.data[superclass]).addItem(model);
+      }
+      
       return model;
-    }
-    
-    protected function addItemToCache(item:Object, type:String):void {
-      var cached:ModelsCollection = ModelsCollection(Ruboss.models.cache.data[type]);
-      if (cached.hasItem(item)) {
-        cached.setItem(item);
-      } else {
-        cached.addItem(item);
-      }      
     }
 
     protected function getType(node:XML):String {

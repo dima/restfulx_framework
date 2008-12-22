@@ -23,9 +23,11 @@ package ruboss.test.cases.models {
       if (Ruboss.models.indexed(PayableAccount, ReceivableAccount)) {
         var payable:ModelsCollection = Ruboss.models.cached(PayableAccount);
         var receivable:ModelsCollection = Ruboss.models.cached(ReceivableAccount);
+        var accounts:ModelsCollection = Ruboss.models.cached(Account);
         
         assertEquals(2, payable.length);
         assertEquals(2, receivable.length);
+        assertEquals(4, accounts.length);
         assertTrue(payable.getItemAt(0) is Account);
         assertEquals("Account1NameString", PayableAccount(payable.getItemAt(0)).name);
         assertTrue(receivable.getItemAt(0) is Account);

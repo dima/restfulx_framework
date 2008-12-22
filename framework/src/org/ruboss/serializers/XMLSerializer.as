@@ -153,7 +153,6 @@ package org.ruboss.serializers {
           updatingExistingReference); 
       }
       
-      addItemToCache(object, fqn);
       processHasManyThroughRelationships(object, fqn);
 
       return object;        

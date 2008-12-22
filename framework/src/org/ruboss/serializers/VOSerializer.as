@@ -75,7 +75,6 @@ package org.ruboss.serializers {
         unmarshallAttribute(source, object, source[property], fqn, targetName, defaultValue, updatingExistingReference);
       }  
       
-      addItemToCache(object, fqn);
       processHasManyThroughRelationships(object, fqn);
 
       return object;         

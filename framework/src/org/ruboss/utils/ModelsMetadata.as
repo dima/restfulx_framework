@@ -6,8 +6,6 @@ package org.ruboss.utils {
   
   import mx.collections.ArrayCollection;
   
-  import org.ruboss.collections.ModelsCollection;
-  
   public class ModelsMetadata {
     
     public var models:Array;
@@ -33,6 +31,8 @@ package org.ruboss.utils {
     public var lazy:Dictionary;
     
     public var hmts:Dictionary;
+    
+    public var parents:Dictionary;
 
     public function ModelsMetadata(models:Array) {
       this.models = models;
@@ -50,6 +50,7 @@ package org.ruboss.utils {
       eager = new Dictionary;
       lazy = new Dictionary;
       hmts = new Dictionary;
+      parents = new Dictionary;
       
       for each (var model:Class in models) {
         var controllerName:String = RubossUtils.getResourceName(model);
@@ -83,6 +84,7 @@ package org.ruboss.utils {
         
         lazy[fqn] = new Array;
         eager[fqn] = new Array;
+        parents[fqn] = new Array;
         
         shown[fqn] = new ArrayCollection;
 
@@ -123,7 +125,18 @@ package org.ruboss.utils {
     
     private function extractMetadata(model:Class):void {
       var fqn:String = types[model];
-      for each (var node:XML in describeType(model)..accessor) {
+      var meta:XML = describeType(model);
+      
+      // extract superclasses
+      for each (var superclass:XML in meta..extendsClass) {
+        var extendedType:String = superclass.@type;
+        if (types[extendedType]) {
+          (parents[fqn] as Array).push(extendedType);
+        }
+      }
+      
+      // extract relationships
+      for each (var node:XML in meta..accessor) {
         try {
           // we are only interested in [BelongsTo], [HasMany] and [HasOne] annotated nodes
           // that refer to other valid models
