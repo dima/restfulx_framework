@@ -63,12 +63,13 @@ package org.ruboss {
     public static var httpController:Class = AuxHTTPController;
             
     /** 
-     * If http controller handler function is set, it allows you to override 
-     * behaviour of the send() function in the controller.
+     * <p>If http controller handler function is set, it allows you to override 
+     * behaviour of the send() function in the controller.</p>
      * 
-     * The signature for the function is 
-     * (controller:SimpleHTTPController, url:String, data:Object = null, 
-     *  method:int = SimpleHTTPController.GET)
+     * <p>The signature for the function is:</p>
+     *  
+     * <code>(controller:SimpleHTTPController, url:String, data:Object = null, 
+     *  method:int = SimpleHTTPController.GET)</code>
      */
     public static var httpControllerHandler:Function;
     
@@ -100,7 +101,8 @@ package org.ruboss {
      * function provided when the result comes back.</p>
      *  
      * <p>or</p>
-     *
+     *  
+     * <p>
      * <code>
      * Ruboss.http({
      *  resultHandler: someFunctionToHandleResult,
@@ -108,7 +110,7 @@ package org.ruboss {
      *  contentType: "application/xml"
      * }).invoke({data: bla, method: "POST", unmarshall: true});
      * </code>
-     *
+     * </p>
      * @param optsOrResultHandler can be either an anonymous object of options or a result handler 
      *  function. Many functions in the framework can be called with named params specified
      *  in an object or explicitly in the order required by the function. See the example above.

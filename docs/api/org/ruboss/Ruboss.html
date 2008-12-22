@@ -80,8 +80,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#httpControllerHandler">httpControllerHandler</a> : Function<div class="summaryTableDescription">[static] 
-     If http controller handler function is set, it allows you to override 
-     behaviour of the send() function in the controller.</div>
+     <p>If http controller handler function is set, it allows you to override 
+     behaviour of the send() function in the controller.</p>
+     
+     <p>The signature for the function is:</p>
+      
+     <code>(controller:SimpleHTTPController, url:String, data:Object = null, 
+      method:int = SimpleHTTPController.GET)</code>
+     </div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
@@ -328,13 +334,14 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static var httpControllerHandler:Function</code><p> 
-     If http controller handler function is set, it allows you to override 
-     behaviour of the send() function in the controller.
+     </p><p>If http controller handler function is set, it allows you to override 
+     behaviour of the send() function in the controller.</p>
      
-     The signature for the function is 
-     (controller:SimpleHTTPController, url:String, data:Object = null, 
-      method:int = SimpleHTTPController.GET)
-     </p></div>
+     <p>The signature for the function is:</p>
+      
+     <code>(controller:SimpleHTTPController, url:String, data:Object = null, 
+      method:int = SimpleHTTPController.GET)</code>
+     </div>
 <a name="httpRootUrl"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -585,14 +592,17 @@ showHideInherited();
      function provided when the result comes back.</p>
       
      <p>or</p>
-          <code>
+      
+     <p>
+     <code>
      Ruboss.http({
       resultHandler: someFunctionToHandleResult,
       faultHandler: someFunctionToHandleFault,
       contentType: "application/xml"
      }).invoke({data: bla, method: "POST", unmarshall: true});
      </code>
-          <span class="label">Parameters</span>
+     </p>
+     <span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">optsOrResultHandler</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; can be either an anonymous object of options or a result handler 
