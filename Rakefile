@@ -21,6 +21,12 @@ end
 desc "Compile and run test application"
 task :test => ["test:build", "test:run"]
 
+desc "Build API documentation"
+task :docs do
+  libs = Dir.glob(File.join(ROOT_DIR, 'framework/lib', '*.swc'))
+  system("#{get_executable('asdoc')} +configname=air -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} -output docs/api")
+end
+
 namespace :test do  
   desc "Compile test application"
   task :build do

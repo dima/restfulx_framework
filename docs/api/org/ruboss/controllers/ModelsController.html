@@ -1,0 +1,857 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="ModelsController,org.ruboss.controllers.ModelsController,cache,state,cached,create,destroy,index,indexAll,indexed,reload,reset,show,showById,shown,update" name="keywords">
+<title>org.ruboss.controllers.ModelsController</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'ModelsController - API Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/ruboss/controllers/ModelsController.html&amp;org/ruboss/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;ModelsController</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class ModelsController"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">org.ruboss.controllers</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class ModelsController</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">ModelsController <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> flash.events.EventDispatcher</td>
+</tr>
+</table>
+<p></p>
+   Provides high level CRUD functionality.
+   <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#cache">cache</a> : <a href="../controllers/CacheController.html">CacheController</a>
+<div class="summaryTableDescription">
+     internal cache of fetched model instances maps model 
+     FQNs to ModelsCollections of instances
+     </div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#state">state</a> : <a href="../utils/ModelsMetadata.html">ModelsMetadata</a>
+<div class="summaryTableDescription"> encapsulates models control metadata and state </div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#ModelsController()">ModelsController</a>(models:Array)</div>
+<div class="summaryTableDescription">
+     Creates a new instance of the controller.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#cached()">cached</a>(clazz:Class):<a href="../collections/ModelsCollection.html">ModelsCollection</a>
+</div>
+<div class="summaryTableDescription">
+     Get current cache representation for a particular model class.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#create()">create</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</div>
+<div class="summaryTableDescription">
+     Perform REST create operation.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</div>
+<div class="summaryTableDescription">
+     Perform REST destroy operation.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#index()">index</a>(clazz:Class, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1):<a href="../collections/ModelsCollection.html">ModelsCollection</a>
+</div>
+<div class="summaryTableDescription">
+     Perform REST index operation.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#indexAll()">indexAll</a>(... models):void</div>
+<div class="summaryTableDescription">
+     A shortcut to index multiple models at once.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#indexed()">indexed</a>(... models):Boolean</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#reload()">reload</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1):void</div>
+<div class="summaryTableDescription">
+     Force reload of a particular model instance or the entire model cache.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#reset()">reset</a>(object:Object = null, hard:Boolean = false):void</div>
+<div class="summaryTableDescription">
+     Resets model metadata.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#show()">show</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1):<a href="../models/RubossModel.html">RubossModel</a>
+</div>
+<div class="summaryTableDescription">
+     Perform REST show operation.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#showById()">showById</a>(clazz:Class, id:Object, optsOrOnSuccess:Function = null, onFailure:Array = null, nestedBy:Object = null, metadata:Boolean = null, fetchDependencies:Boolean = true, useLazyMode:int = false, targetServiceId:* = -1):<a href="../models/RubossModel.html">RubossModel</a>
+</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#shown()">shown</a>(object:Object, id:* = null):Boolean</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#update()">update</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</div>
+<div class="summaryTableDescription">
+     Perform REST update operation.</div>
+</td><td class="summaryTableOwnerCol">ModelsController</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="cache"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">cache</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var cache:<a href="../controllers/CacheController.html">CacheController</a></code><p>
+     internal cache of fetched model instances maps model 
+     FQNs to ModelsCollections of instances
+     </p></div>
+<a name="state"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">state</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var state:<a href="../utils/ModelsMetadata.html">ModelsMetadata</a></code><p> encapsulates models control metadata and state </p></div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="ModelsController()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ModelsController</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function ModelsController(models:Array)</code><p>
+     Creates a new instance of the controller.
+      
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">models</span>:Array</code> &mdash; the array of model classes to register e.g. [Model1, Model2]
+     </td>
+</tr>
+</table>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="cached()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">cached</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function cached(clazz:Class):<a href="../collections/ModelsCollection.html">ModelsCollection</a></code><p>
+     Get current cache representation for a particular model class.
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">clazz</span>:Class</code> &mdash; model class to look up
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../collections/ModelsCollection.html">ModelsCollection</a></code></td>
+</tr>
+</table>
+</div>
+<a name="create()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">create</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function create(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</code><p>
+     Perform REST create operation. For example:
+      
+       Ruboss.models.create(project);
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to create
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
+      when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+      clober the value of any subsequent parameters.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; service provider to use
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">index</div>
+</div>
+<a name="destroy()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">destroy</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function destroy(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</code><p>
+     Perform REST destroy operation. For example:
+      
+       Ruboss.models.destroy(project);
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to destroy
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
+      when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+      clober the value of any subsequent parameters.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; service provider to use
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">index</div>
+</div>
+<a name="index()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">index</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function index(clazz:Class, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1):<a href="../collections/ModelsCollection.html">ModelsCollection</a></code><p>
+     Perform REST index operation. For example:
+      
+       Ruboss.models.index(Project);
+     
+     Note that the following two method calls are equivalent:
+       Ruboss.models.index(Project, myOnSuccess, [company]);
+       Ruboss.models.index(Project, {onSuccess:myOnSuccessFunction, nestedBy:[company]});
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">clazz</span>:Class</code> &mdash; the Class to index
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
+      when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+      clober the value of any subsequent parameters.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true then target ModelsCollection will not be reset but just appended to (default is to reset)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">append</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; service provider to use
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../collections/ModelsCollection.html">ModelsCollection</a></code></td>
+</tr>
+</table>
+</div>
+<a name="indexAll()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">indexAll</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function indexAll(... models):void</code><p>
+     A shortcut to index multiple models at once. Useful if you don't want to define any special options,
+     such as callbacks, metadata, etc.
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code>... <span class="label">models</span></code> &mdash; a list of models to index
+     </td>
+</tr>
+</table>
+</div>
+<a name="indexed()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">indexed</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function indexed(... models):Boolean</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code>... <span class="label">models</span></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code></td>
+</tr>
+</table>
+</div>
+<a name="reload()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">reload</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function reload(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1):void</code><p>
+     Force reload of a particular model instance or the entire model cache.
+      
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; model instance or model Class reference to reload
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
+      when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+      clober the value of any subsequent parameters.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; page to request (only used by index method)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">append</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; service provider to use
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+</table>
+</div>
+<a name="reset()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">reset</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function reset(object:Object = null, hard:Boolean = false):void</code><p>
+     Resets model metadata.
+      
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; can be a model class or specific model instance
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">hard</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">org.ruboss.models.ModelsStateMetadata.reset</div>
+</div>
+<a name="show()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">show</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function show(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1):<a href="../models/RubossModel.html">RubossModel</a></code><p>
+     Perform REST show operation. For example:
+      
+       Ruboss.models.show(project);
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to show
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
+      when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+      clober the value of any subsequent parameters.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; service provider to use
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../models/RubossModel.html">RubossModel</a></code></td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">index</div>
+</div>
+<a name="showById()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">showById</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function showById(clazz:Class, id:Object, optsOrOnSuccess:Function = null, onFailure:Array = null, nestedBy:Object = null, metadata:Boolean = null, fetchDependencies:Boolean = true, useLazyMode:int = false, targetServiceId:* = -1):<a href="../models/RubossModel.html">RubossModel</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">clazz</span>:Class</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">id</span>:Object</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Function</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Array</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Object</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Boolean</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">useLazyMode</span>:int</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:*</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../models/RubossModel.html">RubossModel</a></code></td>
+</tr>
+</table>
+</div>
+<a name="shown()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">shown</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function shown(object:Object, id:* = null):Boolean</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">id</span>:*</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code></td>
+</tr>
+</table>
+</div>
+<a name="update()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">update</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function update(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</code><p>
+     Perform REST update operation. For example:
+      
+       Ruboss.models.update(project);
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to update
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
+      when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
+      clober the value of any subsequent parameters.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; service provider to use
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">index</div>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->
