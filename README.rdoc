@@ -14,7 +14,7 @@ for details on how to get started with the Ruboss framework and Ruby Web Framewo
 
 AS3 API docs are available at 
 
-    http://dima.github.com/ruboss_framework.
+    http://dima.github.com/ruboss_framework
 
 == LICENSE
 
