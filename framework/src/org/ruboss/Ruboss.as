@@ -56,9 +56,6 @@ package org.ruboss {
     /** default root URL for HTTP requests, gets prefixed to CRUD and AUX HTTP operations */
     public static var httpRootUrl:String = "/";
     
-    /** AMF channel id used for AMF-based communication */
-    public static var amfChannelId:String = "rubyamf";
-    
     /** default service provider to use */
     public static var defaultServiceId:int = XMLHTTPServiceProvider.ID;
     
