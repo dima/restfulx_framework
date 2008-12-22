@@ -1,5 +1,14 @@
 require 'rubygems'
 
+# how to update the gh-pages docs branch automatically
+# 1. rake docs in master branch and commit
+# 2. checkout gh-pages
+# 3. git read-tree --prefix=master -u master
+# 4. cp -r master/docs/api/* .
+# 5. rm -rf master
+# 6. git commit
+# 7. git checkout master
+
 TEST_APP_NAME = 'TestApp.mxml'
 ROOT_DIR = File.dirname(__FILE__)
 
