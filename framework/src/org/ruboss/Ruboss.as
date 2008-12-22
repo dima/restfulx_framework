@@ -91,22 +91,24 @@ package org.ruboss {
     public static const DEFAULT_ERROR_FIELD:String = ":base";
     
     /**
-     * Handy shortcut for non-CRUD HTTP operations. This can be used to send any object to any URL
-     * by doing something like this:
+     * <p>Handy shortcut for non-CRUD HTTP operations. This can be used to send any object to any URL
+     * by doing something like this:</p>
+     * 
+     * <code>Ruboss.http(function(result:Object):void { trace(result); }).invoke("some/url/here");</code>
+     * 
+     * <p>This will send a GET request with no arguments to "some/url/here" and call anonymous
+     * function provided when the result comes back.</p>
      *  
-     * Ruboss.http(function(result:Object):void { trace(result); }).invoke("some/url/here");
-     *  
-     * This will send a GET request with no arguments to "some/url/here" and call anonymous
-     * function provided when the result comes back.
-     *  
-     *  or
-     *  
+     * <p>or</p>
+     *
+     * <code>
      * Ruboss.http({
      *  resultHandler: someFunctionToHandleResult,
      *  faultHandler: someFunctionToHandleFault,
      *  contentType: "application/xml"
      * }).invoke({data: bla, method: "POST", unmarshall: true});
-     * 
+     * </code>
+     *
      * @param optsOrResultHandler can be either an anonymous object of options or a result handler 
      *  function. Many functions in the framework can be called with named params specified
      *  in an object or explicitly in the order required by the function. See the example above.
@@ -195,11 +197,29 @@ package org.ruboss {
       return items;
     }
     
+    /** 
+     * Sorts a given RubossCollection using SortFields (or anonymous objects) provided without
+     * side effects. A new sorted collection is returned.
+     * 
+     * @param items RubossCollection to sort (will be not motified in place)
+     * @param fields an Array of SortFields or anonymous objects that represent SortFields
+     *  
+     * @return new array collection with the sorts applied 
+     */
     public static function sort(items:RubossCollection, fields:Array = null):RubossCollection {
       var results:RubossCollection = new RubossCollection(items.source.slice(0));
       return sort$(results, fields);
     }
     
+    /** 
+     * Sorts a given RubossCollection using SortFields (or anonymous objects) provided in 
+     * place.
+     * 
+     * @param items RubossCollection to sort (will be motified in place)
+     * @param fields an Array of SortFields or anonymous objects that represent SortFields
+     *  
+     * @return original array collection with the sorts applied 
+     */
     public static function sort$(items:RubossCollection, fields:Array = null):RubossCollection {
       var sort:Sort = new Sort;
       sort.fields = new Array;
@@ -256,6 +276,11 @@ package org.ruboss {
       Log.addTarget(target);
     }
     
+    /**
+     * Clears errors, defaultMetadata and the sessionToken (a half-harted attempt at cleaning up
+     * framework state, a bullet-proof way, which also clears event listeners you may have is to
+     * reload the app on logout.)
+     */
     public static function reset():void {
       errors = null;
       defaultMetadata = null;

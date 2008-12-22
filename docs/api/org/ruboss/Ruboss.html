@@ -185,7 +185,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="#http()">http</a>(optsOrResultHandler:Object = null, faultHandler:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", rootUrl:String = null):<a href="controllers/AuxHTTPController.html">AuxHTTPController</a>
 </div>
 <div class="summaryTableDescription">[static]
-     Handy shortcut for non-CRUD HTTP operations.</div>
+     <p>Handy shortcut for non-CRUD HTTP operations.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
@@ -219,7 +219,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#reset()">reset</a>():void</div>
-<div class="summaryTableDescription">[static]</div>
+<div class="summaryTableDescription">[static]
+     Clears errors, defaultMetadata and the sessionToken (a half-harted attempt at cleaning up
+     framework state, a bullet-proof way, which also clears event listeners you may have is to
+     reload the app on logout.)
+     </div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
@@ -227,7 +231,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#sort()">sort</a>(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a>
 </div>
-<div class="summaryTableDescription">[static]</div>
+<div class="summaryTableDescription">[static] 
+     Sorts a given RubossCollection using SortFields (or anonymous objects) provided without
+     side effects.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
@@ -235,7 +241,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#sort$()">sort$</a>(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a>
 </div>
-<div class="summaryTableDescription">[static]</div>
+<div class="summaryTableDescription">[static] 
+     Sorts a given RubossCollection using SortFields (or anonymous objects) provided in 
+     place.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 </table>
@@ -568,23 +576,23 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", rootUrl:String = null):<a href="controllers/AuxHTTPController.html">AuxHTTPController</a></code><p>
-     Handy shortcut for non-CRUD HTTP operations. This can be used to send any object to any URL
-     by doing something like this:
+     </p><p>Handy shortcut for non-CRUD HTTP operations. This can be used to send any object to any URL
+     by doing something like this:</p>
+     
+     <code>Ruboss.http(function(result:Object):void { trace(result); }).invoke("some/url/here");</code>
+     
+     <p>This will send a GET request with no arguments to "some/url/here" and call anonymous
+     function provided when the result comes back.</p>
       
-     Ruboss.http(function(result:Object):void { trace(result); }).invoke("some/url/here");
-      
-     This will send a GET request with no arguments to "some/url/here" and call anonymous
-     function provided when the result comes back.
-      
-      or
-      
+     <p>or</p>
+          <code>
      Ruboss.http({
       resultHandler: someFunctionToHandleResult,
       faultHandler: someFunctionToHandleFault,
       contentType: "application/xml"
      }).invoke({data: bla, method: "POST", unmarshall: true});
-     
-     </p><span class="label">Parameters</span>
+     </code>
+          <span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">optsOrResultHandler</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; can be either an anonymous object of options or a result handler 
@@ -757,8 +765,11 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function reset():void</code>
-</div>
+<code>public static function reset():void</code><p>
+     Clears errors, defaultMetadata and the sessionToken (a half-harted attempt at cleaning up
+     framework state, a bullet-proof way, which also clears event listeners you may have is to
+     reload the app on logout.)
+     </p></div>
 <a name="sort()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -766,23 +777,34 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function sort(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><span class="label">Parameters</span>
+<code>public static function sort(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><p> 
+     Sorts a given RubossCollection using SortFields (or anonymous objects) provided without
+     side effects. A new sorted collection is returned.
+     
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">items</span>:<a href="collections/RubossCollection.html">RubossCollection</a></code></td>
+<td width="20px"></td><td><code><span class="label">items</span>:<a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; RubossCollection to sort (will be not motified in place)
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">fields</span>:Array</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">fields</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an Array of SortFields or anonymous objects that represent SortFields
+      
+     </td>
 </tr>
 </table>
 <p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code></td>
+<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; 
+                        new array collection with the sorts applied 
+     
+                        
+                     </td>
 </tr>
 </table>
 </div>
@@ -793,23 +815,34 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function sort$(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><span class="label">Parameters</span>
+<code>public static function sort$(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><p> 
+     Sorts a given RubossCollection using SortFields (or anonymous objects) provided in 
+     place.
+     
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">items</span>:<a href="collections/RubossCollection.html">RubossCollection</a></code></td>
+<td width="20px"></td><td><code><span class="label">items</span>:<a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; RubossCollection to sort (will be motified in place)
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">fields</span>:Array</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">fields</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an Array of SortFields or anonymous objects that represent SortFields
+      
+     </td>
 </tr>
 </table>
 <p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code></td>
+<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; 
+                        original array collection with the sorts applied 
+     
+                        
+                     </td>
 </tr>
 </table>
 </div>

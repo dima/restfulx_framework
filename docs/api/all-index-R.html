@@ -93,7 +93,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("RÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/class-list.html');" href="org/ruboss/Ruboss.html#reset()">reset</a>() &mdash; Static method in class org.ruboss.<a onclick="javascript:loadClassListFrame('org/ruboss/class-list.html');" href="org/ruboss/Ruboss.html">Ruboss</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+     Clears errors, defaultMetadata and the sessionToken (a half-harted attempt at cleaning up
+     framework state, a bullet-proof way, which also clears event listeners you may have is to
+     reload the app on logout.)
+     </td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html#reset()">reset</a>(object, hard) &mdash; Method in class org.ruboss.controllers.<a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html">ModelsController</a></td>
