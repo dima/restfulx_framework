@@ -32,11 +32,14 @@ package org.ruboss.serializers {
     }
     
     // can digest both ActiveRecord-like JSON and CouchDB-like JSON
-    private function unmarshallJSONArray(instances:Array):TypedArray {
+    private function unmarshallJSONArray(instances:Array):Array {
+      if (!instances || !instances.length) return instances;
+      
       var result:TypedArray = new TypedArray;
       for each (var instance:Object in instances) {
         result.push(unmarshallJSONObject(instance));
       }
+      
       result.itemType = getQualifiedClassName(result[0]);
       return result;
     }
