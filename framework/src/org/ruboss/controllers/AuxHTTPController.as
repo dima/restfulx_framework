@@ -33,6 +33,7 @@ package org.ruboss.controllers {
     
     private var rootUrl:String;
     private var contentType:String;
+    private var resultFormat:String;
     private var resultHandler:Function;
     private var faultHandler:Function;
     private var cacheHandler:Function;
@@ -45,11 +46,12 @@ package org.ruboss.controllers {
      * @param rootUrl the URL to prefix to requests
      */
     public function AuxHTTPController(optsOrOnResult:Object = null, onFault:Function = null, 
-      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null) {
+      contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", rootUrl:String = null) {
       if (optsOrOnResult == null) optsOrOnResult = {};
       this.faultHandler = onFault;
       this.contentType = contentType;
       this.rootUrl = rootUrl;
+      this.resultFormat = resultFormat;
       if (optsOrOnResult is Function) {
         this.resultHandler = optsOrOnResult as Function;
       } else {
@@ -159,7 +161,7 @@ package org.ruboss.controllers {
         data = {};
       }
         
-      service.resultFormat = "e4x";
+      service.resultFormat = resultFormat;
       service.useProxy = false;
       service.contentType = contentType;
       service.url = rootUrl + url;

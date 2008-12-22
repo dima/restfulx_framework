@@ -120,8 +120,9 @@ package org.ruboss {
      * @return SimpleHTTPController instance
      */
     public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, 
-      contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null):AuxHTTPController {
-      return new httpController(optsOrResultHandler, faultHandler, contentType, rootUrl);    
+      contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x",
+      rootUrl:String = null):AuxHTTPController {
+      return new httpController(optsOrResultHandler, faultHandler, contentType, resultFormat, rootUrl);    
     }
 
     /**

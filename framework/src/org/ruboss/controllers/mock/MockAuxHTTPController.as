@@ -7,8 +7,9 @@ package org.ruboss.controllers.mock {
 
   public class MockAuxHTTPController extends AuxHTTPController {
     public function MockAuxHTTPController(optsOrOnResult:Object = null, 
-      onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", rootUrl:String = null) {
-      super(optsOrOnResult, onFault, contentType, rootUrl);
+      onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x",
+      rootUrl:String = null) {
+      super(optsOrOnResult, onFault, contentType, resultFormat, rootUrl);
     }
     
     public override function send(url:String, data:Object = null, method:int = AuxHTTPController.GET,

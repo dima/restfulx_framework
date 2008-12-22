@@ -109,8 +109,9 @@
         ts.addTest(new XMLSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshalling"));
                 
-        ts.addTest(new JSONSerializerTest("testObjectUnmarshalling"));
-        ts.addTest(new JSONSerializerTest("testObjectUnmarshallingWithRelationships"));
+        ts.addTest(new JSONSerializerTest("testCouchDBObjectUnmarshalling"));
+        ts.addTest(new JSONSerializerTest("testCouchDBObjectUnmarshallingWithRelationships"));
+        ts.addTest(new JSONSerializerTest("testActiveRecordLikeObjectUnmarshalling"));
         ts.addTest(new JSONSerializerTest("testObjectMarshalling"));
         ts.addTest(new JSONSerializerTest("testObjectMarshallingWithMetadata"));
         ts.addTest(new JSONSerializerTest("testObjectMarshallingWithSetRelationships"));

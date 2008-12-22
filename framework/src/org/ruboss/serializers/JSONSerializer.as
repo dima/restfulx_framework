@@ -1,6 +1,8 @@
 package org.ruboss.serializers {
   import com.adobe.serialization.json.JSON;
   
+  import flash.utils.getQualifiedClassName;
+  
   import org.ruboss.Ruboss;
   import org.ruboss.models.RubossModel;
   import org.ruboss.utils.TypedArray;
@@ -9,9 +11,6 @@ package org.ruboss.serializers {
     
     public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       var marshalled:Object = super.marshall(object, recursive, metadata);
-      marshalled["ruby_class"] = marshalled["clazz"];
-      delete marshalled["clazz"];
-            
       return JSON.encode(marshalled);  
     }
 
@@ -32,30 +31,44 @@ package org.ruboss.serializers {
       return null;    
     }
     
+    // can digest both ActiveRecord-like JSON and CouchDB-like JSON
     private function unmarshallJSONArray(instances:Array):TypedArray {
+      var result:TypedArray = new TypedArray;
       for each (var instance:Object in instances) {
-        instance["id"] = instance["_id"];
-        delete instance["_id"];
-        instance["rev"] = instance["_rev"];
-        delete instance["_rev"];
-    
-        instance["clazz"] = instance["ruby_class"];
-        delete instance["ruby_class"];
+        result.push(unmarshallJSONObject(instance));
       }
-      
-      return TypedArray(super.unmarshall(instances));
+      result.itemType = getQualifiedClassName(result[0]);
+      return result;
     }
     
     private function unmarshallJSONObject(source:Object):Object {
-      source["id"] = source["_id"];
-      delete source["_id"];
-      source["rev"] = source["_rev"];
-      delete source["_rev"];
-      
-      source["clazz"] = source["ruby_class"];
-      delete source["ruby_class"];
+      if (!source.hasOwnProperty("id") && !source.hasOwnProperty("_id")) {
+        // ActiveRecord-like JSON array with element names as object keys
+        for (var prop:String in source) {
+          var target:Object = source[prop];
+          target["clazz"] = prop;
+          source = target;
+          break;
+        }
+      } else {
+        // try CouchDB-like convention
+        convertProperties(source);
+      }
       
       return super.unmarshall(source);
+    }
+    
+    private function convertProperties(instance:Object):Object {
+      for each (var prop:Object in [{"_id" : "id"}, {"_rev" : "rev"}, {"ruby_class" : "clazz"}]) {
+        for (var key:String in prop) {
+          if (instance.hasOwnProperty(key)) {
+            var target:String = prop[key];
+            instance[target] = instance[key];
+            delete instance[key];
+          }
+        }
+      }
+      return instance; 
     }
   }
 }

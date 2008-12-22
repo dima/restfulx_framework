@@ -1,10 +1,11 @@
 package ruboss.test.cases.serializers {
   import flexunit.framework.TestCase;
   
-  import org.ruboss.Ruboss;
   import org.ruboss.serializers.JSONSerializer;
   import org.ruboss.utils.TypedArray;
   
+  import ruboss.test.models.Project;
+  import ruboss.test.models.Task;
   import ruboss.test.models.couchdb.CouchAddress;
 
   public class JSONSerializerTest extends TestCase {
@@ -16,13 +17,13 @@ package ruboss.test.cases.serializers {
       json = new JSONSerializer;
     }
     
-    public function testObjectUnmarshalling():void {
+    public function testCouchDBObjectUnmarshalling():void {
       var marshalled:String = '[{"created_at":"Tue Nov 11 00:59:37 -0500 2008","email":"robmalko@gmail.com","_id":"1011ea17e91e49e9cf9180201a72f2f1","_rev":"1825706269","updated_at":"Tue Nov 11 00:59:37 -0500 2008","login":"ting","ruby_class":"CouchUser","first_name":"Robert","last_name":"Malko"},{"created_at":"Tue Nov 11 00:59:16 -0500 2008","email":"robmalko@gmail.com","_id":"292644e96ce2480a93e0a6a5d268cfc2","_rev":"2459150784","updated_at":"Tue Nov 11 00:59:16 -0500 2008","login":"zing","ruby_class":"CouchUser","first_name":"Robert","last_name":"Malko"},{"created_at":"Tue Nov 11 00:59:29 -0500 2008","email":"robmalko@gmail.com","_id":"cd9aeb26ef90840bb5b1c93ab1293e50","_rev":"1579143706","updated_at":"Tue Nov 11 00:59:29 -0500 2008","login":"ding","ruby_class":"CouchUser","first_name":"Robert","last_name":"Malko"}]';
       var users:TypedArray = json.unmarshall(marshalled) as TypedArray;
       assertTrue(users.length, 3);
     }
     
-    public function testObjectUnmarshallingWithRelationships():void {
+    public function testCouchDBObjectUnmarshallingWithRelationships():void {
       var marshalledUsers:String = '[{"created_at":"Tue Nov 11 00:59:37 -0500 2008","email":"robmalko@gmail.com","_id":"1011ea17e91e49e9cf9180201a72f2f1","_rev":"1825706269","updated_at":"Tue Nov 11 00:59:37 -0500 2008","login":"ting","ruby_class":"CouchUser","first_name":"Robert","last_name":"Malko"},{"created_at":"Tue Nov 11 00:59:16 -0500 2008","email":"robmalko@gmail.com","_id":"292644e96ce2480a93e0a6a5d268cfc2","_rev":"2459150784","updated_at":"Tue Nov 11 00:59:16 -0500 2008","login":"zing","ruby_class":"CouchUser","first_name":"Robert","last_name":"Malko"},{"created_at":"Tue Nov 11 00:59:29 -0500 2008","email":"robmalko@gmail.com","_id":"cd9aeb26ef90840bb5b1c93ab1293e50","_rev":"1579143706","updated_at":"Tue Nov 11 00:59:29 -0500 2008","login":"ding","ruby_class":"CouchUser","first_name":"Robert","last_name":"Malko"}]';
       var users:TypedArray = json.unmarshall(marshalledUsers) as TypedArray;
       
@@ -30,7 +31,16 @@ package ruboss.test.cases.serializers {
       var addresses:TypedArray = json.unmarshall(marshalledAddresses) as TypedArray;
       assertNotNull(CouchAddress(addresses[0]).couchUser);
     }
-
+    
+    public function testActiveRecordLikeObjectUnmarshalling():void {
+      var marshalled:String = '[{\"project\": {\"name\": \"Project4NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"id\": 490909803, \"tasks\": [{\"name\": \"Task4NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"project_id\": 490909803, \"id\": 540638538, \"created_at\": \"2008-12-09T00:02:40Z\"}], \"created_at\": \"2008-12-09T00:02:40Z\"}}, {\"project\": {\"name\": \"Project2NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"id\": 1043718716, \"tasks\": [{\"name\": \"Task2NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"project_id\": 1043718716, \"id\": 525404037, \"created_at\": \"2008-12-09T00:02:40Z\"}], \"created_at\": \"2008-12-09T00:02:40Z\"}}, {\"project\": {\"name\": \"Project1NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"id\": 1060557696, \"tasks\": [{\"name\": \"Task1NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"project_id\": 1060557696, \"id\": 568611273, \"created_at\": \"2008-12-09T00:02:40Z\"}], \"created_at\": \"2008-12-09T00:02:40Z\"}}, {\"project\": {\"name\": \"Project3NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"id\": 1063252898, \"tasks\": [{\"name\": \"Task3NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"project_id\": 1063252898, \"id\": 1069820074, \"created_at\": \"2008-12-09T00:02:40Z\"}], \"created_at\": \"2008-12-09T00:02:40Z\"}}]';
+      var projects:TypedArray = json.unmarshall(marshalled) as TypedArray;
+      assertEquals(4, projects.length);
+      assertEquals("ruboss.test.models::Project", projects.itemType);
+      assertEquals("Project4NameString", Project(projects[0]).name);
+      assertEquals(1, Project(projects[0]).tasks.length);
+      assertEquals("Task4NameString", Task(Project(projects[0]).tasks.getItemAt(0)).name);
+    }
 
     public function testObjectMarshalling():void {
       
@@ -48,9 +58,8 @@ package ruboss.test.cases.serializers {
       var addresses:TypedArray = json.unmarshall(marshalledAddresses) as TypedArray;
 
       var marshalledBack:String = json.marshall(addresses[0]) as String;
-      assertTrue(marshalledBack.indexOf("ruby_class"));
+      assertTrue(marshalledBack.indexOf("clazz"));
     }
-
     
     public function testObjectMarshallingWithNullRelationship():void {
       
