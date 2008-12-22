@@ -1,0 +1,836 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="Ruboss,org.ruboss.Ruboss,DEFAULT_ERROR_FIELD,airDatabaseName,commands,defaultMetadata,defaultServiceId,errors,httpController,httpControllerHandler,httpRootUrl,log,models,serializers,services,sessionToken,enableLogging,filter,filter$,filters,filters$,http,merge,preventNull,preventNullProperty,reset,sort,sort$" name="keywords">
+<title>org.ruboss.Ruboss</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'Ruboss - API Documentation';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?org/ruboss/Ruboss.html&amp;org/ruboss/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Ruboss</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Ruboss"); titleBar_setSubNav(true,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">org.ruboss</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Ruboss</td>
+</tr>
+</table>
+<p></p>
+<p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#airDatabaseName">airDatabaseName</a> : String = "rubossdb"<div class="summaryTableDescription">[static] default database name to use for AIR applications (if nothing else is provided) </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#commands">commands</a> : <a href="controllers/CommandsController.html">CommandsController</a>
+<div class="summaryTableDescription">[static] auxiliary (non-CRUD) commands controller </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#defaultMetadata">defaultMetadata</a> : Object<div class="summaryTableDescription">[static] 
+     metadata allows us to tag arbitrary data along with any provider requests
+     this is typically useful with HTTP provider (but may be useful with other providers too).</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#defaultServiceId">defaultServiceId</a> : int<div class="summaryTableDescription">[static] default service provider to use </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#errors">errors</a> : <a href="services/IServiceErrors.html">IServiceErrors</a>
+<div class="summaryTableDescription">[static] exposes errors reported by a given service provider </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#httpController">httpController</a> : Class<div class="summaryTableDescription">[static] default http controller implementation to use </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#httpControllerHandler">httpControllerHandler</a> : Function<div class="summaryTableDescription">[static] 
+     If http controller handler function is set, it allows you to override 
+     behaviour of the send() function in the controller.</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#httpRootUrl">httpRootUrl</a> : String = "/"<div class="summaryTableDescription">[static] default root URL for HTTP requests, gets prefixed to CRUD and AUX HTTP operations </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#log">log</a> : ILogger<div class="summaryTableDescription">[static] framework logger </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#models">models</a> : <a href="controllers/ModelsController.html">ModelsController</a>
+<div class="summaryTableDescription">[static] centralized access to RESTful CRUD operations on models </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#serializers">serializers</a> : <a href="controllers/SerializersController.html">SerializersController</a>
+<div class="summaryTableDescription">[static] exposes available serializers </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#services">services</a> : <a href="controllers/ServicesController.html">ServicesController</a>
+<div class="summaryTableDescription">[static] exposes available service providers </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#sessionToken">sessionToken</a> : String<div class="summaryTableDescription">[static]
+     stores current session id for use by URLRequest
+     </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#Ruboss()">Ruboss</a>(enforcer:PrivateEnforcer)</div>
+<div class="summaryTableDescription">
+     No constructor
+     </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#enableLogging()">enableLogging</a>():void</div>
+<div class="summaryTableDescription">[static]
+     Enables tracing for internal ruboss framework classes.</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#filter()">filter</a>(items:ArrayCollection, filter:Function = null):<a href="collections/RubossCollection.html">RubossCollection</a>
+</div>
+<div class="summaryTableDescription">[static]
+     Filters a given RubossCollection with no side effects, a new ruboss array collection is created
+     that the filter is applied on.</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#filter$()">filter$</a>(items:<a href="collections/RubossCollection.html">RubossCollection</a>, filter:Function = null):<a href="collections/RubossCollection.html">RubossCollection</a>
+</div>
+<div class="summaryTableDescription">[static] 
+     Filters a given RubossCollection in place, this version actually modifies the instance passed
+     in as the argument.</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#filters()">filters</a>(items:<a href="collections/RubossCollection.html">RubossCollection</a>, filters:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a>
+</div>
+<div class="summaryTableDescription">[static]
+     Applies a composite filter to a given RubossCollection with no side effects, a new ruboss 
+     array collection is created that the filters are applied on.</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#filters$()">filters$</a>(items:<a href="collections/RubossCollection.html">RubossCollection</a>, filters:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a>
+</div>
+<div class="summaryTableDescription">[static] 
+     Applies a composite filter to a given RubossCollection in place, this version actually modifies 
+     the instance passed in as the argument.</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#http()">http</a>(optsOrResultHandler:Object = null, faultHandler:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", rootUrl:String = null):<a href="controllers/AuxHTTPController.html">AuxHTTPController</a>
+</div>
+<div class="summaryTableDescription">[static]
+     Handy shortcut for non-CRUD HTTP operations.</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#merge()">merge</a>(items:ArrayCollection, toAdd:Array, after:Boolean = false):<a href="collections/RubossCollection.html">RubossCollection</a>
+</div>
+<div class="summaryTableDescription">[static]
+     Merges an array into a RubossCollection (without side-effects).</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#preventNull()">preventNull</a>(obj:Object, defaultObj:Object):Object</div>
+<div class="summaryTableDescription">[static]
+     Returns a default object of some kind if the first argument is null
+      
+     </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#preventNullProperty()">preventNullProperty</a>(obj:Object, property:String, defaultObj:Object):Object</div>
+<div class="summaryTableDescription">[static]
+     Same as above but checks object properties instead.</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#reset()">reset</a>():void</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#sort()">sort</a>(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#sort$()">sort$</a>(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a>
+</div>
+<div class="summaryTableDescription">[static]</div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+</table>
+</div>
+<a name="constantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Constants</div>
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DEFAULT_ERROR_FIELD">DEFAULT_ERROR_FIELD</a> : String = ":base"<div class="summaryTableDescription">[static] default error namespace used by service providers </div>
+</td><td class="summaryTableOwnerCol">Ruboss</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="airDatabaseName"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">airDatabaseName</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var airDatabaseName:String = "rubossdb"</code><p> default database name to use for AIR applications (if nothing else is provided) </p></div>
+<a name="commands"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">commands</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var commands:<a href="controllers/CommandsController.html">CommandsController</a></code><p> auxiliary (non-CRUD) commands controller </p></div>
+<a name="defaultMetadata"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">defaultMetadata</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var defaultMetadata:Object</code><p> 
+     metadata allows us to tag arbitrary data along with any provider requests
+     this is typically useful with HTTP provider (but may be useful with other providers too).
+     default metadata specifies metadata that always gets sent along 
+     </p></div>
+<a name="defaultServiceId"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">defaultServiceId</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var defaultServiceId:int</code><p> default service provider to use </p></div>
+<a name="errors"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">errors</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var errors:<a href="services/IServiceErrors.html">IServiceErrors</a></code><p> exposes errors reported by a given service provider </p></div>
+<a name="httpController"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">httpController</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var httpController:Class</code><p> default http controller implementation to use </p></div>
+<a name="httpControllerHandler"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">httpControllerHandler</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var httpControllerHandler:Function</code><p> 
+     If http controller handler function is set, it allows you to override 
+     behaviour of the send() function in the controller.
+     
+     The signature for the function is 
+     (controller:SimpleHTTPController, url:String, data:Object = null, 
+      method:int = SimpleHTTPController.GET)
+     </p></div>
+<a name="httpRootUrl"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">httpRootUrl</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var httpRootUrl:String = "/"</code><p> default root URL for HTTP requests, gets prefixed to CRUD and AUX HTTP operations </p></div>
+<a name="log"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">log</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var log:ILogger</code><p> framework logger </p></div>
+<a name="models"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">models</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var models:<a href="controllers/ModelsController.html">ModelsController</a></code><p> centralized access to RESTful CRUD operations on models </p></div>
+<a name="serializers"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">serializers</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var serializers:<a href="controllers/SerializersController.html">SerializersController</a></code><p> exposes available serializers </p></div>
+<a name="services"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">services</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var services:<a href="controllers/ServicesController.html">ServicesController</a></code><p> exposes available service providers </p></div>
+<a name="sessionToken"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">sessionToken</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var sessionToken:String</code><p>
+     stores current session id for use by URLRequest
+     </p></div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="Ruboss()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">Ruboss</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function Ruboss(enforcer:PrivateEnforcer)</code><p>
+     No constructor
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">enforcer</span>:PrivateEnforcer</code></td>
+</tr>
+</table>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="enableLogging()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableLogging</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function enableLogging():void</code><p>
+     Enables tracing for internal ruboss framework classes. This is useful for debugging
+     purposes. The log can be seen in the console of Flex Builder when you are ebugging     as opposed to running your project.
+     </p></div>
+<a name="filter()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">filter</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function filter(items:ArrayCollection, filter:Function = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><p>
+     Filters a given RubossCollection with no side effects, a new ruboss array collection is created
+     that the filter is applied on.
+      
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">items</span>:ArrayCollection</code> &mdash; ArrayCollection instance to filter
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">filter</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; filter function
+     
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; 
+                        new filtered RubossCollection instance
+     
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="filter$()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">filter$</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function filter$(items:<a href="collections/RubossCollection.html">RubossCollection</a>, filter:Function = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><p> 
+     Filters a given RubossCollection in place, this version actually modifies the instance passed
+     in as the argument.
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">items</span>:<a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; ArrayCollection to filter (will be motified in place)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">filter</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; filter function
+      
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; 
+                        original array collection with the filter applied 
+     
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="filters()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">filters</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function filters(items:<a href="collections/RubossCollection.html">RubossCollection</a>, filters:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><p>
+     Applies a composite filter to a given RubossCollection with no side effects, a new ruboss 
+     array collection is created that the filters are applied on.
+      
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">items</span>:<a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; RubossCollection instance to filter
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">filters</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an Array of filter functions
+     
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; 
+                        new filtered RubossCollection instance
+     
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="filters$()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">filters$</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function filters$(items:<a href="collections/RubossCollection.html">RubossCollection</a>, filters:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><p> 
+     Applies a composite filter to a given RubossCollection in place, this version actually modifies 
+     the instance passed in as the argument.
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">items</span>:<a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; RubossCollection to filter (will be motified in place)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">filters</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an Array of filter functions to apply
+      
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; 
+                        original array collection with the filters applied 
+     
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="http()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">http</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", rootUrl:String = null):<a href="controllers/AuxHTTPController.html">AuxHTTPController</a></code><p>
+     Handy shortcut for non-CRUD HTTP operations. This can be used to send any object to any URL
+     by doing something like this:
+      
+     Ruboss.http(function(result:Object):void { trace(result); }).invoke("some/url/here");
+      
+     This will send a GET request with no arguments to "some/url/here" and call anonymous
+     function provided when the result comes back.
+      
+      or
+      
+     Ruboss.http({
+      resultHandler: someFunctionToHandleResult,
+      faultHandler: someFunctionToHandleFault,
+      contentType: "application/xml"
+     }).invoke({data: bla, method: "POST", unmarshall: true});
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">optsOrResultHandler</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; can be either an anonymous object of options or a result handler 
+      function. Many functions in the framework can be called with named params specified
+      in an object or explicitly in the order required by the function. See the example above.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">faultHandler</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; function to call on HTTPService error
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">contentType</span>:String</code> (default = "<code>application/x-www-form-urlencoded</code>")<code></code> &mdash; content type for the request
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">resultFormat</span>:String</code> (default = "<code>e4x</code>")<code></code> &mdash; the URL to prefix to requests
+      
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">rootUrl</span>:String</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="controllers/AuxHTTPController.html">AuxHTTPController</a></code> &mdash; 
+                        SimpleHTTPController instance
+     
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="merge()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">merge</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function merge(items:ArrayCollection, toAdd:Array, after:Boolean = false):<a href="collections/RubossCollection.html">RubossCollection</a></code><p>
+     Merges an array into a RubossCollection (without side-effects). A new RubossCollection is
+     created/returned as a result.
+      
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">items</span>:ArrayCollection</code> &mdash; ArrayCollection to merge into
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">toAdd</span>:Array</code> &mdash; Array to merge
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">after</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; if true toAdd gets appended else prepended
+      
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code> &mdash; 
+                        a ewRubossCollection
+     
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="preventNull()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">preventNull</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function preventNull(obj:Object, defaultObj:Object):Object</code><p>
+     Returns a default object of some kind if the first argument is null
+      
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">obj</span>:Object</code> &mdash; object to check
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">defaultObj</span>:Object</code> &mdash; to use if obj is null
+          </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Object</code> &mdash; default if object is null the object itself otherwise
+     </td>
+</tr>
+</table>
+</div>
+<a name="preventNullProperty()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">preventNullProperty</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function preventNullProperty(obj:Object, property:String, defaultObj:Object):Object</code><p>
+     Same as above but checks object properties instead.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">obj</span>:Object</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">property</span>:String</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">defaultObj</span>:Object</code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Object</code></td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">preventNull</div>
+</div>
+<a name="reset()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">reset</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function reset():void</code>
+</div>
+<a name="sort()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">sort</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function sort(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">items</span>:<a href="collections/RubossCollection.html">RubossCollection</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">fields</span>:Array</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code></td>
+</tr>
+</table>
+</div>
+<a name="sort$()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">sort$</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function sort$(items:<a href="collections/RubossCollection.html">RubossCollection</a>, fields:Array = null):<a href="collections/RubossCollection.html">RubossCollection</a></code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">items</span>:<a href="collections/RubossCollection.html">RubossCollection</a></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">fields</span>:Array</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="collections/RubossCollection.html">RubossCollection</a></code></td>
+</tr>
+</table>
+</div>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="DEFAULT_ERROR_FIELD"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">DEFAULT_ERROR_FIELD</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const DEFAULT_ERROR_FIELD:String = ":base"</code><p> default error namespace used by service providers </p></div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->
