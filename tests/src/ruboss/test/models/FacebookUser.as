@@ -9,11 +9,14 @@ package ruboss.test.models {
 
     public var name:String;
     
-    [BelongsTo(referAs="friends")]
+    [BelongsTo(referAs="friends, randomFriends")]
     public var friend:FacebookUser;
     
     [HasMany(type="FacebookUser")]
     public var friends:ModelsCollection;
+    
+    [HasMany(type="FacebookUser", conditions="name:4")]
+    public var randomFriends:ModelsCollection;
 
     public function FacebookUser() {
       super(LABEL);

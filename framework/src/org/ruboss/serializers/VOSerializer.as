@@ -27,7 +27,7 @@ package org.ruboss.serializers {
           return unmarshallObject(object, fqn);
         }
       } catch (e:Error) {
-        throw new Error("could not unmarshall provided object");
+        throw new Error("could not unmarshall provided object:" + e.getStackTrace());
       }
       return null;
     }

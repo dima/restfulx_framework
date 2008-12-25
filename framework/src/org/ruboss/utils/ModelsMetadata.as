@@ -149,6 +149,7 @@ package org.ruboss.utils {
           var refName:String = node.@name;
           var referAs:String;
           
+          var conditions:Object;
           var dependencies:Array = new Array;
           var descriptor:XML;
           
@@ -172,6 +173,7 @@ package org.ruboss.utils {
               }
               // hook up N-N = has_many(:through) relationships
               extractHasManyThroughRelationships(node, descriptor, fqn);
+              conditions = extractHasManyConditions(node, descriptor, fqn);
             }
             
             if (descriptor) {
@@ -192,7 +194,7 @@ package org.ruboss.utils {
 
           if (RubossUtils.isBelongsTo(node)) extractDependencies(dependencies, node, descriptor, refType);
 
-          refs[fqn][refName] = {type: refType, referAs: referAs};
+          refs[fqn][refName] = {type: refType, referAs: referAs, conditions: conditions};
           
           for each (var dependency:String in dependencies) {
             if (controllers[dependency] && dependency != fqn && (eager[fqn] as Array).indexOf(dependency) == -1) {
@@ -234,6 +236,20 @@ package org.ruboss.utils {
         }
         (hmts[target] as Array).push({type: fqn, attribute: attribute, refType: refType});
       }
+    }
+    
+    private function extractHasManyConditions(node:XML, descriptor:XML, fqn:String):Object {
+      var conditions:String = descriptor.arg.(@key == "conditions").@value.toString();
+      if (RubossUtils.isEmpty(conditions)) return null;
+      
+      var result:Object = new Object;
+      for each (var condition:String in conditions.split(",")) {
+        var keyValuePair:Array = condition.split(":");
+        var key:String = keyValuePair[0];
+        var value:String = keyValuePair[1];
+        result[key] = value;
+      }
+      return result;
     }
   }
 }

@@ -2,6 +2,7 @@ package org.ruboss.serializers {
   import flash.utils.getDefinitionByName;
   
   import mx.utils.ObjectUtil;
+  import mx.utils.StringUtil;
   
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
@@ -117,36 +118,54 @@ package org.ruboss.serializers {
           }
           
           var pluralName:String = state.refs[fqn][targetName]["referAs"];
-          var singleName:String = pluralName;
+          var singleName:String = pluralName.split(",")[0];
           if (RubossUtils.isEmpty(pluralName)) {
             pluralName = (isParentRef) ? "children" : state.names[fqn]["plural"];
             singleName = state.names[fqn]["single"];
           }
+          
+          for each (var rel:String in pluralName.split(",")) {
+            rel = StringUtil.trim(rel);
+            // if we've got a plural definition which is annotated with [HasMany] 
+            // it's got to be a 1->N relationship           
+            if (ref != null && ref.hasOwnProperty(rel) && 
+              ObjectUtil.hasMetadata(ref, rel, "HasMany")) {
+              var items:ModelsCollection = ModelsCollection(ref[rel]);
+              if (items == null) {
+                items = new ModelsCollection;
+              }
               
-          // if we've got a plural definition which is annotated with [HasMany] 
-          // it's got to be a 1->N relationship           
-          if (ref != null && ref.hasOwnProperty(pluralName) && 
-            ObjectUtil.hasMetadata(ref, pluralName, "HasMany")) {
-            var items:ModelsCollection = ModelsCollection(ref[pluralName]);
-            if (items == null) {
-              items = new ModelsCollection;
+              var conditions:Object = state.refs[targetType][rel]["conditions"];
+              var allConditionsMet:Boolean = true;
+              if (conditions) {
+                for (var condition:String in conditions) {
+                  if (object.hasOwnProperty(condition) && object[condition].toString().search(conditions[condition]) == -1) {
+                    allConditionsMet = false;
+                    break;
+                  }
+                }
+              }
+              
+              if (allConditionsMet) {
+                // add (or replace) the current item to the reference collection
+                if (items.hasItem(object)) {
+                  items.setItem(object);
+                } else {
+                  items.addItem(object);
+                }
+                
+                ref[rel] = items;
+              }              
             }
-            
-            // add (or replace) the current item to the reference collection
-            if (items.hasItem(object)) {
-              items.setItem(object);
-            } else {
-              items.addItem(object);
-            }
-            
-            ref[pluralName] = items;
-  
+          }
+    
           // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
           // link them up
-          } else if (ref != null && ref.hasOwnProperty(singleName) && 
+          if (ref != null && ref.hasOwnProperty(singleName) && 
             ObjectUtil.hasMetadata(ref, singleName, "HasOne")) {
             ref[singleName] = object;
           }
+          
           // and the reverse
           object[targetName] = ref;
         } else if (isNestedArray) {

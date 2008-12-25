@@ -21,6 +21,7 @@ package org.ruboss.utils {
   import mx.collections.ArrayCollection;
   import mx.formatters.DateFormatter;
   import mx.utils.ObjectUtil;
+  import mx.utils.StringUtil;
   
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
@@ -107,30 +108,41 @@ package org.ruboss.utils {
     // needs some testing too
     public static function cleanupModelReferences(model:Object, fqn:String):void {
       for (var reference:String in Ruboss.models.state.refs[fqn]) {
-        var referAs:String = Ruboss.models.state.refs[fqn][reference]["referAs"];
-        var referAsPlural:String = referAs;
-        var referAsSingle:String = referAs;
-        
-        if (RubossUtils.isEmpty(referAs)) {
-          referAsPlural = Ruboss.models.state.names[fqn]["plural"];
-          referAsSingle = Ruboss.models.state.names[fqn]["single"];
-          if (reference == "parent") {
-            referAsPlural = "children";
-          }
-        }
-        
-        var type:String = Ruboss.models.state.refs[fqn][reference]["type"];
         if (ObjectUtil.hasMetadata(model, reference, "BelongsTo") && model[reference] != null) {
+          var referAs:String = Ruboss.models.state.refs[fqn][reference]["referAs"];
+          var referAsPlural:String = referAs;
+          var referAsSingle:String = referAs;
+          var hasManyRel:Boolean = false;
+          
+          if (RubossUtils.isEmpty(referAs)) {
+            referAsPlural = Ruboss.models.state.names[fqn]["plural"];
+            referAsSingle = Ruboss.models.state.names[fqn]["single"];
+            if (reference == "parent") {
+              referAsPlural = "children";
+            }
+          }
+          
+          var type:String = Ruboss.models.state.refs[fqn][reference]["type"];
           // go into the reference and clean up any refs to this object from [HasMany] annotated
           // properties
-          if (model[reference].hasOwnProperty(referAsPlural) && model[reference][referAsPlural] != null 
-            && model[reference][referAsPlural] is ModelsCollection) {
-            var items:ModelsCollection = ModelsCollection(model[reference][referAsPlural]);
-            if (items.hasItem(model)) {
-              items.removeItem(model);
+          for each (var ref:String in referAsPlural.split(",")) {
+            ref = StringUtil.trim(ref);
+            if (model[reference].hasOwnProperty(ref) && model[reference][ref] != null 
+              && model[reference][ref] is ModelsCollection) {
+              var items:ModelsCollection = ModelsCollection(model[reference][ref]);
+              hasManyRel = true;
+              if (items.hasItem(model)) {
+                items.removeItem(model);
+              }
             }
-          } else if (model[reference].hasOwnProperty(referAsSingle) && model[reference][referAsSingle] != null) {
-            model[reference][referAsSingle] = null;
+          }
+          
+          if (!hasManyRel) {
+            referAsSingle = referAsSingle.split(",")[0];
+        
+            if (model[reference].hasOwnProperty(referAsSingle) && model[reference][referAsSingle] != null) {
+              model[reference][referAsSingle] = null;
+            }
           }
         }
       }
