@@ -202,6 +202,8 @@ package org.ruboss.controllers {
       var shown:ArrayCollection = ArrayCollection(state.shown[fqn]);
       var objectId:String = object["id"];
       
+      var currentInstance:Object = ModelsCollection(cache.data[fqn]).withId(objectId);
+      
       if (!shown.contains(objectId)) {
         if (fetchDependencies) {
           var objectMetadata:XML = describeType(object);
@@ -230,13 +232,20 @@ package org.ruboss.controllers {
         state.waiting[fqn] = true;
         shown.addItem(objectId);
         
+        // create an instance of the object to be shown ahead of time to keep the same reference
+        if (!currentInstance) {
+          currentInstance = new (getDefinitionByName(fqn) as Class);
+          currentInstance["id"] = objectId;
+          ModelsCollection(cache.data[fqn]).addItem(currentInstance);
+        }
+        
         var service:IServiceProvider = getServiceProvider(targetServiceId);
         var serviceResponder:ServiceResponder = new ServiceResponder(cache.show, service, onSuccess, onFailure);
 
         invokeService(service.show, service, object, serviceResponder, metadata, nestedBy);
       }
       
-      return RubossModel(ModelsCollection(cache.data[fqn]).getItem(object));
+      return RubossModel(currentInstance);
     }
     
     [Bindable(event="cacheUpdate")]
