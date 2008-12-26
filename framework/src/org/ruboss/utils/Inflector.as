@@ -1,7 +1,5 @@
 /*******************************************************************************
  * Inflector for AS3
- * @author Akeem Philbert <akeemphilbert@gmail.com>
- * @version 1
  * 
  * Copyright (c) 2008 Akeem Philbert
  *
