@@ -12,6 +12,26 @@ Refer to
   
 for details on how to get started with the Ruboss framework.
 
+== Building from Source
+
+    git clone git://github.com/dima/ruboss_framework.git
+    cd ruboss_framework
+    rake -T
+    
+Run rake to build the framework
+
+    rake
+    
+Run rake test to build and run the test suite
+
+    rake test
+    
+Run rake doc to generate AS3 API documentation
+    
+    rake doc
+    
+Alternatively, you can point your Flex Builder 3 at ruboss_framework directory and compile and run/test from there.
+
 == LICENSE
 
 Copyright (c) 2008 Ruboss Technology Corporation, released under the GPLv3 license
