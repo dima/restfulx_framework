@@ -62,7 +62,8 @@ package org.ruboss.serializers {
     }
     
     private function convertProperties(instance:Object):Object {
-      for each (var prop:Object in [{"_id" : "id"}, {"_rev" : "rev"}, {"ruby_class" : "clazz"}]) {
+      for each (var prop:Object in [{"_id" : "id"}, {"_rev" : "rev"}, {"ruby_class" : "clazz"},
+        {"couchrest-type" : "clazz"}]) {
         for (var key:String in prop) {
           if (instance.hasOwnProperty(key)) {
             var target:String = prop[key];
