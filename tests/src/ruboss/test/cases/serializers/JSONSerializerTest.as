@@ -56,6 +56,12 @@ package ruboss.test.cases.serializers {
       assertEquals(1, Project(projects[0]).tasks.length);
       assertEquals("Task4NameString", Task(Project(projects[0]).tasks.getItemAt(0)).name);
     }
+    
+    public function testNothingUnmarshalling():void {
+      var nothing:String = '[]';
+      var result:Array = json.unmarshall(nothing) as Array;
+      assertEquals(0, result.length);
+    }
 
     public function testObjectMarshalling():void {
       

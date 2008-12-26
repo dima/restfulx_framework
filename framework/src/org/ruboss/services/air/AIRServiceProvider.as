@@ -33,7 +33,6 @@ package org.ruboss.services.air {
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.RubossUtils;
-  import org.ruboss.utils.TypedArray;
 
   /**
    * AIR Service Provider implementation.
@@ -378,19 +377,20 @@ package org.ruboss.services.air {
       try {   
         statement.execute();
         
+        var result:Object;
         var data:Array = statement.getResult().data;
-        if (data.length > 0) {
+        if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
+          result = unmarshall(data);
+        } else {
+          // nothing in the DB
+          result = new Array;
         }
         
-        var result:TypedArray = unmarshall(data) as TypedArray;
-        
         delete indexing[fqn];
-        delete state.waiting[fqn];
         invokeResponderResult(token.responders[0], result);
       } catch (e:Error) {
         delete indexing[fqn];
-        delete state.waiting[fqn];
         IResponder(token.responders[0]).fault(e);
       }
     }

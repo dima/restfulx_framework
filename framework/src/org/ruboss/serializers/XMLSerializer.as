@@ -17,8 +17,6 @@ package org.ruboss.serializers {
   import flash.utils.describeType;
   import flash.utils.getQualifiedClassName;
   
-  import mx.utils.ObjectUtil;
-  
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
   import org.ruboss.models.RubossModel;
@@ -46,6 +44,9 @@ package org.ruboss.serializers {
         Ruboss.log.debug("unmarshalling response:\n" + xmlFragment.toXMLString());
 
         var objectName:String = xmlFragment.localName();
+        
+        if (objectName == "nil_classes") return new Array;
+        
         var results:TypedArray = new TypedArray;
         // if the object name is the same as the controller specified 
         // on the model (which are typically plural) we know we got back 

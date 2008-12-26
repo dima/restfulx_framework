@@ -94,6 +94,12 @@ package ruboss.test.cases.serializers {
       assertEquals("Customer1NameString", Customer(location.owner).name);
     }
     
+    public function testNothingUnmarshalling():void {
+      var xmlForNothing:XML = TestApp(Application.application).nothing;
+      var result:Array = xml.unmarshall(xmlForNothing) as Array;
+      assertEquals(0, result.length);
+    }
+    
     public function testObjectMarshalling():void {
       var simpleProperty:SimpleProperty = getNewSimpleProperty();
       var marshalled:XML = xml.marshall(simpleProperty) as XML;

@@ -22,6 +22,7 @@ package org.ruboss.services {
   import org.ruboss.Ruboss;
   import org.ruboss.events.ServiceCallStopEvent;
   import org.ruboss.events.ServiceErrorEvent;
+  import org.ruboss.models.RubossModel;
   import org.ruboss.utils.TypedArray;
 
   /**
@@ -31,6 +32,7 @@ package org.ruboss.services {
 
     private var handler:Function;
     private var service:IServiceProvider;
+    private var modelType:String;
     private var onSuccess:Object;
     private var onFailure:Function;
 
@@ -42,10 +44,11 @@ package org.ruboss.services {
      *  everything has been *successfully* processed
      * @param onFailure
      */
-    public function ServiceResponder(handler:Function, service:IServiceProvider, onSuccess:Object = null, 
+    public function ServiceResponder(handler:Function, service:IServiceProvider, modelType:String, onSuccess:Object = null, 
       onFailure:Function = null) {
       this.handler = handler;
       this.service = service;
+      this.modelType = modelType;
       this.onSuccess = onSuccess;
       this.onFailure = onFailure;
     }
@@ -63,8 +66,14 @@ package org.ruboss.services {
           var resultType:String;
           if (result is TypedArray) {
             resultType = TypedArray(result).itemType;
-          } else {
+          } else if (result is RubossModel) {
             resultType = getQualifiedClassName(result);
+          } else if (result is Array) {
+            resultType = modelType;
+            result = new TypedArray;
+            TypedArray(result).itemType = resultType;
+          } else {
+            invokeOnFailure(result);
           }
           
           Ruboss.log.debug("handled response for: " + resultType);
@@ -93,6 +102,7 @@ package org.ruboss.services {
      */
     public function fault(error:Object):void {
       CursorManager.removeBusyCursor();
+      delete Ruboss.models.state.waiting[modelType];
       Ruboss.models.dispatchEvent(new ServiceCallStopEvent);
       invokeOnFailure(error);
       Ruboss.log.error(error.toString());

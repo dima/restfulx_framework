@@ -18,6 +18,8 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.models.NothingIndexingTest;
+		  import ruboss.test.models.Nothing;
 		  import ruboss.test.cases.InflectorTest;
 		  import ruboss.test.cases.ReferenceCleanupTest;
 		  import ruboss.test.cases.models.SelfReferentialModelsTest;
@@ -69,7 +71,8 @@
           stores: stores,
           books: books,
           authors: authors,
-          facebook_users: facebook_users
+          facebook_users: facebook_users,
+          nothing: nothing
         }
 
         MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
@@ -106,6 +109,8 @@
         ts.addTest(new HasManyThroughRelationshipsTest("testHasManyThroughForm2Index", serviceProviderId));
         
         ts.addTest(new SingleTableInheritanceTest("testSTIIndex", serviceProviderId));
+        
+        ts.addTest(new NothingIndexingTest("testNothingIndex", serviceProviderId));
  			}
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {
@@ -125,6 +130,7 @@
         ts.addTest(new XMLSerializerTest("testObjectMarshallingWithSetRelationships"));
         ts.addTest(new XMLSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshalling"));
+        ts.addTest(new XMLSerializerTest("testNothingUnmarshalling"));
                 
         ts.addTest(new JSONSerializerTest("testCouchDBObjectUnmarshalling"));
         ts.addTest(new JSONSerializerTest("testCouchDBObjectUnmarshallingWithRelationships"));
@@ -134,6 +140,7 @@
         ts.addTest(new JSONSerializerTest("testObjectMarshallingWithSetRelationships"));
         ts.addTest(new JSONSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new JSONSerializerTest("testRecursiveObjectMarshalling"));
+        ts.addTest(new JSONSerializerTest("testNothingUnmarshalling"));        
         
         // TODO: JSON nested resources unmarshalling
         
@@ -224,7 +231,9 @@
 
   <!-- HasMany(:through) form 2 included -->
   <mx:XML id="store_with_authors" source="ruboss/test/responses/store_with_authors.xml"/>
-  	
+  
+  <mx:XML id="nothing" source="ruboss/test/responses/nothing.xml"/>
+
 	<!-- Reported Bugs -->
 	<mx:XML id="bug26user" source="ruboss/test/responses/bug26/user.xml"/>
 	<mx:XML id="bug26contactA" source="ruboss/test/responses/bug26/contactA.xml"/>

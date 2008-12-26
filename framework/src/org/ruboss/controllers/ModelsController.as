@@ -135,7 +135,7 @@ package org.ruboss.controllers {
         state.waiting[fqn] = true;
   
         var service:IServiceProvider = getServiceProvider(targetServiceId);
-        var serviceResponder:ServiceResponder = new ServiceResponder(cache.index, service, onSuccess, onFailure);
+        var serviceResponder:ServiceResponder = new ServiceResponder(cache.index, service, fqn, onSuccess, onFailure);
         invokeService(service.index, service, clazz, serviceResponder, metadata, nestedBy);  
       }
       return ModelsCollection(cache.data[fqn]);
@@ -242,7 +242,7 @@ package org.ruboss.controllers {
         }
         
         var service:IServiceProvider = getServiceProvider(targetServiceId);
-        var serviceResponder:ServiceResponder = new ServiceResponder(cache.show, service, onSuccess, onFailure);
+        var serviceResponder:ServiceResponder = new ServiceResponder(cache.show, service, fqn, onSuccess, onFailure);
 
         invokeService(service.show, service, object, serviceResponder, metadata, nestedBy);
       }
@@ -287,8 +287,9 @@ package org.ruboss.controllers {
           if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
         }
       }
+      var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
-      var serviceResponder:ServiceResponder = new ServiceResponder(cache.update, service, onSuccess, onFailure);
+      var serviceResponder:ServiceResponder = new ServiceResponder(cache.update, service, fqn, onSuccess, onFailure);
       invokeService(service.update, service, object, serviceResponder, metadata, nestedBy);
     }
     
@@ -321,8 +322,9 @@ package org.ruboss.controllers {
           if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
         }
       }
+      var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
-      var serviceResponder:ServiceResponder = new ServiceResponder(cache.create, service, onSuccess, onFailure);
+      var serviceResponder:ServiceResponder = new ServiceResponder(cache.create, service, fqn, onSuccess, onFailure);
       invokeService(service.create, service, object, serviceResponder, metadata, nestedBy);
     }
 
@@ -355,8 +357,9 @@ package org.ruboss.controllers {
           if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
         }
       }
+      var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
-      var serviceResponder:ServiceResponder = new ServiceResponder(cache.destroy, service, onSuccess, onFailure);
+      var serviceResponder:ServiceResponder = new ServiceResponder(cache.destroy, service, fqn, onSuccess, onFailure);
       invokeService(service.destroy, service, object, serviceResponder, metadata, nestedBy);
     }
     
