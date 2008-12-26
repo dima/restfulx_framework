@@ -41,8 +41,8 @@ package ruboss.test.cases {
     }
     
     public function testCamelCasing():void {
-      assertEquals("someSubSubStuff", RubossUtils.toCamelCase("some_sub_sub_stuff"));
       assertEquals("some_sub_sub_stuff", RubossUtils.toSnakeCase("someSubSubStuff"));
+      assertEquals("someSubSubStuff", RubossUtils.toCamelCase("some_sub_sub_stuff"));
     }
     
     public function testResourceNesting():void {

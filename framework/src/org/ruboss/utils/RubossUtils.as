@@ -288,14 +288,18 @@ package org.ruboss.utils {
      * Converts a string to CamelCase from snake_case
      */
     public static function toCamelCase(string:String):String {
-      return Inflector.camelize(string);
+      return string.replace(/_[a-z]/g, function x():String {
+        return (arguments[0] as String).slice(1).toUpperCase();
+      });      
     }
     
     /**
      * Converts a string to snake_case from CamelCase
      */
     public static function toSnakeCase(string:String):String {
-      return Inflector.underscore(string);
+      return lowerCaseFirst(string).replace(/[A-Z]/g, function x():String {
+        return "_" + (arguments[0] as String).toLowerCase();
+      });
     }
     
     /**
@@ -309,7 +313,7 @@ package org.ruboss.utils {
      * Upper cases first letter in a string leaving the rest of it alone
      */
     public static function upperCaseFirst(string:String):String {
-      return Inflector.ucfirst(string);
+      return string.charAt(0).toUpperCase() + string.slice(1);
     }
     
     /**

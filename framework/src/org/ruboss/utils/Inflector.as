@@ -57,7 +57,7 @@ package org.ruboss.utils {
     static private var regexirregularsingular:String;
     
     /**
-     *  Returns a string with all spaces converted to replacement and non word characters removed.
+     * Returns a string with all spaces converted to replacement and non word characters removed.
      * @param word string to convert to slug
      * @param replacement 
      * @return
@@ -303,60 +303,6 @@ package org.ruboss.utils {
       }
       
       return singularized[word] = word;
-    }
-    
-    /**
-     * Returns given lowercaseandunderscoreword as a camelCased word.
-     *
-     * @param string lowercaseandunderscoreword Word to camelize
-     * @return string Camelized word. likeThis.
-     */
-    static public function camelize(lowercaseandunderscoreword:String):String {
-      var tarray:Array = lowercaseandunderscoreword.split("_");      
-      for (var i:int = 1; i < tarray.length; i++) {
-        tarray[i] = ucfirst(tarray[i] as String);
-      }
-      var replace:String = tarray.join("");
-      return replace;
-    }
-    
-    /**
-     * Returns an underscore-syntaxed (like_this) version of the likeThis.
-     *
-     * @param string camelcaseword Camel-cased word to be "underscorized"
-     * @return string Underscore-syntaxed version of the camelcaseword
-     */
-    static public function underscore(camelcaseword:String):String {
-      var replace:String = camelcaseword.replace(new RegExp('(?<=\\w)([A-Z])'), '_$1').toLowerCase();
-      return replace;
-    }
-      
-    /**
-     * Returns a human-readable string from lowercaseandunderscoreword,
-     * by replacing underscores with a space, and by upper-casing the initial characters.
-     *
-     * @param string lowercaseandunderscoreword String to be made more readable
-     * @return string Human-readable string
-     * @access public
-     * @static
-     */
-    static public function humanize(lowercaseandunderscoreword:String):String {
-      var tarray:Array = lowercaseandunderscoreword.split("_");
-      for (var i:int = 0; i < tarray.length; i++) {
-        tarray[i] = ucfirst(tarray[i] as String);
-      }
-      
-      var replace:String = tarray.join(" ");
-      return replace;
-    }
-    
-    /**
-     *  Make first character of word upper case
-     * @param word
-     * @return string
-     */
-    static public function ucfirst(word:String):String {
-      return word.substr(0, 1).toUpperCase() + word.substr(1);
     }
     
     static private function enclose(string:String):String {
