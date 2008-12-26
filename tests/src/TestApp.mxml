@@ -115,6 +115,7 @@
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
+        ts.addTest(new RubossUtilTest("testCamelCasing"));
  			  ts.addTest(new InflectorTest("testInflector"));
  			  
  			  ts.addTest(new CommandsControllerTest("testCommandExecutionByClass"));

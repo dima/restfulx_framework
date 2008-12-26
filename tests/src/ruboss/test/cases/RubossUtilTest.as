@@ -40,6 +40,11 @@ package ruboss.test.cases {
       
     }
     
+    public function testCamelCasing():void {
+      assertEquals("someSubSubStuff", RubossUtils.toCamelCase("some_sub_sub_stuff"));
+      assertEquals("some_sub_sub_stuff", RubossUtils.toSnakeCase("someSubSubStuff"));
+    }
+    
     public function testResourceNesting():void {
       Ruboss.httpRootUrl = "/";
 
