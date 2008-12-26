@@ -20,6 +20,9 @@ package ruboss.test.models {
     [HasMany(type="Timesheet", through="billableWeeks")]
     public var incompleteTimesheets:ModelsCollection;
     
+    [HasMany(type="Timesheet", through="billableWeeks", conditions="name:2")]
+    public var randomTimesheets:ModelsCollection;
+    
     public function Client() {
       super(LABEL);
     }

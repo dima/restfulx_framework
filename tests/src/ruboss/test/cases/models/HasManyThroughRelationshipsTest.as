@@ -30,6 +30,8 @@ package ruboss.test.cases.models {
       var firstTimesheet:Timesheet = timesheets.getItemAt(0) as Timesheet;
       var firstBillableWeek:BillableWeek = billableWeeks.getItemAt(0) as BillableWeek;
       
+      var thirdClient:Client = clients.getItemAt(2) as Client;
+      
       assertEquals(4, clients.length);
       assertEquals(4, timesheets.length);
       assertEquals(4, billableWeeks.length);
@@ -39,8 +41,11 @@ package ruboss.test.cases.models {
       assertEquals("BillableWeek4NameString", BillableWeek(firstClient.billableWeeks.getItemAt(0)).name);
       assertEquals(1, firstClient.timesheets.length);
       assertEquals(1, firstClient.incompleteTimesheets.length);
+      assertEquals(0, firstClient.randomTimesheets.length);
       assertEquals("Timesheet4NameString", Timesheet(firstClient.timesheets.getItemAt(0)).name);
       assertEquals("Timesheet4NameString", Timesheet(firstClient.incompleteTimesheets.getItemAt(0)).name);
+      assertEquals(1, thirdClient.randomTimesheets.length);
+      assertEquals("Timesheet2NameString", Timesheet(thirdClient.randomTimesheets.getItemAt(0)).name);
     }
     
     public function testHasManyThroughForm2Index():void {

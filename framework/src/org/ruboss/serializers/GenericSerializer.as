@@ -139,7 +139,13 @@ package org.ruboss.serializers {
               var allConditionsMet:Boolean = true;
               if (conditions) {
                 for (var condition:String in conditions) {
-                  if (object.hasOwnProperty(condition) && object[condition].toString().search(conditions[condition]) == -1) {
+                  condition = RubossUtils.toSnakeCase(condition);
+                  if (source.hasOwnProperty(condition) && source[condition] == null) {
+                    allConditionsMet = false;
+                    break;
+                  }
+                  if (source.hasOwnProperty(condition) &&
+                    source[condition].toString().search(conditions[condition]) == -1) {
                     allConditionsMet = false;
                     break;
                   }
@@ -232,16 +238,31 @@ package org.ruboss.serializers {
   
           // e.g. object[client][timesheets]
           var items:ModelsCollection = object[localSingleName][relationship["attribute"]];
+          var conditions:Object = state.refs[relType][relationship["attribute"]]["conditions"];
+          var allConditionsMet:Boolean = true;
+
           if (items == null) {
             items = new ModelsCollection;
           }
           
           // form 1, e.g. object[timesheet]
           if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refNameSingle)) {
-            if (items.hasItem(object[refNameSingle])) {
-              items.setItem(object[refNameSingle]);
-            } else {
-              items.addItem(object[refNameSingle]);
+            if (conditions) {
+              for (var condition:String in conditions) {
+                if (object[refNameSingle].hasOwnProperty(condition) && object[refNameSingle][condition] != null
+                  && object[refNameSingle][condition].toString().search(conditions[condition]) == -1) {
+                  allConditionsMet = false;
+                  break;
+                }
+              }
+            }
+            
+            if (allConditionsMet) {            
+              if (items.hasItem(object[refNameSingle])) {
+                items.setItem(object[refNameSingle]);
+              } else {
+                items.addItem(object[refNameSingle]);
+              }
             }
             object[localSingleName][relationship["attribute"]] = items;
             
@@ -250,7 +271,7 @@ package org.ruboss.serializers {
             if (object[refNamePlural] == null) {
               object[refNamePlural] = new ModelsCollection;
             }
-            object[localSingleName][relationship["attribute"]] = object[refNamePlural];          
+            object[localSingleName][relationship["attribute"]] = object[refNamePlural];        
           }
         } catch (e:Error) {
           // do something

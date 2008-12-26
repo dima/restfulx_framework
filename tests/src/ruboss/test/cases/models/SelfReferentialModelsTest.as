@@ -20,8 +20,6 @@ package ruboss.test.cases.models {
     private function onIndex(result:TypedArray):void {
       var facebookUsers:ModelsCollection = Ruboss.models.cached(FacebookUser);
       
-      var models:ModelsController = Ruboss.models;
-      
       var firstUser:FacebookUser = facebookUsers.getItemAt(0) as FacebookUser;
       assertEquals(4, facebookUsers.length);
       assertNull(firstUser.randomFriends);
