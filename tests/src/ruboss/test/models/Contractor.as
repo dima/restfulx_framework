@@ -12,7 +12,7 @@ package ruboss.test.models {
 
     public var city:String;
 
-    [BelongsTo]
+    [BelongsTo(referAs="contractor, randomContractor")]
     public var project:Project;
 
     public function Contractor() {

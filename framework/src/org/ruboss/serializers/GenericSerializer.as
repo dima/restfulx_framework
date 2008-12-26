@@ -118,7 +118,7 @@ package org.ruboss.serializers {
           }
           
           var pluralName:String = state.refs[fqn][targetName]["referAs"];
-          var singleName:String = pluralName.split(",")[0];
+          var singleName:String = pluralName;
           if (RubossUtils.isEmpty(pluralName)) {
             pluralName = (isParentRef) ? "children" : state.names[fqn]["plural"];
             singleName = state.names[fqn]["single"];
@@ -136,21 +136,7 @@ package org.ruboss.serializers {
               }
               
               var conditions:Object = state.refs[targetType][rel]["conditions"];
-              var allConditionsMet:Boolean = true;
-              if (conditions) {
-                for (var condition:String in conditions) {
-                  condition = RubossUtils.toSnakeCase(condition);
-                  if (source.hasOwnProperty(condition) && source[condition] == null) {
-                    allConditionsMet = false;
-                    break;
-                  }
-                  if (source.hasOwnProperty(condition) &&
-                    source[condition].toString().search(conditions[condition]) == -1) {
-                    allConditionsMet = false;
-                    break;
-                  }
-                }
-              }
+              var allConditionsMet:Boolean = checkConditions(source, conditions);
               
               if (allConditionsMet) {
                 // add (or replace) the current item to the reference collection
@@ -164,12 +150,20 @@ package org.ruboss.serializers {
               }              
             }
           }
-    
-          // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
-          // link them up
-          if (ref != null && ref.hasOwnProperty(singleName) && 
-            ObjectUtil.hasMetadata(ref, singleName, "HasOne")) {
-            ref[singleName] = object;
+
+          for each (var singleRel:String in singleName.split(",")) {
+            singleRel = StringUtil.trim(singleRel);
+            var singleConditions:Object = null;
+            if (state.refs[targetType].hasOwnProperty(singleRel) && state.refs[targetType][singleRel] != null) {
+              singleConditions = state.refs[targetType][singleRel]["conditions"];
+            }
+            
+            // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
+            // link them up
+            if (ref != null && ref.hasOwnProperty(singleRel) && 
+              ObjectUtil.hasMetadata(ref, singleRel, "HasOne")) {
+              if (checkConditions(source, singleConditions)) ref[singleRel] = object;
+            }
           }
           
           // and the reverse
@@ -190,6 +184,25 @@ package org.ruboss.serializers {
     
     protected function processNestedArray(array:Object, type:String):ModelsCollection {
       return new ModelsCollection;
+    }
+    
+    protected function checkConditions(source:Object, conditions:Object):Boolean {
+      var allConditionsMet:Boolean = true;
+      if (conditions) {
+        for (var condition:String in conditions) {
+          condition = RubossUtils.toSnakeCase(condition);
+          if (source.hasOwnProperty(condition) && source[condition] == null) {
+            allConditionsMet = false;
+            break;
+          }
+          if (source.hasOwnProperty(condition) &&
+            source[condition].toString().search(conditions[condition]) == -1) {
+            allConditionsMet = false;
+            break;
+          }
+        }
+      }
+      return allConditionsMet;
     }
 
     protected function initializeModel(id:String, fqn:String):Object {

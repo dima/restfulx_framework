@@ -11,6 +11,9 @@ package ruboss.test.models {
 
     [HasOne]
     public var contractor:Contractor;
+    
+    [HasOne(conditions="name:2")]
+    public var randomContractor:Contractor;
         
     [HasMany]
     public var tasks:ModelsCollection;

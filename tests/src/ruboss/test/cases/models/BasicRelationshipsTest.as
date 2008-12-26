@@ -32,12 +32,18 @@ package ruboss.test.cases.models {
         assertEquals(4, tasks.length);
         
         var firstProject:Project = projects.getItemAt(0) as Project;
+        var secondProject:Project = projects.getItemAt(1) as Project;
         
         assertEquals(1, firstProject.tasks.length);
+        assertNull(firstProject.randomContractor);
         assertEquals("Project4NameString", firstProject.name);
         assertEquals("Contractor4NameString", firstProject.contractor.name);
         assertEquals("Task4NameString", Task(firstProject.tasks.getItemAt(0)).name);
         assertEquals("Project4NameString", Project(Task(firstProject.tasks.getItemAt(0)).project).name);
+        
+        assertEquals("Project2NameString", secondProject.name);
+        assertEquals("Contractor2NameString", secondProject.randomContractor.name);
+        
         Ruboss.models.removeEventListener(CacheUpdateEvent.ID, onIndex);
       }
     }
