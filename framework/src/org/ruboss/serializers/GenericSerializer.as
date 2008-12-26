@@ -252,7 +252,6 @@ package org.ruboss.serializers {
           // e.g. object[client][timesheets]
           var items:ModelsCollection = object[localSingleName][relationship["attribute"]];
           var conditions:Object = state.refs[relType][relationship["attribute"]]["conditions"];
-          var allConditionsMet:Boolean = true;
 
           if (items == null) {
             items = new ModelsCollection;
@@ -260,17 +259,7 @@ package org.ruboss.serializers {
           
           // form 1, e.g. object[timesheet]
           if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refNameSingle)) {
-            if (conditions) {
-              for (var condition:String in conditions) {
-                if (object[refNameSingle].hasOwnProperty(condition) && object[refNameSingle][condition] != null
-                  && object[refNameSingle][condition].toString().search(conditions[condition]) == -1) {
-                  allConditionsMet = false;
-                  break;
-                }
-              }
-            }
-            
-            if (allConditionsMet) {            
+            if (checkConditions(object[refNameSingle], conditions)) {            
               if (items.hasItem(object[refNameSingle])) {
                 items.setItem(object[refNameSingle]);
               } else {
