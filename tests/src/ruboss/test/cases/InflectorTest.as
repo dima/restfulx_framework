@@ -13,34 +13,22 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com. 
  ******************************************************************************/
-package ruboss.test.models {
-  import org.ruboss.models.RubossModel;
+package ruboss.test.cases {
+  import flexunit.framework.TestCase;
   
-  [Resource(name="simple_properties")]
-  [Bindable]
-  public class SimpleProperty extends RubossModel {
-    public static const LABEL:String = "name";
+  import org.ruboss.utils.Inflector;
 
-    public var name:String;
-
-    public var amount:int;
-
-    public var price:Number;
-
-    public var quantity:Number;
-
-    public var available:Boolean;
-
-    public var deliveredOn:Date;
-
-    [DateTime]
-    public var soldOn:Date;
+  public class InflectorTest extends TestCase {
     
-    [DateTime]
-    public var createdAt:Date;
-
-    public function SimpleProperty() {
-      super(LABEL);
+    public function InflectorTest(methodName:String) {
+      super(methodName);
+    }
+    
+    public function testInflector():void {
+      assertEquals("projects", Inflector.pluralize("project"));
+      assertEquals("project", Inflector.singularize("projects"));
+      assertEquals("facebook_users", Inflector.pluralize("facebook_user"));
+      assertEquals("facebookUsers", Inflector.pluralize("facebookUser"));
     }
   }
 }

@@ -1,6 +1,8 @@
 /*******************************************************************************
  * Copyright 2008, Ruboss Technology Corporation.
- *
+ * 
+ * @author Dima Berastau
+ * 
  * This software is dual-licensed under both the terms of the Ruboss Commercial
  * License v1 (RCL v1) as published by Ruboss Technology Corporation and under
  * the terms of the GNU General Public License v3 (GPL v3) as published by the
@@ -9,7 +11,7 @@
  * Both the RCL v1 (rcl-1.0.txt) and the GPL v3 (gpl-3.0.txt) are included in
  * the source code. If you have purchased a commercial license then only the
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
- * commercial license, please go to http://ruboss.com.
+ * commercial license, please go to http://ruboss.com. 
  ******************************************************************************/
 package org.ruboss.utils {
   import flash.net.URLRequest;
@@ -286,18 +288,14 @@ package org.ruboss.utils {
      * Converts a string to CamelCase from snake_case
      */
     public static function toCamelCase(string:String):String {
-      return string.replace(/_[a-z]/g, function x():String {
-        return (arguments[0] as String).slice(1).toUpperCase();
-      });      
+      return Inflector.camelize(string);
     }
     
     /**
      * Converts a string to snake_case from CamelCase
      */
     public static function toSnakeCase(string:String):String {
-      return lowerCaseFirst(string).replace(/[A-Z]/g, function x():String {
-        return "_" + (arguments[0] as String).toLowerCase();
-      });
+      return Inflector.underscore(string);
     }
     
     /**
@@ -305,6 +303,13 @@ package org.ruboss.utils {
      */
     public static function lowerCaseFirst(string:String):String {
       return string.charAt(0).toLowerCase() + string.slice(1);
+    }
+    
+    /**
+     * Upper cases first letter in a string leaving the rest of it alone
+     */
+    public static function upperCaseFirst(string:String):String {
+      return Inflector.ucfirst(string);
     }
     
     /**

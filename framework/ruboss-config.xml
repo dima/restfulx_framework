@@ -52,6 +52,7 @@
 		<class>org.ruboss.services.mock.MockJSONHTTPServiceProvider</class>
 		<class>org.ruboss.services.mock.MockXMLHTTPServiceProvider</class>
 		<class>org.ruboss.utils.ModelsMetadata</class>
+    <class>org.ruboss.utils.Inflector</class>
 		<class>org.ruboss.utils.RubossFileReference</class>
 		<class>org.ruboss.utils.RubossUtils</class>
 		<class>org.ruboss.utils.TypedArray</class>
