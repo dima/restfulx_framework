@@ -1,6 +1,6 @@
 = Ruboss Framework
 
-== MOTIVATION
+== DESCRIPTION
 
 The Ruboss Framework brings the design principles and productivity of Rails to Flex development, and makes integration with RESTful APIs as simple as possible.
 
