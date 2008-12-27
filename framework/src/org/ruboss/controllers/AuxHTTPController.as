@@ -21,6 +21,8 @@ package org.ruboss.controllers {
   import mx.utils.ObjectUtil;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.serializers.ISerializer;
+  import org.ruboss.serializers.XMLSerializer;
   import org.ruboss.utils.RubossUtils;
   
   /**
@@ -36,6 +38,7 @@ package org.ruboss.controllers {
     private var rootUrl:String;
     private var contentType:String;
     private var resultFormat:String;
+    private var serializer:ISerializer;
     private var resultHandler:Function;
     private var faultHandler:Function;
     private var cacheHandler:Function;
@@ -48,18 +51,23 @@ package org.ruboss.controllers {
      * @param rootUrl the URL to prefix to requests
      */
     public function AuxHTTPController(optsOrOnResult:Object = null, onFault:Function = null, 
-      contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", rootUrl:String = null) {
+      contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", serializer:ISerializer = null,
+      rootUrl:String = null) {
       if (optsOrOnResult == null) optsOrOnResult = {};
       this.faultHandler = onFault;
       this.contentType = contentType;
       this.rootUrl = rootUrl;
       this.resultFormat = resultFormat;
+      this.serializer = serializer;
+      if (!serializer) this.serializer = new XMLSerializer;
       if (optsOrOnResult is Function) {
         this.resultHandler = optsOrOnResult as Function;
       } else {
         if (optsOrOnResult['onResult']) this.resultHandler = optsOrOnResult['onResult'];
         if (optsOrOnResult['onFault']) this.faultHandler = optsOrOnResult['onFault'];
         if (optsOrOnResult['contentType']) this.contentType = optsOrOnResult['contentType'];
+        if (optsOrOnResult['resultFormat']) this.resultFormat = optsOrOnResult['resultFormat'];
+        if (optsOrOnResult['serializer']) this.serializer = optsOrOnResult['serializer'];
         if (optsOrOnResult['rootUrl']) this.rootUrl = optsOrOnResult['rootUrl'];
       }
     }
@@ -202,7 +210,7 @@ package org.ruboss.controllers {
         
     protected function unmarshall(data:Object):Object {
       try {
-        return Ruboss.serializers.xml.unmarshall(data.result);
+        return serializer.unmarshall(data.result);
       } catch (e:Error) {
         defaultFaultHandler(data.result);
       }

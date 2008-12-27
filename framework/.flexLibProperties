@@ -40,11 +40,13 @@
 <classEntry path="org.ruboss.controllers.AuxHTTPController"/>
 <classEntry path="org.ruboss.services.mock.MockJSONHTTPServiceProvider"/>
 <classEntry path="org.ruboss.events.ServiceCallStartEvent"/>
+<classEntry path="org.ruboss.services.as3http.AS3JSONHTTPServiceProvider"/>
 <classEntry path="org.ruboss.utils.Inflector"/>
 <classEntry path="org.ruboss.controllers.mock.MockAuxHTTPController"/>
 <classEntry path="org.ruboss.commands.CommandsEventDispatcher"/>
 <classEntry path="org.ruboss.components.RubossAutoComplete"/>
 <classEntry path="org.ruboss.services.as3http.AS3XMLHTTPServiceProvider"/>
+<classEntry path="org.ruboss.services.as3http.DirectCouchDBHTTPServiceProvider"/>
 <classEntry path="org.ruboss.serializers.XMLSerializer"/>
 <classEntry path="org.ruboss.collections.ModelsCollection"/>
 <classEntry path="org.ruboss.services.XMLServiceErrors"/>

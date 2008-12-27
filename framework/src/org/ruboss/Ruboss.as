@@ -28,14 +28,17 @@ package org.ruboss {
   import org.ruboss.controllers.ModelsController;
   import org.ruboss.controllers.SerializersController;
   import org.ruboss.controllers.ServicesController;
+  import org.ruboss.serializers.ISerializer;
   import org.ruboss.services.IServiceErrors;
   import org.ruboss.services.http.XMLHTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
   
-  /**
-   * Provides central access to most commonly used framework features
-   */
   [Bindable]
+  /**
+   * Provides central access to most commonly used framework features.
+   *  
+   * 
+   */
   public class Ruboss {
     /** framework logger */
     public static var log:ILogger = Log.getLogger("org.ruboss");
@@ -57,6 +60,9 @@ package org.ruboss {
     
     /** default root URL for HTTP requests, gets prefixed to CRUD and AUX HTTP operations */
     public static var httpRootUrl:String = "/";
+    
+    /** root URL for CouchDB requests */
+    public static var couchDBRootUrl:String = "";
     
     /** default service provider to use */
     public static var defaultServiceId:int = XMLHTTPServiceProvider.ID;
@@ -85,9 +91,10 @@ package org.ruboss {
     /** default database name to use for AIR applications (if nothing else is provided) */
     public static var airDatabaseName:String = "rubossdb";
     
-    /**
-     * stores current session id for use by URLRequest
-     */
+    /** default database name to use for apps talking to CouchDB directly (if nothing else is provided) */
+    public static var couchDbDatabaseName:String = "rubossdb";
+    
+    /** stores current session id for use by URLRequest */
     public static var sessionToken:String;
     
     /** default error namespace used by service providers */
@@ -124,8 +131,8 @@ package org.ruboss {
      */
     public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, 
       contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x",
-      rootUrl:String = null):AuxHTTPController {
-      return new httpController(optsOrResultHandler, faultHandler, contentType, resultFormat, rootUrl);    
+      serializer:ISerializer = null, rootUrl:String = null):AuxHTTPController {
+      return new httpController(optsOrResultHandler, faultHandler, contentType, resultFormat, serializer, rootUrl);    
     }
 
     /**

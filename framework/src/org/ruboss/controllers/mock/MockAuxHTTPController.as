@@ -19,12 +19,13 @@ package org.ruboss.controllers.mock {
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.AuxHTTPController;
+  import org.ruboss.serializers.ISerializer;
 
   public class MockAuxHTTPController extends AuxHTTPController {
     public function MockAuxHTTPController(optsOrOnResult:Object = null, 
       onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x",
-      rootUrl:String = null) {
-      super(optsOrOnResult, onFault, contentType, resultFormat, rootUrl);
+      serializer:ISerializer = null, rootUrl:String = null) {
+      super(optsOrOnResult, onFault, contentType, resultFormat, serializer, rootUrl);
     }
     
     public override function send(url:String, data:Object = null, method:int = AuxHTTPController.GET,

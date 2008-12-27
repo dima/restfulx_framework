@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="Inflector,org.ruboss.utils.Inflector,camelize,humanize,pluralize,singularize,slug,ucfirst,underscore" name="keywords">
+<meta content="Inflector,org.ruboss.utils.Inflector,pluralize,singularize,slug" name="keywords">
 <title>org.ruboss.utils.Inflector</title>
 </head>
 <body>
@@ -53,23 +53,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#camelize()">camelize</a>(lowercaseandunderscoreword:String):String</div>
-<div class="summaryTableDescription">[static]
-     Returns given lowercaseandunderscoreword as a camelCased word.</div>
-</td><td class="summaryTableOwnerCol">Inflector</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#humanize()">humanize</a>(lowercaseandunderscoreword:String):String</div>
-<div class="summaryTableDescription">[static]
-     Returns a human-readable string from lowercaseandunderscoreword,
-     by replacing underscores with a space, and by upper-casing the initial characters.</div>
-</td><td class="summaryTableOwnerCol">Inflector</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
 <a class="signatureLink" href="#pluralize()">pluralize</a>(word:String):String</div>
 <div class="summaryTableDescription">[static]
      Return word in plural form.</div>
@@ -88,24 +71,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#slug()">slug</a>(word:String, replacement:String = "_"):String</div>
 <div class="summaryTableDescription">[static]
-      Returns a string with all spaces converted to replacement and non word characters removed.</div>
-</td><td class="summaryTableOwnerCol">Inflector</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#ucfirst()">ucfirst</a>(word:String):String</div>
-<div class="summaryTableDescription">[static]
-      Make first character of word upper case
-     </div>
-</td><td class="summaryTableOwnerCol">Inflector</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
-<a class="signatureLink" href="#underscore()">underscore</a>(camelcaseword:String):String</div>
-<div class="summaryTableDescription">[static]
-     Returns an underscore-syntaxed (like_this) version of the likeThis.</div>
+     Returns a string with all spaces converted to replacement and non word characters removed.</div>
 </td><td class="summaryTableOwnerCol">Inflector</td>
 </tr>
 </table>
@@ -117,61 +83,10 @@ showHideInherited();
 <div class="MainContent">
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
-<a name="camelize()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">camelize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function camelize(lowercaseandunderscoreword:String):String</code><p>
-     Returns given lowercaseandunderscoreword as a camelCased word.
-          </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">lowercaseandunderscoreword</span>:String</code> &mdash; lowercaseandunderscoreword Word to camelize
-     </td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>String</code> &mdash; string Camelized word. likeThis.
-     </td>
-</tr>
-</table>
-</div>
-<a name="humanize()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">humanize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function humanize(lowercaseandunderscoreword:String):String</code><p>
-     Returns a human-readable string from lowercaseandunderscoreword,
-     by replacing underscores with a space, and by upper-casing the initial characters.
-          </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">lowercaseandunderscoreword</span>:String</code> &mdash; lowercaseandunderscoreword String to be made more readable
-     </td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>String</code> &mdash; string Human-readable string
-     </td>
-</tr>
-</table>
-</div>
 <a name="pluralize()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">pluralize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">pluralize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -226,7 +141,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static function slug(word:String, replacement:String = "_"):String</code><p>
-      Returns a string with all spaces converted to replacement and non word characters removed.
+     Returns a string with all spaces converted to replacement and non word characters removed.
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -245,55 +160,6 @@ showHideInherited();
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20"></td><td><code>String</code></td>
-</tr>
-</table>
-</div>
-<a name="ucfirst()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">ucfirst</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function ucfirst(word:String):String</code><p>
-      Make first character of word upper case
-     </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">word</span>:String</code></td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>String</code> &mdash; string
-     </td>
-</tr>
-</table>
-</div>
-<a name="underscore()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">underscore</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public static function underscore(camelcaseword:String):String</code><p>
-     Returns an underscore-syntaxed (like_this) version of the likeThis.
-          </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">camelcaseword</span>:String</code> &mdash; camelcaseword Camel-cased word to be "underscorized"
-     </td>
-</tr>
-</table>
-<p></p>
-<span class="label">Returns</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20"></td><td><code>String</code> &mdash; string Underscore-syntaxed version of the camelcaseword
-     </td>
 </tr>
 </table>
 </div>

@@ -26,6 +26,8 @@ package org.ruboss.services.as3http {
   import org.httpclient.events.HttpStatusEvent;
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
+  import org.ruboss.serializers.ISerializer;
+  import org.ruboss.serializers.XMLSerializer;
   import org.ruboss.services.http.XMLHTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
 
@@ -38,12 +40,18 @@ package org.ruboss.services.as3http {
     
     /** service id */
     public static const ID:int = ServicesController.generateId();
+    
+    protected var serializer:ISerializer;
+    
+    protected var contentType:String;
                     
     /**
      * @param controller reference to RubossModelsController instance
      */
     public function AS3XMLHTTPServiceProvider() {
       state = Ruboss.models.state;
+      serializer = new XMLSerializer;
+      contentType = "application/xml";
     }
 
     /**
@@ -135,9 +143,9 @@ package org.ruboss.services.as3http {
       var uri:URI = new URI(url);
 
       var data:ByteArray = new ByteArray();
-      data.writeUTFBytes(XML(Ruboss.serializers.xml.marshall(object, false, metadata)).toXMLString());
+      data.writeUTFBytes(serializer.marshall(object, false, metadata).toString());
       
-      client.post(uri, data, "application/xml");
+      client.post(uri, data, contentType);
       
       //client.postFormData(uri, [marshallToVO(object, false, metadata)]);  
     }
@@ -166,9 +174,9 @@ package org.ruboss.services.as3http {
       var uri:URI = new URI(url);
 
       var data:ByteArray = new ByteArray();
-      data.writeUTFBytes(XML(Ruboss.serializers.xml.marshall(object, false, metadata)).toXMLString());
+      data.writeUTFBytes(serializer.marshall(object, false, metadata).toString());
       
-      client.put(uri, data, "application/xml"); 
+      client.put(uri, data, contentType); 
 
       //client.putFormData(uri, [marshallToVO(object, false, metadata)]);
     }
