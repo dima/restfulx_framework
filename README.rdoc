@@ -1,10 +1,10 @@
 = Ruboss Framework
 
-== Motivation
+== MOTIVATION
 
 The Ruboss Framework brings the design principles and productivity of Rails to Flex development, and makes integration with RESTful APIs as simple as possible.
 
-== Getting Started
+== GETTING STARTEDG
 
 Refer to 
 
@@ -12,7 +12,7 @@ Refer to
   
 for details on how to get started with the Ruboss framework.
 
-== Building from Source
+== GET THE SOURCE
 
     git clone git://github.com/dima/ruboss_framework.git
     cd ruboss_framework
