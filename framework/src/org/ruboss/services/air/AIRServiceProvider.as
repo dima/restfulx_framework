@@ -202,7 +202,7 @@ package org.ruboss.services.air {
       try {
         statement.execute();
         object["id"] = statement.getResult().lastInsertRowID;
-        invokeResponderResult(responder, object);
+        show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
         responder.fault(e);
       }
