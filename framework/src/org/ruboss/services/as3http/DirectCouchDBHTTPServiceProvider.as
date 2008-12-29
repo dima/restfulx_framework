@@ -35,7 +35,7 @@ package org.ruboss.services.as3http {
   import org.ruboss.utils.RubossUtils;
 
   /**
-   * Direct CouchDB Service Provider. Experimental.
+   * Direct CouchDB Service Provider.
    * 
    * For API details refer to:
    * 
@@ -82,16 +82,16 @@ package org.ruboss.services.as3http {
     public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
         if (event.response.code != "200") {
-          responder.fault(event);
+          if (responder) responder.fault(event);
         } else {
           data.position = 0;
           var response:Object = JSON.decode(data.readUTFBytes(data.length));
           var result:Array = 
             (response["rows"] as Array).map(function(item:Object, i:int, a:Array):Object { return item["value"]; });
-          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, result));
+          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, result));
         }
       }, function(event:HttpErrorEvent):void {
-        responder.fault(event);
+        if (responder) responder.fault(event);
       });
       
       var clazz:String = (Ruboss.models.state.types[Class(object)] as String).split("::")[1];
@@ -112,13 +112,13 @@ package org.ruboss.services.as3http {
       
       var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
         if (event.response.code != "200") {
-          responder.fault(event);
+          if (responder) responder.fault(event);
         } else {
           data.position = 0;
-          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, data.readUTFBytes(data.length)));
+          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, data.readUTFBytes(data.length)));
         }
       }, function(event:HttpErrorEvent):void {
-        responder.fault(event);
+        if (responder) responder.fault(event);
       });
       
       client.get(getCouchDBURI(Ruboss.couchDbDatabaseName + object["id"]));
@@ -152,18 +152,18 @@ package org.ruboss.services.as3http {
       
       var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
         if (event.response.code != "200") {
-          responder.fault(event);
+          if (responder) responder.fault(event);
         } else {
-          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
+          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
         }     
       }, function(event:HttpErrorEvent):void {
-        responder.fault(event);
+        if (responder) responder.fault(event);
       });
       
       client.del(getCouchDBURI(Ruboss.couchDbDatabaseName + object["id"] + "?rev=" + object["rev"]));
     }
 
-    private function getHttpClient(onDataComplete:Function, onError:Function = null):HttpClient {
+    protected function getHttpClient(onDataComplete:Function, onError:Function = null):HttpClient {
       var client:HttpClient = new HttpClient();
       var listener:HttpDataListener = new HttpDataListener;
       listener.onDataComplete = onDataComplete;
@@ -174,26 +174,26 @@ package org.ruboss.services.as3http {
       return client; 
     }
 
-    private function getCreateOrUpdateHttpClient(object:Object, responder:IResponder):HttpClient {
+    protected function getCreateOrUpdateHttpClient(object:Object, responder:IResponder):HttpClient {
       var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
         if (event.response.code != "201") {
-          responder.fault(event);
+          if (responder) responder.fault(event);
         } else {
           data.position = 0;
           var response:Object = JSON.decode(data.readUTFBytes(data.length));
           for each (var prop:String in ['id', 'rev']) {
             object[prop] = response[prop];
           }
-          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
+          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
         }
       }, function(event:HttpErrorEvent):void {
-        responder.fault(event);
+        if (responder) responder.fault(event);
       });
       
       return client;      
     }
 
-    private function marshallToJSON(object:Object, recursive:Boolean = false, metadata:Object = null):String {
+    protected function marshallToJSON(object:Object, recursive:Boolean = false, metadata:Object = null):String {
       var vo:Object = Ruboss.serializers.vo.marshall(object, recursive, metadata);
       if (object.hasOwnProperty("id") && !RubossUtils.isEmpty(object["id"])) {
         vo["_id"] = object["id"];
@@ -209,7 +209,7 @@ package org.ruboss.services.as3http {
       return JSON.encode(vo); 
     }
     
-    private function marshallToJSONAndConvertToByteArray(object:Object):ByteArray {
+    protected function marshallToJSONAndConvertToByteArray(object:Object):ByteArray {
       var marshalled:String = marshallToJSON(object);
       Ruboss.log.debug("sending: " + marshalled);
       
@@ -220,7 +220,7 @@ package org.ruboss.services.as3http {
       return data;    
     }
     
-    private function getCouchDBURI(url:String):URI {
+    protected function getCouchDBURI(url:String):URI {
       var url:String = Ruboss.couchDBRootUrl + url;
       trace("sending request to: " + url);
       return new URI(url);
@@ -248,7 +248,7 @@ package org.ruboss.services.as3http {
       getHttpClient(defaultOnData).del(getCouchDBURI(Ruboss.couchDbDatabaseName));
     }
     
-    private function defaultOnData(event:HttpResponseEvent, data:ByteArray):void {
+    protected function defaultOnData(event:HttpResponseEvent, data:ByteArray):void {
       data.position = 0;
       var result:String = data.readUTFBytes(data.length);
       trace(result);

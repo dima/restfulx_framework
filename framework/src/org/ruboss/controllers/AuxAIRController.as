@@ -14,6 +14,11 @@
  * commercial license, please go to http://ruboss.com. 
  ******************************************************************************/
 package org.ruboss.controllers {
+  
+  /**
+   * Custom AIR controller that allows performing arbitrary operations (as 
+   * opposed to CRUD on models).
+   */
   public class AuxAIRController {
     public function AuxAIRController() {
     }
