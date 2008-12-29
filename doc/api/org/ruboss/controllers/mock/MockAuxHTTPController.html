@@ -64,7 +64,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#MockAuxHTTPController()">MockAuxHTTPController</a>(optsOrOnResult:Object = null, onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", rootUrl:String = null)</div>
+<a class="signatureLink" href="#MockAuxHTTPController()">MockAuxHTTPController</a>(optsOrOnResult:Object = null, onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", serializer:<a href="../../serializers/ISerializer.html">ISerializer</a> = null, rootUrl:String = null)</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">MockAuxHTTPController</td>
 </tr>
@@ -184,7 +184,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function MockAuxHTTPController(optsOrOnResult:Object = null, onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", rootUrl:String = null)</code><span class="label">Parameters</span>
+<code>public function MockAuxHTTPController(optsOrOnResult:Object = null, onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", serializer:<a href="../../serializers/ISerializer.html">ISerializer</a> = null, rootUrl:String = null)</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">optsOrOnResult</span>:Object</code> (default = <code>null</code>)<code></code></td>
@@ -206,6 +206,12 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">resultFormat</span>:String</code> (default = "<code>e4x</code>")<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">serializer</span>:<a href="../../serializers/ISerializer.html">ISerializer</a></code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
