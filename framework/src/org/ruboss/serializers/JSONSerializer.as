@@ -18,7 +18,6 @@ package org.ruboss.serializers {
   
   import flash.utils.getQualifiedClassName;
   
-  import org.ruboss.Ruboss;
   import org.ruboss.models.RubossModel;
   import org.ruboss.utils.TypedArray;
   
@@ -26,6 +25,11 @@ package org.ruboss.serializers {
     
     public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       var marshalled:Object = super.marshall(object, recursive, metadata);
+      for (var prop:String in marshalled) {
+        if (marshalled[prop] == null) {
+          marshalled[prop] = "";
+        }
+      }
       return JSON.encode(marshalled);  
     }
 
@@ -34,11 +38,15 @@ package org.ruboss.serializers {
         return object;
       }
       try {
-        var source:Object = JSON.decode(object as String);
-        if (source is Array) {
-          return unmarshallJSONArray(source as Array);
-        } else {
-          return unmarshallJSONObject(source);
+        if (object is Array) {
+          return unmarshallJSONArray(object as Array);
+        } else if (object is String) {
+          var source:Object = JSON.decode(object as String);
+          if (source is Array) {
+            return unmarshallJSONArray(source as Array);
+          } else {
+            return unmarshallJSONObject(source);
+          }
         }
       } catch (e:Error) {
         throw new Error("could not unmarshall provided object");

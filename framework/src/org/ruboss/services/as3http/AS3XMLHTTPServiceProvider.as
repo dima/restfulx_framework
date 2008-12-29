@@ -23,6 +23,8 @@ package org.ruboss.services.as3http {
   
   import org.httpclient.HttpClient;
   import org.httpclient.events.HttpDataEvent;
+  import org.httpclient.events.HttpDataListener;
+  import org.httpclient.events.HttpResponseEvent;
   import org.httpclient.events.HttpStatusEvent;
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
@@ -60,24 +62,27 @@ package org.ruboss.services.as3http {
     public override function get id():int {
       return ID;
     }
+    
+    private function getHttpClient(responder:IResponder):HttpClient {
+      var client:HttpClient = new HttpClient;
+      var listener:HttpDataListener = new HttpDataListener;
+      listener.onComplete = function(event:HttpResponseEvent, data:ByteArray):void {
+        if (event.response.code != "200") {
+          responder.fault(event);
+        } else {
+          data.position = 0;
+          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, XML(data.readUTFBytes(data.length))));         
+        }
+      }
+      
+      client.listener = listener;
+      return client;
+    }
         
     /**
      * @see org.ruboss.services.IServiceProvider#index
      */
-    public override function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var client:HttpClient = new HttpClient();
-      
-      client.listener.onStatus = function(event:HttpStatusEvent):void {
-        if (event.response.code != "200") {
-          responder.fault(event);
-        }
-      };
-      
-      client.listener.onData = function(event:HttpDataEvent):void {
-        var data:String = event.readUTFBytes();
-        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, XML(data)));
-      };
-      
+    public override function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
       var url:String = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
       trace("sending index request to: " + url);
         
@@ -87,26 +92,13 @@ package org.ruboss.services.as3http {
       }
       
       var uri:URI = new URI(url);
-      client.get(uri);
+      getHttpClient(responder).get(uri);
     }
     
     /**
      * @see org.ruboss.services.IServiceProvider#show
      */
-    public override function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var client:HttpClient = new HttpClient();
-      
-      client.listener.onStatus = function(event:HttpStatusEvent):void {
-        if (event.response.code != "200") {
-          responder.fault(event);
-        }
-      };
-      
-      client.listener.onData = function(event:HttpDataEvent):void {
-        var data:String = event.readUTFBytes();
-        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, XML(data)));
-      };
-      
+    public override function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
       var url:String = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
       url = RubossUtils.addObjectIdToResourceURL(url, object);
       trace("sending show request to: " + url);
@@ -117,26 +109,13 @@ package org.ruboss.services.as3http {
       }
       
       var uri:URI = new URI(url);
-      client.get(uri);
+      getHttpClient(responder).get(uri);
     }
 
     /**
      * @see org.ruboss.services.IServiceProvider#create
      */    
-    public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var client:HttpClient = new HttpClient();
-      
-      client.listener.onStatus = function(event:HttpStatusEvent):void {
-        if (event.response.code != "200") {
-          responder.fault(event);
-        }
-      };
-      
-      client.listener.onData = function(event:HttpDataEvent):void {
-        var data:String = event.readUTFBytes();
-        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, XML(data)));
-      };
-      
+    public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
       var url:String = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
       trace("sending create request to: " + url);
 
@@ -144,8 +123,9 @@ package org.ruboss.services.as3http {
 
       var data:ByteArray = new ByteArray();
       data.writeUTFBytes(serializer.marshall(object, false, metadata).toString());
+      data.position = 0;
       
-      client.post(uri, data, contentType);
+      getHttpClient(responder).post(uri, data, contentType);
       
       //client.postFormData(uri, [marshallToVO(object, false, metadata)]);  
     }
@@ -153,20 +133,7 @@ package org.ruboss.services.as3http {
     /**
      * @see org.ruboss.services.IServiceProvider#update
      */
-    public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var client:HttpClient = new HttpClient();
-      
-      client.listener.onStatus = function(event:HttpStatusEvent):void {
-        if (event.response.code != "200") {
-          responder.fault(event);
-        }
-      };
-      
-      client.listener.onData = function(event:HttpDataEvent):void {
-        var data:String = event.readUTFBytes();
-        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, XML(data)));
-      };
-      
+    public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
       var url:String = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
       url = RubossUtils.addObjectIdToResourceURL(url, object);
       trace("sending update request to: " + url);
@@ -175,8 +142,9 @@ package org.ruboss.services.as3http {
 
       var data:ByteArray = new ByteArray();
       data.writeUTFBytes(serializer.marshall(object, false, metadata).toString());
+      data.position = 0;
       
-      client.put(uri, data, contentType); 
+      getHttpClient(responder).put(uri, data, contentType); 
 
       //client.putFormData(uri, [marshallToVO(object, false, metadata)]);
     }
@@ -185,19 +153,6 @@ package org.ruboss.services.as3http {
      * @see org.ruboss.services.IServiceProvider#destroy
      */
     public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var client:HttpClient = new HttpClient();
-      
-      client.listener.onStatus = function(event:HttpStatusEvent):void {
-        if (event.response.code != "200") {
-          responder.fault(event);
-        }
-      };
-      
-      client.listener.onData = function(event:HttpDataEvent):void {
-        var data:String = event.readUTFBytes();
-        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, XML(data)));
-      };
-      
       var url:String = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
       url = RubossUtils.addObjectIdToResourceURL(url, object);
         
@@ -208,7 +163,7 @@ package org.ruboss.services.as3http {
       
       var uri:URI = new URI(url);
       
-      client.del(uri);
+      getHttpClient(responder).del(uri);
     }
   }
 }

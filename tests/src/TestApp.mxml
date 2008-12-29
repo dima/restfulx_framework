@@ -51,7 +51,7 @@
 			private function onCreationComplete():void {
 			  Ruboss.enableLogging();
         RubossTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider, AS3XMLHTTPServiceProvider,
-          JSONHTTPServiceProvider], 
+          JSONHTTPServiceProvider, DirectCouchDBHTTPServiceProvider], 
           MockXMLHTTPServiceProvider.ID, "ruboss-tests");
                     
         var testData:Object = {
@@ -172,7 +172,13 @@
 //        ts.addTest(new JSONHTTPServiceProviderTest("testCreate"));
 //        ts.addTest(new JSONHTTPServiceProviderTest("testUpdate"));
 //        ts.addTest(new JSONHTTPServiceProviderTest("testDestroy"));
-        ts.addTest(new DirectCouchDBServiceProviderTest("testListAllDBs"));
+//        ts.addTest(new DirectCouchDBServiceProviderTest("testListAllDBs"));
+//        ts.addTest(new DirectCouchDBServiceProviderTest("testErroHandler"));
+//        ts.addTest(new DirectCouchDBServiceProviderTest("testCouchDBJSONMarshalling"));
+//        ts.addTest(new DirectCouchDBServiceProviderTest("testCreate"));
+//        ts.addTest(new DirectCouchDBServiceProviderTest("testUpdate"));
+//        ts.addTest(new DirectCouchDBServiceProviderTest("testDestroy"));
+        ts.addTest(new DirectCouchDBServiceProviderTest("testIndex"));
  			}
 		]]>
 	</mx:Script>
