@@ -44,6 +44,14 @@ package org.ruboss.services.mock {
         contentType);      
     }
     
+    public function recreateTestDatabase(callback:Function):void {
+      deleteDatabase(function(result:Boolean):void {
+        if (result) {
+          createDatabase(callback);
+        }
+      });
+    }
+    
     public function loadTestData(dataSets:Object):void {
       Ruboss.log.debug("loading test data for MockDirectCouchDBHTTPServiceProvider");
         

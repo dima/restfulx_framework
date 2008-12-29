@@ -18,6 +18,10 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import org.ruboss.services.http.XMLHTTPServiceProvider;
+		  import org.ruboss.services.as3http.AS3JSONHTTPServiceProvider;
+		  import org.ruboss.services.air.AIRServiceProvider;
+		  import org.ruboss.services.mock.MockDirectCouchDBHTTPServiceProvider;
 		  import ruboss.test.cases.integration.DirectCouchDBServiceProviderTest;
 		  import org.ruboss.services.as3http.DirectCouchDBHTTPServiceProvider;
 		  import ruboss.test.cases.models.NothingIndexingTest;
@@ -51,7 +55,8 @@
 			private function onCreationComplete():void {
 			  Ruboss.enableLogging();
         RubossTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider, AS3XMLHTTPServiceProvider,
-          JSONHTTPServiceProvider, DirectCouchDBHTTPServiceProvider], 
+          JSONHTTPServiceProvider, XMLHTTPServiceProvider, MockDirectCouchDBHTTPServiceProvider, AIRServiceProvider, 
+          DirectCouchDBHTTPServiceProvider, AS3JSONHTTPServiceProvider], 
           MockXMLHTTPServiceProvider.ID, "ruboss-tests");
                     
         var testData:Object = {
@@ -76,13 +81,21 @@
           facebook_users: facebook_users,
           nothing: nothing
         }
+        
+        Ruboss.couchDBRootUrl = "http://127.0.0.1:5984/";
+        Ruboss.couchDbDatabaseName = "ruboss_tests/";
 
         MockXMLHTTPServiceProvider(Ruboss.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
         MockAIRServiceProvider(Ruboss.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
+//        MockDirectCouchDBHTTPServiceProvider(Ruboss.services.getServiceProvider(MockDirectCouchDBHTTPServiceProvider.ID)).loadTestData(testData);
 			  
 			  var testSuite:TestSuite = new TestSuite;
 			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
-			  addServiceDependentTests(testSuite, MockAIRServiceProvider.ID);
+			  
+			  addServiceDependentTests(testSuite, AIRServiceProvider.ID);
+			  // enable only if you have CouchDB installed and ruboss_tests database prepopulated with test data, see above
+//			  addServiceDependentTests(testSuite, DirectCouchDBHTTPServiceProvider.ID);
+			  
 			  addNonServiceDependentTests(testSuite);
 //        addIntegrationTests(testSuite);
  				testRunner.test = testSuite;
@@ -93,9 +106,6 @@
 			  ts.addTest(new SimplePropertiesTest("testIndexWithEventListener", serviceProviderId));
 			  ts.addTest(new SimplePropertiesTest("testIndexWithOnSuccessFunction", serviceProviderId));
         ts.addTest(new SimplePropertiesTest("testIndexWithOnFailureFunction", serviceProviderId));
-        ts.addTest(new SimplePropertiesTest("testCreateWithTrueBoolean", serviceProviderId));
-        ts.addTest(new SimplePropertiesTest("testCreateWithFalseBoolean", serviceProviderId));
-        ts.addTest(new SimplePropertiesTest("testCreateFollowedByUpdate", serviceProviderId));
         
         ts.addTest(new BasicRelationshipsTest("testBasicRelationshipsIndex", serviceProviderId));
         
@@ -116,6 +126,14 @@
  			}
  			
  			private function addNonServiceDependentTests(ts:TestSuite):void {
+        // these should not be run with an actual async service provider because they'll affect
+        // other tests
+        for each (var serviceProviderId:int in [MockXMLHTTPServiceProvider.ID, MockAIRServiceProvider.ID]) {
+          ts.addTest(new SimplePropertiesTest("testCreateWithTrueBoolean", serviceProviderId));
+          ts.addTest(new SimplePropertiesTest("testCreateWithFalseBoolean", serviceProviderId));
+          ts.addTest(new SimplePropertiesTest("testCreateFollowedByUpdate", serviceProviderId));
+        }
+
  			  ts.addTest(new RubossUtilTest("testResourceNesting"));
         ts.addTest(new RubossUtilTest("testCamelCasing"));
  			  ts.addTest(new InflectorTest("testInflector"));
@@ -175,10 +193,6 @@
 //        ts.addTest(new DirectCouchDBServiceProviderTest("testListAllDBs"));
 //        ts.addTest(new DirectCouchDBServiceProviderTest("testErroHandler"));
 //        ts.addTest(new DirectCouchDBServiceProviderTest("testCouchDBJSONMarshalling"));
-//        ts.addTest(new DirectCouchDBServiceProviderTest("testCreate"));
-//        ts.addTest(new DirectCouchDBServiceProviderTest("testUpdate"));
-//        ts.addTest(new DirectCouchDBServiceProviderTest("testDestroy"));
-        ts.addTest(new DirectCouchDBServiceProviderTest("testIndex"));
  			}
 		]]>
 	</mx:Script>

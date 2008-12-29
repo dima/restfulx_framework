@@ -40,7 +40,8 @@ package org.ruboss.services.as3http {
    * For API details refer to:
    * 
    * http://wiki.apache.org/couchdb/HTTP_database_API
-   * 
+   * http://wiki.apache.org/couchdb/HTTP_Document_API
+   * http://wiki.apache.org/couchdb/HTTP_view_API
    */
   public class DirectCouchDBHTTPServiceProvider implements IServiceProvider {
 
@@ -226,8 +227,17 @@ package org.ruboss.services.as3http {
       return new URI(url);
     }
     
-    public function listDatabases():void {
-      getHttpClient(defaultOnData).get(getCouchDBURI("_all_dbs"));
+    public function listDatabases(callback:Function):void {
+      getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
+        if (event.response.code != "200") {
+          callback(event);
+        } else {
+          data.position = 0;
+          var response:String = data.readUTFBytes(data.length);
+          
+          callback(JSON.decode(response));
+        }
+      }).get(getCouchDBURI("_all_dbs"));
     }
     
     public function createDatabase(callback:Function):void {   
@@ -240,18 +250,26 @@ package org.ruboss.services.as3http {
       }).put(getCouchDBURI(Ruboss.couchDbDatabaseName), "", contentType);  
     }
     
-    public function getDatabaseInfo():void {
-      getHttpClient(defaultOnData).get(getCouchDBURI(Ruboss.couchDbDatabaseName));        
+    public function getDatabaseInfo(callback:Function):void {
+      getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
+        if (event.response.code != "200") {
+          callback(event);
+        } else {
+          data.position = 0;
+          var response:String = data.readUTFBytes(data.length);
+          callback(JSON.decode(response));
+        }
+      }).get(getCouchDBURI(Ruboss.couchDbDatabaseName));        
     }
     
-    public function deleteDatabase():void {
-      getHttpClient(defaultOnData).del(getCouchDBURI(Ruboss.couchDbDatabaseName));
-    }
-    
-    protected function defaultOnData(event:HttpResponseEvent, data:ByteArray):void {
-      data.position = 0;
-      var result:String = data.readUTFBytes(data.length);
-      trace(result);
+    public function deleteDatabase(callback:Function):void {
+      getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
+        if (event.response.code == "200") {
+          callback(true);
+        } else {
+          callback(false);
+        }    
+      }).del(getCouchDBURI(Ruboss.couchDbDatabaseName));
     }
   }
 }

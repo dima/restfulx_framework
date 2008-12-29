@@ -44,9 +44,9 @@ package ruboss.test.cases.models {
         assertEquals(2, receivable.length);
         assertEquals(4, accounts.length);
         assertTrue(payable.getItemAt(0) is Account);
-        assertEquals("Account1NameString", PayableAccount(payable.getItemAt(0)).name);
+        assertEquals("Account1NameString", PayableAccount(payable.withId("88762491")).name);
         assertTrue(receivable.getItemAt(0) is Account);
-        assertEquals("Account2NameString", ReceivableAccount(receivable.getItemAt(0)).name);
+        assertEquals("Account2NameString", ReceivableAccount(receivable.withId("45555255")).name);
         
       }
     }

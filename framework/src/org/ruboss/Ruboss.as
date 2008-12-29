@@ -92,7 +92,7 @@ package org.ruboss {
     public static var airDatabaseName:String = "rubossdb";
     
     /** default database name to use for apps talking to CouchDB directly (if nothing else is provided) */
-    public static var couchDbDatabaseName:String = "rubossdb";
+    public static var couchDbDatabaseName:String = "rubossdb/";
     
     /** stores current session id for use by URLRequest */
     public static var sessionToken:String;

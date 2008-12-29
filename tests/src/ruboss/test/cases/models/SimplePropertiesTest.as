@@ -30,7 +30,7 @@ package ruboss.test.cases.models {
     
     public function testIndexWithEventListener():void {
       establishService();
-      Ruboss.models.addEventListener(CacheUpdateEvent.ID, onTestIndexWithEvent, false, 0, true);
+      Ruboss.models.addEventListener(CacheUpdateEvent.ID, onTestIndexWithEvent);
       Ruboss.models.index(SimpleProperty);
     }
 
@@ -41,27 +41,34 @@ package ruboss.test.cases.models {
     
     public function testIndexWithOnFailureFunction():void {
       establishService();
-      Ruboss.models.index(Account, onTestIndex, onTestIndexFail);
+      Ruboss.models.index(Account, onTestEmptyCallback, onTestIndexFail);
     }
     
     private function onTestIndexWithEvent(event:CacheUpdateEvent):void {
-      assertEquals(Ruboss.models.state.types[SimpleProperty], event.fqn);
-      assertEquals(CacheUpdateEvent.INDEX, event.opType);
-      assertTrue(event.isFor(SimpleProperty));
-      assertTrue(event.isIndex());
-      assertTrue(event.isIndexFor(SimpleProperty));
-      onTestIndex(Ruboss.models.cached(SimpleProperty));
-      Ruboss.models.removeEventListener(CacheUpdateEvent.ID, onTestIndexWithEvent);
+      if (event.isIndexFor(SimpleProperty)) {
+        assertEquals(Ruboss.models.state.types[SimpleProperty], event.fqn);
+        assertEquals(CacheUpdateEvent.INDEX, event.opType);
+        assertTrue(event.isFor(SimpleProperty));
+        assertTrue(event.isIndex());
+        assertTrue(event.isIndexFor(SimpleProperty));
+        onTestIndexResult(Ruboss.models.cached(SimpleProperty));
+        Ruboss.models.removeEventListener(CacheUpdateEvent.ID, onTestIndexWithEvent);
+      }
+    }
+    
+    private function onTestEmptyCallback(results:TypedArray):void {
+      assertEquals(0, results.length);
+      assertEquals(Ruboss.models.state.types[Account], results.itemType);
     }
     
     private function onTestIndexWithCallback(results:TypedArray):void {
       assertEquals(Ruboss.models.state.types[SimpleProperty], results.itemType);
-      onTestIndex(new ModelsCollection(results));
+      onTestIndexResult(new ModelsCollection(results));
     }
     
-    private function onTestIndex(results:ModelsCollection):void {
+    private function onTestIndexResult(results:ModelsCollection):void {
       assertEquals(4, results.length);
-      var firstModel:SimpleProperty = SimpleProperty(results.getItemAt(0));
+      var firstModel:SimpleProperty = SimpleProperty(results.withId("380986833"));
       // integer
       assertEquals(1, firstModel.amount);
       // boolean

@@ -34,12 +34,12 @@ package ruboss.test.cases.models {
     private function onIndex(result:TypedArray):void {
       var categories:ModelsCollection = Ruboss.models.cached(Category);
       
-      var firstCategory:Category = categories.getItemAt(0) as Category;
+      var firstCategory:Category = categories.withId("8451967") as Category;
       assertEquals(4, categories.length);
       assertNull(firstCategory.parent);
       assertEquals(2, firstCategory.children.length);
       assertEquals("Category1NameString", firstCategory.name);
-      assertEquals("Category2NameString", Category(firstCategory.children.getItemAt(0)).name);
+      assertEquals("Category2NameString", Category(firstCategory.children.withId("51659203")).name);
     }
   }
 }

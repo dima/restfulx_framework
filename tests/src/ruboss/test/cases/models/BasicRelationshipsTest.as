@@ -46,14 +46,14 @@ package ruboss.test.cases.models {
         assertEquals(4, contractors.length);
         assertEquals(4, tasks.length);
         
-        var firstProject:Project = projects.getItemAt(0) as Project;
-        var secondProject:Project = projects.getItemAt(1) as Project;
+        var firstProject:Project = projects.withId("490909803") as Project;
+        var secondProject:Project = projects.withId("1043718716") as Project;
         
         assertEquals(1, firstProject.tasks.length);
         assertNull(firstProject.randomContractor);
         assertEquals("Project4NameString", firstProject.name);
         assertEquals("Contractor4NameString", firstProject.contractor.name);
-        assertEquals("Task4NameString", Task(firstProject.tasks.getItemAt(0)).name);
+        assertEquals("Task4NameString", Task(firstProject.tasks.withId("540638538")).name);
         assertEquals("Project4NameString", Project(Task(firstProject.tasks.getItemAt(0)).project).name);
         
         assertEquals("Project2NameString", secondProject.name);

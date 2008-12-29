@@ -20,6 +20,7 @@ package ruboss.test.cases {
   
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
+  import org.ruboss.services.mock.MockXMLHTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
   
@@ -44,7 +45,7 @@ package ruboss.test.cases {
       // will already be null
       var firstTask:Task = RubossUtils.clone(project.tasks.getItemAt(0)) as Task;
       firstTask.project = null;
-      firstTask.update(onTaskUpdate);
+      firstTask.update({onSuccess: onTaskUpdate, targetServiceId: MockXMLHTTPServiceProvider.ID});
     }
     
     private function onTaskUpdate(result:Task):void {
@@ -64,7 +65,7 @@ package ruboss.test.cases {
       
       var contractor:Contractor = RubossUtils.clone(project.contractor) as Contractor;
       contractor.project = null;
-      contractor.update(onContractorUpdate);   
+      contractor.update({onSuccess: onContractorUpdate, targetServiceId: MockXMLHTTPServiceProvider.ID});   
     }
     
     private function onContractorUpdate(result:Contractor):void {
@@ -89,7 +90,7 @@ package ruboss.test.cases {
       
       var clone:FacebookUser = RubossUtils.clone(facebookUser2) as FacebookUser;
       clone.friend = null;
-      clone.update(onFacebookUserUpdate);
+      clone.update({onSuccess: onFacebookUserUpdate, targetServiceId: MockXMLHTTPServiceProvider.ID});
     }
     
     private function onFacebookUserUpdate(result:FacebookUser):void {

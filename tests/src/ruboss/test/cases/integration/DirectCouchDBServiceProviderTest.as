@@ -27,8 +27,6 @@ package ruboss.test.cases.integration {
         
     public function DirectCouchDBServiceProviderTest(methodName:String) {
       super(methodName);
-      Ruboss.couchDbDatabaseName = "foobar/";
-      Ruboss.couchDBRootUrl = "http://127.0.0.1:5984/";
       provider = Ruboss.services.getServiceProvider(DirectCouchDBHTTPServiceProvider.ID) as DirectCouchDBHTTPServiceProvider;
     }
     
@@ -46,23 +44,6 @@ package ruboss.test.cases.integration {
       propToUpdate["rev"] = "123123123";
       var marshalledUpdate:String = provider.marshall(propToUpdate) as String;
       trace(marshalledUpdate);
-    }
-    
-    public function testIndex():void {
-      Ruboss.models.index(SimpleProperty, {onSuccess: onIndex, targetServiceId: DirectCouchDBHTTPServiceProvider.ID});
-    }
-    
-    private function onIndex(result:Object):void {
-      trace(result);
-    }
-    
-    public function testCreate():void {
-      var simpleModel:SimpleProperty = getNewSimpleProperty();
-      simpleModel.create({onSuccess: onModelCreate, targetServiceId: DirectCouchDBHTTPServiceProvider.ID});      
-    }
-    
-    private function onModelCreate(model:Object):void {
-      trace(model);
     }
     
     private function getNewSimpleProperty():SimpleProperty {

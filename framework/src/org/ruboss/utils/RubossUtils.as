@@ -326,7 +326,12 @@ package org.ruboss.utils {
       if (targetType == "boolean") {
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date" || targetType == "datetime") {
-        return new Date(Date.parse(value));
+        if (value is String) {
+          var date:String = String(value).replace("T", " ").replace(new RegExp("-", "g"), "/");
+          return new Date(Date.parse(date));
+        } else {
+          return new Date(Date.parse(value));
+        }
       } else {
         return String(value).replace("\\x3A", ":").split("\\n").join("\n");
       }

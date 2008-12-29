@@ -44,9 +44,9 @@ package ruboss.test.cases.models {
         assertEquals(4, employees.length);
         assertEquals(4, locations.length);
         
-        var firstCustomer:Customer = customers.getItemAt(0) as Customer;
-        var firstEmployee:Employee = employees.getItemAt(0) as Employee;
-        var firstLocation:Location = locations.getItemAt(0) as Location;
+        var firstCustomer:Customer = customers.withId("589916620") as Customer;
+        var firstEmployee:Employee = employees.withId("69560147") as Employee;
+        var firstLocation:Location = locations.withId("361020393") as Location;
         
         assertEquals("Customer1NameString", firstCustomer.name);
         assertEquals("Location1CityString", firstCustomer.location.city);

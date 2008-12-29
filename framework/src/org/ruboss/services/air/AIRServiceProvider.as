@@ -163,7 +163,7 @@ package org.ruboss.services.air {
       
         invokeResponderResult(responder, object);
       } catch (e:Error) {
-        responder.fault(e);
+        if (responder) responder.fault(e);
       }
     }
     
@@ -204,7 +204,7 @@ package org.ruboss.services.air {
         object["id"] = statement.getResult().lastInsertRowID;
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
-        responder.fault(e);
+        if (responder) responder.fault(e);
       }
     }
 
@@ -243,7 +243,7 @@ package org.ruboss.services.air {
         sqlStatement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
-        responder.fault(e);
+        if (responder) responder.fault(e);
       }
     }
     
@@ -258,7 +258,7 @@ package org.ruboss.services.air {
         getSQLStatement(statement).execute();
         invokeResponderResult(responder, object);
       } catch (e:Error) {
-        responder.fault(e);
+        if (responder) responder.fault(e);
       }
     }
 

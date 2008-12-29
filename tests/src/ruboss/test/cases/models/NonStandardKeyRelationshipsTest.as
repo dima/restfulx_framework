@@ -16,7 +16,7 @@
 package ruboss.test.cases.models {
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
-  import org.ruboss.utils.TypedArray;
+  import org.ruboss.events.CacheUpdateEvent;
   
   import ruboss.test.RubossTestCase;
   import ruboss.test.models.Actor;
@@ -29,24 +29,28 @@ package ruboss.test.cases.models {
     
     public function testNonStandardKeyRelationshipsIndex():void {
       establishService();
-      Ruboss.models.index(Actor, onIndex);
+      Ruboss.models.addEventListener(CacheUpdateEvent.ID, onCacheUpdate);
+      Ruboss.models.index(Actor);
     }
     
-    private function onIndex(result:TypedArray):void {
-      var movies:ModelsCollection = Ruboss.models.cached(Movie);
-      var actors:ModelsCollection = Ruboss.models.cached(Actor);
+    private function onCacheUpdate(event:CacheUpdateEvent):void {
+      if (Ruboss.models.indexed(Movie, Actor)) {
+        var movies:ModelsCollection = Ruboss.models.cached(Movie);
+        var actors:ModelsCollection = Ruboss.models.cached(Actor);
       
-      assertEquals(4, movies.length);
-      assertEquals(4, actors.length);
+        assertEquals(4, movies.length);
+        assertEquals(4, actors.length);
       
-      var firstActor:Actor = actors.getItemAt(0) as Actor;
-      assertEquals("Actor2NameString", firstActor.name);
-      assertEquals("Movie1NameString", firstActor.actionMovie.name);
-      assertEquals(4, firstActor.actionMovie.actors.length);
-      assertEquals("Movie4NameString", firstActor.documentary.name);
-      assertEquals(2, firstActor.documentary.actors.length);
-      assertEquals("Movie2NameString", firstActor.movie.name);
-      assertEquals(4, firstActor.movie.actors.length);
+        var firstActor:Actor = actors.withId("172214130") as Actor;
+        assertEquals("Actor2NameString", firstActor.name);
+        assertEquals("Movie1NameString", firstActor.actionMovie.name);
+        assertEquals(4, firstActor.actionMovie.actors.length);
+        assertEquals("Movie4NameString", firstActor.documentary.name);
+        assertEquals(2, firstActor.documentary.actors.length);
+        assertEquals("Movie2NameString", firstActor.movie.name);
+        assertEquals(4, firstActor.movie.actors.length);
+        Ruboss.models.removeEventListener(CacheUpdateEvent.ID, onCacheUpdate);
+      }
     }
   }
 }

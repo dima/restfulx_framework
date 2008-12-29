@@ -91,7 +91,7 @@ package org.ruboss.services.mock {
         }
         invokeResponderResult(responder, object);
       } catch (e:Error) {
-        responder.fault(e);
+        if (responder) responder.fault(e);
       }
     }
     

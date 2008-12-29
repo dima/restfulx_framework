@@ -35,19 +35,19 @@ package ruboss.test.cases.models {
     private function onIndex(result:TypedArray):void {
       var facebookUsers:ModelsCollection = Ruboss.models.cached(FacebookUser);
       
-      var firstUser:FacebookUser = facebookUsers.getItemAt(0) as FacebookUser;
+      var firstUser:FacebookUser = facebookUsers.withId("845196711") as FacebookUser;
       assertEquals(4, facebookUsers.length);
       assertNull(firstUser.randomFriends);
       assertNull(firstUser.friend);
       assertEquals(2, firstUser.friends.length);
       assertEquals("FacebookUser1NameString", firstUser.name);
-      assertEquals("FacebookUser2NameString", FacebookUser(firstUser.friends.getItemAt(0)).name);
+      assertEquals("FacebookUser2NameString", FacebookUser(firstUser.friends.withId("5165920311")).name);
       
-      var secondUser:FacebookUser = facebookUsers.getItemAt(1) as FacebookUser;
+      var secondUser:FacebookUser = facebookUsers.withId("5165920311") as FacebookUser;
       assertEquals("FacebookUser2NameString", secondUser.name);
       assertEquals(1, secondUser.friends.length);
       assertEquals(1, secondUser.randomFriends.length);
-      assertEquals("FacebookUser4NameString", FacebookUser(secondUser.randomFriends.getItemAt(0)).name);
+      assertEquals("FacebookUser4NameString", FacebookUser(secondUser.randomFriends.withId("13452406411")).name);
     }
   }
 }
