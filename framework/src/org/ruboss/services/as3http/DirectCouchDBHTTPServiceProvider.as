@@ -126,13 +126,15 @@ package org.ruboss.services.as3http {
     }
     
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      if (!RubossUtils.isEmpty(object["id"]) || !RubossUtils.isEmpty(object["rev"])) {
-        throw new Error("model: " + object + " has 'id' or 'rev' properties set => cannot be created.");
-      }
-      
       var client:HttpClient = getCreateOrUpdateHttpClient(object, responder);
-      client.post(getCouchDBURI(Ruboss.couchDbDatabaseName), marshallToJSONAndConvertToByteArray(object), 
-        contentType);
+
+      if (RubossUtils.isEmpty(object["id"])) {
+        client.post(getCouchDBURI(Ruboss.couchDbDatabaseName), marshallToJSONAndConvertToByteArray(object), 
+          contentType);
+      } else {
+        client.put(getCouchDBURI(Ruboss.couchDbDatabaseName + object["id"]), marshallToJSONAndConvertToByteArray(object),
+          contentType);
+      }
     }
     
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {

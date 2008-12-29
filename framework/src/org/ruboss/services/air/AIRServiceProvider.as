@@ -172,7 +172,12 @@ package org.ruboss.services.air {
      */
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
-      var statement:SQLStatement = getSQLStatement(sql[fqn]["insert"]);
+      var sqlText:String = sql[fqn]["insert"];
+      if (!RubossUtils.isEmpty(object["id"])) {
+        sqlText = sqlText.replace(")", ", id)");
+        sqlText = sqlText.replace(/\)$/, ", \:id)");
+      }
+      var statement:SQLStatement = getSQLStatement(sqlText);
       for each (var node:XML in describeType(object)..accessor) {
         var localName:String = node.@name;
         var type:String = node.@type;
@@ -200,8 +205,13 @@ package org.ruboss.services.air {
       }
       
       try {
+        if (!RubossUtils.isEmpty(object["id"])) {
+          statement.parameters[":id"] = object["id"];
+        }
         statement.execute();
-        object["id"] = statement.getResult().lastInsertRowID;
+        if (RubossUtils.isEmpty(object["id"])) {
+          object["id"] = statement.getResult().lastInsertRowID;
+        }
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
         if (responder) responder.fault(e);

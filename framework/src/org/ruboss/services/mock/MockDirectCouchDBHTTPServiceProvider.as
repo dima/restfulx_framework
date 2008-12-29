@@ -34,16 +34,6 @@ package org.ruboss.services.mock {
       super();
     }
     
-    public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      if (RubossUtils.isEmpty(object["id"])) {
-        throw new Error("model: " + object + " doesn't have 'id' property set => cannot be created.");
-      }
-      
-      var client:HttpClient = getCreateOrUpdateHttpClient(object, responder);
-      client.put(getCouchDBURI(Ruboss.couchDbDatabaseName + object["id"]), marshallToJSONAndConvertToByteArray(object), 
-        contentType);      
-    }
-    
     public function recreateTestDatabase(callback:Function):void {
       deleteDatabase(function(result:Boolean):void {
         if (result) {
