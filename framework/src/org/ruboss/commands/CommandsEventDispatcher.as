@@ -18,7 +18,7 @@ package org.ruboss.commands {
   import flash.events.IEventDispatcher;
   
   /**
-   * Singleton. Manages ruboss command related event registration.
+   * Manages ruboss command related event registration.
    */
   public class CommandsEventDispatcher extends EventDispatcher {
     private static var instance:CommandsEventDispatcher;

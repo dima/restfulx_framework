@@ -17,7 +17,24 @@ package org.ruboss.collections {
   import mx.collections.ArrayCollection;
 
   /**
-   * Adds a few handy, frequently used methods to ArrayCollection class.
+   * Adds a few handy general purpose methods to 
+   *  <code>mx.collections.ArrayCollection</code>. These helpers are not 
+   *  <code>RubossModel</code> specific and can be used instead of any 
+   *  regular <code>ArrayCollection</code> instance. 
+   *  
+   * <p>One of the things you can do with <code>RubossCollection</code> is set
+   *  multiple filter functions. They are evaluated one by one with the end result
+   *  being false if <em>ANY</em> of the filter functions is false. Much like an
+   *  OR.</p>
+   *  
+   * @example Given 2 or more filter functions you can:
+   *  
+   * <listing version="3.0">
+   *  var rc:RubossCollection = new RubossCollection;
+   *  // add some data
+   *  rc.filterFunctions = [function1, function2, function3]
+   *  rc.refresh();
+   * </listing>
    */
   public class RubossCollection extends ArrayCollection {
 

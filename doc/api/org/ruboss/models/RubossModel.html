@@ -42,7 +42,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+   Encapsulates properties common to all model objects and wraps around a few
+   Ruboss.models.methods to shorten access.
+   <p></p>
 <br>
 <hr>
 </div>
@@ -106,7 +108,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#reload()">reload</a>(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, targetServiceId:int = -1):void</div>
 <div class="summaryTableDescription">
-     Force reload of a particular model instance or the entire model cache.</div>
+     Wrapper around Ruboss.models.reload
+      
+     </div>
 </td><td class="summaryTableOwnerCol">RubossModel</td>
 </tr>
 <tr class="">
@@ -123,7 +127,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#shown()">shown</a>():Boolean</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Wrapper around Ruboss.models.shown
+      
+     </div>
 </td><td class="summaryTableOwnerCol">RubossModel</td>
 </tr>
 <tr class="">
@@ -209,31 +216,25 @@ showHideInherited();
           </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
-     when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     clober the value of any subsequent parameters.
-     </td>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
-     </td>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
-     </td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; service provider to use
-     </td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
@@ -245,7 +246,9 @@ showHideInherited();
 <p>
 <span class="label">See also</span>
 </p>
-<div class="seeAlso">org.ruboss.controllers.RubossModelsController.create</div>
+<div class="seeAlso">
+<a href="../controllers/ModelsController.html#create" target="">org.ruboss.controllers.ModelsController.create</a>
+</div>
 </div>
 <a name="destroy()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -259,31 +262,25 @@ showHideInherited();
           </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
-     when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     clober the value of any subsequent parameters.
-     </td>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
-     </td>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
-     </td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; service provider to use
-     </td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
@@ -305,59 +302,56 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function reload(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, targetServiceId:int = -1):void</code><p>
-     Force reload of a particular model instance or the entire model cache.
+     Wrapper around Ruboss.models.reload
       
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; model instance or model Class reference to reload
-     </td>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
-      when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-      clober the value of any subsequent parameters.
-     </td>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
-     </td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
-     </td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
-     </td>
+<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
-     </td>
+<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; page to request (only used by index method)
-     </td>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
 </tr>
 </table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../controllers/ModelsController.html#reload" target="">org.ruboss.controllers.ModelsController.reload</a>
+</div>
 </div>
 <a name="show()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -372,45 +366,37 @@ showHideInherited();
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
-     when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     clober the value of any subsequent parameters.
-     </td>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
-     </td>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
-     </td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
-     </td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
-     </td>
+<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; service provider to use
-     </td>
+<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
@@ -429,7 +415,9 @@ showHideInherited();
 <p>
 <span class="label">See also</span>
 </p>
-<div class="seeAlso">org.ruboss.controllers.RubossModelsController.show</div>
+<div class="seeAlso">
+<a href="../controllers/ModelsController.html#show" target="">org.ruboss.controllers.ModelsController.show</a>
+</div>
 </div>
 <a name="shown()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -438,14 +426,22 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function shown():Boolean</code>
-<p></p>
+<code>public function shown():Boolean</code><p>
+     Wrapper around Ruboss.models.shown
+      
+     </p><p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20"></td><td><code>Boolean</code></td>
 </tr>
 </table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../controllers/ModelsController.html#shown" target="">org.ruboss.controllers.ModelsController.shown</a>
+</div>
 </div>
 <a name="toString()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -476,31 +472,25 @@ showHideInherited();
           </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if this is a Function or an IResponder, we treat it as a callback to invoke
-     when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
-     clober the value of any subsequent parameters.
-     </td>
+<td width="20px"></td><td><code><span class="label">optsOrOnSuccess</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
-     </td>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
-     </td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; service provider to use
-     </td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
@@ -512,7 +502,9 @@ showHideInherited();
 <p>
 <span class="label">See also</span>
 </p>
-<div class="seeAlso">org.ruboss.controllers.RubossModelsController.update</div>
+<div class="seeAlso">
+<a href="../controllers/ModelsController.html#update" target="">org.ruboss.controllers.ModelsController.update</a>
+</div>
 </div>
 <br>
 <br>

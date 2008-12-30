@@ -23,8 +23,7 @@ package org.ruboss.controllers {
   import org.ruboss.events.CommandExecutionEvent;
   
   /**
-   * Manages registered commands (classes that implement org.ruboss.controllers.ICommand)
-   * and wraps around RubossModelsController initialization for convenience.
+   * Manages registered commands (classes that implement org.ruboss.controllers.ICommand).
    */
   public class CommandsController {
     

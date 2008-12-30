@@ -18,6 +18,9 @@ package org.ruboss.events {
   
   import org.ruboss.services.IServiceErrors;
 
+  /**
+   * This event is dispatched when the service provider received an error.
+   */
   public class ServiceErrorEvent extends Event {
     
     /** Event identifier */

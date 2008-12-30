@@ -33,7 +33,11 @@ package org.ruboss.controllers {
   import org.ruboss.utils.RubossUtils;
 
   /**
-   * Provides high level CRUD functionality.
+   * Provides high level CRUD functionality. This class is responsible
+   *  for resolving Model dependencies on <code>index</code> and
+   *  <code>show</code> invocations and hooking up appropriate
+   *  <code>ServiceProvider</code> methods with their corresponding
+   *  <code>CacheController</code> methods.
    */
   public class ModelsController extends EventDispatcher {
     
@@ -57,7 +61,6 @@ package org.ruboss.controllers {
       cache = new CacheController(state);
     }
 
-    
     /**
      * Get current cache representation for a particular model class.
      * 
@@ -70,14 +73,28 @@ package org.ruboss.controllers {
     }
 
     /**
-     * Perform REST index operation. For example:
+     * Perform REST index operation. 
      *  
+     * @example
+     *  
+     * <listing version="3.0">
      *   Ruboss.models.index(Project);
-     * 
-     * Note that the following two method calls are equivalent:
+     * </listing>
+     *  
+     * @example Note that the following two method calls are equivalent:
+     *
+     * <listing version="3.0">
      *   Ruboss.models.index(Project, myOnSuccess, [company]);
      *   Ruboss.models.index(Project, {onSuccess:myOnSuccessFunction, nestedBy:[company]});
-     * 
+     * </listing>
+     *  
+     * <p>This means that you can specify arguments in order (which means you'll
+     *  have to provide arguments for all parameters even if you really just want to specify
+     *  the last one for example) or you can specify them selectively.</p>
+     *  
+     * <p>In order to specify arguments selectively you can use the <code>{}</code> syntax
+     *  and then refer to the arguments by name.</p>
+     *  
      * @param clazz the Class to index
      * @param optsOrOnSuccess if this is a Function or an IResponder, we treat it as a callback to invoke
      *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
@@ -154,16 +171,21 @@ package org.ruboss.controllers {
     }
     
     /**
-     * Perform REST show operation. For example:
+     * Perform REST show operation.
      *  
-     *   Ruboss.models.show(project);
-     * 
-     * @see index
+     * @example
+     *  
+     * <listing version="3.0">
+     *   Ruboss.models.show(project); // project is an instance variable of a model class
+     * </listing>
+     *  
+     * @see #index
      * 
      * @param object object to show
-     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * @param optsOrOnSuccess if this is a Function or an IResponder, we treat it as a callback to invoke
      *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
      *  clober the value of any subsequent parameters.
+     * @param onFailure callback function which is invoked if there are errors during service call
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param fetchDependencies if true model dependencies will be recursively fetched as well
@@ -251,6 +273,17 @@ package org.ruboss.controllers {
     }
     
     [Bindable(event="cacheUpdate")]
+    /**
+     * A different take on <code>show</code> method.
+     *  
+     * @example You can perform a show operation using Class and id instead of instance variable
+     *  
+     * <listing version="3.0">
+     *  Ruboss.models.showById(Project, "123123");
+     * </listing>
+     *  
+     * @copy #show
+     */
     public function showById(clazz:Class, id:*, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false,
       targetServiceId:int = -1):RubossModel {
@@ -294,16 +327,21 @@ package org.ruboss.controllers {
     }
     
     /**
-     * Perform REST create operation. For example:
+     * Perform REST create operation.
      *  
-     *   Ruboss.models.create(project);
-     * 
-     * @see index
+     * @example
+     *  
+     * <listing version="3.0">
+     *   Ruboss.models.create(project); // project is an instance variable of a model class
+     * </listing>
+     *  
+     * @see #index
      * 
      * @param object object to create
-     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * @param optsOrOnSuccess if this is a Function or an IResponder, we treat it as a callback to invoke
      *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
      *  clober the value of any subsequent parameters.
+     * @param onFailure callback function invoked if service call fails
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
@@ -331,14 +369,19 @@ package org.ruboss.controllers {
     /**
      * Perform REST destroy operation. For example:
      *  
-     *   Ruboss.models.destroy(project);
-     * 
-     * @see index
+     * @example
+     *  
+     * <listing version="3.0">
+     *   Ruboss.models.destroy(project); // project is an instance variable of a model class
+     * </listing>
+     *  
+     * @see #index
      * 
      * @param object object to destroy
-     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * @param optsOrOnSuccess if this is a Function or an IResponder, we treat it as a callback to invoke
      *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
      *  clober the value of any subsequent parameters.
+     * @param onFailure callback function invoked if service call fails
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
@@ -363,6 +406,19 @@ package org.ruboss.controllers {
       invokeService(service.destroy, service, object, serviceResponder, metadata, nestedBy);
     }
     
+    /**
+     * Checks to see if specified models have been index
+     *  
+     * @example
+     *  
+     * <listing version="3.0">
+     *  Ruboss.models.index(Project, Task, RandomStuff) // true of false
+     * </listing>
+     *  
+     *  @param list of models
+     *  
+     *  @return true if all the models have been indexed, false otherwise
+     */
     public function indexed(... models):Boolean {
       for each (var model:Class in models) {
         var fqn:String = state.types[model];
@@ -371,24 +427,42 @@ package org.ruboss.controllers {
       return true;
     }
     
+    /**
+     * Checks to see if specified model has been shown
+     *  
+     * @example
+     *  
+     * <listing version="3.0">
+     *  Ruboss.models.shown(Project, "123123") // true of false
+     *  
+     *  // Or
+     *  
+     *  Ruboss.models.shown(project);
+     * </listing>
+     *  
+     *  @param list of models
+     *  
+     *  @return true if all the models have been indexed, false otherwise
+     */
     public function shown(object:Object, id:* = null):Boolean {
       var fqn:String = getQualifiedClassName(object);
       var objectId:String = (id) ? id : object["id"];
-      return ArrayCollection(state.shown[fqn]).contains(objectId);
+      return !state.waiting[fqn] && ArrayCollection(state.shown[fqn]).contains(objectId);
     }
 
     /**
      * Force reload of a particular model instance or the entire model cache.
      *  
      * @param object model instance or model Class reference to reload
-     * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
+     * @param optsOrOnSuccess if this is a Function or an IResponder, we treat it as a callback to invoke
      *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
      *  clober the value of any subsequent parameters.
+     * @param onFailure callback function invoked if service call fails
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param fetchDependencies if true model dependencies will be recursively fetched as well
      * @param useLazyModel if true dependencies marked with [Lazy] will be skipped (not fetched)
-     * @param page page to request (only used by index method)
+     * @param append set this to true if you don't want to nuke target ModelsCollection
      * @param targetServiceId service provider to use
      */
     public function reload(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,

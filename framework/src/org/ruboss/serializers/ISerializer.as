@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.ruboss.serializers {
   public interface ISerializer {
+    
     /**
      * Produces service provider specific model representation suitable for being serialized. For example,
      * HTTPServiceProvider would return XML.

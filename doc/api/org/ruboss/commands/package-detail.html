@@ -41,8 +41,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Pa
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><i><a href="ICommand.html">ICommand</a></i></td><td class="summaryTableLastCol">
-   Must be implemented by commands
-   </td>
+   As per the command design pattern, commands are expected to implement a
+    simple interface with <code>execute()</code> function defined.</td>
 </tr>
 </table>
 <a name="classSummary"></a>
@@ -53,7 +53,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Pa
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="CommandsEventDispatcher.html">CommandsEventDispatcher</a></td><td class="summaryTableLastCol">
-   Singleton.</td>
+   Manages ruboss command related event registration.</td>
 </tr>
 </table>
 <p></p>

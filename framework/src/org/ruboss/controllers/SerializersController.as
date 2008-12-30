@@ -18,10 +18,16 @@ package org.ruboss.controllers {
   import org.ruboss.serializers.ISerializer;
   import org.ruboss.serializers.XMLSerializer;
   
+  /**
+   * Provides centralized access to comonly used serializers. <code>XML</code>
+   *  and <code>ValueObject</code> to be specific
+   */
   public class SerializersController {
     
+    /** XML serializer instance */
     public var xml:ISerializer;
     
+    /** Value Object serializer instance */
     public var vo:ISerializer;
 
     public function SerializersController() {

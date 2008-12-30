@@ -27,9 +27,51 @@ package org.ruboss.controllers {
   
   /**
    * Custom HTTP controller that allows sending arbitrary data (as 
-   * opposed to models) over HTTP faking PUT and DELETE
+   *  opposed to models) over HTTP faking PUT and DELETE. You can use
+   *  this to perform any non-CRUD actions including the ability to
+   *  treat responses <em>as-if</em> there were CRUD actions. This is
+   *  useful on many levels.
+   *  
+   * @example This will produce a GET request to "some/url", where 
+   *  "some/url" can be mapped to any server-side controller action:
+   *  
+   * <listing version="3.0">
+   * Ruboss.http(function(result:Object):void { 
+   * // do whatever you want with the result object here 
+   * }).invoke("some/url");
+   *  
+   * // or something like this:
+   *  
+   *  var invokeOpts:Object = { URL: "sessions.fxml", method: "POST", data: 
+   *     {email: "foobar-at-foobar.com", password: "bla"}, 
+   *    unmarshall: true, cacheBy: "show"};
+   *  
+   * // and then:
+   * Ruboss.http(onSuccessfulLogin, onBadLogin).invoke(invokeOpts); 
+   * </listing>
+   *  
+   * <p><code>onSuccessfulLogin</code> is a handler function for 
+   *  successful result, <code>onBadLogin</code> is a handler function for 
+   *  failure. The line above can be pretty much used with something 
+   *  like RESTful authentication to login a user.</p>
+   *  
+   * <p>If you know that your custom method returns a known model instance you  
+   *  can choose to unmarshall it and/or cache it simulating one of:</p>
+   * 
+   * <ul>
+   *   <li><strong>index</strong></li>
+   *   <li><strong>show</strong></li>
+   *   <li><strong>update</strong></li>
+   *   <li><strong>create</strong></li>
+   * </ul>
+   *  
+   * <p>These are in fact the options to <code>cacheBy</code> parameter of
+   *  <code>invoke</code> function.
+   *  
+   * @see #invoke
    */
   public class AuxHTTPController {
+    
     public static const GET:int = 1;
     public static const POST:int = 2;
     public static const PUT:int = 3;
@@ -44,10 +86,12 @@ package org.ruboss.controllers {
     private var cacheHandler:Function;
     
     /**
-     * @param optsOrResultHandler can be either an anonymous object of options or a result handler 
+     * @param optsOrOnResult can be either an anonymous object of options or a result handler 
      *  function.
-     * @param faultHandler function to call on HTTPService error
+     * @param onFault function to call on HTTPService error or if unmarshalling fails
      * @param contentType content type for the request
+     * @param resultFormat what to treat the response as (e.g. e4x, text)
+     * @param serializer what serializer to use (default is XML)
      * @param rootUrl the URL to prefix to requests
      */
     public function AuxHTTPController(optsOrOnResult:Object = null, onFault:Function = null, 
@@ -79,11 +123,18 @@ package org.ruboss.controllers {
      * @param optsOrResultHandler can be either an anonymous object of options or a result handler 
      *  function.
      * @param data data object to pass along
-     * @param method HTTP method to use
+     * @param method HTTP method to use (one of GET, PUT, POST or DELETE)
      * @param unmarshall boolean indicating if the response should be unmarshalled using
      *  HTTPSericeProvider
-     * @param cache boolean indicating if the response should be cached (this implicitly assumes
-     *  the response will be unmarshalled first)
+     * @param cacheBy a String describing recommended caching method for this response. If you 
+     *  specify <code>cacheBy</code> unmarshalling is performed automatically, using specified
+     *  serializer. Possible options are:
+     * <ul>
+     *   <li><strong>index</strong></li>
+     *   <li><strong>show</strong></li>
+     *   <li><strong>update</strong></li>
+     *   <li><strong>create</strong></li>
+     * </ul>
      */
     public function invoke(optsOrURL:Object, data:Object = null, method:* = AuxHTTPController.GET, 
       unmarshall:Boolean = false, cacheBy:String = null):void {
@@ -144,14 +195,17 @@ package org.ruboss.controllers {
      * A different take on invoke. Can be used with standalone org.ruboss.controllers.ICommand
      * implementations if they also implement IResponder interface.
      *
-     * If you don't like to create responder objects you can use ItemResponder like so:
-     * send("/foobar.xml", {some:"data"}, SimpleHTTPController.GET,
+     * @example If you don't like to create responder objects you can use ItemResponder like so:
+     *  
+     * <listing version="3.0">
+     * controller.send("/foobar.xml", {some:"data"}, SimpleHTTPController.GET,
      *   new ItemResponder(function result(data:Object):void {},
      *    function fault(info:Object):void {});
+     * </listing>
      *  
-     * Or use invoke function above.
+     * <p>Or use invoke function above.</p>
      *  
-     * @see invoke
+     * @see #invoke
      *  
      * @param url URL to call
      * @param data data to pass along

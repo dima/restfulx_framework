@@ -17,7 +17,11 @@ package org.ruboss.collections {
 
   /**
    * Adds a few handy methods to ArrayCollection class to simplify working 
-   * with model objects.
+   * with model objects. ModelsCollection is expected to always contain
+   * <code>RubossModel</code> instances, which are guaranteed to always
+   * have some fields, such as <code>id</code>. This allows us to add a
+   * few helpers to ArrayCollection that exploit these <code>RubossModel</code>
+   * properties.
    */
   public class ModelsCollection extends RubossCollection {
     
@@ -29,7 +33,8 @@ package org.ruboss.collections {
     }
     
     /**
-     * Looks up a model object in the collection by it's id. IDs are guaranteed to be unique.
+     * Looks up a model object in the collection by it's id. IDs are guaranteed to be unique
+     * in a collection.
      *  
      * @param id id of the model
      * @return model object with a given id
@@ -41,7 +46,7 @@ package org.ruboss.collections {
     }
     
     /**
-     * Checks to see if a given model object is in the collection. Comparison done by IDs.
+     * Checks to see if a given model object is in the collection. Comparison done by id.
      *  
      * @param object model object
      * @return boolean result

@@ -33,8 +33,47 @@ package org.ruboss.components {
   [Event(name="selectedItemShown", type="flash.events.Event")]
   
   [Bindable]
+  /**
+   * This class adds integrated search capability to your Flex/AIR applications.
+   *  
+   * <p>The idea is this:</p>
+   *  
+   * <p>You type some stuff into a text-field. Whatever you type up to a given   
+   *    number of milliseconds (say 500) will be used to create a search query   
+   *    to the appropriate server-side controller. That controller would typically   
+   *    return a super thin version of the objects (let's say just the id and   
+   *    the parameter such as name you were searching on). Once that is   
+   *    received the component switches to filtering and does the rest of the   
+   *    search in-memory. When you try a different search same thing happens,   
+   *    we try to hit the server with the initial search criteria and then   
+   *    switch to in-memory filtering. When you hit enter the component will   
+   *    call <code>show</code> method on the object which will hit server-side 
+   *    controller <code>show</code> action and give you an opportunity to return 
+   *    a full version of the object and any of it's children using 
+   *    <code>to_fxml(:include)</code> or something along those lines. If the 
+   *    object has already been shown then the version from the cache is 
+   *    returned directly.</p>
+   *    
+   *  @example Some sample MXML code:
+   *  
+   *  <listing version="3.0">
+   *  &lt;components:RubossAutoComplete id=&quot;autoComplete&quot;   
+   *    resource=&quot;{Project}&quot; filterFunction=&quot;filterProjectsByName&quot; 
+   *    selectedItemShown=&quot;onProjectShow(event)&quot;/&gt;
+   *  </listing>
+   *  
+   *  @example And the filter function:
+   *  
+   *  <listing version="3.0"> 
+   *    private function filterProjectsByname(item:Project):Boolean { 
+   *            var regexp:RegExp = new RegExp(autoComplete.typedText, "i"); 
+   *            return item.name.search(regexp) != -1; 
+   *    } 
+   *  </listing>
+   */
   public class RubossAutoComplete extends ComboBox {
     
+    // TODO: document these properties clean up, etc
     public var resource:Class;
     
     public var filterFunction:Function;

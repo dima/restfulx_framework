@@ -42,7 +42,23 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+   In-memory model data store. This class is responsible for storing models
+    that make it into memory as a result of various <code>ModelsController</code>
+    or other controller actions. It also dispatches relevant <code>CacheUpdateEvent</code>
+    events.
+    
+   <p>Models are stored in ModelsCollections keyed on model fully qualified
+    class name.</p>
+    
+   <p></p>
+<br>
+<span class="label">Example</span>
+<br>This looks something like this:
+    
+   <div class='listing'><pre>
+    data['com.foobar.models::Project'] = ModelsCollection
+   </pre></div>
+   <p></p>
 <br>
 <hr>
 </div>
@@ -54,7 +70,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#data">data</a> : Dictionary<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#data">data</a> : Dictionary<div class="summaryTableDescription"> model data store </div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
 </tr>
 </table>
@@ -70,42 +86,48 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#CacheController()">CacheController</a>(state:<a href="../utils/ModelsMetadata.html">ModelsMetadata</a>)</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     </div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#create()">create</a>(model:<a href="../models/RubossModel.html">RubossModel</a>):void</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Cache version of the <code>create</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#destroy()">destroy</a>(model:<a href="../models/RubossModel.html">RubossModel</a>):void</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Cache version of the <code>destroy</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#index()">index</a>(models:Object):void</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Cache version of the <code>index</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#show()">show</a>(model:<a href="../models/RubossModel.html">RubossModel</a>):void</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Cache version of the <code>show</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#update()">update</a>(model:<a href="../models/RubossModel.html">RubossModel</a>):void</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Cache version of the <code>update</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
 </tr>
 </table>
@@ -124,8 +146,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var data:Dictionary</code>
-</div>
+<code>public var data:Dictionary</code><p> model data store </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="CacheController()"></a>
@@ -135,10 +156,12 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function CacheController(state:<a href="../utils/ModelsMetadata.html">ModelsMetadata</a>)</code><span class="label">Parameters</span>
+<code>public function CacheController(state:<a href="../utils/ModelsMetadata.html">ModelsMetadata</a>)</code><p>
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">state</span>:<a href="../utils/ModelsMetadata.html">ModelsMetadata</a></code></td>
+<td width="20px"></td><td><code><span class="label">state</span>:<a href="../utils/ModelsMetadata.html">ModelsMetadata</a></code> &mdash; computed model metadata
+     </td>
 </tr>
 </table>
 </div>
@@ -151,10 +174,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function create(model:<a href="../models/RubossModel.html">RubossModel</a>):void</code><span class="label">Parameters</span>
+<code>public function create(model:<a href="../models/RubossModel.html">RubossModel</a>):void</code><p>
+     Cache version of the <code>create</code> call. This dispatches
+      create update event.
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RubossModel.html">RubossModel</a></code></td>
+<td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RubossModel.html">RubossModel</a></code> &mdash; unmarshalled model
+     </td>
 </tr>
 </table>
 </div>
@@ -165,10 +192,15 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function destroy(model:<a href="../models/RubossModel.html">RubossModel</a>):void</code><span class="label">Parameters</span>
+<code>public function destroy(model:<a href="../models/RubossModel.html">RubossModel</a>):void</code><p>
+     Cache version of the <code>destroy</code> call. This dispatches
+      destroy update event and cleans up any other model references.
+      
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RubossModel.html">RubossModel</a></code></td>
+<td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RubossModel.html">RubossModel</a></code> &mdash; unmarshalled model
+     </td>
 </tr>
 </table>
 </div>
@@ -179,10 +211,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function index(models:Object):void</code><span class="label">Parameters</span>
+<code>public function index(models:Object):void</code><p>
+     Cache version of the <code>index</code> call. This dispatches
+      index update event.
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">models</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">models</span>:Object</code> &mdash; unmarshalled models
+     </td>
 </tr>
 </table>
 </div>
@@ -193,10 +229,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function show(model:<a href="../models/RubossModel.html">RubossModel</a>):void</code><span class="label">Parameters</span>
+<code>public function show(model:<a href="../models/RubossModel.html">RubossModel</a>):void</code><p>
+     Cache version of the <code>show</code> call. This dispatches
+      show update event.
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RubossModel.html">RubossModel</a></code></td>
+<td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RubossModel.html">RubossModel</a></code> &mdash; unmarshalled model
+     </td>
 </tr>
 </table>
 </div>
@@ -207,10 +247,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function update(model:<a href="../models/RubossModel.html">RubossModel</a>):void</code><span class="label">Parameters</span>
+<code>public function update(model:<a href="../models/RubossModel.html">RubossModel</a>):void</code><p>
+     Cache version of the <code>update</code> call. This dispatches
+      update update event.
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RubossModel.html">RubossModel</a></code></td>
+<td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RubossModel.html">RubossModel</a></code> &mdash; unmarshalled model
+     </td>
 </tr>
 </table>
 </div>

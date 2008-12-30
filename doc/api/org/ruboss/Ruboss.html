@@ -72,9 +72,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
       collection that was passed as an argument. The other one creates a new collection 
       based on the argument and applies the filter on that. This ensures that your source 
       collection remains the same. By convention <code>Ruboss</code> helper functions that 
-      have side-effects end with <strong>$</strong> sign. For example, <code>Ruboss.filter</code> 
-      has no side-effects whereas <code>Ruboss.filter$</code> does.</li>
-      <li><strong>Ruboss.sort</strong>: Applies sort fields on a given <code>RubossCollection</code>.</li>
+      have side-effects end with <strong>$</strong> sign. For example, 
+      <code>Ruboss.filter</code> has no side-effects whereas <code>Ruboss.filter$</code> 
+      does.</li>
+      <li><strong>Ruboss.sort</strong>: Applies sort fields on a given 
+    <code>RubossCollection</code>.</li>
     </ul>
    
     <p></p>
@@ -194,7 +196,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#enableLogging()">enableLogging</a>(logLevel:LogEventLevel):void</div>
+<a class="signatureLink" href="#enableLogging()">enableLogging</a>(logLevel:int):void</div>
 <div class="summaryTableDescription">[static]
      Enables tracing for internal ruboss framework classes.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
@@ -605,14 +607,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function enableLogging(logLevel:LogEventLevel):void</code><p>
+<code>public static function enableLogging(logLevel:int):void</code><p>
      Enables tracing for internal ruboss framework classes. This is useful for debugging
      purposes. The log can be seen in the console of Flex Builder when you are ebugging     as opposed to running your project.
      
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">logLevel</span>:LogEventLevel</code> &mdash; allows you to control loggin level. By default this is set to
+<td width="20px"></td><td><code><span class="label">logLevel</span>:int</code> &mdash; allows you to control loggin level. By default this is set to
        <code>LogEventLevel.ALL</code>, you can tweak it to show <em>INFO</em> messages
        for example.
      

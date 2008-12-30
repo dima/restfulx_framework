@@ -27,12 +27,31 @@ package org.ruboss.controllers {
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
   
+  /**
+   * In-memory model data store. This class is responsible for storing models
+   *  that make it into memory as a result of various <code>ModelsController</code>
+   *  or other controller actions. It also dispatches relevant <code>CacheUpdateEvent</code>
+   *  events.
+   *  
+   * <p>Models are stored in ModelsCollections keyed on model fully qualified
+   *  class name.</p>
+   *  
+   * @example This looks something like this:
+   *  
+   * <listing version="3.0">
+   *  data['com.foobar.models::Project'] = ModelsCollection
+   * </listing>
+   */
   public class CacheController extends EventDispatcher {
     
+    /** model data store */
     public var data:Dictionary;
     
     private var state:ModelsMetadata;
     
+    /**
+     * @param state computed model metadata
+     */
     public function CacheController(state:ModelsMetadata) {
       this.data = new Dictionary;
       this.state = state;
@@ -43,6 +62,11 @@ package org.ruboss.controllers {
       }
     }
     
+    /**
+     * Cache version of the <code>index</code> call. This dispatches
+     *  index update event.
+     * @param models unmarshalled models
+     */
     public function index(models:Object):void {
       var fqn:String;
       if (models is TypedArray) {
@@ -53,23 +77,44 @@ package org.ruboss.controllers {
       Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.INDEX));            
     }
 
+    /**
+     * Cache version of the <code>show</code> call. This dispatches
+     *  show update event.
+     * @param model unmarshalled model
+     */
     public function show(model:RubossModel):void {
       var fqn:String = getQualifiedClassName(model);
       dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW));            
     }
-    
+
+    /**
+     * Cache version of the <code>create</code> call. This dispatches
+     *  create update event.
+     * @param model unmarshalled model
+     */    
     public function create(model:RubossModel):void {
       var fqn:String = getQualifiedClassName(model);
       Ruboss.errors = new GenericServiceErrors;
       Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.CREATE));
     }
-    
+
+    /**
+     * Cache version of the <code>update</code> call. This dispatches
+     *  update update event.
+     * @param model unmarshalled model
+     */    
     public function update(model:RubossModel):void {
       var fqn:String = getQualifiedClassName(model);
       Ruboss.errors = new GenericServiceErrors;
       Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.UPDATE));            
     }
-    
+
+    /**
+     * Cache version of the <code>destroy</code> call. This dispatches
+     *  destroy update event and cleans up any other model references.
+     *  
+     * @param model unmarshalled model
+     */    
     public function destroy(model:RubossModel):void {
       var fqn:String = getQualifiedClassName(model);
       RubossUtils.cleanupModelReferences(model, fqn);

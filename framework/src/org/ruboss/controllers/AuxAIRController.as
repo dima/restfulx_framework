@@ -17,7 +17,7 @@ package org.ruboss.controllers {
   
   /**
    * Custom AIR controller that allows performing arbitrary operations (as 
-   * opposed to CRUD on models).
+   * opposed to CRUD on models) against local SQLite database.
    */
   public class AuxAIRController {
     public function AuxAIRController() {

@@ -42,7 +42,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-   Provides high level CRUD functionality.
+   Provides high level CRUD functionality. This class is responsible
+    for resolving Model dependencies on <code>index</code> and
+    <code>show</code> invocations and hooking up appropriate
+    <code>ServiceProvider</code> methods with their corresponding
+    <code>CacheController</code> methods.
    <p></p>
 <br>
 <hr>
@@ -130,7 +134,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#indexed()">indexed</a>(... models):Boolean</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Checks to see if specified models have been index
+      
+     </div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
 </tr>
 <tr class="">
@@ -163,14 +170,18 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#showById()">showById</a>(clazz:Class, id:Object, optsOrOnSuccess:Function = null, onFailure:Array = null, nestedBy:Object = null, metadata:Boolean = null, fetchDependencies:Boolean = true, useLazyMode:int = false, targetServiceId:* = -1):<a href="../models/RubossModel.html">RubossModel</a>
 </div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     A different take on <code>show</code> method.</div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#shown()">shown</a>(object:Object, id:* = null):Boolean</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Checks to see if specified model has been shown
+      
+     </div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
 </tr>
 <tr class="">
@@ -264,10 +275,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function create(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</code><p>
-     Perform REST create operation. For example:
+     Perform REST create operation.
       
-       Ruboss.models.create(project);
-     
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -287,34 +296,45 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; callback function invoked if service call fails
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; service provider to use
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
+     </td>
 </tr>
 </table>
 <p>
 <span class="label">See also</span>
 </p>
-<div class="seeAlso">index</div>
+<div class="seeAlso">
+<a href="../controllers/ModelsController.html#index" target="">index</a>
+</div>
+<br>
+<span class="label">Example</span>
+<br>      
+     <div class='listing'><pre>
+       Ruboss.models.create(project); // project is an instance variable of a model class
+     </pre></div>
+      
+     <p></p>
 </div>
 <a name="destroy()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -326,8 +346,6 @@ showHideInherited();
 <code>public function destroy(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</code><p>
      Perform REST destroy operation. For example:
       
-       Ruboss.models.destroy(project);
-     
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -347,34 +365,45 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; callback function invoked if service call fails
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; service provider to use
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
+     </td>
 </tr>
 </table>
 <p>
 <span class="label">See also</span>
 </p>
-<div class="seeAlso">index</div>
+<div class="seeAlso">
+<a href="../controllers/ModelsController.html#index" target="">index</a>
+</div>
+<br>
+<span class="label">Example</span>
+<br>      
+     <div class='listing'><pre>
+       Ruboss.models.destroy(project); // project is an instance variable of a model class
+     </pre></div>
+      
+     <p></p>
 </div>
 <a name="index()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -384,14 +413,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function index(clazz:Class, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1):<a href="../collections/ModelsCollection.html">ModelsCollection</a></code><p>
-     Perform REST index operation. For example:
+     Perform REST index operation. 
       
-       Ruboss.models.index(Project);
-     
-     Note that the following two method calls are equivalent:
-       Ruboss.models.index(Project, myOnSuccess, [company]);
-       Ruboss.models.index(Project, {onSuccess:myOnSuccessFunction, nestedBy:[company]});
-     
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -463,6 +486,27 @@ showHideInherited();
 <td width="20"></td><td><code><a href="../collections/ModelsCollection.html">ModelsCollection</a></code></td>
 </tr>
 </table>
+<br>
+<span class="label">Example</span>
+<br>      
+     <div class='listing'><pre>
+       Ruboss.models.index(Project);
+     </pre></div>
+      
+     <p></p>Note that the following two method calls are equivalent:
+          <div class='listing'><pre>
+       Ruboss.models.index(Project, myOnSuccess, [company]);
+       Ruboss.models.index(Project, {onSuccess:myOnSuccessFunction, nestedBy:[company]});
+     </pre></div>
+      
+     <p>This means that you can specify arguments in order (which means you'll
+      have to provide arguments for all parameters even if you really just want to specify
+      the last one for example) or you can specify them selectively.</p>
+      
+     <p>In order to specify arguments selectively you can use the <code>{}</code> syntax
+      and then refer to the arguments by name.</p>
+      
+     <p></p>
 </div>
 <a name="indexAll()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -490,19 +534,33 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function indexed(... models):Boolean</code><span class="label">Parameters</span>
+<code>public function indexed(... models):Boolean</code><p>
+     Checks to see if specified models have been index
+      
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code>... <span class="label">models</span></code></td>
+<td width="20px"></td><td><code>... <span class="label">models</span></code> &mdash; of models
+      
+      </td>
 </tr>
 </table>
 <p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Boolean</code></td>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if all the models have been indexed, false otherwise
+     </td>
 </tr>
 </table>
+<br>
+<span class="label">Example</span>
+<br>      
+     <div class='listing'><pre>
+      Ruboss.models.index(Project, Task, RandomStuff) // true of false
+     </pre></div>
+      
+      <p></p>
 </div>
 <a name="reload()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -533,49 +591,50 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; callback function invoked if service call fails
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
+<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; page to request (only used by index method)
+<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">append</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; service provider to use
+<td width="20px"></td><td><code><span class="label">append</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; set this to true if you don't want to nuke target ModelsCollection
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
+     </td>
 </tr>
 </table>
 </div>
@@ -615,10 +674,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function show(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1):<a href="../models/RubossModel.html">RubossModel</a></code><p>
-     Perform REST show operation. For example:
+     Perform REST show operation.
       
-       Ruboss.models.show(project);
-     
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -638,42 +695,43 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; callback function which is invoked if there are errors during service call
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
+<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; service provider to use
+<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
+     </td>
 </tr>
 </table>
 <p></p>
@@ -686,7 +744,17 @@ showHideInherited();
 <p>
 <span class="label">See also</span>
 </p>
-<div class="seeAlso">index</div>
+<div class="seeAlso">
+<a href="../controllers/ModelsController.html#index" target="">index</a>
+</div>
+<br>
+<span class="label">Example</span>
+<br>      
+     <div class='listing'><pre>
+       Ruboss.models.show(project); // project is an instance variable of a model class
+     </pre></div>
+      
+     <p></p>
 </div>
 <a name="showById()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -695,7 +763,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function showById(clazz:Class, id:Object, optsOrOnSuccess:Function = null, onFailure:Array = null, nestedBy:Object = null, metadata:Boolean = null, fetchDependencies:Boolean = true, useLazyMode:int = false, targetServiceId:* = -1):<a href="../models/RubossModel.html">RubossModel</a></code><span class="label">Parameters</span>
+<code>public function showById(clazz:Class, id:Object, optsOrOnSuccess:Function = null, onFailure:Array = null, nestedBy:Object = null, metadata:Boolean = null, fetchDependencies:Boolean = true, useLazyMode:int = false, targetServiceId:* = -1):<a href="../models/RubossModel.html">RubossModel</a></code><p>
+     A different take on <code>show</code> method.
+      
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">clazz</span>:Class</code></td>
@@ -756,6 +827,15 @@ showHideInherited();
 <td width="20"></td><td><code><a href="../models/RubossModel.html">RubossModel</a></code></td>
 </tr>
 </table>
+<br>
+<span class="label">Example</span>
+<br>You can perform a show operation using Class and id instead of instance variable
+      
+     <div class='listing'><pre>
+      Ruboss.models.showById(Project, "123123");
+     </pre></div>
+      
+     <p></p>
 </div>
 <a name="shown()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -764,10 +844,15 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function shown(object:Object, id:* = null):Boolean</code><span class="label">Parameters</span>
+<code>public function shown(object:Object, id:* = null):Boolean</code><p>
+     Checks to see if specified model has been shown
+      
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; of models
+      
+      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
@@ -780,9 +865,22 @@ showHideInherited();
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Boolean</code></td>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if all the models have been indexed, false otherwise
+     </td>
 </tr>
 </table>
+<br>
+<span class="label">Example</span>
+<br>      
+     <div class='listing'><pre>
+      Ruboss.models.shown(Project, "123123") // true of false
+      
+      // Or
+      
+      Ruboss.models.shown(project);
+     </pre></div>
+      
+      <p></p>
 </div>
 <a name="update()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">

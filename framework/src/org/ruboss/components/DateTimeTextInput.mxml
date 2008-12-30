@@ -2,8 +2,8 @@
 <!--
  * Copyright 2008, Ruboss Technology Corporation.
  * 
- * @author Dima Berastau
  * @author Peter Armstrong
+ * @author Dima Berastau
  * 
  * This software is dual-licensed under both the terms of the Ruboss Commercial
  * License v1 (RCL v1) as published by Ruboss Technology Corporation and under
@@ -17,24 +17,26 @@
 -->
 <mx:TextInput xmlns:mx="http://www.adobe.com/2006/mxml"
   text="{formatDate(date)}" focusOut="updateDate()">
-<mx:Script><![CDATA[
-  import flash.events.Event;
+  <mx:Script><![CDATA[
+    import flash.events.Event;
   
-  [Bindable]
-  public var formatString:String = "YYYY/MM/DD L:NN:SS A";
+    [Bindable]
+    /** Default format string */
+    public var formatString:String = "YYYY/MM/DD L:NN:SS A";
   
-  [Bindable]
-  public var date:Date;
+    [Bindable]
+    /** The date this component is bound to */
+    public var date:Date;
   
-  private function formatDate(date:Date):String {
-    return (date == null || isNaN(date.fullYear)) ? '' : dateFormatter.format(date);
-  }
+    private function formatDate(date:Date):String {
+      return (date == null || isNaN(date.fullYear)) ? '' : dateFormatter.format(date);
+    }
   
-  private function updateDate():void {
-    var time:Number = Date.parse(text);
-    date = isNaN(time) ? null : new Date(time);
-    text = formatDate(date);//needed in case binding doesn't trigger
-  }
-]]></mx:Script>
+    private function updateDate():void {
+      var time:Number = Date.parse(text);
+      date = isNaN(time) ? null : new Date(time);
+      text = formatDate(date);//needed in case binding doesn't trigger
+    }
+  ]]></mx:Script>
   <mx:DateFormatter id="dateFormatter" formatString="{formatString}"/>
 </mx:TextInput>

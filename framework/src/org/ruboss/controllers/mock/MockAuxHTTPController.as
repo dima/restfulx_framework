@@ -21,13 +21,32 @@ package org.ruboss.controllers.mock {
   import org.ruboss.controllers.AuxHTTPController;
   import org.ruboss.serializers.ISerializer;
 
+  /**
+   * This class allows re-routing of <code>AuxHTTPController</code> <code>send</code>
+   *  method to the specified <code>Ruboss.httpControllerHandler</code> function.
+   *  This is useful for mocking <code>AuxHTTPController</code> calls or doing something
+   *  entirely different with them.
+   */
   public class MockAuxHTTPController extends AuxHTTPController {
+    
+    /**
+     * @param optsOrOnResult can be either an anonymous object of options or a result handler 
+     *  function.
+     * @param onFault function to call on HTTPService error or if unmarshalling fails
+     * @param contentType content type for the request
+     * @param resultFormat what to treat the response as (e.g. e4x, text)
+     * @param serializer what serializer to use (default is XML)
+     * @param rootUrl the URL to prefix to requests
+     */
     public function MockAuxHTTPController(optsOrOnResult:Object = null, 
       onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x",
       serializer:ISerializer = null, rootUrl:String = null) {
       super(optsOrOnResult, onFault, contentType, resultFormat, serializer, rootUrl);
     }
     
+    /**
+     * @inheritDoc
+     */
     public override function send(url:String, data:Object = null, method:int = AuxHTTPController.GET,
       responder:IResponder = null):void {
       

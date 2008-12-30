@@ -17,7 +17,11 @@ package org.ruboss.commands {
   import org.ruboss.events.CommandExecutionEvent;
   
   /**
-   * Must be implemented by commands
+   * As per the command design pattern, commands are expected to implement a
+   *  simple interface with <code>execute()</code> function defined. If
+   *  you've used Cairngorm, et al. before this should sound pretty familiar.
+   *  If not, you can read up on Command pattern in the classic GoF Design
+   *  Patterns book.
    */
   public interface ICommand {
     

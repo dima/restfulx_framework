@@ -15,13 +15,12 @@
  ******************************************************************************/
 package org.ruboss.models {
   import org.ruboss.collections.ModelsCollection;
-  
-  
+
+  [Bindable]  
   /**
    * Allows tree representation (parent->children) relationship between instances
    * of the same model type.
    */
-  [Bindable]
   public class RubossTreeModel extends RubossModel {
     
     [HasMany]
