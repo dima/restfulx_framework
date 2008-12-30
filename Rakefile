@@ -33,7 +33,18 @@ task :test => ["test:build", "test:run"]
 desc "Build API documentation"
 task :doc do
   libs = Dir.glob(File.join(ROOT_DIR, 'framework/lib', '*.swc'))
-  system("#{get_executable('asdoc')} +configname=air -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} -output doc/api")
+  packages = ['-package org.ruboss "Provides central access to a number of frequently used subsystems, configuration options and helpers."']
+  packages << '-package org.ruboss.collections "ArrayCollection extensions that help dealing with RubossModels."'
+  packages << '-package org.ruboss.commands "Command pattern specific classes."'
+  packages << '-package org.ruboss.components "Reusable MXML components that maybe used the Code generation engine."'
+  packages << '-package org.ruboss.controllers "Various framework controllers such as RubossApplicationController and ModelsController."'
+  packages << '-package org.ruboss.events "Events dispatched by the framework."'
+  packages << '-package org.ruboss.models "Classes used by Ruboss models."'
+  packages << '-package org.ruboss.serializers "Serializers provided by the framework, including XML, ValueObject and JSON."'
+  packages << '-package org.ruboss.services "Services provided by the framework including XML-over-HTTP, JSON-over-HTTP, CouchDB and AIR."'
+  packages << '-package org.ruboss.utils "Framework utilties."'
+  packages << '-package org.ruboss.validators "Validation classes for proxying server-side/service provider errors to the UI."'
+  system("#{get_executable('asdoc')} +configname=air -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{packages.join(" ")} -output doc/api")
 end
 
 namespace :test do  
