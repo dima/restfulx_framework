@@ -6,13 +6,13 @@ The Ruboss Framework brings the design principles and productivity of Rails to F
 
 == GETTING STARTED
 
-Refer to 
+For details on how to get started with the Ruboss framework refer to:
 
     http://github.com/dima/ruboss_framework/wikis/home 
   
-for details on how to get started with the Ruboss framework.
 
-Report bugs or track framework development progress
+
+Report bugs or track framework development progress:
 
     http://ruboss.lighthouseapp.com/projects/12668-ruboss-framework/overview
 
