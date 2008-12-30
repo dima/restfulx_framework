@@ -18,6 +18,7 @@ package org.ruboss.services.as3http {
   import com.adobe.serialization.json.JSON;
   
   import flash.utils.ByteArray;
+  import flash.utils.getQualifiedClassName;
   
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
@@ -27,6 +28,7 @@ package org.ruboss.services.as3http {
   import org.httpclient.events.HttpErrorEvent;
   import org.httpclient.events.HttpResponseEvent;
   import org.ruboss.Ruboss;
+  import org.ruboss.collections.ModelsCollection;
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.serializers.ISerializer;
   import org.ruboss.serializers.JSONSerializer;
@@ -36,12 +38,6 @@ package org.ruboss.services.as3http {
 
   /**
    * Direct CouchDB Service Provider.
-   * 
-   * For API details refer to:
-   * 
-   * http://wiki.apache.org/couchdb/HTTP_database_API
-   * http://wiki.apache.org/couchdb/HTTP_Document_API
-   * http://wiki.apache.org/couchdb/HTTP_view_API
    */
   public class DirectCouchDBHTTPServiceProvider implements IServiceProvider {
 
@@ -216,6 +212,11 @@ package org.ruboss.services.as3http {
           var response:Object = JSON.decode(data.readUTFBytes(data.length));
           for each (var prop:String in ['id', 'rev']) {
             object[prop] = response[prop];
+          }
+          var fqn:String = getQualifiedClassName(object);
+          var items:ModelsCollection = Ruboss.models.cache.data[fqn] as ModelsCollection;
+          if (!items.hasItem(object)) {
+            items.addItem(object);
           }
           if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
         }

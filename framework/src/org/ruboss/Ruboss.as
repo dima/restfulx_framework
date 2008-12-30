@@ -160,7 +160,7 @@ package org.ruboss {
      *  
      * @example http://localhost:5984/
      */
-    public static var couchDBRootUrl:String = "";
+    public static var couchDBRootUrl:String = "http://localhost:5984/";
     
     /** 
      * Default database name to use for apps talking to CouchDB directly. Simply set
