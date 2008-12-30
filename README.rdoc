@@ -12,7 +12,11 @@ Refer to
   
 for details on how to get started with the Ruboss framework.
 
-== GET THE SOURCE
+Report bugs or track framework development progress
+
+    http://ruboss.lighthouseapp.com/projects/12668-ruboss-framework/overview
+
+== BUILDING FROM SOURCE
 
     git clone git://github.com/dima/ruboss_framework.git
     cd ruboss_framework
