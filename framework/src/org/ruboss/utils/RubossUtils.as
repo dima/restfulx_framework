@@ -91,6 +91,7 @@ package org.ruboss.utils {
         var clazz:Class = getDefinitionByName(fqn) as Class;
         var cloned:Object = new clazz;
         cloned["id"] = object["id"];
+        cloned["rev"] = object["rev"];
         for each (var node:XML in describeType(object)..accessor) {
           if (!isInvalidPropertyName(node.@name) && !RubossUtils.isIgnored(node)) {
             try {
