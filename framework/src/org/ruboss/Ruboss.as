@@ -35,99 +35,244 @@ package org.ruboss {
   
   [Bindable]
   /**
-   * Provides central access to most commonly used framework features.
+   * Provides central access to a number of frequently used subsystems, configuration 
+   * options and helpers.
    *  
+   * <p>Commonly used and most important subsystems to be aware of are:</p>
+   * <ul>
+   *  <li><strong>Ruboss.models</strong>: Perform CRUD operations on 
+   *  <code>RubossModel</code> instances, access model metadata, in-memory 
+   *  cache and so on.</li>
+   *  <li><strong>Ruboss.services</strong>: <code>IServiceProvider</code> 
+   *  implementations are registered with the <code>ServicesController</code> 
+   *  and can be accessed via :
+   *  <code>Ruboss.services.getServiceProvider(<em>YourServiceProvider</em>.ID)</code>
+   *  </li>
+   *  <li><strong>Ruboss.commands</strong>: If you like to follow the <code>Command</code>
+   *  pattern <code>Ruboss.commands.execute()</code> is a quick and easy way to 
+   *  execute a command from anywhere in your code.</li>
+   *  <li><strong>Ruboss.serializers</strong>: Ruboss framework comes with a number of
+   *  serializers to help you convert your <code>RubossModel</code> instances into 
+   *  XML, JSON or Value Objects and visa-versa. In order to keep your application SWF 
+   *  file small not all of them are linked in. The two most frequently used serializers 
+   *  (namely XML and Value Object) are linked in though and are accessible via:
+   *  <code>Ruboss.serializers.xml</code> and <code>Ruboss.serializers.vo</code>
+   *  respectively.</li>
+   *  </ul>
+   *  
+   *  <p>A number of static helper functions also live in this namespace including:</p>
+   *  <ul>
+   *    <li><strong>Ruboss.filter</strong>: Allows you to apply a filter function on a 
+   *    given <code>RubossCollection</code>. There are two versions of this function. 
+   *    One has side-effects in that it actually applies the filter directly on the 
+   *    collection that was passed as an argument. The other one creates a new collection 
+   *    based on the argument and applies the filter on that. This ensures that your source 
+   *    collection remains the same. By convention <code>Ruboss</code> helper functions that 
+   *    have side-effects end with <strong>$</strong> sign. For example, <code>Ruboss.filter</code> 
+   *    has no side-effects whereas <code>Ruboss.filter$</code> does.</li>
+   *    <li><strong>Ruboss.sort</strong>: Applies sort fields on a given <code>RubossCollection</code>.</li>
+   *  </ul>
    * 
+   *  @see org.ruboss.controllers.ModelsController 
+   *  @see org.ruboss.controllers.ServicesController
+   *  @see org.ruboss.controllers.CommandsController
+   *  @see org.ruboss.controllers.SerializersController
    */
   public class Ruboss {
-    /** framework logger */
+    
+    /** 
+     * Framework logger. In order to see any framework-level logging at all
+     * you should call <code>Ruboss.enableLogging()</code> anywhere in your
+     * code. This is typically done at application initialization.
+     *  
+     * <p>You can control log level by passing appropriate argument to
+     * <code>Ruboss.enableLogging()</code>, such as <code>LogEventLevel.INFO</code>
+     *  
+     * @see #enableLogging
+     */
     public static var log:ILogger = Log.getLogger("org.ruboss");
 
     /** centralized access to RESTful CRUD operations on models */
     public static var models:ModelsController;
     
-    /** auxiliary (non-CRUD) commands controller */
+    /** auxiliary (typically non-CRUD) commands controller */
     public static var commands:CommandsController;
     
-    /** exposes available service providers */
+    /** exposes currently registered service providers */
     public static var services:ServicesController;
     
-    /** exposes available serializers */
+    /** exposes commonly used serializers (XML and VO) */
     public static var serializers:SerializersController;
     
-    /** exposes errors reported by a given service provider */
+    /** 
+     * Exposes errors reported by a service provider. This typically happens
+     * as a result of <code>Ruboss.models.create</code> or <code>Ruboss.models.update</code>
+     * call and gives the back-end service (such as RubyOnRails or Merb) to validate 
+     * incoming data and report any errors back to Flex/AIR client.
+     *  
+     * @example Here's an example of how to use <code>Ruboss.errors</code> in your application.
+     * Let's say you have an MXML component that provides a sign-up form:
+     *  
+     * <listing version="3.0">
+     * &lt;mx:Canvas xmlns:mx=&quot;http://www.adobe.com/2006/mxml&quot; height=&quot;400&quot; width=&quot;300&quot; 
+     *   xmlns:validators=&quot;org.ruboss.validators.*&quot;&gt;
+     *   &lt;!-- Proxies for Rails Validators --&gt;
+     *   &lt;validators:ServiceErrorValidator id=&quot;signUpLoginNameValidator&quot; field=&quot;login&quot; listener=&quot;{signUpUsername}&quot; 
+     *      serviceErrors=&quot;{Ruboss.errors}&quot;/&gt;
+     *   &lt;validators:ServiceErrorValidator id=&quot;signUpPasswordValidator&quot; field=&quot;password&quot; listener=&quot;{signUpPassword}&quot; 
+     *      serviceErrors=&quot;{Ruboss.errors}&quot;/&gt;
+     *   &lt;mx:Form&gt;
+     *     &lt;mx:FormItem label=&quot;Username&quot; required=&quot;true&quot;&gt;
+     *        &lt;mx:TextInput id=&quot;signUpUsername&quot; width=&quot;190&quot;/&gt;
+     *     &lt;/mx:FormItem&gt;
+     *     &lt;mx:FormItem label=&quot;Email&quot; required=&quot;true&quot;&gt;
+     *        &lt;mx:TextInput id=&quot;signUpEmail&quot; width=&quot;190&quot;/&gt;
+     *       &lt;/mx:FormItem&gt;
+     *     &lt;mx:FormItem label=&quot;Password&quot; required=&quot;true&quot;&gt;
+     *        &lt;mx:TextInput id=&quot;signUpPassword&quot; width=&quot;190&quot; displayAsPassword=&quot;true&quot;/&gt;
+     *      &lt;/mx:FormItem&gt;
+     *   &lt;/mx:Form&gt;
+     * &lt;/mx:Canvas&gt;
+     * </listing>
+     *  
+     * @example When you perform an actual CRUD action on the object that binds to this 
+     *  form, all errors that have been reported by the service provider will be 
+     *  automatically displayed on the appropriate form fields:
+     *  
+     * <listing version="3.0">
+     * private function signUp():void {
+     *   var account:Account = new Account;
+     *   account.login = signUpUsername.text;
+     *   account.password = signUpPassword.text;
+     *   account.create();
+     * }
+     * </listing>
+     */
     public static var errors:IServiceErrors;
     
     /** default root URL for HTTP requests, gets prefixed to CRUD and AUX HTTP operations */
     public static var httpRootUrl:String = "/";
     
-    /** root URL for CouchDB requests */
+    /** 
+     * Root URL for CouchDB requests. 
+     *  
+     * @example http://localhost:5984/
+     */
     public static var couchDBRootUrl:String = "";
     
-    /** default service provider to use */
+    /** 
+     * Default database name to use for apps talking to CouchDB directly. Simply set
+     * <code>Ruboss.couchDbdatabaseName</code> anywhere in your code to override. This is
+     * usually done at application initialization. 
+     *  
+     * @example Remember to post-fix your database name with a forward slash
+     *  
+     * <listing version="3.0">
+     * Ruboss.couchDbDatabaseName = "foobar/";
+     * </listing>
+     */
+    public static var couchDbDatabaseName:String = "rubossdb/";
+
+    /** 
+     * Default database name to use for AIR applications. Simply set
+     * <code>Ruboss.airDatabaseName</code> anywhere in your code to override. This is
+     * usually done at application initialization.
+     *  
+     * @example Unlike CouchDB names, database names for AIR usually don't have any postfixes
+     *  
+     * <listing version="3.0">
+     * Ruboss.airDatabaseName = "myairdb";
+     * </listing>
+     */
+    public static var airDatabaseName:String = "rubossdb";
+    
+    /** default service provider to use. <code>XMLHTTPServiceProvider.ID</code> is default. */
     public static var defaultServiceId:int = XMLHTTPServiceProvider.ID;
     
     /** default http controller implementation to use */
     public static var httpController:Class = AuxHTTPController;
             
     /** 
-     * <p>If http controller handler function is set, it allows you to override 
-     * behaviour of the send() function in the controller.</p>
+     * If http controller handler function is set, it allows you to override 
+     * behaviour of the <code>send()</code> function in <code>httpController</code>.
      * 
-     * <p>The signature for the function is:</p>
+     * @example Here's one approach:
      *  
-     * <code>(controller:SimpleHTTPController, url:String, data:Object = null, 
-     *  method:int = SimpleHTTPController.GET)</code>
+     * <listing version="3.0">
+     *  public override function send(url:String, data:Object = null, method:int = AuxHTTPController.GET,
+     *    responder:IResponder = null):void {
+     *
+     *     var response:Object = null;
+     *     if (Ruboss.httpControllerHandler != null) {
+     *       response = Ruboss.httpControllerHandler(this, url, data, method);
+     *     }  
+     *
+     *     responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));   
+     *  }
+     * </listing>
      */
     public static var httpControllerHandler:Function;
     
     /** 
-     * metadata allows us to tag arbitrary data along with any provider requests
+     * Metadata allows us to tag arbitrary data along with any provider requests
      * this is typically useful with HTTP provider (but may be useful with other providers too).
-     * default metadata specifies metadata that always gets sent along 
+     *  
+     * <p>Default metadata specifies metadata that always gets sent along. You can always provide
+     * metadata on a per-<code>ModelsController</code> CRUD method basis.
+     *  
+     * @example Default metadata is typically an anonymous object
+     *  
+     * <listing version="3.0">
+     *  Ruboss.defaultMetadata = {foo: 'bar', bar: 'foo'};
+     * </listing>
      */
     public static var defaultMetadata:Object;
-    
-    /** default database name to use for AIR applications (if nothing else is provided) */
-    public static var airDatabaseName:String = "rubossdb";
-    
-    /** default database name to use for apps talking to CouchDB directly (if nothing else is provided) */
-    public static var couchDbDatabaseName:String = "rubossdb/";
-    
-    /** stores current session id for use by URLRequest */
+
+    /** 
+     * Stores current session id for use by URLRequest. If your application requires authentication,
+     * it is recommended that you return a session token from the server as a result of login. This
+     * session token will be re-used for subsequent calls until the user logs out. This is particularly
+     * important for file uploads.
+     */
     public static var sessionToken:String;
     
     /** default error namespace used by service providers */
     public static const DEFAULT_ERROR_FIELD:String = ":base";
     
     /**
-     * <p>Handy shortcut for non-CRUD HTTP operations. This can be used to send any object to any URL
-     * by doing something like this:</p>
+     * Handy shortcut for non-CRUD HTTP operations. 
+     *  
+     * @example It can be used to send any object to any URL by doing something like this:
      * 
-     * <code>Ruboss.http(function(result:Object):void { trace(result); }).invoke("some/url/here");</code>
+     * <listing version="3.0">
+     *  Ruboss.http(function(result:Object):void { trace(result); }).invoke("some/url/here");
+     * </listing>
      * 
      * <p>This will send a GET request with no arguments to "some/url/here" and call anonymous
      * function provided when the result comes back.</p>
      *  
-     * <p>or</p>
+     * @example Or
      *  
-     * <p>
-     * <code>
+     * <listing version="3.0">
      * Ruboss.http({
      *  resultHandler: someFunctionToHandleResult,
      *  faultHandler: someFunctionToHandleFault,
      *  contentType: "application/xml"
      * }).invoke({data: bla, method: "POST", unmarshall: true});
-     * </code>
-     * </p>
+     * </listing>
+     *  
      * @param optsOrResultHandler can be either an anonymous object of options or a result handler 
      *  function. Many functions in the framework can be called with named params specified
      *  in an object or explicitly in the order required by the function. See the example above.
      * @param faultHandler function to call on HTTPService error
      * @param contentType content type for the request
+     * @param resultFormat how to treat the response from the server (e4x is the default)
+     * @param serializer ISerializer implementation to use when unmarshalling responses. Use
+     *  this in conjunction with resultFormat. Default is XMLSerializer.
      * @param rootUrl the URL to prefix to requests
      *  
-     * @return SimpleHTTPController instance
+     * @see org.ruboss.controllers.AuxHTTPController
+     * @return AuxHTTPController instance
      */
     public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, 
       contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x",
@@ -265,7 +410,8 @@ package org.ruboss {
     
     /**
      * Same as above but checks object properties instead.
-     * @see preventNull
+     *  
+     * @see #preventNull
      */
     public static function preventNullProperty(obj:Object, property:String, defaultObj:Object):Object {
       return (obj == null || obj[property] == null) ? defaultObj : obj[property];
@@ -275,8 +421,14 @@ package org.ruboss {
      * Enables tracing for internal ruboss framework classes. This is useful for debugging
      * purposes. The log can be seen in the console of Flex Builder when you are *debugging*
      * as opposed to running your project.
+     * 
+     * @param logLevel allows you to control loggin level. By default this is set to
+     *   <code>LogEventLevel.ALL</code>, you can tweak it to show <em>INFO</em> messages
+     *   for example.
+     * 
+     * @see mx.logging.LogEventLevel
      */
-    public static function enableLogging():void {
+    public static function enableLogging(logLevel:LogEventLevel = LogEventLevel.ALL):void {
       var target:TraceTarget = new TraceTarget();
       target.filters = ["org.ruboss.*"];
       target.level = LogEventLevel.ALL;
@@ -298,9 +450,6 @@ package org.ruboss {
       sessionToken = null;
     }
     
-    /**
-     * No constructor
-     */
     public function Ruboss(enforcer:PrivateEnforcer) {}
   }
 }

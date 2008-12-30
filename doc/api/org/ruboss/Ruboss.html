@@ -39,10 +39,57 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-   Provides central access to most commonly used framework features.
+   Provides central access to a number of frequently used subsystems, configuration 
+   options and helpers.
     
+   <p>Commonly used and most important subsystems to be aware of are:</p>
+   <ul>
+    <li><strong>Ruboss.models</strong>: Perform CRUD operations on 
+    <code>RubossModel</code> instances, access model metadata, in-memory 
+    cache and so on.</li>
+    <li><strong>Ruboss.services</strong>: <code>IServiceProvider</code> 
+    implementations are registered with the <code>ServicesController</code> 
+    and can be accessed via :
+    <code>Ruboss.services.getServiceProvider(<em>YourServiceProvider</em>.ID)</code>
+    </li>
+    <li><strong>Ruboss.commands</strong>: If you like to follow the <code>Command</code>
+    pattern <code>Ruboss.commands.execute()</code> is a quick and easy way to 
+    execute a command from anywhere in your code.</li>
+    <li><strong>Ruboss.serializers</strong>: Ruboss framework comes with a number of
+    serializers to help you convert your <code>RubossModel</code> instances into 
+    XML, JSON or Value Objects and visa-versa. In order to keep your application SWF 
+    file small not all of them are linked in. The two most frequently used serializers 
+    (namely XML and Value Object) are linked in though and are accessible via:
+    <code>Ruboss.serializers.xml</code> and <code>Ruboss.serializers.vo</code>
+    respectively.</li>
+    </ul>
+    
+    <p>A number of static helper functions also live in this namespace including:</p>
+    <ul>
+      <li><strong>Ruboss.filter</strong>: Allows you to apply a filter function on a 
+      given <code>RubossCollection</code>. There are two versions of this function. 
+      One has side-effects in that it actually applies the filter directly on the 
+      collection that was passed as an argument. The other one creates a new collection 
+      based on the argument and applies the filter on that. This ensures that your source 
+      collection remains the same. By convention <code>Ruboss</code> helper functions that 
+      have side-effects end with <strong>$</strong> sign. For example, <code>Ruboss.filter</code> 
+      has no side-effects whereas <code>Ruboss.filter$</code> does.</li>
+      <li><strong>Ruboss.sort</strong>: Applies sort fields on a given <code>RubossCollection</code>.</li>
+    </ul>
    
-   <p></p>
+    <p></p>
+<p>
+<span class="classHeaderTableLabel">See also</span>
+</p>
+<div class="seeAlso">
+<a href="controllers/ModelsController.html" target="">org.ruboss.controllers.ModelsController</a>
+<br>
+<a href="controllers/ServicesController.html" target="">org.ruboss.controllers.ServicesController</a>
+<br>
+<a href="controllers/CommandsController.html" target="">org.ruboss.controllers.CommandsController</a>
+<br>
+<a href="controllers/SerializersController.html" target="">org.ruboss.controllers.SerializersController</a>
+</div>
 <br>
 <hr>
 </div>
@@ -54,35 +101,39 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#airDatabaseName">airDatabaseName</a> : String = "rubossdb"<div class="summaryTableDescription">[static] default database name to use for AIR applications (if nothing else is provided) </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#airDatabaseName">airDatabaseName</a> : String = "rubossdb"<div class="summaryTableDescription">[static] 
+     Default database name to use for AIR applications.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#commands">commands</a> : <a href="controllers/CommandsController.html">CommandsController</a>
-<div class="summaryTableDescription">[static] auxiliary (non-CRUD) commands controller </div>
+<div class="summaryTableDescription">[static] auxiliary (typically non-CRUD) commands controller </div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#couchDbDatabaseName">couchDbDatabaseName</a> : String = "rubossdb/"<div class="summaryTableDescription">[static] default database name to use for apps talking to CouchDB directly (if nothing else is provided) </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#couchDbDatabaseName">couchDbDatabaseName</a> : String = "rubossdb/"<div class="summaryTableDescription">[static] 
+     Default database name to use for apps talking to CouchDB directly.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#couchDBRootUrl">couchDBRootUrl</a> : String = ""<div class="summaryTableDescription">[static] root URL for CouchDB requests </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#couchDBRootUrl">couchDBRootUrl</a> : String = ""<div class="summaryTableDescription">[static] 
+     Root URL for CouchDB requests.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#defaultMetadata">defaultMetadata</a> : Object<div class="summaryTableDescription">[static] 
-     metadata allows us to tag arbitrary data along with any provider requests
+     Metadata allows us to tag arbitrary data along with any provider requests
      this is typically useful with HTTP provider (but may be useful with other providers too).</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#defaultServiceId">defaultServiceId</a> : int<div class="summaryTableDescription">[static] default service provider to use </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#defaultServiceId">defaultServiceId</a> : int<div class="summaryTableDescription">[static] default service provider to use.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#errors">errors</a> : <a href="services/IServiceErrors.html">IServiceErrors</a>
-<div class="summaryTableDescription">[static] exposes errors reported by a given service provider </div>
+<div class="summaryTableDescription">[static] 
+     Exposes errors reported by a service provider.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
@@ -91,14 +142,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#httpControllerHandler">httpControllerHandler</a> : Function<div class="summaryTableDescription">[static] 
-     <p>If http controller handler function is set, it allows you to override 
-     behaviour of the send() function in the controller.</p>
-     
-     <p>The signature for the function is:</p>
-      
-     <code>(controller:SimpleHTTPController, url:String, data:Object = null, 
-      method:int = SimpleHTTPController.GET)</code>
-     </div>
+     If http controller handler function is set, it allows you to override 
+     behaviour of the <code>send()</code> function in <code>httpController</code>.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
@@ -106,7 +151,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#log">log</a> : ILogger<div class="summaryTableDescription">[static] framework logger </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#log">log</a> : ILogger<div class="summaryTableDescription">[static] 
+     Framework logger.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
@@ -116,16 +162,17 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#serializers">serializers</a> : <a href="controllers/SerializersController.html">SerializersController</a>
-<div class="summaryTableDescription">[static] exposes available serializers </div>
+<div class="summaryTableDescription">[static] exposes commonly used serializers (XML and VO) </div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#services">services</a> : <a href="controllers/ServicesController.html">ServicesController</a>
-<div class="summaryTableDescription">[static] exposes available service providers </div>
+<div class="summaryTableDescription">[static] exposes currently registered service providers </div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#sessionToken">sessionToken</a> : String<div class="summaryTableDescription">[static] stores current session id for use by URLRequest </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#sessionToken">sessionToken</a> : String<div class="summaryTableDescription">[static] 
+     Stores current session id for use by URLRequest.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 </table>
@@ -141,15 +188,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#Ruboss()">Ruboss</a>(enforcer:PrivateEnforcer)</div>
-<div class="summaryTableDescription">
-     No constructor
-     </div>
+<div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#enableLogging()">enableLogging</a>():void</div>
+<a class="signatureLink" href="#enableLogging()">enableLogging</a>(logLevel:LogEventLevel):void</div>
 <div class="summaryTableDescription">[static]
      Enables tracing for internal ruboss framework classes.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
@@ -200,7 +245,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="#http()">http</a>(optsOrResultHandler:Object = null, faultHandler:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", serializer:<a href="serializers/ISerializer.html">ISerializer</a> = null, rootUrl:String = null):<a href="controllers/AuxHTTPController.html">AuxHTTPController</a>
 </div>
 <div class="summaryTableDescription">[static]
-     <p>Handy shortcut for non-CRUD HTTP operations.</div>
+     Handy shortcut for non-CRUD HTTP operations.</div>
 </td><td class="summaryTableOwnerCol">Ruboss</td>
 </tr>
 <tr class="">
@@ -290,7 +335,20 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var airDatabaseName:String = "rubossdb"</code><p> default database name to use for AIR applications (if nothing else is provided) </p></div>
+<code>public static var airDatabaseName:String = "rubossdb"</code><p> 
+     Default database name to use for AIR applications. Simply set
+     <code>Ruboss.airDatabaseName</code> anywhere in your code to override. This is
+     usually done at application initialization.
+      
+     </p><br>
+<span class="label">Example</span>
+<br>Unlike CouchDB names, database names for AIR usually don't have any postfixes
+      
+     <div class='listing'><pre>
+     Ruboss.airDatabaseName = "myairdb";
+     </pre></div>
+     <p></p>
+</div>
 <a name="commands"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -298,7 +356,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var commands:<a href="controllers/CommandsController.html">CommandsController</a></code><p> auxiliary (non-CRUD) commands controller </p></div>
+<code>public static var commands:<a href="controllers/CommandsController.html">CommandsController</a></code><p> auxiliary (typically non-CRUD) commands controller </p></div>
 <a name="couchDbDatabaseName"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -306,7 +364,20 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var couchDbDatabaseName:String = "rubossdb/"</code><p> default database name to use for apps talking to CouchDB directly (if nothing else is provided) </p></div>
+<code>public static var couchDbDatabaseName:String = "rubossdb/"</code><p> 
+     Default database name to use for apps talking to CouchDB directly. Simply set
+     <code>Ruboss.couchDbdatabaseName</code> anywhere in your code to override. This is
+     usually done at application initialization. 
+      
+     </p><br>
+<span class="label">Example</span>
+<br>Remember to post-fix your database name with a forward slash
+      
+     <div class='listing'><pre>
+     Ruboss.couchDbDatabaseName = "foobar/";
+     </pre></div>
+     <p></p>
+</div>
 <a name="couchDBRootUrl"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -314,7 +385,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var couchDBRootUrl:String = ""</code><p> root URL for CouchDB requests </p></div>
+<code>public static var couchDBRootUrl:String = ""</code><p> 
+     Root URL for CouchDB requests. 
+      
+     </p><br>
+<span class="label">Example</span>
+<br>http://localhost:5984/
+     <p></p>
+</div>
 <a name="defaultMetadata"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -323,10 +401,21 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static var defaultMetadata:Object</code><p> 
-     metadata allows us to tag arbitrary data along with any provider requests
+     Metadata allows us to tag arbitrary data along with any provider requests
      this is typically useful with HTTP provider (but may be useful with other providers too).
-     default metadata specifies metadata that always gets sent along 
-     </p></div>
+      
+     </p><p>Default metadata specifies metadata that always gets sent along. You can always provide
+     metadata on a per-<code>ModelsController</code> CRUD method basis.
+      
+     <br>
+<span class="label">Example</span>
+<br>Default metadata is typically an anonymous object
+      
+     <div class='listing'><pre>
+      Ruboss.defaultMetadata = {foo: 'bar', bar: 'foo'};
+     </pre></div>
+     <p></p>
+</div>
 <a name="defaultServiceId"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -334,7 +423,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var defaultServiceId:int</code><p> default service provider to use </p></div>
+<code>public static var defaultServiceId:int</code><p> default service provider to use. <code>XMLHTTPServiceProvider.ID</code> is default. </p></div>
 <a name="errors"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -342,7 +431,53 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var errors:<a href="services/IServiceErrors.html">IServiceErrors</a></code><p> exposes errors reported by a given service provider </p></div>
+<code>public static var errors:<a href="services/IServiceErrors.html">IServiceErrors</a></code><p> 
+     Exposes errors reported by a service provider. This typically happens
+     as a result of <code>Ruboss.models.create</code> or <code>Ruboss.models.update</code>
+     call and gives the back-end service (such as RubyOnRails or Merb) to validate 
+     incoming data and report any errors back to Flex/AIR client.
+      
+     </p><br>
+<span class="label">Example</span>
+<br>Here's an example of how to use <code>Ruboss.errors</code> in your application.
+     Let's say you have an MXML component that provides a sign-up form:
+      
+     <div class='listing'><pre>
+     &lt;mx:Canvas xmlns:mx=&quot;http://www.adobe.com/2006/mxml&quot; height=&quot;400&quot; width=&quot;300&quot; 
+       xmlns:validators=&quot;org.ruboss.validators.quot;&gt;
+       &lt;!-- Proxies for Rails Validators --&gt;
+       &lt;validators:ServiceErrorValidator id=&quot;signUpLoginNameValidator&quot; field=&quot;login&quot; listener=&quot;{signUpUsername}&quot; 
+          serviceErrors=&quot;{Ruboss.errors}&quot;/&gt;
+       &lt;validators:ServiceErrorValidator id=&quot;signUpPasswordValidator&quot; field=&quot;password&quot; listener=&quot;{signUpPassword}&quot; 
+          serviceErrors=&quot;{Ruboss.errors}&quot;/&gt;
+       &lt;mx:Form&gt;
+         &lt;mx:FormItem label=&quot;Username&quot; required=&quot;true&quot;&gt;
+            &lt;mx:TextInput id=&quot;signUpUsername&quot; width=&quot;190&quot;/&gt;
+         &lt;/mx:FormItem&gt;
+         &lt;mx:FormItem label=&quot;Email&quot; required=&quot;true&quot;&gt;
+            &lt;mx:TextInput id=&quot;signUpEmail&quot; width=&quot;190&quot;/&gt;
+           &lt;/mx:FormItem&gt;
+         &lt;mx:FormItem label=&quot;Password&quot; required=&quot;true&quot;&gt;
+            &lt;mx:TextInput id=&quot;signUpPassword&quot; width=&quot;190&quot; displayAsPassword=&quot;true&quot;/&gt;
+          &lt;/mx:FormItem&gt;
+       &lt;/mx:Form&gt;
+     &lt;/mx:Canvas&gt;
+     </pre></div>
+      
+     <p></p>When you perform an actual CRUD action on the object that binds to this 
+      form, all errors that have been reported by the service provider will be 
+      automatically displayed on the appropriate form fields:
+      
+     <div class='listing'><pre>
+     private function signUp():void {
+       var account:Account = new Account;
+       account.login = signUpUsername.text;
+       account.password = signUpPassword.text;
+       account.create();
+     }
+     </pre></div>
+     <p></p>
+</div>
 <a name="httpController"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -359,14 +494,25 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static var httpControllerHandler:Function</code><p> 
-     </p><p>If http controller handler function is set, it allows you to override 
-     behaviour of the send() function in the controller.</p>
+     If http controller handler function is set, it allows you to override 
+     behaviour of the <code>send()</code> function in <code>httpController</code>.
      
-     <p>The signature for the function is:</p>
+     </p><br>
+<span class="label">Example</span>
+<br>Here's one approach:
       
-     <code>(controller:SimpleHTTPController, url:String, data:Object = null, 
-      method:int = SimpleHTTPController.GET)</code>
-     </div>
+     <div class='listing'><pre>
+      public override function send(url:String, data:Object = null, method:int = AuxHTTPController.GET,
+        responder:IResponder = null):void {
+              var response:Object = null;
+         if (Ruboss.httpControllerHandler != null) {
+           response = Ruboss.httpControllerHandler(this, url, data, method);
+         }  
+              responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));   
+      }
+     </pre></div>
+     <p></p>
+</div>
 <a name="httpRootUrl"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -382,7 +528,21 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var log:ILogger</code><p> framework logger </p></div>
+<code>public static var log:ILogger</code><p> 
+     Framework logger. In order to see any framework-level logging at all
+     you should call <code>Ruboss.enableLogging()</code> anywhere in your
+     code. This is typically done at application initialization.
+      
+     </p><p>You can control log level by passing appropriate argument to
+     <code>Ruboss.enableLogging()</code>, such as <code>LogEventLevel.INFO</code>
+      
+     <p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../ruboss/Ruboss.html#enableLogging" target="">enableLogging</a>
+</div>
+</div>
 <a name="models"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -398,7 +558,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var serializers:<a href="controllers/SerializersController.html">SerializersController</a></code><p> exposes available serializers </p></div>
+<code>public static var serializers:<a href="controllers/SerializersController.html">SerializersController</a></code><p> exposes commonly used serializers (XML and VO) </p></div>
 <a name="services"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -406,7 +566,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var services:<a href="controllers/ServicesController.html">ServicesController</a></code><p> exposes available service providers </p></div>
+<code>public static var services:<a href="controllers/ServicesController.html">ServicesController</a></code><p> exposes currently registered service providers </p></div>
 <a name="sessionToken"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -414,7 +574,12 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var sessionToken:String</code><p> stores current session id for use by URLRequest </p></div>
+<code>public static var sessionToken:String</code><p> 
+     Stores current session id for use by URLRequest. If your application requires authentication,
+     it is recommended that you return a session token from the server as a result of login. This
+     session token will be re-used for subsequent calls until the user logs out. This is particularly
+     important for file uploads.
+     </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="Ruboss()"></a>
@@ -424,9 +589,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function Ruboss(enforcer:PrivateEnforcer)</code><p>
-     No constructor
-     </p><span class="label">Parameters</span>
+<code>public function Ruboss(enforcer:PrivateEnforcer)</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">enforcer</span>:PrivateEnforcer</code></td>
@@ -442,10 +605,25 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function enableLogging():void</code><p>
+<code>public static function enableLogging(logLevel:LogEventLevel):void</code><p>
      Enables tracing for internal ruboss framework classes. This is useful for debugging
      purposes. The log can be seen in the console of Flex Builder when you are ebugging     as opposed to running your project.
-     </p></div>
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">logLevel</span>:LogEventLevel</code> &mdash; allows you to control loggin level. By default this is set to
+       <code>LogEventLevel.ALL</code>, you can tweak it to show <em>INFO</em> messages
+       for example.
+     
+     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">mx.logging.LogEventLevel</div>
+</div>
 <a name="filter()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -606,26 +784,9 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", serializer:<a href="serializers/ISerializer.html">ISerializer</a> = null, rootUrl:String = null):<a href="controllers/AuxHTTPController.html">AuxHTTPController</a></code><p>
-     </p><p>Handy shortcut for non-CRUD HTTP operations. This can be used to send any object to any URL
-     by doing something like this:</p>
-     
-     <code>Ruboss.http(function(result:Object):void { trace(result); }).invoke("some/url/here");</code>
-     
-     <p>This will send a GET request with no arguments to "some/url/here" and call anonymous
-     function provided when the result comes back.</p>
+     Handy shortcut for non-CRUD HTTP operations. 
       
-     <p>or</p>
-      
-     <p>
-     <code>
-     Ruboss.http({
-      resultHandler: someFunctionToHandleResult,
-      faultHandler: someFunctionToHandleFault,
-      contentType: "application/xml"
-     }).invoke({data: bla, method: "POST", unmarshall: true});
-     </code>
-     </p>
-     <span class="label">Parameters</span>
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">optsOrResultHandler</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; can be either an anonymous object of options or a result handler 
@@ -651,21 +812,24 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">resultFormat</span>:String</code> (default = "<code>e4x</code>")<code></code> &mdash; the URL to prefix to requests
-      
+<td width="20px"></td><td><code><span class="label">resultFormat</span>:String</code> (default = "<code>e4x</code>")<code></code> &mdash; how to treat the response from the server (e4x is the default)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">serializer</span>:<a href="serializers/ISerializer.html">ISerializer</a></code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">serializer</span>:<a href="serializers/ISerializer.html">ISerializer</a></code> (default = <code>null</code>)<code></code> &mdash; ISerializer implementation to use when unmarshalling responses. Use
+      this in conjunction with resultFormat. Default is XMLSerializer.
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">rootUrl</span>:String</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">rootUrl</span>:String</code> (default = <code>null</code>)<code></code> &mdash; the URL to prefix to requests
+      
+     </td>
 </tr>
 </table>
 <p></p>
@@ -673,12 +837,40 @@ showHideInherited();
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20"></td><td><code><a href="controllers/AuxHTTPController.html">AuxHTTPController</a></code> &mdash; 
-                        SimpleHTTPController instance
+                        AuxHTTPController instance
      
                         
                      </td>
 </tr>
 </table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="controllers/AuxHTTPController.html" target="">org.ruboss.controllers.AuxHTTPController</a>
+</div>
+<br>
+<span class="label">Example</span>
+<br>It can be used to send any object to any URL by doing something like this:
+     
+     <div class='listing'><pre>
+      Ruboss.http(function(result:Object):void { trace(result); }).invoke("some/url/here");
+     </pre></div>
+     
+     <p>This will send a GET request with no arguments to "some/url/here" and call anonymous
+     function provided when the result comes back.</p>
+      
+     <p></p>Or
+      
+     <div class='listing'><pre>
+     Ruboss.http({
+      resultHandler: someFunctionToHandleResult,
+      faultHandler: someFunctionToHandleFault,
+      contentType: "application/xml"
+     }).invoke({data: bla, method: "POST", unmarshall: true});
+     </pre></div>
+      
+     <p></p>
 </div>
 <a name="merge()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -767,6 +959,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public static function preventNullProperty(obj:Object, property:String, defaultObj:Object):Object</code><p>
      Same as above but checks object properties instead.
+      
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -795,7 +988,9 @@ showHideInherited();
 <p>
 <span class="label">See also</span>
 </p>
-<div class="seeAlso">preventNull</div>
+<div class="seeAlso">
+<a href="../ruboss/Ruboss.html#preventNull" target="">preventNull</a>
+</div>
 </div>
 <a name="reset()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
