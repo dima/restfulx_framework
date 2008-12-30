@@ -68,9 +68,11 @@ package org.ruboss {
    *    collection that was passed as an argument. The other one creates a new collection 
    *    based on the argument and applies the filter on that. This ensures that your source 
    *    collection remains the same. By convention <code>Ruboss</code> helper functions that 
-   *    have side-effects end with <strong>$</strong> sign. For example, <code>Ruboss.filter</code> 
-   *    has no side-effects whereas <code>Ruboss.filter$</code> does.</li>
-   *    <li><strong>Ruboss.sort</strong>: Applies sort fields on a given <code>RubossCollection</code>.</li>
+   *    have side-effects end with <strong>$</strong> sign. For example, 
+   *    <code>Ruboss.filter</code> has no side-effects whereas <code>Ruboss.filter$</code> 
+   *    does.</li>
+   *    <li><strong>Ruboss.sort</strong>: Applies sort fields on a given 
+   *  <code>RubossCollection</code>.</li>
    *  </ul>
    * 
    *  @see org.ruboss.controllers.ModelsController 
@@ -428,10 +430,10 @@ package org.ruboss {
      * 
      * @see mx.logging.LogEventLevel
      */
-    public static function enableLogging(logLevel:LogEventLevel = LogEventLevel.ALL):void {
+    public static function enableLogging(logLevel:int = LogEventLevel.ALL):void {
       var target:TraceTarget = new TraceTarget();
       target.filters = ["org.ruboss.*"];
-      target.level = LogEventLevel.ALL;
+      target.level = logLevel;
       target.includeDate = true;
       target.includeTime = true;
       target.includeCategory = true;
