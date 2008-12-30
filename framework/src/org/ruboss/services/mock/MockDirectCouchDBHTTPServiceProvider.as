@@ -22,6 +22,9 @@ package org.ruboss.services.mock {
   import org.ruboss.services.as3http.DirectCouchDBHTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
 
+  /**
+   * Adds testing specific methods to DirectCouchDBHTTPServiceProvider.
+   */
   public class MockDirectCouchDBHTTPServiceProvider extends DirectCouchDBHTTPServiceProvider {
 
     public static const ID:int = ServicesController.generateId();

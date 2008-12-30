@@ -64,9 +64,6 @@ package org.ruboss.services.air {
     
     private var timer:Timer;
 
-    /**
-     * @param controller reference to RubossModelsController instance
-     */
     public function AIRServiceProvider() {
       var databaseName:String = Ruboss.airDatabaseName;
       var dbFile:File = File.userDirectory.resolvePath(databaseName + ".db");

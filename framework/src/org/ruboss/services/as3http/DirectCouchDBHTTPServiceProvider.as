@@ -60,26 +60,44 @@ package org.ruboss.services.as3http {
       contentType = "application/json";
     }
 
+    /**
+     * @see org.ruboss.services.IServiceProvider#id
+     */
     public function get id():int {
       return ID;
     }
     
+    /**
+     * @see org.ruboss.services.IServiceProvider#hasErrors
+     */
     public function hasErrors(object:Object):Boolean {
       return false;
     }
     
+    /**
+     * @see org.ruboss.services.IServiceProvider#canLazyLoad
+     */
     public function canLazyLoad():Boolean {
       return false;
     }
     
+    /**
+     * @see org.ruboss.services.IServiceProvider#marshall
+     */
     public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       return marshallToJSON(object, recursive, metadata);
     }
     
+    /**
+     * @see org.ruboss.services.IServiceProvider#unmarshall
+     */
     public function unmarshall(object:Object):Object {
       return serializer.unmarshall(object);
     }
-    
+
+    /**
+     * @see org.ruboss.services.IServiceProvider#index
+     */    
     public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
         if (event.response.code != "200") {
@@ -106,6 +124,9 @@ package org.ruboss.services.as3http {
       client.post(getCouchDBURI(Ruboss.couchDbDatabaseName + "_temp_view"), data, contentType);
     }
     
+    /**
+     * @see org.ruboss.services.IServiceProvider#show
+     */
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       if (RubossUtils.isEmpty(object["id"]) || !RubossUtils.isEmpty(object["rev"])) {
         throw new Error("model: " + object + " does not have 'id' property set => cannot be shown.");
@@ -125,6 +146,9 @@ package org.ruboss.services.as3http {
       client.get(getCouchDBURI(Ruboss.couchDbDatabaseName + object["id"]));
     }
     
+    /**
+     * @see org.ruboss.services.IServiceProvider#create
+     */
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var client:HttpClient = getCreateOrUpdateHttpClient(object, responder);
 
@@ -137,6 +161,9 @@ package org.ruboss.services.as3http {
       }
     }
     
+    /**
+     * @see org.ruboss.services.IServiceProvider#update
+     */
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       if (RubossUtils.isEmpty(object["id"]) || RubossUtils.isEmpty(object["rev"])) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be updated.");
@@ -148,6 +175,9 @@ package org.ruboss.services.as3http {
         contentType);      
     }
     
+    /**
+     * @see org.ruboss.services.IServiceProvider#destroy
+     */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       if (RubossUtils.isEmpty(object["id"]) || RubossUtils.isEmpty(object["rev"])) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be destroyed.");

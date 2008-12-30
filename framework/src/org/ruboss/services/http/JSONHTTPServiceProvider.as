@@ -21,6 +21,9 @@ package org.ruboss.services.http {
   import org.ruboss.serializers.JSONSerializer;
   import org.ruboss.utils.RubossUtils;
 
+  /**
+   * JSON-over-HTTP service provider based on Flex HTTPService.
+   */
   public class JSONHTTPServiceProvider extends XMLHTTPServiceProvider {
 
     /** service id */

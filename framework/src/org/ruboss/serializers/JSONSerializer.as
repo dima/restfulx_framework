@@ -21,8 +21,14 @@ package org.ruboss.serializers {
   import org.ruboss.models.RubossModel;
   import org.ruboss.utils.TypedArray;
   
+  /**
+   * Serialises <code>RubossModel</code> instances to JSON and back.
+   */
   public class JSONSerializer extends VOSerializer {
     
+    /**
+     *  @inheritDoc
+     */
     public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       var marshalled:Object = super.marshall(object, recursive, metadata);
       for (var prop:String in marshalled) {
@@ -33,6 +39,9 @@ package org.ruboss.serializers {
       return JSON.encode(marshalled);  
     }
 
+    /**
+     *  @inheritDoc
+     */
     public override function unmarshall(object:Object):Object {
       if (object is TypedArray || object is RubossModel) {
         return object;

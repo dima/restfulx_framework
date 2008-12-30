@@ -26,6 +26,9 @@ package org.ruboss.services.mock {
   import org.ruboss.services.air.AIRServiceProvider;
   import org.ruboss.utils.RubossUtils;
 
+  /**
+   * Adds testing specific methods to AIRServiceProvider.
+   */
   public class MockAIRServiceProvider extends AIRServiceProvider {
 
     public static const ID:int = ServicesController.generateId();

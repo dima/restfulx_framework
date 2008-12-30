@@ -42,7 +42,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+   Serialises <code>RubossModel</code> instances to JSON and back.
+   <p></p>
 <br>
 <hr>
 </div>
@@ -83,14 +84,20 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#marshall()">marshall</a>(object:Object, recursive:Boolean = false, metadata:Object = null):Object</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+      
+      
+     Serializes the object to required form.</div>
 </td><td class="summaryTableOwnerCol">JSONSerializer</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#unmarshall()">unmarshall</a>(object:Object):Object</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+      
+      
+     Unmarshalls the serialized form to object graph.</div>
 </td><td class="summaryTableOwnerCol">JSONSerializer</td>
 </tr>
 </table>
@@ -176,7 +183,12 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object</code><span class="label">Parameters</span>
+<code>public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object</code><p>
+      
+      
+     Serializes the object to required form. 
+      
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
@@ -209,7 +221,12 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public override function unmarshall(object:Object):Object</code><span class="label">Parameters</span>
+<code>public override function unmarshall(object:Object):Object</code><p>
+      
+      
+     Unmarshalls the serialized form to object graph.
+       
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>

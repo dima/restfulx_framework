@@ -24,6 +24,11 @@ package org.ruboss.serializers {
   import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.RubossUtils;
   
+  /**
+   *  GenericSerializer groups together a few handy functions that are common,
+   *  useful to all serializers. As such it is not meant to be initialized by
+   *  itself but rather should be subclasses/extended.
+   */
   public class GenericSerializer implements ISerializer {
 
     protected static var types:Object = {
@@ -42,10 +47,21 @@ package org.ruboss.serializers {
       state = Ruboss.models.state;
     }
 
+    /**
+     * Serializes the object to required form. 
+     *  
+     * @see org.ruboss.serializers.ISerializer#marshall
+     * @copy org.ruboss.serializers.ISerializer#marshall
+     */
     public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       return object;
     }
     
+    /**
+     * Unmarshalls the serialized form to object graph.
+     *   
+     * @see org.ruboss.serializers.ISerializer#unmarshall
+     */
     public function unmarshall(object:Object):Object {
       return object;
     }

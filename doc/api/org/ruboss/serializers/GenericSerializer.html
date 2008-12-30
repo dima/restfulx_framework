@@ -45,7 +45,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+    GenericSerializer groups together a few handy functions that are common,
+    useful to all serializers. As such it is not meant to be initialized by
+    itself but rather should be subclasses/extended.
+   <p></p>
 <br>
 <hr>
 </div>
@@ -85,14 +88,16 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#marshall()">marshall</a>(object:Object, recursive:Boolean = false, metadata:Object = null):Object</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Serializes the object to required form.</div>
 </td><td class="summaryTableOwnerCol">GenericSerializer</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#unmarshall()">unmarshall</a>(object:Object):Object</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Unmarshalls the serialized form to object graph.</div>
 </td><td class="summaryTableOwnerCol">GenericSerializer</td>
 </tr>
 </table>
@@ -276,7 +281,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object</code><span class="label">Parameters</span>
+<code>public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object</code><p>
+     Serializes the object to required form. 
+      
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
@@ -301,6 +309,12 @@ showHideInherited();
 <td width="20"></td><td><code>Object</code></td>
 </tr>
 </table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../serializers/ISerializer.html#marshall" target="">org.ruboss.serializers.ISerializer.marshall</a>
+</div>
 </div>
 <a name="processHasManyThroughRelationships()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -356,7 +370,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function unmarshall(object:Object):Object</code><span class="label">Parameters</span>
+<code>public function unmarshall(object:Object):Object</code><p>
+     Unmarshalls the serialized form to object graph.
+       
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
@@ -369,6 +386,12 @@ showHideInherited();
 <td width="20"></td><td><code>Object</code></td>
 </tr>
 </table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../serializers/ISerializer.html#unmarshall" target="">org.ruboss.serializers.ISerializer.unmarshall</a>
+</div>
 </div>
 <a name="unmarshallAttribute()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">

@@ -24,12 +24,21 @@ package org.ruboss.serializers {
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
   
+  /**
+   *  Serializes <code>RubossModel</code> instances to Value Objects and back.
+   */
   public class VOSerializer extends GenericSerializer {
 
+    /**
+     *  @inheritDoc
+     */
     public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       return marshallToVO(object, metadata);  
     }
 
+    /**
+     *  @inheritDoc
+     */
     public override function unmarshall(object:Object):Object {
       if (object is TypedArray || object is RubossModel) {
         return object;

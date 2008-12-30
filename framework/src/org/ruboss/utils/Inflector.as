@@ -30,6 +30,11 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.ruboss.utils {
+  
+  /**
+   * AS3 CakePHP inflector implementation. Performs pluralization and
+   *  singularization of English nouns.
+   */
   public class Inflector {
     
     static private var corepluralrules:Array;

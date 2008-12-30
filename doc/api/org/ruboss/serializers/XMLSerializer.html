@@ -42,7 +42,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+   Serialises <code>RubossModel</code> instances to XML and back. XML produced
+    is quite different from the form used by SimpleXMLEncoder/Decoder. Target format
+    is expected to be more Rails-like, with a lot less formalism and a lot more 
+    conventions.
+   <p></p>
 <br>
 <hr>
 </div>
@@ -84,7 +88,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#marshall()">marshall</a>(object:Object, recursive:Boolean = false, metadata:Object = null):Object</div>
 <div class="summaryTableDescription">
-     </div>
+      
+     Serializes the object to required form.</div>
 </td><td class="summaryTableOwnerCol">XMLSerializer</td>
 </tr>
 <tr class="">
@@ -92,7 +97,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#unmarshall()">unmarshall</a>(object:Object):Object</div>
 <div class="summaryTableDescription">
-     </div>
+      
+     Unmarshalls the serialized form to object graph.</div>
 </td><td class="summaryTableOwnerCol">XMLSerializer</td>
 </tr>
 </table>
@@ -179,6 +185,9 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object</code><p>
+      
+     Serializes the object to required form. 
+      
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -204,12 +213,6 @@ showHideInherited();
 <td width="20"></td><td><code>Object</code></td>
 </tr>
 </table>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="../services/IServiceProvider.html#marshall" target="">org.ruboss.services.IServiceProvider.marshall</a>
-</div>
 </div>
 <a name="processNestedArray()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -246,6 +249,9 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public override function unmarshall(object:Object):Object</code><p>
+      
+     Unmarshalls the serialized form to object graph.
+       
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -259,12 +265,6 @@ showHideInherited();
 <td width="20"></td><td><code>Object</code></td>
 </tr>
 </table>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">
-<a href="../services/IServiceProvider.html#unmarshall" target="">org.ruboss.services.IServiceProvider.unmarshall</a>
-</div>
 </div>
 <a name="unmarshallObject()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">

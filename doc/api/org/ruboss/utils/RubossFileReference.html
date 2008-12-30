@@ -43,7 +43,27 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </table>
 <p></p>
    Allows Flash file references to be attached to models. Requires something
-   like attachment_fu on the server-side.
+   like attachment_fu or paperclip on the server-side if you are using
+   remote service provider.
+    
+   <p></p>
+<br>
+<span class="label">Example</span>
+<br>For attachment_fu use this:
+    
+   <div class='listing'><pre>
+    var ref:RubossFileReference = new RubossFileReference;
+   </pre></div>
+    
+   <p></p>For paperclip use this:
+    
+   <div class='listing'><pre>
+    var ref:RubossFileReference = new RubossFileReference("avatar")
+   </pre></div> 
+    
+   <p>This will match <code>has_file_attachment :avatar</code> in your Ruby model.</p>
+    
+   <p>If you pick a different name adjust the argument to constructor accordintly.
    <p></p>
 <br>
 <hr>

@@ -35,7 +35,7 @@ package org.ruboss.services.http {
   import org.ruboss.utils.RubossUtils;
 
   /**
-   * XML-over-HTTP service provider.
+   * XML-over-HTTP service provider based on Flex HTTPService.
    */
   public class XMLHTTPServiceProvider implements IServiceProvider {
     

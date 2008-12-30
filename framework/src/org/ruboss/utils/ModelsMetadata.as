@@ -22,34 +22,56 @@ package org.ruboss.utils {
   import mx.collections.ArrayCollection;
   import mx.utils.StringUtil;
   
+  /**
+   * All runtime metadata used by the framework about application models is stored
+   *  in this class.
+   */
   public class ModelsMetadata {
     
+    /** registered models */
     public var models:Array;
     
+    /** maps FQNs to controller names */
     public var controllers:Dictionary;
     
+    /** maps model references to their types and auxilary info */
     public var refs:Dictionary;
 
+    /** various aliases for FQNs */
     public var fqns:Dictionary;
     
+    /** maps between Class instances of models and their String representations */
     public var types:Dictionary;
     
+    /** maps between FQNs and single + pluralized noun versions of FQNs */
     public var names:Dictionary;
     
+    /** tracks which models have been indexed */
     public var indexed:Dictionary;
     
+    /** tracks which models have been shown */
     public var shown:Dictionary;
     
+    /** tracks which models we are currently waiting for */
     public var waiting:Dictionary;
     
+    /** lists all dependencies for models */
     public var eager:Dictionary;
 
+    /** lists only [Lazy] annotated dependencies for models */
     public var lazy:Dictionary;
     
+    /** computed [HasMany(through)] relationships */
     public var hmts:Dictionary;
     
+    /** computed model inheritance heirarchy */
     public var parents:Dictionary;
 
+    /**
+     * Computes all relevant metadata for the models passed in as argument.
+     *
+     * @param models array of classes for application models
+     */
     public function ModelsMetadata(models:Array) {
       this.models = models;
       

@@ -24,6 +24,11 @@ package org.ruboss.services.mock {
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.http.XMLHTTPServiceProvider;
   
+  /**
+   * Testing specific XMLHTTPServiceProvider. This doesn't actually make any server
+   *  calls. It loads XML provided to <code>loadTestData</code> call and handles
+   *  responses directly from it's own internal cache. Non-asynchronous as a result.
+   */
   public class MockXMLHTTPServiceProvider extends XMLHTTPServiceProvider {
 
     public static const ID:int = ServicesController.generateId();

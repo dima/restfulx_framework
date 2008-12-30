@@ -24,6 +24,9 @@ package org.ruboss.services.mock {
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.http.JSONHTTPServiceProvider;
   
+  /**
+   * Adds testing specific methods to JSONHTTPServiceProvider.
+   */
   public class MockJSONHTTPServiceProvider extends JSONHTTPServiceProvider {
 
     public static const ID:int = ServicesController.generateId();

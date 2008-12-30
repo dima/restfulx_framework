@@ -31,7 +31,7 @@ package org.ruboss.utils {
   import org.ruboss.models.RubossModel;
 
   /**
-   * Various Utilities
+   * Various Utilities.
    */
   public class RubossUtils {
     private static const IGNORED_TYPES:Array = [
@@ -107,7 +107,12 @@ package org.ruboss.utils {
       }
     }
 
-    // needs some testing too
+    /**
+     *  Cleanup references to specified model.
+     *  
+     * @param model model instance to clean-up references for
+     * @param fqn FullyQualifiedName of the model
+     */
     public static function cleanupModelReferences(model:Object, fqn:String):void {
       for (var reference:String in Ruboss.models.state.refs[fqn]) {
         if (ObjectUtil.hasMetadata(model, reference, "BelongsTo") && model[reference] != null) {

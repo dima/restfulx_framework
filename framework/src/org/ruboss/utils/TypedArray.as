@@ -16,14 +16,14 @@
 package org.ruboss.utils {
 
   /**
-   * An array of model items where we know what type of models it contains.
+   * An array of items where we know what type of models it contains.
    */
   public dynamic class TypedArray extends Array {
     
+    [Bindable]
     /**
      * Fully Qualified Name (fqn) of the class instances that this array contains.
      */
-    [Bindable]
     public var itemType:String;
     
     public function TypedArray(numElements:int = 0) {

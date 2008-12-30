@@ -39,7 +39,7 @@ package org.ruboss.services {
     /**
      * @param handler function to call with the unmarshalled result
      * @param service IServiceProvider instance that we are dealing with
-     * @param checkOrder true if ServiceResponder should enforce order on responses
+     * @param modelType keeps track of what model we are waiting the response for
      * @param onSuccess optional user callback function or IResponder to call when
      *  everything has been *successfully* processed
      * @param onFailure

@@ -18,7 +18,24 @@ package org.ruboss.utils {
   
   /**
    * Allows Flash file references to be attached to models. Requires something
-   * like attachment_fu on the server-side.
+   * like attachment_fu or paperclip on the server-side if you are using
+   * remote service provider.
+   *  
+   * @example For attachment_fu use this:
+   *  
+   * <listing version="3.0">
+   *  var ref:RubossFileReference = new RubossFileReference;
+   * </listing>
+   *  
+   * @example For paperclip use this:
+   *  
+   * <listing version="3.0">
+   *  var ref:RubossFileReference = new RubossFileReference("avatar")
+   * </listing> 
+   *  
+   * <p>This will match <code>has_file_attachment :avatar</code> in your Ruby model.</p>
+   *  
+   * <p>If you pick a different name adjust the argument to constructor accordintly.
    */
   public class RubossFileReference extends FileReference {
     

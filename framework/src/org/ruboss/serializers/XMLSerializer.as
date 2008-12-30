@@ -23,17 +23,23 @@ package org.ruboss.serializers {
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
   
+  /**
+   * Serialises <code>RubossModel</code> instances to XML and back. XML produced
+   *  is quite different from the form used by SimpleXMLEncoder/Decoder. Target format
+   *  is expected to be more Rails-like, with a lot less formalism and a lot more 
+   *  conventions.
+   */
   public class XMLSerializer extends GenericSerializer {
 
     /**
-     * @see org.ruboss.services.IServiceProvider#marshall
+     *  @inheritDoc
      */
     public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
       return marshallToXML(object, recursive, metadata);
     }
 
     /**
-     * @see org.ruboss.services.IServiceProvider#unmarshall
+     *  @inheritDoc
      */
     public override function unmarshall(object:Object):Object {
       if (object is TypedArray || object is RubossModel) {

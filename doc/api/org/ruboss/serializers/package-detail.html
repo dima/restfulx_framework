@@ -40,7 +40,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Pa
 <th>&nbsp;</th><th width="30%">Interface</th><th width="70%">Description</th>
 </tr>
 <tr class="prow1">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><i><a href="ISerializer.html">ISerializer</a></i></td><td class="summaryTableLastCol">&nbsp;</td>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><i><a href="ISerializer.html">ISerializer</a></i></td><td class="summaryTableLastCol">
+   Serves as a contract between various serializers and the rest of the framework.</td>
 </tr>
 </table>
 <a name="classSummary"></a>
@@ -50,16 +51,21 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Pa
 <th>&nbsp;</th><th width="30%">Class</th><th width="70%">Description</th>
 </tr>
 <tr class="prow1">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="GenericSerializer.html">GenericSerializer</a></td><td class="summaryTableLastCol">&nbsp;</td>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="GenericSerializer.html">GenericSerializer</a></td><td class="summaryTableLastCol">
+    GenericSerializer groups together a few handy functions that are common,
+    useful to all serializers.</td>
 </tr>
 <tr class="prow0">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="JSONSerializer.html">JSONSerializer</a></td><td class="summaryTableLastCol">&nbsp;</td>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="JSONSerializer.html">JSONSerializer</a></td><td class="summaryTableLastCol">
+   Serialises <code>RubossModel</code> instances to JSON and back.</td>
 </tr>
 <tr class="prow1">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="VOSerializer.html">VOSerializer</a></td><td class="summaryTableLastCol">&nbsp;</td>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="VOSerializer.html">VOSerializer</a></td><td class="summaryTableLastCol">
+    Serializes <code>RubossModel</code> instances to Value Objects and back.</td>
 </tr>
 <tr class="prow0">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="XMLSerializer.html">XMLSerializer</a></td><td class="summaryTableLastCol">&nbsp;</td>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="XMLSerializer.html">XMLSerializer</a></td><td class="summaryTableLastCol">
+   Serialises <code>RubossModel</code> instances to XML and back.</td>
 </tr>
 </table>
 <p></p>
