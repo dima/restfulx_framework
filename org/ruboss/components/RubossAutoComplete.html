@@ -42,7 +42,46 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+   This class adds integrated search capability to your Flex/AIR applications.
+    
+   <p>The idea is this:</p>
+    
+   <p>You type some stuff into a text-field. Whatever you type up to a given   
+      number of milliseconds (say 500) will be used to create a search query   
+      to the appropriate server-side controller. That controller would typically   
+      return a super thin version of the objects (let's say just the id and   
+      the parameter such as name you were searching on). Once that is   
+      received the component switches to filtering and does the rest of the   
+      search in-memory. When you try a different search same thing happens,   
+      we try to hit the server with the initial search criteria and then   
+      switch to in-memory filtering. When you hit enter the component will   
+      call <code>show</code> method on the object which will hit server-side 
+      controller <code>show</code> action and give you an opportunity to return 
+      a full version of the object and any of it's children using 
+      <code>to_fxml(:include)</code> or something along those lines. If the 
+      object has already been shown then the version from the cache is 
+      returned directly.</p>
+      
+    <p></p>
+<br>
+<span class="label">Example</span>
+<br>Some sample MXML code:
+    
+    <div class='listing'><pre>
+    &lt;components:RubossAutoComplete id=&quot;autoComplete&quot;   
+      resource=&quot;{Project}&quot; filterFunction=&quot;filterProjectsByName&quot; 
+      selectedItemShown=&quot;onProjectShow(event)&quot;/&gt;
+    </pre></div>
+    
+    <p></p>And the filter function:
+    
+    <div class='listing'><pre> 
+      private function filterProjectsByname(item:Project):Boolean { 
+              var regexp:RegExp = new RegExp(autoComplete.typedText, "i"); 
+              return item.name.search(regexp) != -1; 
+      } 
+    </pre></div>
+   <p></p>
 <br>
 <hr>
 </div>

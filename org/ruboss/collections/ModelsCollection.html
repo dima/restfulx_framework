@@ -43,7 +43,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </table>
 <p></p>
    Adds a few handy methods to ArrayCollection class to simplify working 
-   with model objects.
+   with model objects. ModelsCollection is expected to always contain
+   <code>RubossModel</code> instances, which are guaranteed to always
+   have some fields, such as <code>id</code>. This allows us to add a
+   few helpers to ArrayCollection that exploit these <code>RubossModel</code>
+   properties.
    <p></p>
 <br>
 <hr>
@@ -237,7 +241,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function hasItem(object:Object):Boolean</code><p>
-     Checks to see if a given model object is in the collection. Comparison done by IDs.
+     Checks to see if a given model object is in the collection. Comparison done by id.
       
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
@@ -325,7 +329,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function withId(id:String):Object</code><p>
-     Looks up a model object in the collection by it's id. IDs are guaranteed to be unique.
+     Looks up a model object in the collection by it's id. IDs are guaranteed to be unique
+     in a collection.
       
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">

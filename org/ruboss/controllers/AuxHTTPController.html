@@ -43,8 +43,57 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </table>
 <p></p>
    Custom HTTP controller that allows sending arbitrary data (as 
-   opposed to models) over HTTP faking PUT and DELETE
+    opposed to models) over HTTP faking PUT and DELETE. You can use
+    this to perform any non-CRUD actions including the ability to
+    treat responses <em>as-if</em> there were CRUD actions. This is
+    useful on many levels.
+    
    <p></p>
+<br>
+<span class="label">Example</span>
+<br>This will produce a GET request to "some/url", where 
+    "some/url" can be mapped to any server-side controller action:
+    
+   <div class='listing'><pre>
+   Ruboss.http(function(result:Object):void { 
+   // do whatever you want with the result object here 
+   }).invoke("some/url");
+    
+   // or something like this:
+    
+    var invokeOpts:Object = { URL: "sessions.fxml", method: "POST", data: 
+       {email: "foobar-at-foobar.com", password: "bla"}, 
+      unmarshall: true, cacheBy: "show"};
+    
+   // and then:
+   Ruboss.http(onSuccessfulLogin, onBadLogin).invoke(invokeOpts); 
+   </pre></div>
+    
+   <p><code>onSuccessfulLogin</code> is a handler function for 
+    successful result, <code>onBadLogin</code> is a handler function for 
+    failure. The line above can be pretty much used with something 
+    like RESTful authentication to login a user.</p>
+    
+   <p>If you know that your custom method returns a known model instance you  
+    can choose to unmarshall it and/or cache it simulating one of:</p>
+   
+   <ul>
+     <li><strong>index</strong></li>
+     <li><strong>show</strong></li>
+     <li><strong>update</strong></li>
+     <li><strong>create</strong></li>
+   </ul>
+    
+   <p>These are in fact the options to <code>cacheBy</code> parameter of
+    <code>invoke</code> function.
+    
+   <p></p>
+<p>
+<span class="classHeaderTableLabel">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../controllers/AuxHTTPController.html#invoke" target="">invoke</a>
+</div>
 <br>
 <hr>
 </div>
@@ -176,7 +225,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFault</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; function to call on HTTPService error
+<td width="20px"></td><td><code><span class="label">onFault</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; function to call on HTTPService error or if unmarshalling fails
      </td>
 </tr>
 <tr>
@@ -190,20 +239,22 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">resultFormat</span>:String</code> (default = "<code>e4x</code>")<code></code> &mdash; the URL to prefix to requests
+<td width="20px"></td><td><code><span class="label">resultFormat</span>:String</code> (default = "<code>e4x</code>")<code></code> &mdash; what to treat the response as (e.g. e4x, text)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">serializer</span>:<a href="../serializers/ISerializer.html">ISerializer</a></code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">serializer</span>:<a href="../serializers/ISerializer.html">ISerializer</a></code> (default = <code>null</code>)<code></code> &mdash; what serializer to use (default is XML)
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">rootUrl</span>:String</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">rootUrl</span>:String</code> (default = <code>null</code>)<code></code> &mdash; the URL to prefix to requests
+     </td>
 </tr>
 </table>
 </div>
@@ -278,7 +329,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">method</span>:Boolean</code> &mdash; HTTP method to use
+<td width="20px"></td><td><code><span class="label">method</span>:Boolean</code> &mdash; HTTP method to use (one of GET, PUT, POST or DELETE)
      </td>
 </tr>
 <tr>
@@ -293,8 +344,15 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">cacheBy</span>:*</code> (default = <code>null</code>)<code></code> &mdash; boolean indicating if the response should be cached (this implicitly assumes
-      the response will be unmarshalled first)
+<td width="20px"></td><td><code><span class="label">cacheBy</span>:*</code> (default = <code>null</code>)<code></code> &mdash; a String describing recommended caching method for this response. If you 
+      specify <code>cacheBy</code> unmarshalling is performed automatically, using specified
+      serializer. Possible options are:
+     <ul>
+       <li><strong>index</strong></li>
+       <li><strong>show</strong></li>
+       <li><strong>update</strong></li>
+       <li><strong>create</strong></li>
+     </ul>
      </td>
 </tr>
 </table>
@@ -309,14 +367,7 @@ showHideInherited();
 <code>public function send(url:String, data:Object = null, method:int, responder:IResponder = null):void</code><p>
      A different take on invoke. Can be used with standalone org.ruboss.controllers.ICommand
      implementations if they also implement IResponder interface.
-          If you don't like to create responder objects you can use ItemResponder like so:
-     send("/foobar.xml", {some:"data"}, SimpleHTTPController.GET,
-       new ItemResponder(function result(data:Object):void {},
-        function fault(info:Object):void {});
-      
-     Or use invoke function above.
-      
-     </p><span class="label">Parameters</span>
+          </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">url</span>:String</code> &mdash; URL to call
@@ -348,7 +399,22 @@ showHideInherited();
 <p>
 <span class="label">See also</span>
 </p>
-<div class="seeAlso">invoke</div>
+<div class="seeAlso">
+<a href="../controllers/AuxHTTPController.html#invoke" target="">invoke</a>
+</div>
+<br>
+<span class="label">Example</span>
+<br>If you don't like to create responder objects you can use ItemResponder like so:
+      
+     <div class='listing'><pre>
+     controller.send("/foobar.xml", {some:"data"}, SimpleHTTPController.GET,
+       new ItemResponder(function result(data:Object):void {},
+        function fault(info:Object):void {});
+     </pre></div>
+      
+     <p>Or use invoke function above.</p>
+      
+     <p></p>
 </div>
 <a name="unmarshall()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">

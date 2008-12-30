@@ -39,7 +39,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+   Provides centralized access to comonly used serializers. <code>XML</code>
+    and <code>ValueObject</code> to be specific
+   <p></p>
 <br>
 <hr>
 </div>
@@ -52,12 +54,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#vo">vo</a> : <a href="../serializers/ISerializer.html">ISerializer</a>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription"> Value Object serializer instance </div>
 </td><td class="summaryTableOwnerCol">SerializersController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#xml">xml</a> : <a href="../serializers/ISerializer.html">ISerializer</a>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription"> XML serializer instance </div>
 </td><td class="summaryTableOwnerCol">SerializersController</td>
 </tr>
 </table>
@@ -92,8 +94,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var vo:<a href="../serializers/ISerializer.html">ISerializer</a></code>
-</div>
+<code>public var vo:<a href="../serializers/ISerializer.html">ISerializer</a></code><p> Value Object serializer instance </p></div>
 <a name="xml"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -101,8 +102,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var xml:<a href="../serializers/ISerializer.html">ISerializer</a></code>
-</div>
+<code>public var xml:<a href="../serializers/ISerializer.html">ISerializer</a></code><p> XML serializer instance </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="SerializersController()"></a>

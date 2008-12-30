@@ -47,13 +47,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("CÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/CacheController.html">CacheController</a> &mdash; Class in package <a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+   In-memory model data store.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/CacheController.html#CacheController()">CacheController</a>(state:<a href="org/ruboss/utils/ModelsMetadata.html" onclick="javascript:loadClassListFrame('org/ruboss/utils./class-list.html');">org.ruboss.utils:ModelsMetadata</a>) &mdash; Constructor in class org.ruboss.controllers.<a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/CacheController.html">CacheController</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+     </td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html#cached()">cached</a>(clazz) &mdash; Method in class org.ruboss.controllers.<a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html">ModelsController</a></td>
@@ -190,8 +192,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("CÂ
 </tr>
 <tr>
 <td width="20"></td><td>
-   Manages registered commands (classes that implement org.ruboss.controllers.ICommand)
-   and wraps around RubossModelsController initialization for convenience.</td>
+   Manages registered commands (classes that implement org.ruboss.controllers.ICommand).</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/CommandsController.html#CommandsController()">CommandsController</a>(commands) &mdash; Constructor in class org.ruboss.controllers.<a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/CommandsController.html">CommandsController</a></td>
@@ -205,7 +206,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("CÂ
 </tr>
 <tr>
 <td width="20"></td><td>
-   Singleton.</td>
+   Manages ruboss command related event registration.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/commands/class-list.html');" href="org/ruboss/commands/CommandsEventDispatcher.html#CommandsEventDispatcher()">CommandsEventDispatcher</a>(target) &mdash; Constructor in class org.ruboss.commands.<a onclick="javascript:loadClassListFrame('org/ruboss/commands/class-list.html');" href="org/ruboss/commands/CommandsEventDispatcher.html">CommandsEventDispatcher</a></td>
@@ -270,7 +271,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("CÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/CacheController.html#create()">create</a>(model:<a href="org/ruboss/models/RubossModel.html" onclick="javascript:loadClassListFrame('org/ruboss/models./class-list.html');">org.ruboss.models:RubossModel</a>) &mdash; Method in class org.ruboss.controllers.<a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/CacheController.html">CacheController</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+     Cache version of the <code>create</code> call.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html#create()">create</a>(object, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId) &mdash; Method in class org.ruboss.controllers.<a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html">ModelsController</a></td>

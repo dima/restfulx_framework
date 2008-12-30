@@ -59,20 +59,20 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td><td class="summaryTableLastCol">
    Custom AIR controller that allows performing arbitrary operations (as 
-   opposed to CRUD on models).</td>
+   opposed to CRUD on models) against local SQLite database.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/controllers/AuxHTTPController.html">AuxHTTPController</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td><td class="summaryTableLastCol">
    Custom HTTP controller that allows sending arbitrary data (as 
-   opposed to models) over HTTP faking PUT and DELETE
-   </td>
+    opposed to models) over HTTP faking PUT and DELETE.</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/controllers/CacheController.html">CacheController</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td><td class="summaryTableLastCol">
+   In-memory model data store.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/events/CacheUpdateEvent.html">CacheUpdateEvent</a>
@@ -91,14 +91,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/controllers/CommandsController.html">CommandsController</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td><td class="summaryTableLastCol">
-   Manages registered commands (classes that implement org.ruboss.controllers.ICommand)
-   and wraps around RubossModelsController initialization for convenience.</td>
+   Manages registered commands (classes that implement org.ruboss.controllers.ICommand).</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/commands/CommandsEventDispatcher.html">CommandsEventDispatcher</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/commands/class-list.html');" href="org/ruboss/commands/package-detail.html">org.ruboss.commands</a></td><td class="summaryTableLastCol">
-   Singleton.</td>
+   Manages ruboss command related event registration.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/components/DateTextInput.html">DateTextInput</a>
@@ -131,8 +130,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/commands/ICommand.html"><i>ICommand</i></a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/commands/class-list.html');" href="org/ruboss/commands/package-detail.html">org.ruboss.commands</a></td><td class="summaryTableLastCol">
-   Must be implemented by commands
-   </td>
+   As per the command design pattern, commands are expected to implement a
+    simple interface with <code>execute()</code> function defined.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/utils/Inflector.html">Inflector</a>
@@ -176,7 +175,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/controllers/mock/MockAuxHTTPController.html">MockAuxHTTPController</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/mock/class-list.html');" href="org/ruboss/controllers/mock/package-detail.html">org.ruboss.controllers.mock</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/mock/class-list.html');" href="org/ruboss/controllers/mock/package-detail.html">org.ruboss.controllers.mock</a></td><td class="summaryTableLastCol">
+   This class allows re-routing of <code>AuxHTTPController</code> <code>send</code>
+    method to the specified <code>Ruboss.httpControllerHandler</code> function.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/services/mock/MockDirectCouchDBHTTPServiceProvider.html">MockDirectCouchDBHTTPServiceProvider</a>
@@ -231,18 +232,22 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/controllers/RubossApplicationController.html">RubossApplicationController</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td><td class="summaryTableLastCol">
+   This is the primary extension point for Flex/AIR applications based on
+    the framework.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/components/RubossAutoComplete.html">RubossAutoComplete</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/components/class-list.html');" href="org/ruboss/components/package-detail.html">org.ruboss.components</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/components/class-list.html');" href="org/ruboss/components/package-detail.html">org.ruboss.components</a></td><td class="summaryTableLastCol">
+   This class adds integrated search capability to your Flex/AIR applications.</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/collections/RubossCollection.html">RubossCollection</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/collections/class-list.html');" href="org/ruboss/collections/package-detail.html">org.ruboss.collections</a></td><td class="summaryTableLastCol">
-   Adds a few handy, frequently used methods to ArrayCollection class.</td>
+   Adds a few handy general purpose methods to 
+    <code>mx.collections.ArrayCollection</code>.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/utils/RubossFileReference.html">RubossFileReference</a>
@@ -253,12 +258,16 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/models/RubossModel.html">RubossModel</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/models/class-list.html');" href="org/ruboss/models/package-detail.html">org.ruboss.models</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/models/class-list.html');" href="org/ruboss/models/package-detail.html">org.ruboss.models</a></td><td class="summaryTableLastCol">
+   Encapsulates properties common to all model objects and wraps around a few
+   Ruboss.models.methods to shorten access.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/models/RubossTreeModel.html">RubossTreeModel</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/models/class-list.html');" href="org/ruboss/models/package-detail.html">org.ruboss.models</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/models/class-list.html');" href="org/ruboss/models/package-detail.html">org.ruboss.models</a></td><td class="summaryTableLastCol">
+   Allows tree representation (parent->children) relationship between instances
+   of the same model type.</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/utils/RubossUtils.html">RubossUtils</a>
@@ -270,7 +279,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/controllers/SerializersController.html">SerializersController</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/package-detail.html">org.ruboss.controllers</a></td><td class="summaryTableLastCol">
+   Provides centralized access to comonly used serializers.</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/events/ServiceCallStartEvent.html">ServiceCallStartEvent</a>
@@ -288,7 +298,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/events/ServiceErrorEvent.html">ServiceErrorEvent</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/events/class-list.html');" href="org/ruboss/events/package-detail.html">org.ruboss.events</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/ruboss/events/class-list.html');" href="org/ruboss/events/package-detail.html">org.ruboss.events</a></td><td class="summaryTableLastCol">
+   This event is dispatched when the service provider received an error.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/ruboss/validators/ServiceErrorValidator.html">ServiceErrorValidator</a>

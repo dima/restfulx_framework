@@ -39,8 +39,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("IÂ
 </tr>
 <tr>
 <td width="20"></td><td>
-   Must be implemented by commands
-   </td>
+   As per the command design pattern, commands are expected to implement a
+    simple interface with <code>execute()</code> function defined.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/models/class-list.html');" href="org/ruboss/models/RubossModel.html#id">id</a> &mdash; Property in class org.ruboss.models.<a onclick="javascript:loadClassListFrame('org/ruboss/models/class-list.html');" href="org/ruboss/models/RubossModel.html">RubossModel</a></td>
@@ -201,7 +201,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("IÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/CacheController.html#index()">index</a>(models) &mdash; Method in class org.ruboss.controllers.<a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/CacheController.html">CacheController</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+     Cache version of the <code>index</code> call.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html#index()">index</a>(clazz, optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, append, targetServiceId) &mdash; Method in class org.ruboss.controllers.<a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html">ModelsController</a></td>
@@ -273,7 +274,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("IÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html#indexed()">indexed</a>(... rest) &mdash; Method in class org.ruboss.controllers.<a onclick="javascript:loadClassListFrame('org/ruboss/controllers/class-list.html');" href="org/ruboss/controllers/ModelsController.html">ModelsController</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+     Checks to see if specified models have been index
+      
+     </td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/ruboss/utils/class-list.html');" href="org/ruboss/utils/ModelsMetadata.html#indexed">indexed</a> &mdash; Property in class org.ruboss.utils.<a onclick="javascript:loadClassListFrame('org/ruboss/utils/class-list.html');" href="org/ruboss/utils/ModelsMetadata.html">ModelsMetadata</a></td>
