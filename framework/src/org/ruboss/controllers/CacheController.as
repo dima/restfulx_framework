@@ -84,7 +84,7 @@ package org.ruboss.controllers {
      */
     public function show(model:RubossModel):void {
       var fqn:String = getQualifiedClassName(model);
-      dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW));            
+      Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW));            
     }
 
     /**
