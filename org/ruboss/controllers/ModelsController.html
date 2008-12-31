@@ -434,49 +434,50 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; callback function to call if the service call fails
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that should used to nest this request under
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; an object (a hash of key value pairs that should be tagged on to the request)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
+<td width="20px"></td><td><code><span class="label">fetchDependencies</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true model dependencies will be recursively fetched as well
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true then target ModelsCollection will not be reset but just appended to (default is to reset)
+<td width="20px"></td><td><code><span class="label">useLazyMode</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash; if true dependencies marked with [Lazy] will be skipped (not fetched)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">append</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; service provider to use
+<td width="20px"></td><td><code><span class="label">append</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; if true then target ModelsCollection will not be reset but just appended to (default is to reset)
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
+     </td>
 </tr>
 </table>
 <p></p>
