@@ -108,6 +108,12 @@ package org.ruboss.utils {
       }
     }
     
+    /**
+     *  Add a give model to cache.
+     *  
+     * @param model model instance to clean-up references for
+     * @param fqn FullyQualifiedName of the model
+     */
     public static function addModelToCache(model:Object, fqn:String):void {
       ModelsCollection(Ruboss.models.cache.data[fqn]).addItem(model);
       
