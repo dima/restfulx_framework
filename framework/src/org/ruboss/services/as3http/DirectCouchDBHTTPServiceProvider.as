@@ -124,21 +124,11 @@ package org.ruboss.services.as3http {
      * @see org.ruboss.services.IServiceProvider#show
      */
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      if (RubossUtils.isEmpty(object["id"]) || !RubossUtils.isEmpty(object["rev"])) {
+      if (RubossUtils.isEmpty(object["id"])) {
         throw new Error("model: " + object + " does not have 'id' property set => cannot be shown.");
       }
       
-      var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
-        if (event.response.code != "200") {
-          if (responder) responder.fault(event);
-        } else {
-          data.position = 0;
-          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, data.readUTFBytes(data.length)));
-        }
-      }, function(event:HttpErrorEvent):void {
-        if (responder) responder.fault(event);
-      });
-      
+      var client:HttpClient = getShowHttpClient(object, responder);
       client.get(getCouchDBURI(Ruboss.couchDbDatabaseName + object["id"]));
     }
     
@@ -161,7 +151,7 @@ package org.ruboss.services.as3http {
      * @see org.ruboss.services.IServiceProvider#update
      */
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      if (RubossUtils.isEmpty(object["id"]) || RubossUtils.isEmpty(object["rev"])) {
+      if (!modelCanBeUpdatedOrDestroyed(object)) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be updated.");
       }
       
@@ -175,7 +165,7 @@ package org.ruboss.services.as3http {
      * @see org.ruboss.services.IServiceProvider#destroy
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      if (RubossUtils.isEmpty(object["id"]) || RubossUtils.isEmpty(object["rev"])) {
+      if (!modelCanBeUpdatedOrDestroyed(object)) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be destroyed.");
       }
       
@@ -189,7 +179,28 @@ package org.ruboss.services.as3http {
         if (responder) responder.fault(event);
       });
       
-      client.del(getCouchDBURI(Ruboss.couchDbDatabaseName + object["id"] + "?rev=" + object["rev"]));
+      client.del(getModelDestroyURI(object));
+    }
+
+    protected function getShowHttpClient(object:Object, responder:IResponder):HttpClient {
+      return getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
+        if (event.response.code != "200") {
+          if (responder) responder.fault(event);
+        } else {
+          data.position = 0;
+          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, data.readUTFBytes(data.length)));
+        }
+      }, function(event:HttpErrorEvent):void {
+        if (responder) responder.fault(event);
+      });      
+    }
+    
+    protected function getModelDestroyURI(object:Object):URI {
+      return getCouchDBURI(Ruboss.couchDbDatabaseName + object["id"] + "?rev=" + object["rev"]);
+    }
+    
+    protected function modelCanBeUpdatedOrDestroyed(model:Object):Boolean {
+      return !(RubossUtils.isEmpty(model["id"]) || RubossUtils.isEmpty(model["rev"]));
     }
 
     protected function getHttpClient(onDataComplete:Function, onError:Function = null):HttpClient {
@@ -216,7 +227,7 @@ package org.ruboss.services.as3http {
           var fqn:String = getQualifiedClassName(object);
           var items:ModelsCollection = Ruboss.models.cache.data[fqn] as ModelsCollection;
           if (!items.hasItem(object)) {
-            items.addItem(object);
+            RubossUtils.addModelToCache(object, fqn);
           }
           if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
         }

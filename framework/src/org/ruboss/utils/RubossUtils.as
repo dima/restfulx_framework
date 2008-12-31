@@ -107,6 +107,14 @@ package org.ruboss.utils {
         return ObjectUtil.copy(object);
       }
     }
+    
+    public static function addModelToCache(model:Object, fqn:String):void {
+      ModelsCollection(Ruboss.models.cache.data[fqn]).addItem(model);
+      
+      for each (var superclass:String in Ruboss.models.state.parents[fqn]) {
+        ModelsCollection(Ruboss.models.cache.data[superclass]).addItem(model);
+      }
+    }
 
     /**
      *  Cleanup references to specified model.

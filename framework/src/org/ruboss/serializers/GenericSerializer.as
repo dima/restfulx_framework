@@ -238,13 +238,8 @@ package org.ruboss.serializers {
 
     protected function initializeModel(id:String, fqn:String):Object {
       var model:Object = new (getDefinitionByName(fqn) as Class);
-      ModelsCollection(Ruboss.models.cache.data[fqn]).addItem(model);
       model["id"] = id;
-      
-      for each (var superclass:String in state.parents[fqn]) {
-        ModelsCollection(Ruboss.models.cache.data[superclass]).addItem(model);
-      }
-      
+      RubossUtils.addModelToCache(model, fqn);
       return model;
     }
 
