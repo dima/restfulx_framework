@@ -99,6 +99,7 @@ package org.ruboss.controllers {
      * @param optsOrOnSuccess if this is a Function or an IResponder, we treat it as a callback to invoke
      *  when the service returns; otherwise, we treat it as an anonymous Object of key/value pairs which can be used to
      *  clober the value of any subsequent parameters.
+     * @param onFailure callback function to call if the service call fails
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param fetchDependencies if true model dependencies will be recursively fetched as well
