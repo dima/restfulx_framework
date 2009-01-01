@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flexLibProperties version="1">
 <includeClasses>
+<classEntry path="org.ruboss.services.as3http.GAEHTTPServiceProvider"/>
 <classEntry path="org.ruboss.controllers.ServicesController"/>
 <classEntry path="org.ruboss.services.http.XMLHTTPServiceProvider"/>
 <classEntry path="org.ruboss.collections.RubossCollection"/>
@@ -38,6 +39,7 @@
 <classEntry path="org.ruboss.controllers.CacheController"/>
 <classEntry path="org.ruboss.services.IServiceErrors"/>
 <classEntry path="org.ruboss.services.mock.MockXMLHTTPServiceProvider"/>
+<classEntry path="org.ruboss.serializers.GAEXMLSerializer"/>
 <classEntry path="org.ruboss.controllers.AuxHTTPController"/>
 <classEntry path="org.ruboss.services.mock.MockJSONHTTPServiceProvider"/>
 <classEntry path="org.ruboss.events.ServiceCallStartEvent"/>

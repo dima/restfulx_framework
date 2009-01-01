@@ -18,6 +18,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.serializers.GAEXMLSerializerTest;
 		  import org.ruboss.services.http.XMLHTTPServiceProvider;
 		  import org.ruboss.services.as3http.AS3JSONHTTPServiceProvider;
 		  import org.ruboss.services.air.AIRServiceProvider;
@@ -90,9 +91,9 @@
 //        MockDirectCouchDBHTTPServiceProvider(Ruboss.services.getServiceProvider(MockDirectCouchDBHTTPServiceProvider.ID)).loadTestData(testData);
 			  
 			  var testSuite:TestSuite = new TestSuite;
-			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
-			  
-			  addServiceDependentTests(testSuite, AIRServiceProvider.ID);
+////			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
+//			  
+////			  addServiceDependentTests(testSuite, AIRServiceProvider.ID);
 			  // enable only if you have CouchDB installed and ruboss_tests database prepopulated with test data, see above
 //			  addServiceDependentTests(testSuite, DirectCouchDBHTTPServiceProvider.ID);
 			  
@@ -174,6 +175,8 @@
         ts.addTest(new ReferenceCleanupTest("testHasManyRelationshipCleanup"));
         ts.addTest(new ReferenceCleanupTest("testHasOneRelationshipCleanup"));
         ts.addTest(new ReferenceCleanupTest("testSelfReferentialModelCleanup"));
+        
+        ts.addTest(new GAEXMLSerializerTest("testUnmarshalling"));
         
         // TODO: VO unmarshalling tests
         
@@ -257,6 +260,9 @@
   <mx:XML id="store_with_authors" source="ruboss/test/responses/store_with_authors.xml"/>
   
   <mx:XML id="nothing" source="ruboss/test/responses/nothing.xml"/>
+
+  <!-- GAE formatted XML -->
+  <mx:XML id="posts" source="ruboss/test/responses/posts.xml"/>
 
 	<!-- Reported Bugs -->
 	<mx:XML id="bug26user" source="ruboss/test/responses/bug26/user.xml"/>

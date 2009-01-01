@@ -344,6 +344,7 @@ package org.ruboss.utils {
       if (value == null) return null;
       
       if (targetType == "boolean") {
+        value = String(value).toLowerCase();
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date" || targetType == "datetime") {
         if (value is String) {
