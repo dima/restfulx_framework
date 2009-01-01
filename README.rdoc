@@ -19,15 +19,16 @@ Here's some of the things you can do:
     ruboss-gen -h
 
 * *Integrate* with _Ruby_ _On_ _Rails_, _Merb_ or _Sinatra_ applications 
-  that use _ActiveRecord_ or _DataMapper_.
+  that use _ActiveRecord_, _DataMapper_, _CouchRest_, _ActiveCouch_, etc.
 
 * *Communicate* between your Flex/AIR rich client and service providers 
   using either _XML_ or _JSON_.
   
 * *Persist* your data directly in Adobe AIR's _SQLite_ database or _CouchDB_ 
   without any additional infrastructure or intermediate servers.
-
-* *Switch* between any of these data providers on the fly.
+  
+* *Deploy* your Ruboss application on the Google App Engine and use Google
+  DataStore for persistence.
 
 == Getting Started
 
