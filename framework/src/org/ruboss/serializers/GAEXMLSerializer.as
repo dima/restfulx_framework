@@ -102,7 +102,7 @@ package org.ruboss.serializers {
         if (targetType != "key") {
           defaultValue = RubossUtils.cast(types[targetType], element.toString());
         } else {
-          targetName = targetName + "_";
+          targetName = targetName + "_id";
         }
         unmarshallAttribute(node, object, element, fqn, targetName, defaultValue, 
           updatingExistingReference); 
@@ -113,9 +113,13 @@ package org.ruboss.serializers {
       return object;        
     }
     
+    protected override function getRefId(id:String):String {
+      return id.replace(/.*\[(\w+)\]/, "$1");
+    }
+    
     protected override function getPolymorphicRef(source:Object, name:String):String {
       var polyName:String = name + "_type";
-      var results:XMLList = XML(source).property.(@name == "content");
+      var results:XMLList = XML(source).property.(@name == polyName);
       if (results.length()) {
         return results[0].toString();
       } else {
