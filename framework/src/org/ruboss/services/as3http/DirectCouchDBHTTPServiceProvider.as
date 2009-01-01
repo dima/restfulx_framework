@@ -30,8 +30,8 @@ package org.ruboss.services.as3http {
   import org.ruboss.Ruboss;
   import org.ruboss.collections.ModelsCollection;
   import org.ruboss.controllers.ServicesController;
+  import org.ruboss.serializers.CouchDBJSONSerializer;
   import org.ruboss.serializers.ISerializer;
-  import org.ruboss.serializers.JSONSerializer;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.RubossUtils;
@@ -52,7 +52,7 @@ package org.ruboss.services.as3http {
 
     public function DirectCouchDBHTTPServiceProvider() {
       state = Ruboss.models.state;
-      serializer = new JSONSerializer;
+      serializer = new CouchDBJSONSerializer;
       contentType = "application/json";
     }
 

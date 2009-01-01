@@ -27,6 +27,8 @@
 <classEntry path="org.ruboss.events.ServiceErrorEvent"/>
 <classEntry path="org.ruboss.models.RubossModel"/>
 <classEntry path="org.ruboss.models.RubossTreeModel"/>
+<classEntry path="org.ruboss.serializers.CouchDBJSONSerializer"/>
+<classEntry path="org.ruboss.serializers.GAEXMLSerializer"/>
 <classEntry path="org.ruboss.serializers.GenericSerializer"/>
 <classEntry path="org.ruboss.serializers.ISerializer"/>
 <classEntry path="org.ruboss.serializers.JSONSerializer"/>
@@ -38,9 +40,11 @@
 <classEntry path="org.ruboss.services.ServiceResponder"/>
 <classEntry path="org.ruboss.services.XMLServiceErrors"/>
 <classEntry path="org.ruboss.services.air.AIRServiceProvider"/>
+<classEntry path="org.ruboss.services.as3http.AS3GAEHTTPServiceProvider"/>
 <classEntry path="org.ruboss.services.as3http.AS3JSONHTTPServiceProvider"/>
 <classEntry path="org.ruboss.services.as3http.AS3XMLHTTPServiceProvider"/>
 <classEntry path="org.ruboss.services.as3http.DirectCouchDBHTTPServiceProvider"/>
+<classEntry path="org.ruboss.services.http.GAEHTTPServiceProvider"/>
 <classEntry path="org.ruboss.services.http.JSONHTTPServiceProvider"/>
 <classEntry path="org.ruboss.services.http.XMLHTTPServiceProvider"/>
 <classEntry path="org.ruboss.services.mock.MockAIRServiceProvider"/>

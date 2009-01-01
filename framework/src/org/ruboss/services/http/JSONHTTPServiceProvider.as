@@ -29,8 +29,6 @@ package org.ruboss.services.http {
     /** service id */
     public static const ID:int = ServicesController.generateId();
     
-    protected var serializer:JSONSerializer;
-    
     public function JSONHTTPServiceProvider() {
       state = Ruboss.models.state;
       serializer = new JSONSerializer;

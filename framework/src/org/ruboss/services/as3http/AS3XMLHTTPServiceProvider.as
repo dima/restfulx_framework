@@ -43,8 +43,6 @@ package org.ruboss.services.as3http {
     /** service id */
     public static const ID:int = ServicesController.generateId();
     
-    protected var serializer:ISerializer;
-    
     protected var contentType:String;
                     
     /**
@@ -63,7 +61,7 @@ package org.ruboss.services.as3http {
       return ID;
     }
     
-    private function getHttpClient(responder:IResponder):HttpClient {
+    protected function getHttpClient(responder:IResponder):HttpClient {
       var client:HttpClient = new HttpClient;
       var listener:HttpDataListener = new HttpDataListener;
       listener.onComplete = function(event:HttpResponseEvent, data:ByteArray):void {

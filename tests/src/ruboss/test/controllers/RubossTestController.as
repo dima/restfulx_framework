@@ -29,7 +29,7 @@ package ruboss.test.controllers {
     
     public var testCommandData:String;
     
-    public static var models:Array = [Account, Actor, Author, BillableWeek, Book, Category, Client, Contractor, Customer,
+    public static var models:Array = [Post, Account, Actor, Author, BillableWeek, Book, Category, Client, Contractor, Customer,
      Employee, Location, Movie, PayableAccount, Project, ReceivableAccount, SimpleProperty, Store, Task, Timesheet,
      Article, Section, CouchUser, CouchAddress, Contact, Key, Kv, User, UserGroup, FacebookUser, Nothing]; /* Models */
           

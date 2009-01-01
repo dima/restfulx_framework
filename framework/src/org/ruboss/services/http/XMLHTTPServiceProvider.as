@@ -28,6 +28,7 @@ package org.ruboss.services.http {
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
+  import org.ruboss.serializers.ISerializer;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.XMLServiceErrors;
   import org.ruboss.utils.ModelsMetadata;
@@ -46,12 +47,15 @@ package org.ruboss.services.http {
     
     protected var urlSuffix:String;
     
+    protected var serializer:ISerializer;
+    
     /**
      * @param controller reference to RubossModelsController instance
      */
     public function XMLHTTPServiceProvider() {
       state = Ruboss.models.state;
       urlSuffix = "fxml";
+      serializer = Ruboss.serializers.xml;
     }
     
     /**
@@ -93,7 +97,7 @@ package org.ruboss.services.http {
      * @see org.ruboss.services.IServiceProvider#unmarshall
      */
     public function unmarshall(object:Object):Object {
-      return Ruboss.serializers.xml.unmarshall(object);
+      return serializer.unmarshall(object);
     }
     
     /**
@@ -143,6 +147,7 @@ package org.ruboss.services.http {
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
+      httpService.headers = {'X-HTTP-Method-Override': 'PUT'};
       httpService.request = marshallToVO(object, false, metadata);
       httpService.request["_method"] = "PUT";
       httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
@@ -155,6 +160,7 @@ package org.ruboss.services.http {
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
+      httpService.headers = {'X-HTTP-Method-Override': 'DELETE'};
       httpService.request["_method"] = "DELETE";
       httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
         

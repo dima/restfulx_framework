@@ -90,7 +90,7 @@ package org.ruboss.serializers {
           isParentRef = true;
         } else {
           // check to see if it's a polymorphic association
-          var polymorphicRef:String = source[checkName + "_type"];
+          var polymorphicRef:String = getPolymorphicRef(source, checkName);
           if (!RubossUtils.isEmpty(polymorphicRef)) {
             var polymorphicRefName:String = RubossUtils.lowerCaseFirst(polymorphicRef);
             if (state.fqns[polymorphicRefName]) {
@@ -129,7 +129,7 @@ package org.ruboss.serializers {
         // if this property is a reference, try to resolve the 
         // reference and set up biderctional links between models
         if (isRef) {
-          var refId:String = (attribute) ? attribute.toString() : "";
+          var refId:String = (attribute) ? getRefId(attribute.toString()) : "";
           if (RubossUtils.isEmpty(refId)) {
             Ruboss.log.warn("reference id :" + fqn + "." + targetName + " is empty, setting it to null.");
             if (updatingExistingReference) {
@@ -215,6 +215,19 @@ package org.ruboss.serializers {
     
     protected function processNestedArray(array:Object, type:String):ModelsCollection {
       return new ModelsCollection;
+    }
+    
+    protected function getRefId(id:String):String {
+      return id;
+    }
+
+    protected function getPolymorphicRef(source:Object, name:String):String {
+      var polyName:String = name + "_type";
+      if (source.hasOwnProperty(polyName)) {
+        return source[polyName];
+      } else {
+        return "";
+      }
     }
     
     protected function checkConditions(source:Object, conditions:Object):Boolean {

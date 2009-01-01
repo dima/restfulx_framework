@@ -344,10 +344,11 @@ package org.ruboss.utils {
       if (value == null) return null;
       
       if (targetType == "boolean") {
+        value = String(value).toLowerCase();
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date" || targetType == "datetime") {
         if (value is String) {
-          var date:String = String(value).replace("T", " ").replace(new RegExp("-", "g"), "/");
+          var date:String = String(value).replace("T", " ").replace(new RegExp("-", "g"), "/").replace(/\.\d+$/, "");
           return new Date(Date.parse(date));
         } else {
           return new Date(Date.parse(value));
