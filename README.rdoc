@@ -34,6 +34,8 @@ Here's some of the things you can do:
 For details on how to get started with the Ruboss framework refer to:
 
     http://github.com/dima/ruboss_framework/wikis/home 
+    
+    http://github.com/dima/ruboss4ruby/wikis/home
   
 Report bugs or track framework development progress:
 
