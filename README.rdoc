@@ -9,7 +9,7 @@ Here's some of the things you can do:
 
 * *Create* a complete _Adobe_ _Flex_ or _AIR_ application in less than 5 minutes.
 
-  Use our lightweight Ruby-based code generation toolkit to generate a fully functional
+  Use our lightweight Ruby-based code generation toolkit to create a fully functional
   CRUD application. Simply do:
   
     sudo gem install dima-ruboss4ruby -s http://gems.github.com 
