@@ -232,10 +232,17 @@ package org.ruboss.services.http {
         " with method: " + service.method + " and content:" + 
         ((service.request == null) ? "null" : "\r" + service.request.toString()));
       
+      service.addEventListener(ResultEvent.RESULT, onHttpResult);
       var call:AsyncToken = service.send();
       if (responder != null) {
         call.addResponder(responder);
       }
+    }
+    
+    protected function onHttpResult(event:ResultEvent):void {
+      var service:HTTPService = HTTPService(event.currentTarget);
+      service.disconnect();
+      service.removeEventListener(ResultEvent.RESULT, onHttpResult);
     }
     
     protected function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
