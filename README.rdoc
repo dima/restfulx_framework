@@ -1,21 +1,42 @@
 = Ruboss Framework
 
-== DESCRIPTION
+== Description
 
-The Ruboss Framework brings the design principles and productivity of Rails to Flex development, and makes integration with RESTful APIs as simple as possible.
+The Ruboss Framework brings the design principles and productivity of 
+Rails to Flex development, and makes integration with RESTful APIs as simple as possible.
 
-== GETTING STARTED
+Here's some of the things you can do:
+
+1. Create a complete Adobe Flex or AIR application in less than 5 minutes using
+a lightweight Ruby-based code generation toolkit. Simply do 
++sudo gem install dima-ruboss4ruby -s http://gems.github.com+ and then run +ruboss-gen -h+
+to get started.
+
+2. Seamlessly integrate with Ruby On Rails, Merb or Sinatra applications that use
+ActiveRecord or DataMapper.
+
+3. Communicate between your Flex/AIR rich client and service providers using either XML or JSON.
+  
+4. Persist your data directly in Adobe AIR's SQLite database or CouchDB without any additional
+infrastructure or intermediate servers.
+
+5. Switch between any of these data providers on the fly.
+
+== Getting Started
 
 For details on how to get started with the Ruboss framework refer to:
 
     http://github.com/dima/ruboss_framework/wikis/home 
   
-
 Report bugs or track framework development progress:
 
     http://ruboss.lighthouseapp.com/projects/12668-ruboss-framework/overview
+    
+== Getting Involved
 
-== BUILDING FROM SOURCE
+    http://groups.google.com/group/ruboss-framework
+
+== Getting The Code
 
     git clone git://github.com/dima/ruboss_framework.git
     cd ruboss_framework
@@ -35,6 +56,6 @@ Run rake doc to generate AS3 API documentation
     
 Alternatively, you can point your Flex Builder 3 at ruboss_framework directory and compile and run/test from there.
 
-== LICENSE
+== License
 
-Copyright (c) 2008 Ruboss Technology Corporation, released under the GPLv3 license
+Copyright (c) 2008 Ruboss Technology Corporation, released under dual GPLv3 and Ruboss Commercial License
