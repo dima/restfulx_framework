@@ -13,16 +13,23 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com. 
  ******************************************************************************/
-package org.ruboss.services.as3http {
+package org.ruboss.services.http {
+  import com.adobe.net.URI;
+  
+  import mx.rpc.IResponder;
+  
+  import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.serializers.GAEXMLSerializer;
+  import org.ruboss.utils.RubossUtils;
   
   /**
-   * AS3 HTTP Client based GAE XML-over-HTTP service provider.
+   * HTTPService based GAE XML-over-HTTP service provider.
    * 
    * TODO: needs to be able to upload files as well.
    */
-  public class GAEHTTPServiceProvider extends AS3XMLHTTPServiceProvider {
+  public class GAEHTTPServiceProvider extends XMLHTTPServiceProvider {
+    
     /** service id */
     public static const ID:int = ServicesController.generateId();
     
@@ -36,6 +43,10 @@ package org.ruboss.services.as3http {
      */
     public override function get id():int {
       return ID;
+    }
+
+    protected override function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
+      return Ruboss.serializers.vo.marshall(object, false, metadata);
     }
   }
 }

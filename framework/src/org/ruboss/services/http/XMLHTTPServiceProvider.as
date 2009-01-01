@@ -28,6 +28,7 @@ package org.ruboss.services.http {
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
+  import org.ruboss.serializers.ISerializer;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.XMLServiceErrors;
   import org.ruboss.utils.ModelsMetadata;
@@ -46,12 +47,15 @@ package org.ruboss.services.http {
     
     protected var urlSuffix:String;
     
+    protected var serializer:ISerializer;
+    
     /**
      * @param controller reference to RubossModelsController instance
      */
     public function XMLHTTPServiceProvider() {
       state = Ruboss.models.state;
       urlSuffix = "fxml";
+      serializer = Ruboss.serializers.xml;
     }
     
     /**
@@ -93,7 +97,7 @@ package org.ruboss.services.http {
      * @see org.ruboss.services.IServiceProvider#unmarshall
      */
     public function unmarshall(object:Object):Object {
-      return Ruboss.serializers.xml.unmarshall(object);
+      return serializer.unmarshall(object);
     }
     
     /**
