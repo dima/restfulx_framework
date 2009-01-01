@@ -14,14 +14,9 @@
  * commercial license, please go to http://ruboss.com. 
  ******************************************************************************/
 package org.ruboss.services.http {
-  import com.adobe.net.URI;
-  
-  import mx.rpc.IResponder;
-  
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.serializers.GAEXMLSerializer;
-  import org.ruboss.utils.RubossUtils;
   
   /**
    * HTTPService based GAE XML-over-HTTP service provider.
@@ -45,8 +40,16 @@ package org.ruboss.services.http {
       return ID;
     }
 
+    // play with this
     protected override function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      return Ruboss.serializers.vo.marshall(object, false, metadata);
+      var vo:Object =  Ruboss.serializers.vo.marshall(object, false, metadata);
+      delete vo["clazz"];
+      for (var prop:String in vo) {
+        if (vo[prop] == null) {
+          vo[prop] = "";
+        }
+      }
+      return vo;
     }
   }
 }

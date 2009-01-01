@@ -13,32 +13,31 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com. 
  ******************************************************************************/
-package ruboss.test.cases.serializers {
-  import flexunit.framework.TestCase;
+package org.ruboss.serializers {
+  import com.adobe.serialization.json.JSON;
   
-  import mx.core.Application;
+  import org.ruboss.Ruboss;
   
-  import org.ruboss.serializers.GAEXMLSerializer;
-  import org.ruboss.utils.TypedArray;
-  
-  public class GAEXMLSerializerTest extends TestCase {
-    
-    private var serializer:GAEXMLSerializer;
-
-    public function GAEXMLSerializerTest(methodName:String) {
-      super(methodName);
-      serializer = new GAEXMLSerializer;
+  /**
+   * Serialises <code>RubossModel</code> instances to JSON and back according to
+   * CouchDB conventions.
+   */
+  public class CouchDBJSONSerializer extends JSONSerializer {
+    public function CouchDBJSONSerializer() {
+      super();
     }
 
-    public function testUnmarshalling():void {
-      var xmlForPosts:XML = TestApp(Application.application).posts;
-      var foo:XMLList = xmlForPosts..property.(@name == "content");
-      if (foo.length()) {
-        trace(foo[0].toString());
+    /**
+     *  @inheritDoc
+     */
+    public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
+      var marshalled:Object = Ruboss.serializers.vo.marshall(object, recursive, metadata);
+      for (var prop:String in marshalled) {
+        if (marshalled[prop] == null) {
+          marshalled[prop] = "";
+        }
       }
-          
-      var posts:TypedArray = serializer.unmarshall(xmlForPosts) as TypedArray;
-      trace(posts);
-    }
+      return JSON.encode(marshalled);  
+    }    
   }
 }

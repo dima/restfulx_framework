@@ -147,6 +147,7 @@ package org.ruboss.services.http {
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
+      httpService.headers = {'X-HTTP-Method-Override': 'PUT'};
       httpService.request = marshallToVO(object, false, metadata);
       httpService.request["_method"] = "PUT";
       httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
@@ -159,6 +160,7 @@ package org.ruboss.services.http {
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
+      httpService.headers = {'X-HTTP-Method-Override': 'DELETE'};
       httpService.request["_method"] = "DELETE";
       httpService.url = RubossUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
         

@@ -19,6 +19,7 @@ package org.ruboss.serializers {
   import flash.utils.getQualifiedClassName;
   
   import org.ruboss.models.RubossModel;
+  import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.TypedArray;
   
   /**
@@ -30,13 +31,17 @@ package org.ruboss.serializers {
      *  @inheritDoc
      */
     public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      var marshalled:Object = super.marshall(object, recursive, metadata);
-      for (var prop:String in marshalled) {
-        if (marshalled[prop] == null) {
-          marshalled[prop] = "";
+      var vo:Object = super.marshall(object, recursive, metadata);
+      var localName:String = RubossUtils.toSnakeCase(vo["clazz"]);
+      delete vo["clazz"];
+      for (var prop:String in vo) {
+        if (vo[prop] == null) {
+          vo[prop] = "";
         }
       }
-      return JSON.encode(marshalled);  
+      var result:Object = new Object;
+      result[localName] = vo;
+      return JSON.encode(result);  
     }
 
     /**

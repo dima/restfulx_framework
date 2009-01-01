@@ -18,6 +18,8 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
 	<mx:Script>
 		<![CDATA[
+		  import ruboss.test.cases.serializers.CouchDBJSONSerializerTest;
+		  import org.ruboss.serializers.JSONSerializer;
 		  import ruboss.test.cases.serializers.GAEXMLSerializerTest;
 		  import org.ruboss.services.http.XMLHTTPServiceProvider;
 		  import org.ruboss.services.as3http.AS3JSONHTTPServiceProvider;
@@ -153,16 +155,18 @@
         ts.addTest(new XMLSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshalling"));
         ts.addTest(new XMLSerializerTest("testNothingUnmarshalling"));
-                
-        ts.addTest(new JSONSerializerTest("testCouchDBObjectUnmarshalling"));
-        ts.addTest(new JSONSerializerTest("testCouchDBObjectUnmarshallingWithRelationships"));
-        ts.addTest(new JSONSerializerTest("testActiveRecordLikeObjectUnmarshalling"));
+
+        ts.addTest(new JSONSerializerTest("testObjectUnmarshalling"));
         ts.addTest(new JSONSerializerTest("testObjectMarshalling"));
-        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithMetadata"));
-        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithSetRelationships"));
-        ts.addTest(new JSONSerializerTest("testObjectMarshallingWithNullRelationship"));
-        ts.addTest(new JSONSerializerTest("testRecursiveObjectMarshalling"));
-        ts.addTest(new JSONSerializerTest("testNothingUnmarshalling"));        
+                        
+        ts.addTest(new CouchDBJSONSerializerTest("testCouchDBObjectUnmarshalling"));
+        ts.addTest(new CouchDBJSONSerializerTest("testCouchDBObjectUnmarshallingWithRelationships"));
+        ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshalling"));
+        ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshallingWithMetadata"));
+        ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshallingWithSetRelationships"));
+        ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshallingWithNullRelationship"));
+        ts.addTest(new CouchDBJSONSerializerTest("testRecursiveObjectMarshalling"));
+        ts.addTest(new CouchDBJSONSerializerTest("testNothingUnmarshalling"));        
         
         // TODO: JSON nested resources unmarshalling
         
