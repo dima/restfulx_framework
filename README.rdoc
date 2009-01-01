@@ -8,6 +8,7 @@ Rails to Flex development, and makes integration with RESTful APIs as simple as 
 Here's some of the things you can do:
 
 - Create a complete Adobe Flex or AIR application in less than 5 minutes.
+
   Use our lightweight Ruby-based code generation toolkit to generate a fully functional
   CRUD application. Simply do:
   
@@ -17,13 +18,11 @@ Here's some of the things you can do:
   
     ruboss-gen -h
 
-- Seamlessly integrate with Ruby On Rails, Merb or Sinatra applications that use
-ActiveRecord or DataMapper.
+- Seamlessly integrate with Ruby On Rails, Merb or Sinatra applications that use ActiveRecord or DataMapper.
 
 - Communicate between your Flex/AIR rich client and service providers using either XML or JSON.
   
-- Persist your data directly in Adobe AIR's SQLite database or CouchDB without any additional
-infrastructure or intermediate servers.
+- Persist your data directly in Adobe AIR's SQLite database or CouchDB without any additional infrastructure or intermediate servers.
 
 - Switch between any of these data providers on the fly.
 
