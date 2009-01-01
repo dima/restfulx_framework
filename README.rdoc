@@ -18,7 +18,7 @@ Here's some of the things you can do:
   
     ruboss-gen -h
 
-* *Integrate* with _Ruby_ _On_ Rails_, _Merb_ or _Sinatra_ applications 
+* *Integrate* with _Ruby_ _On_ _Rails_, _Merb_ or _Sinatra_ applications 
   that use _ActiveRecord_ or _DataMapper_.
 
 * *Communicate* between your Flex/AIR rich client and service providers 
