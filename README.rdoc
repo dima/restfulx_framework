@@ -36,13 +36,15 @@ For details on how to get started with the Ruboss framework refer to:
     http://github.com/dima/ruboss_framework/wikis/home 
     
     http://github.com/dima/ruboss4ruby/wikis/home
-  
+    
+== Getting Involved
+
 Report bugs or track framework development progress:
 
     http://ruboss.lighthouseapp.com/projects/12668-ruboss-framework/overview
     
-== Getting Involved
-
+Get involved with the community:
+      
     http://groups.google.com/group/ruboss-framework
 
 == Getting The Code
