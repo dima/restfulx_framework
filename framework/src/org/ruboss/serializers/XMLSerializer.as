@@ -51,7 +51,7 @@ package org.ruboss.serializers {
 
         var objectName:String = xmlFragment.localName();
         
-        if (objectName == "nil_classes" || "entities") return new Array;
+        if (objectName == "nil_classes") return new Array;
         
         var results:TypedArray = new TypedArray;
         // if the object name is the same as the controller specified 

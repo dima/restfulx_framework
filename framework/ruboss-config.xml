@@ -39,6 +39,7 @@
     <class>org.ruboss.serializers.JSONSerializer</class>
     <class>org.ruboss.serializers.VOSerializer</class>
     <class>org.ruboss.serializers.XMLSerializer</class>
+    <class>org.ruboss.serializers.GAEXMLSerializer</class>
     <class>org.ruboss.services.GenericServiceErrors</class>
     <class>org.ruboss.services.IServiceErrors</class>
     <class>org.ruboss.services.IServiceProvider</class>
@@ -47,6 +48,7 @@
     <class>org.ruboss.services.air.AIRServiceProvider</class>
     <class>org.ruboss.services.as3http.AS3JSONHTTPServiceProvider</class>
     <class>org.ruboss.services.as3http.AS3XMLHTTPServiceProvider</class>
+    <class>org.ruboss.services.as3http.GAEHTTPServiceProvider</class>
     <class>org.ruboss.services.as3http.DirectCouchDBHTTPServiceProvider</class>
     <class>org.ruboss.services.http.JSONHTTPServiceProvider</class>
     <class>org.ruboss.services.http.XMLHTTPServiceProvider</class>
