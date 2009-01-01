@@ -36,6 +36,7 @@ package org.ruboss.services.as3http {
     public function AS3GAEHTTPServiceProvider() {
       super();
       serializer = new GAEXMLSerializer;
+      urlSuffix = "xml";
     }
 
     /**

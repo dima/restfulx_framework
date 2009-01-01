@@ -31,6 +31,7 @@ package org.ruboss.services.http {
     public function GAEHTTPServiceProvider() {
       super();
       serializer = new GAEXMLSerializer;
+      urlSuffix = "xml";
     }
 
     /**
