@@ -7,7 +7,7 @@ Rails to Flex development, and makes integration with RESTful APIs as simple as 
 
 Here's some of the things you can do:
 
-* *Create* a complete _Adobe Flex_ or _AIR_ application in less than 5 minutes.
+* *Create* a complete _Adobe_ _Flex_ or _AIR_ application in less than 5 minutes.
 
   Use our lightweight Ruby-based code generation toolkit to generate a fully functional
   CRUD application. Simply do:
@@ -18,7 +18,7 @@ Here's some of the things you can do:
   
     ruboss-gen -h
 
-* *Integrate* with _Ruby On Rails_, _Merb_ or _Sinatra_ applications 
+* *Integrate* with _Ruby_ _On_ Rails_, _Merb_ or _Sinatra_ applications 
   that use _ActiveRecord_ or _DataMapper_.
 
 * *Communicate* between your Flex/AIR rich client and service providers 
