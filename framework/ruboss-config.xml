@@ -34,25 +34,26 @@
     <class>org.ruboss.events.ServiceErrorEvent</class>
     <class>org.ruboss.models.RubossModel</class>
     <class>org.ruboss.models.RubossTreeModel</class>
+    <class>org.ruboss.serializers.CouchDBJSONSerializer</class>
+    <class>org.ruboss.serializers.GAEXMLSerializer</class>
     <class>org.ruboss.serializers.GenericSerializer</class>
     <class>org.ruboss.serializers.ISerializer</class>
     <class>org.ruboss.serializers.JSONSerializer</class>
     <class>org.ruboss.serializers.VOSerializer</class>
     <class>org.ruboss.serializers.XMLSerializer</class>
-    <class>org.ruboss.serializers.GAEXMLSerializer</class>
     <class>org.ruboss.services.GenericServiceErrors</class>
     <class>org.ruboss.services.IServiceErrors</class>
     <class>org.ruboss.services.IServiceProvider</class>
     <class>org.ruboss.services.ServiceResponder</class>
     <class>org.ruboss.services.XMLServiceErrors</class>
     <class>org.ruboss.services.air.AIRServiceProvider</class>
+    <class>org.ruboss.services.as3http.AS3GAEHTTPServiceProvider</class>
     <class>org.ruboss.services.as3http.AS3JSONHTTPServiceProvider</class>
     <class>org.ruboss.services.as3http.AS3XMLHTTPServiceProvider</class>
-    <class>org.ruboss.services.as3http.AS3GAEHTTPServiceProvider</class>
     <class>org.ruboss.services.as3http.DirectCouchDBHTTPServiceProvider</class>
+    <class>org.ruboss.services.http.GAEHTTPServiceProvider</class>
     <class>org.ruboss.services.http.JSONHTTPServiceProvider</class>
     <class>org.ruboss.services.http.XMLHTTPServiceProvider</class>
-    <class>org.ruboss.services.http.GAEHTTPServiceProvider</class>
     <class>org.ruboss.services.mock.MockAIRServiceProvider</class>
     <class>org.ruboss.services.mock.MockDirectCouchDBHTTPServiceProvider</class>
     <class>org.ruboss.services.mock.MockJSONHTTPServiceProvider</class>
