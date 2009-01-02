@@ -71,9 +71,7 @@ package org.ruboss.serializers {
           return unmarshallObject(xmlFragment);
         }
       } catch(e:Error) {
-        Ruboss.log.error("'" + object + "' has not been unmarshalled. it is not an XML element: Error: " + 
-          e.getStackTrace());
-        throw new Error("'" + object + "' is not an XML element. Error: " + e.getStackTrace());
+        throw new Error("'" + object + "' not not been unmarshalled. Error: " + e.getStackTrace());
       }
       return object;
     }
