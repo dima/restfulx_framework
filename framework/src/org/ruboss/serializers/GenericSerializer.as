@@ -111,13 +111,15 @@ package org.ruboss.serializers {
           if (attribute is Array || (attribute is XML && XML(attribute).@type == "array")) {
             isNestedArray = true;
           } else {
-            isNestedObject = true;
             if (RubossUtils.isEmpty(targetType)) {
               // we potentially have a nested polymorphic relationship here
               var nestedPolymorphicRef:String = source[RubossUtils.toSnakeCase(targetName) + "_type"];
               if (!RubossUtils.isEmpty(nestedPolymorphicRef)) {
                 targetType = state.fqns[nestedPolymorphicRef];
+                isNestedObject = true;
               }
+            } else {
+              isNestedObject = true;
             }
           }
         } catch (e:Error) {
@@ -129,7 +131,7 @@ package org.ruboss.serializers {
         // if this property is a reference, try to resolve the 
         // reference and set up biderctional links between models
         if (isRef) {
-          var refId:String = (attribute) ? getRefId(attribute.toString()) : "";
+          var refId:String = (attribute) ? getRefId(attribute) : "";
           if (RubossUtils.isEmpty(refId)) {
             Ruboss.log.warn("reference id :" + fqn + "." + targetName + " is empty, setting it to null.");
             if (updatingExistingReference) {
@@ -217,8 +219,8 @@ package org.ruboss.serializers {
       return new ModelsCollection;
     }
     
-    protected function getRefId(id:String):String {
-      return id;
+    protected function getRefId(id:Object):String {
+      return id.toString()
     }
 
     protected function getPolymorphicRef(source:Object, name:String):String {

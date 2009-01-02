@@ -49,6 +49,8 @@ package org.ruboss.serializers {
 
         var objectName:String = xmlFragment.@kind;
         
+        if (RubossUtils.isEmpty(objectName) && xmlFragment.localName().toString() == "entities") return new Array;
+        
         var results:TypedArray = new TypedArray;
         if (xmlFragment.@type == "array") {
           // we are only going to specifically unmarshall known relationships
@@ -74,6 +76,8 @@ package org.ruboss.serializers {
     protected override function unmarshallObject(source:Object, type:String = null):Object {
       var node:XML = XML(source);
       var localName:String = RubossUtils.lowerCaseFirst(node.@kind);
+      if (RubossUtils.isEmpty(localName)) return null;
+      
       var fqn:String = (!type) ? state.fqns[localName] : type;
       var nodeId:String = node.@key;
       var updatingExistingReference:Boolean = false;
@@ -93,17 +97,18 @@ package org.ruboss.serializers {
       object["rev"] = node.key;
             
       for each (var element:XML in node.elements()) {
-        if (node.localName().toString() == "key") continue;
+        if (element.localName().toString() == "key") continue;
 
         var targetName:String = element.@name;
         var targetType:String = element.@type;
         var defaultValue:* = null;
         
-        if (targetType != "key") {
+        if (targetType != "key" && targetType != "null") {
           defaultValue = RubossUtils.cast(types[targetType], element.toString());
-        } else {
+        } else if (targetType == "key") {
           targetName = targetName + "_id";
         }
+
         unmarshallAttribute(node, object, element, fqn, targetName, defaultValue, 
           updatingExistingReference); 
       }
@@ -113,8 +118,13 @@ package org.ruboss.serializers {
       return object;        
     }
     
-    protected override function getRefId(id:String):String {
-      return id.replace(/.*\[(\w+)\]/, "$1");
+    protected override function getRefId(id:Object):String {
+      try {
+        return XML(id).toString().replace(/.*\[(\w+)\]/, "$1");
+      } catch (e:Error) {
+        return "";
+      }
+      return "";
     }
     
     protected override function getPolymorphicRef(source:Object, name:String):String {
