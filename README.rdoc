@@ -12,7 +12,7 @@ Here's some of the things you can do:
   Use our lightweight Ruby-based code generation toolkit to create a fully functional
   CRUD application. Simply do:
   
-    sudo gem install dima-ruboss4ruby -s http://gems.github.com 
+    sudo gem install ruboss4ruby
   
   And then run:
   
