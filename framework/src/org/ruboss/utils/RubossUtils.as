@@ -355,7 +355,7 @@ package org.ruboss.utils {
      * based on targetType description.
      */
     public static function cast(targetType:String, value:Object):* {
-      if (value == null) return null;
+      if (value == null || !(value is String)) return value;
       
       if (targetType == "boolean") {
         value = String(value).toLowerCase();
