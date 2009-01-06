@@ -132,11 +132,7 @@ package org.ruboss.serializers {
             result[snakeName + "_id"] = null;
           }
         } else {
-          if (object[nodeName] != null) {
-            result[snakeName] = RubossUtils.uncast(object, nodeName);
-          } else {
-            result[snakeName] = null;
-          }
+          result[snakeName] = uncastAttribute(object, nodeName)
         }
       }
 
@@ -147,6 +143,14 @@ package org.ruboss.serializers {
       }
             
       return result;
+    }
+    
+    protected function uncastAttribute(object:Object, attributeName:String):Object {
+      if (object[attributeName] != null) {
+        return RubossUtils.uncast(object, attributeName);
+      } else {
+        return null;
+      }     
     }
 
     protected override function processNestedArray(array:Object, type:String):ModelsCollection {
