@@ -74,7 +74,7 @@ package org.ruboss.controllers {
       } else if (models is RubossModel) {
         fqn = getQualifiedClassName(models);
       }
-      Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.INDEX));            
+      Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.INDEX, data[fqn]));            
     }
 
     /**
