@@ -84,7 +84,7 @@ package org.ruboss.controllers {
      */
     public function show(model:RubossModel):void {
       var fqn:String = getQualifiedClassName(model);
-      Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW));            
+      Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW, model));            
     }
 
     /**
@@ -95,7 +95,7 @@ package org.ruboss.controllers {
     public function create(model:RubossModel):void {
       var fqn:String = getQualifiedClassName(model);
       Ruboss.errors = new GenericServiceErrors;
-      Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.CREATE));
+      Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.CREATE, model));
     }
 
     /**
@@ -106,7 +106,7 @@ package org.ruboss.controllers {
     public function update(model:RubossModel):void {
       var fqn:String = getQualifiedClassName(model);
       Ruboss.errors = new GenericServiceErrors;
-      Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.UPDATE));            
+      Ruboss.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.UPDATE, model));            
     }
 
     /**

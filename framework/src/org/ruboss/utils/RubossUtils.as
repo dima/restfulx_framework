@@ -116,9 +116,23 @@ package org.ruboss.utils {
      */
     public static function addModelToCache(model:Object, fqn:String):void {
       ModelsCollection(Ruboss.models.cache.data[fqn]).addItem(model);
-      
+      updateExistingParentReferenceIfExists(model, fqn);
+    }
+
+    /**
+     *  Updates an parent references with this item if their ids match.
+     *  
+     * @param model model instance to clean-up references for
+     * @param fqn FullyQualifiedName of the model
+     */
+    public static function updateExistingParentReferenceIfExists(model:Object, fqn:String):void {
       for each (var superclass:String in Ruboss.models.state.parents[fqn]) {
-        ModelsCollection(Ruboss.models.cache.data[superclass]).addItem(model);
+        var items:ModelsCollection = ModelsCollection(Ruboss.models.cache.data[superclass]);
+        var item:Object = items.withId(model["id"]);
+        if (item) {
+          items.removeItem(item);
+        }
+        items.addItem(model);
       }
     }
 

@@ -40,12 +40,17 @@ package org.ruboss.events {
     /** Fully qualified name of the model class that got updated */
     public var fqn:String;
     
+    /** The operation that was performed */
     public var opType:int;
     
-    public function CacheUpdateEvent(fqn:String, opType:int) {
+    /** Data associated with the operation */
+    public var data:Object;
+    
+    public function CacheUpdateEvent(fqn:String, opType:int, data:Object = null) {
       super(ID, false, false);
       this.fqn = fqn;
       this.opType = opType;
+      this.data = data;
     }
     
     public function isFor(model:Class):Boolean {

@@ -226,9 +226,11 @@ package org.ruboss.components {
           dropdownClosed = true;
         } else if (event.keyCode == Keyboard.ENTER) {
           if (selectedItem != null) {
-            if (RubossModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true})) {
+            if (Ruboss.models.shown(selectedItem)) {
               onResourceShow(selectedItem);
-            }           
+            } else {
+              RubossModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
+            }       
           }
         }
       } else if (event.ctrlKey && event.keyCode == Keyboard.UP) {
@@ -239,8 +241,12 @@ package org.ruboss.components {
     }
     
     private function onResourceShow(result:Object):void {
-      selectedItem = result;
-      dispatchEvent(new Event("selectedItemShown"));
+      textInput.text = "";
+      textInput.setSelection(0, 0);
+      selectedIndex = -1;
+      showingDropdown = false;
+      dropdownClosed = true;
+      typedText = "";
     }
     
     override protected function measure():void {
