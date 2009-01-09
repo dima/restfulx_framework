@@ -56,7 +56,7 @@ package org.ruboss.serializers {
       return null;
     }
     
-    private function unmarshallArray(instances:Array):Array {
+    protected function unmarshallArray(instances:Array):Array {
       if (!instances || !instances.length) return instances;
       
       var results:TypedArray = new TypedArray;
@@ -104,7 +104,7 @@ package org.ruboss.serializers {
       return object;         
     }
 
-    private function marshallToVO(object:Object, metadata:Object = null):Object {        
+    protected function marshallToVO(object:Object, metadata:Object = null):Object {        
       var fqn:String = getQualifiedClassName(object);
       
       var result:Object = new Object;

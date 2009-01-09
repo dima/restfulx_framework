@@ -76,7 +76,7 @@ package org.ruboss.serializers {
       return object;
     }
 
-    private function marshallToXML(object:Object, recursive:Boolean = false, metadata:Object = null, 
+    protected function marshallToXML(object:Object, recursive:Boolean = false, metadata:Object = null, 
       parent:Object = null):XML {
       var result:String = null;
       
