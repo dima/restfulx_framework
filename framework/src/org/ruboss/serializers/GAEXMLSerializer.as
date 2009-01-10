@@ -39,7 +39,7 @@ package org.ruboss.serializers {
     /**
      *  @inheritDoc
      */
-    public override function unmarshall(object:Object):Object {
+    public override function unmarshall(object:Object, disconnected:Boolean = false):Object {
       if (object is TypedArray || object is RubossModel) {
         return object;
       }
@@ -57,13 +57,13 @@ package org.ruboss.serializers {
           if (state.fqns[objectName]) {
             results.itemType = state.fqns[objectName];
             for each (var node:XML in xmlFragment.children()) {
-              results.push(unmarshallObject(node, state.fqns[objectName]));
+              results.push(unmarshallObject(node, disconnected, state.fqns[objectName]));
             }
           }
           return results;
         } else {
           // otherwise treat it as a single element (treat it as a show)
-          return unmarshallObject(xmlFragment);
+          return unmarshallObject(xmlFragment, disconnected);
         }
       } catch(e:Error) {
         Ruboss.log.error("'" + object + "' has not been unmarshalled. it is not an XML element: Error: " + 
@@ -73,7 +73,7 @@ package org.ruboss.serializers {
       return object;
     }
 
-    protected override function unmarshallObject(source:Object, type:String = null):Object {
+    protected override function unmarshallObject(source:Object, disconnected:Boolean = false, type:String = null):Object {
       var node:XML = XML(source);
       var localName:String = RubossUtils.lowerCaseFirst(node.@kind);
       if (RubossUtils.isEmpty(localName)) return null;
@@ -88,7 +88,7 @@ package org.ruboss.serializers {
       var object:Object = ModelsCollection(Ruboss.models.cache.data[fqn]).withId(nodeId);
       
       if (object == null) {
-        object = initializeModel(nodeId, fqn);
+        object = initializeModel(nodeId, fqn, disconnected);
       } else {
         updatingExistingReference = true;
       }
@@ -110,10 +110,10 @@ package org.ruboss.serializers {
         }
 
         unmarshallAttribute(node, object, element, fqn, targetName, defaultValue, 
-          updatingExistingReference); 
+          updatingExistingReference, disconnected); 
       }
       
-      processHasManyThroughRelationships(object, fqn);
+      if (!disconnected) processHasManyThroughRelationships(object, fqn);
 
       return object;        
     }

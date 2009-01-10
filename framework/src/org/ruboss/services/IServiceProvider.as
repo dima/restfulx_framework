@@ -19,7 +19,7 @@ package org.ruboss.services {
   /**
    * This interface represents the core contract between service providers (such as HTTP, 
    * AIR, etc) and the rest of the framework. New service providers must implement this 
-   * interface and register with the RubossCommandsController on application initialization.
+   * interface and register with the RubossApplicationController on application initialization.
    */
   public interface IServiceProvider {
     /**

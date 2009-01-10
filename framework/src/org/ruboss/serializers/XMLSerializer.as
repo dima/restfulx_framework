@@ -41,7 +41,7 @@ package org.ruboss.serializers {
     /**
      *  @inheritDoc
      */
-    public override function unmarshall(object:Object):Object {
+    public override function unmarshall(object:Object, disconnected:Boolean = false):Object {
       if (object is TypedArray || object is RubossModel) {
         return object;
       }
@@ -62,13 +62,13 @@ package org.ruboss.serializers {
           if (state.fqns[objectName]) {
             results.itemType = state.fqns[objectName];
             for each (var node:XML in xmlFragment.children()) {
-              results.push(unmarshallObject(node, state.fqns[objectName]));
+              results.push(unmarshallObject(node, disconnected, state.fqns[objectName]));
             }
           }
           return results;
         } else {
           // otherwise treat it as a single element (treat it as a show)
-          return unmarshallObject(xmlFragment);
+          return unmarshallObject(xmlFragment, disconnected);
         }
       } catch(e:Error) {
         throw new Error("'" + object + "' not not been unmarshalled. Error: " + e.getStackTrace());
@@ -144,7 +144,7 @@ package org.ruboss.serializers {
       return new XML(result);
     }
     
-    protected override function unmarshallObject(source:Object, type:String = null):Object {
+    protected override function unmarshallObject(source:Object, disconnected:Boolean = false, type:String = null):Object {
       var node:XML = XML(source);
       var localName:String = RubossUtils.toCamelCase(node.localName());
       var fqn:String = (!type) ? state.fqns[localName] : type;
@@ -157,7 +157,7 @@ package org.ruboss.serializers {
       var object:Object = ModelsCollection(Ruboss.models.cache.data[fqn]).withId(nodeId);
       
       if (object == null) {
-        object = initializeModel(nodeId, fqn);
+        object = initializeModel(nodeId, fqn, disconnected);
       } else {
         updatingExistingReference = true; 
       }
@@ -170,19 +170,19 @@ package org.ruboss.serializers {
           defaultValue = RubossUtils.cast(element.@type, element.toString());
         }
         unmarshallAttribute(node, object, element, fqn, targetName, defaultValue, 
-          updatingExistingReference); 
+          updatingExistingReference, disconnected); 
       }
       
-      processHasManyThroughRelationships(object, fqn);
+      if (!disconnected) processHasManyThroughRelationships(object, fqn);
 
       return object;        
     }
     
-    protected override function processNestedArray(array:Object, type:String):ModelsCollection {
+    protected override function processNestedArray(array:Object, type:String, disconnected:Boolean = false):ModelsCollection {
       var element:XML = XML(array);
       var result:ModelsCollection = new ModelsCollection;
       for each (var nestedElement:XML in element.children()) {
-        result.addItem(unmarshallObject(nestedElement, type));
+        result.addItem(unmarshallObject(nestedElement, disconnected, type));
       }
       return result;
     }

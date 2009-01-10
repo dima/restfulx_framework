@@ -43,6 +43,6 @@ package org.ruboss.serializers {
      * @param object source object from the service provider/responder
      * @return connected object graph of the model corresponding to the response
      */
-     function unmarshall(object:Object):Object;    
+     function unmarshall(object:Object, disconnected:Boolean = false):Object;    
   }
 }

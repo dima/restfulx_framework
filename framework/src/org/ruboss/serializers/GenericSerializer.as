@@ -62,16 +62,16 @@ package org.ruboss.serializers {
      *   
      * @see org.ruboss.serializers.ISerializer#unmarshall
      */
-    public function unmarshall(object:Object):Object {
+    public function unmarshall(object:Object, disconnected:Boolean = false):Object {
       return object;
     }
 
-    protected function unmarshallObject(source:Object, type:String = null):Object {
+    protected function unmarshallObject(source:Object, disconnected:Boolean = false, type:String = null):Object {
       return source;
     }
 
     protected function unmarshallAttribute(source:Object, object:Object, attribute:Object, fqn:String, 
-      targetName:String, defaultValue:*, updatingExistingReference:Boolean):void {
+      targetName:String, defaultValue:*, updatingExistingReference:Boolean, disconnected:Boolean = false):void {
       var targetType:String = null;
       var isRef:Boolean = false;
       var isParentRef:Boolean = false;
@@ -130,7 +130,7 @@ package org.ruboss.serializers {
       if (object.hasOwnProperty(targetName)) {
         // if this property is a reference, try to resolve the 
         // reference and set up biderctional links between models
-        if (isRef) {
+        if (isRef && !disconnected) {
           var refId:String = (attribute) ? getRefId(attribute) : "";
           if (RubossUtils.isEmpty(refId)) {
             Ruboss.log.warn("reference id :" + fqn + "." + targetName + " is empty, setting it to null.");
@@ -202,11 +202,11 @@ package org.ruboss.serializers {
           // and the reverse
           object[targetName] = ref;
         } else if (isNestedArray) {
-          object[targetName] = processNestedArray(attribute, targetType);
-        } else if (isNestedObject) {
+          object[targetName] = processNestedArray(attribute, targetType, disconnected);
+        } else if (isNestedObject && !disconnected) {
           if (ObjectUtil.hasMetadata(object, targetName, "HasOne") ||
             ObjectUtil.hasMetadata(object, targetName, "BelongsTo")) {
-            var nestedRef:Object = unmarshallObject(attribute, targetType);
+            var nestedRef:Object = unmarshallObject(attribute, disconnected, targetType);
             object[targetName] = nestedRef;
           }
         } else {
@@ -215,7 +215,7 @@ package org.ruboss.serializers {
       }      
     }
     
-    protected function processNestedArray(array:Object, type:String):ModelsCollection {
+    protected function processNestedArray(array:Object, type:String, disconnected:Boolean = false):ModelsCollection {
       return new ModelsCollection;
     }
     
@@ -251,10 +251,10 @@ package org.ruboss.serializers {
       return allConditionsMet;
     }
 
-    protected function initializeModel(id:String, fqn:String):Object {
+    protected function initializeModel(id:String, fqn:String, disconnected:Boolean = false):Object {
       var model:Object = new (getDefinitionByName(fqn) as Class);
       model["id"] = id;
-      RubossUtils.addModelToCache(model, fqn);
+      if (!disconnected) RubossUtils.addModelToCache(model, fqn);
       return model;
     }
 
