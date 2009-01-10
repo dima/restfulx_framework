@@ -144,7 +144,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#getRefId()">getRefId</a>(id:String):String</div>
+<a class="signatureLink" href="#getRefId()">getRefId</a>(id:Object):String</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">GAEXMLSerializer</td>
 </tr>
@@ -161,6 +161,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a class="signatureLink" href="GenericSerializer.html#initializeModel()">initializeModel</a>(id:String, fqn:String):Object</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="GenericSerializer.html">GenericSerializer</a></td>
+</tr>
+<tr class="hideInheritedProtectedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="XMLSerializer.html#marshallToXML()">marshallToXML</a>(object:Object, recursive:Boolean = false, metadata:Object = null, parent:Object = null):XML</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="XMLSerializer.html">XMLSerializer</a></td>
 </tr>
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -245,10 +252,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected override function getRefId(id:String):String</code><span class="label">Parameters</span>
+<code>protected override function getRefId(id:Object):String</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">id</span>:String</code></td>
+<td width="20px"></td><td><code><span class="label">id</span>:Object</code></td>
 </tr>
 </table>
 <p></p>
