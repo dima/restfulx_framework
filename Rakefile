@@ -49,7 +49,7 @@ task :doc do
   packages << '-package org.ruboss.services.mock "Adds a few testing specific service providers."'
   packages << '-package org.ruboss.utils "Framework utilties."'
   packages << '-package org.ruboss.validators "Validation classes for proxying server-side/service provider errors to the UI."'
-  system("#{get_executable('asdoc')} +configname=air -main-title 'Ruboss Framework 1.1.0 API Documenation' -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{packages.join(" ")} -output doc/api")
+  system("#{get_executable('asdoc')} +configname=air -main-title 'Ruboss Framework 1.1.1 API Documenation' -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{packages.join(" ")} -output doc/api")
 end
 
 namespace :test do  
