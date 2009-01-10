@@ -263,10 +263,10 @@ package org.ruboss {
      * }).invoke({data: bla, method: "POST", unmarshall: true});
      * </listing>
      *  
-     * @param optsOrResultHandler can be either an anonymous object of options or a result handler 
+     * @param optsOrOnResult can be either an anonymous object of options or a result handler 
      *  function. Many functions in the framework can be called with named params specified
      *  in an object or explicitly in the order required by the function. See the example above.
-     * @param faultHandler function to call on HTTPService error
+     * @param onFault function to call on HTTPService error
      * @param contentType content type for the request
      * @param resultFormat how to treat the response from the server (e4x is the default)
      * @param serializer ISerializer implementation to use when unmarshalling responses. Use
@@ -276,10 +276,10 @@ package org.ruboss {
      * @see org.ruboss.controllers.AuxHTTPController
      * @return AuxHTTPController instance
      */
-    public static function http(optsOrResultHandler:Object = null, faultHandler:Function = null, 
+    public static function http(optsOrOnResult:Object = null, onFault:Function = null, 
       contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x",
       serializer:ISerializer = null, rootUrl:String = null):AuxHTTPController {
-      return new httpController(optsOrResultHandler, faultHandler, contentType, resultFormat, serializer, rootUrl);    
+      return new httpController(optsOrOnResult, onFault, contentType, resultFormat, serializer, rootUrl);    
     }
 
     /**

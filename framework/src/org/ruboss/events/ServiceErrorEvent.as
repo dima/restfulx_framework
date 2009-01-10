@@ -26,6 +26,7 @@ package org.ruboss.events {
     /** Event identifier */
     public static var ID:String = "serviceError";
     
+    /** Reported errors */
     public var errors:IServiceErrors;
 
     public function ServiceErrorEvent(errors:IServiceErrors) {

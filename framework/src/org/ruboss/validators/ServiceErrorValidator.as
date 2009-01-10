@@ -23,7 +23,8 @@ package org.ruboss.validators {
    * Flex Validator that can be used to display errors that are stored in
    * IServiceErrors format.
    */
-  public class ServiceErrorValidator extends Validator {    
+  public class ServiceErrorValidator extends Validator {
+       
     private var errors:IServiceErrors;
     
     /** field that the errors are for */
