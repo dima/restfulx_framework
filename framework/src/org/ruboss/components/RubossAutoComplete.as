@@ -24,7 +24,6 @@ package org.ruboss.components {
   
   import org.ruboss.Ruboss;
   import org.ruboss.collections.RubossCollection;
-  import org.ruboss.events.CacheUpdateEvent;
   import org.ruboss.models.RubossModel;
   import org.ruboss.utils.RubossUtils;
   
@@ -89,6 +88,9 @@ package org.ruboss.components {
     
     /** Minimum number of characters that must be provided before server request will be made */
     public var lookupMinChars:int = 1;
+    
+    /** Indicates if the search area should be cleared after a specific item has been found/shown */
+    public var clearTextAfterFind:Boolean = false;
 
     private var _typedText:String = "";
 
@@ -204,7 +206,7 @@ package org.ruboss.components {
 
     private function onResourceShow(result:Object):void {
       selectedItem = result;
-      clearTypedText();
+      if (clearTextAfterFind) clearTypedText();
       dispatchEvent(new Event("selectedItemChange"));
     }
       
