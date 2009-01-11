@@ -91,6 +91,9 @@ package org.ruboss.components {
     
     /** Indicates if the search area should be cleared after a specific item has been found/shown */
     public var clearTextAfterFind:Boolean = false;
+    
+    /** Indicates if a Ruboss.models.show operation should be performed on enter */
+    public var showOnEnter:Boolean = true;
 
     private var _typedText:String = "";
 
@@ -116,7 +119,12 @@ package org.ruboss.components {
   
     public function RubossAutoComplete() {
       super();
-      dataProvider = new ArrayCollection;      
+      if (Ruboss.models.cached(resource) && Ruboss.models.cached(resource).length) {
+        dataProvider = Ruboss.filter(Ruboss.models.cached(resource), filterFunction);
+        dataProvider.refresh();
+      } else {
+        dataProvider = new ArrayCollection;
+      }
       
       //cruft to make ComboBox look-n-feel appropriate in the context
       editable = true;
@@ -238,7 +246,9 @@ package org.ruboss.components {
       unscaledHeight:Number):void {
       super.updateDisplayList(unscaledWidth, unscaledHeight);
       
-      if (selectedIndex == -1) textInput.text = typedText;
+      if (selectedIndex == -1) {
+        textInput.text = typedText;
+      }
   
       if (dropdown) {
         if (typedTextChanged) {
@@ -284,12 +294,12 @@ package org.ruboss.components {
           dropdownClosed = true;
         } else if (event.keyCode == Keyboard.ENTER) {
           if (selectedItem != null && selectedItem is RubossModel) {
-            if (!Ruboss.models.shown(selectedItem)) {
+            if (showOnEnter && !Ruboss.models.shown(selectedItem)) {
               RubossModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
             } else {
-              if (clearTextAfterFind) clearTypedText();            
+              if (clearTextAfterFind) clearTypedText();
+              dispatchEvent(new Event("selectedItemChange"));
             }
-            dispatchEvent(new Event("selectedItemChange"));
           }
         }
       } else if (event.ctrlKey && event.keyCode == Keyboard.UP) {
