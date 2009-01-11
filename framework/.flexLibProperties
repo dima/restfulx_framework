@@ -9,7 +9,6 @@
 <classEntry path="org.ruboss.components.DateTextInput"/>
 <classEntry path="org.ruboss.components.DateTimeTextInput"/>
 <classEntry path="org.ruboss.components.MoneyTextInput"/>
-<classEntry path="org.ruboss.components.RadioComboBox"/>
 <classEntry path="org.ruboss.components.RubossAutoComplete"/>
 <classEntry path="org.ruboss.controllers.AuxAIRController"/>
 <classEntry path="org.ruboss.controllers.AuxHTTPController"/>

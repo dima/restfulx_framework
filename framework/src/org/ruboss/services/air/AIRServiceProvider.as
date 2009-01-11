@@ -54,14 +54,14 @@ package org.ruboss.services.air {
     }
     
     protected var state:ModelsMetadata;
+
+    protected var sql:Dictionary;
+        
+    protected var connection:SQLConnection;
     
     private var pending:Array;
     
     private var indexing:Dictionary;
-    
-    protected var sql:Dictionary;
-        
-    protected var connection:SQLConnection;
     
     private var timer:Timer;
 

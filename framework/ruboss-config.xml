@@ -16,7 +16,6 @@
     <class>org.ruboss.components.DateTextInput</class>
     <class>org.ruboss.components.DateTimeTextInput</class>
     <class>org.ruboss.components.MoneyTextInput</class>
-    <class>org.ruboss.components.RadioComboBox</class>
     <class>org.ruboss.components.RubossAutoComplete</class>
     <class>org.ruboss.controllers.AuxAIRController</class>
     <class>org.ruboss.controllers.AuxHTTPController</class>
