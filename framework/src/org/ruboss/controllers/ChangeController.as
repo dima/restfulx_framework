@@ -22,6 +22,7 @@ package org.ruboss.controllers {
   import org.ruboss.Ruboss;
   import org.ruboss.events.SyncEndEvent;
   import org.ruboss.events.SyncStartEvent;
+  import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ISyncingServiceProvider;
   
   public class ChangeController extends EventDispatcher {
@@ -36,9 +37,9 @@ package org.ruboss.controllers {
     
     private var source:ISyncingServiceProvider;
     
-    private var destination:ISyncingServiceProvider;
+    private var destination:IServiceProvider;
 	
-  	public function ChangeController(source:ISyncingServiceProvider, destination:ISyncingServiceProvider) {
+  	public function ChangeController(source:ISyncingServiceProvider, destination:IServiceProvider) {
   	  super();
   	  this.stack = new ArrayCollection();
   		this.source = source;
@@ -59,7 +60,7 @@ package org.ruboss.controllers {
 	    }
 	  }
 	  
-	  private function onDirtyChanges(result:Object, token:Object = null):void {
+	  protected function onDirtyChanges(result:Object, token:Object = null):void {
 	    dispatchEvent(new SyncStartEvent);
 	    for each (var instance:Object in result as Array) {
 	      switch (instance["sync"]) {
@@ -79,7 +80,7 @@ package org.ruboss.controllers {
 	    dispatchEvent(new SyncEndEvent);
 	  }
 	  
-	  private function onDirtyFault(info:Object, token:Object = null):void {
+	  protected function onDirtyFault(info:Object, token:Object = null):void {
 	    throw new Error(info);
 	  }
   }

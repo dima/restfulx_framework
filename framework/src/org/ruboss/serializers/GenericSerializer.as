@@ -77,9 +77,7 @@ package org.ruboss.serializers {
       var isParentRef:Boolean = false;
       var isNestedArray:Boolean = false;
       var isNestedObject:Boolean = false;
-      
-      // if we got a node with a name that terminates in "_id" we check to see if
-      // it's a model reference       
+         
       if (targetName.search(/.*_id$/) != -1) {
         // name to check on the ruboss model object
         var checkName:String = targetName.replace(/_id$/, "");
@@ -123,13 +121,11 @@ package org.ruboss.serializers {
             }
           }
         } catch (e:Error) {
-          // normal property, a-la String
+          // normal property
         }
       }
       
       if (object.hasOwnProperty(targetName)) {
-        // if this property is a reference, try to resolve the 
-        // reference and set up biderctional links between models
         if (isRef && !disconnected) {
           var refId:String = (attribute) ? getRefId(attribute) : "";
           if (RubossUtils.isEmpty(refId)) {
@@ -191,15 +187,12 @@ package org.ruboss.serializers {
               singleConditions = state.refs[targetType][singleRel]["conditions"];
             }
             
-            // if we've got a singular definition annotated with [HasOne] then it must be a 1->1 relationship
-            // link them up
             if (ref != null && ref.hasOwnProperty(singleRel) && 
               ObjectUtil.hasMetadata(ref, singleRel, "HasOne")) {
               if (checkConditions(source, singleConditions)) ref[singleRel] = object;
             }
           }
           
-          // and the reverse
           object[targetName] = ref;
         } else if (isNestedArray) {
           object[targetName] = processNestedArray(attribute, targetType, disconnected);

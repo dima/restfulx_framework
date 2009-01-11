@@ -257,7 +257,6 @@ package org.ruboss.controllers {
         state.waiting[fqn] = true;
         shown.addItem(objectId);
         
-        // create an instance of the object to be shown ahead of time to keep the same reference
         if (!currentInstance) {
           currentInstance = new (getDefinitionByName(fqn) as Class);
           currentInstance["id"] = objectId;
@@ -297,7 +296,7 @@ package org.ruboss.controllers {
      *  
      *   Ruboss.models.update(project);
      * 
-     * @see index
+     * @see #index
      * 
      * @param object object to update
      * @param optsOrAfterCallback if this is a Function or an IResponder, we treat it as a callback to invoke
