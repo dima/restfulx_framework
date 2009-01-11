@@ -72,9 +72,10 @@ package org.ruboss.services {
      * an object graph of models.
      *  
      * @param object source object from the service provider/responder
-     * @return connected object graph of the model corresponding to the response
+     * @param disconnected a flag indicating that the object should not be reconnected with the cache
+     * @return (dis)connected object graph of the model corresponding to the response
      */
-    function unmarshall(object:Object):Object;
+    function unmarshall(object:Object, disconnected:Boolean = false):Object;
 
     /**
      * RESTful CRUD contract: index method. Same semantics as Rails RESTful controller index.

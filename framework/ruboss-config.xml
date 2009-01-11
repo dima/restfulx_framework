@@ -33,6 +33,10 @@
     <class>org.ruboss.events.ServiceCallStartEvent</class>
     <class>org.ruboss.events.ServiceCallStopEvent</class>
     <class>org.ruboss.events.ServiceErrorEvent</class>
+    <class>org.ruboss.events.SyncEndEvent</class>
+    <class>org.ruboss.events.SyncErrorEvent</class>
+    <class>org.ruboss.events.SyncItemEvent</class>
+    <class>org.ruboss.events.SyncStartEvent</class>
     <class>org.ruboss.models.RubossModel</class>
     <class>org.ruboss.models.RubossTreeModel</class>
     <class>org.ruboss.serializers.CouchDBJSONSerializer</class>
@@ -45,8 +49,8 @@
     <class>org.ruboss.services.GenericServiceErrors</class>
     <class>org.ruboss.services.IServiceErrors</class>
     <class>org.ruboss.services.IServiceProvider</class>
-    <class>org.ruboss.services.IVersioningServiceProvider</class>
     <class>org.ruboss.services.ISyncingServiceProvider</class>
+    <class>org.ruboss.services.IVersioningServiceProvider</class>
     <class>org.ruboss.services.ServiceResponder</class>
     <class>org.ruboss.services.XMLServiceErrors</class>
     <class>org.ruboss.services.air.AIRServiceProvider</class>

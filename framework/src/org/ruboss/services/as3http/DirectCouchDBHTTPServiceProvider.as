@@ -87,8 +87,8 @@ package org.ruboss.services.as3http {
     /**
      * @see org.ruboss.services.IServiceProvider#unmarshall
      */
-    public function unmarshall(object:Object):Object {
-      return serializer.unmarshall(object);
+    public function unmarshall(object:Object, disconnected:Boolean = false):Object {
+      return serializer.unmarshall(object, disconnected);
     }
 
     /**

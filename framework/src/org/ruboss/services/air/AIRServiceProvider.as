@@ -30,7 +30,7 @@ package org.ruboss.services.air {
   
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
-  import org.ruboss.services.IServiceProvider;
+  import org.ruboss.services.ISyncingServiceProvider;
   import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.UUID;
@@ -38,7 +38,7 @@ package org.ruboss.services.air {
   /**
    * AIR Service Provider implementation.
    */
-  public class AIRServiceProvider implements IServiceProvider {
+  public class AIRServiceProvider implements ISyncingServiceProvider {
     
     /** service id */
     public static const ID:int = ServicesController.generateId();
@@ -121,8 +121,8 @@ package org.ruboss.services.air {
     /**
      * @see org.ruboss.services.IServiceProvider#unmarshall
      */
-    public function unmarshall(object:Object):Object {
-      return Ruboss.serializers.vo.unmarshall(object);
+    public function unmarshall(object:Object, disconnected:Boolean = false):Object {
+      return Ruboss.serializers.vo.unmarshall(object, disconnected);
     }
     
     /**
@@ -258,6 +258,40 @@ package org.ruboss.services.air {
      * @see org.ruboss.services.IServiceProvider#destroy
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      updateSyncStatus(object, responder, "D");
+    }
+    
+    /**
+     * @see org.ruboss.services.ISyncingServiceProvider#dirty
+     */
+    public function dirty(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+      var fqn:String = Ruboss.models.state.types[object];
+      
+      var statement:SQLStatement = getSQLStatement(sql[fqn]["dirty"]);  
+      
+      try {   
+        statement.execute();
+        
+        var result:Object;
+        var data:Array = statement.getResult().data;
+        if (data && data.length > 0) {
+          data[0]["clazz"] = fqn.split("::")[1];
+          result = unmarshall(data, true);
+        } else {
+          // nothing in the DB
+          result = new Array;
+        }
+        
+        if (responder) responder.result(result);
+      } catch (e:Error) {
+        if (responder) responder.fault(e);
+      }    
+    }
+    
+    /**
+     * @see org.ruboss.services.ISyncingServiceProvider#purge
+     */
+    public function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["delete"];
       statement = statement.replace("{id}", object["id"]);
@@ -268,7 +302,14 @@ package org.ruboss.services.air {
       } catch (e:Error) {
         if (responder) responder.fault(e);
       }
-    }
+    }  
+	  
+    /**
+     * @see org.ruboss.services.ISyncingServiceProvider#sync
+     */
+	  public function sync(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+	    updateSyncStatus(object, responder);
+	  }
 
     protected function getSQLType(node:XML):String {
       var type:String = node.@type;
@@ -279,6 +320,23 @@ package org.ruboss.services.air {
         return types["DateTime"];
       } else {
         return (result == null) ? types["String"] : result; 
+      }
+    }
+    
+    private function updateSyncStatus(object:Object, responder:IResponder, syncStatus:String = ""):void {
+      var fqn:String = getQualifiedClassName(object);
+      var statement:String = sql[fqn]["sync"];
+      statement = statement.replace("{id}", object["id"]);
+      statement = statement.replace("{rev}", object["rev"]);
+      var sqlStatement:SQLStatement = getSQLStatement(statement);
+      sqlStatement.parameters[":sync"] = syncStatus;
+      
+      try {
+        sqlStatement.execute();
+        object["sync"] = syncStatus;
+        invokeResponderResult(responder, object);
+      } catch (e:Error) {
+        if (responder) responder.fault(e);
       }
     }
     
@@ -340,12 +398,16 @@ package org.ruboss.services.air {
       updateStatement = updateStatement.substring(0, updateStatement.length - 1);
       updateStatement += " WHERE id={id} and rev={rev}";
       sql[modelName]["update"] = updateStatement;
+      
+      sql[modelName]["sync"] = "UPDATE " + tableName + " SET sync=:sync WHERE id='{id}' and rev='{rev}'";
 
-      var deleteStatement:String = "DELETE FROM " + tableName + " WHERE id={id} and rev={rev}";
+      var deleteStatement:String = "DELETE FROM " + tableName + " WHERE id='{id}' and rev='{rev}'";
       sql[modelName]["delete"] = deleteStatement;
       
       var selectStatement:String = "SELECT * FROM " + tableName + " WHERE sync != 'D' and rev = 0";
       sql[modelName]["select"] = selectStatement;
+      
+      sql[modelName]["dirty"] = "SELECT * FROM " + tableName + " WHERE sync != '' and rev = 0";
     }
     
     protected function initializeConnection(databaseName:String, 

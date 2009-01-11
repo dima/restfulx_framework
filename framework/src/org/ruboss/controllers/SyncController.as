@@ -14,16 +14,64 @@
  * commercial license, please go to http://ruboss.com. 
  ******************************************************************************/
 package org.ruboss.controllers {
-  public class SyncController {
+  import flash.events.EventDispatcher;
+  
+  import mx.collections.ItemResponder;
+  
+  import org.ruboss.Ruboss;
+  import org.ruboss.events.SyncEndEvent;
+  import org.ruboss.events.SyncStartEvent;
+  import org.ruboss.services.ISyncingServiceProvider;
+  
+  public class SyncController extends EventDispatcher {
+    
+    public static const DELETE:String = "D";
+    
+    public static const CREATE:String = "N";
+    
+    public static const UPDATE:String = "U";
+    
+    private var source:ISyncingServiceProvider;
+    
+    private var destination:ISyncingServiceProvider;
 	
-  	public function SyncController() {
-  		super();
+  	public function SyncController(source:ISyncingServiceProvider, destination:ISyncingServiceProvider) {
+  	  super();
+  		this.source = source;
+  		this.destination = destination;
   	}
 	
 	  public function push():void {
+	    for each (var model:Class in Ruboss.models.state.models) {
+	      source.dirty(model, new ItemResponder(onDirtySuccess, onDirtyFault));
+	    }
+	  }
+
+    public function pull():void {
+    }
+	  
+	  private function onDirtySuccess(result:Object, token:Object = null):void {
+	    dispatchEvent(new SyncStartEvent);
+	    for each (var instance:Object in result as Array) {
+	      switch (instance["sync"]) {
+	        case DELETE:
+	          trace("deleting: " + instance);
+	          break;
+	        case CREATE:
+	          trace("creating: " + instance);
+	          break;
+	        case UPDATE:
+	          trace("updating: " + instance);
+	          break;
+	        default:
+	          trace("don't know what to do with: " + instance["sync"]);
+	      }
+	    }
+	    dispatchEvent(new SyncEndEvent);
 	  }
 	  
-	  public function pull():void {
+	  private function onDirtyFault(info:Object, token:Object = null):void {
+	    throw new Error(info);
 	  }
   }
 }

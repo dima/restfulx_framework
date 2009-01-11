@@ -28,6 +28,7 @@ package org.ruboss {
   import org.ruboss.controllers.ModelsController;
   import org.ruboss.controllers.SerializersController;
   import org.ruboss.controllers.ServicesController;
+  import org.ruboss.controllers.SyncController;
   import org.ruboss.serializers.ISerializer;
   import org.ruboss.services.IServiceErrors;
   import org.ruboss.services.http.XMLHTTPServiceProvider;
@@ -105,6 +106,9 @@ package org.ruboss {
     
     /** exposes commonly used serializers (XML and VO) */
     public static var serializers:SerializersController;
+    
+    /** exposes the Synchronization controller */
+    public static var sync:SyncController;
     
     /** 
      * Exposes errors reported by a service provider. This typically happens

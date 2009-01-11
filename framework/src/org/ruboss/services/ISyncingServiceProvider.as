@@ -16,7 +16,7 @@
 package org.ruboss.services {
   import mx.rpc.IResponder;
 
-  public interface ISyncingServiceProvider {
+  public interface ISyncingServiceProvider extends IServiceProvider {
     /**
      * Idenfies all the instances for a particular class of models that need to be
      *  synchronized
@@ -33,8 +33,7 @@ package org.ruboss.services {
 	  function dirty(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
 
     /**
-     * Idenfies all the instances for a particular class of models that need to be
-     *  *really* deleted = purged from the database as opposed to just being marked as deleted.
+     * Tries to *really* delete an object as opposed to just mark it for deletion.
      *
      * @param object object to find versions for (typically a model class)
      * @param responder the responder that must be called on versions
@@ -46,6 +45,20 @@ package org.ruboss.services {
      * @return an ArrayCollection of versions that are currently known for this object
      */
     function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
+    
+    /**
+     * Mark a specific model object as synced
+     *
+     * @param object object to find versions for (typically a model class instance)
+     * @param responder the responder that must be called on versions
+     * @param metadata any metadata that must be appended with the index request
+     * @param nestedBy an array of model instances that will be used to nest this request, e.g.:
+     *  [project, user] where project is some Project model instance and user is some User model
+     *  instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
+     *  If you are using Rails see config/routes.rb for more details.
+     * @return an ArrayCollection of versions that are currently known for this object
+     */
+    function sync(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
   }
 }
 

@@ -67,8 +67,8 @@ package org.ruboss.services.http {
     /**
      * @see org.ruboss.services.IServiceProvider#unmarshall
      */
-    public override function unmarshall(object:Object):Object {      
-      return serializer.unmarshall(object);
+    public override function unmarshall(object:Object, disconnected:Boolean = false):Object {      
+      return serializer.unmarshall(object, disconnected);
     }
 
     protected override function getHTTPService(object:Object, nestedBy:Array = null):HTTPService {

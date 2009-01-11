@@ -26,6 +26,10 @@
 <classEntry path="org.ruboss.events.ServiceCallStartEvent"/>
 <classEntry path="org.ruboss.events.ServiceCallStopEvent"/>
 <classEntry path="org.ruboss.events.ServiceErrorEvent"/>
+<classEntry path="org.ruboss.events.SyncEndEvent"/>
+<classEntry path="org.ruboss.events.SyncErrorEvent"/>
+<classEntry path="org.ruboss.events.SyncItemEvent"/>
+<classEntry path="org.ruboss.events.SyncStartEvent"/>
 <classEntry path="org.ruboss.models.RubossModel"/>
 <classEntry path="org.ruboss.models.RubossTreeModel"/>
 <classEntry path="org.ruboss.serializers.CouchDBJSONSerializer"/>
