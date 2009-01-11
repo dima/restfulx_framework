@@ -184,9 +184,12 @@ package org.ruboss.components {
     }
     
     private function invokeSearch(event:TimerEvent):void {
-      if (RubossUtils.isEmpty(typedText)) return;
-      Ruboss.http(onResourceSearch).invoke({URL:
-        RubossUtils.nestResource(resource), data: {search: typedText, category: filterCategory}, 
+      if (RubossUtils.isEmpty(typedText)) {
+        searchInProgress = false;
+        return;
+      }
+      Ruboss.http(onResourceSearch).invoke(
+        {URL: RubossUtils.nestResource(resource), data: {search: typedText, category: filterCategory}, 
         cacheBy: "index"});
     }
         
@@ -283,6 +286,8 @@ package org.ruboss.components {
           if (selectedItem != null && selectedItem is RubossModel) {
             if (!Ruboss.models.shown(selectedItem)) {
               RubossModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
+            } else {
+              if (clearTextAfterFind) clearTypedText();            
             }
             dispatchEvent(new Event("selectedItemChange"));
           }
