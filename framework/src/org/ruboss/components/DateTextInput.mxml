@@ -14,5 +14,5 @@
  * RCL v1 applies; otherwise, only the GPL v3 applies. To learn more or to buy a
  * commercial license, please go to http://ruboss.com. 
 -->
-<rcomponents:DateTimeTextInput xmlns:mx="http://www.adobe.com/2006/mxml" 
-  xmlns:rcomponents="org.ruboss.components.*" formatString="MM/DD/YYYY"/>
+<ruboss:DateTimeTextInput xmlns:mx="http://www.adobe.com/2006/mxml" 
+  xmlns:ruboss="org.ruboss.components.*" formatString="MM/DD/YYYY"/>

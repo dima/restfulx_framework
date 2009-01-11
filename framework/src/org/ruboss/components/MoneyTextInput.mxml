@@ -22,6 +22,10 @@
     import mx.utils.StringUtil;
 
     [Bindable]
+    /** Number of cents */
+    public var cents:int;
+
+    [Bindable]
     /**
      * Get the number of dollars.  Ideally this would be a decimal type.
      */
@@ -33,11 +37,11 @@
      * Set the number of dollars.  Ideally this would be a decimal type.
      */
     public function set dollars(d:Number):void {
-      cents = int(d * 100);
+      cents = int(Math.round(Math.max(minDollars, d) * 100));
     }
 
-    [Bindable]
-    public var cents:int;
+    /** Minimum valid number of dollars */
+    public var minDollars:Number = 0.0;
     
     private function formatCurrency(cents:int):String {
       if (isNaN(cents)) {
@@ -59,7 +63,8 @@
       } else {
         dollars = 0;
       }
-      text = formatCurrency(cents);//needed in case binding doesn't trigger
+      // needed in case binding doesn't trigger
+      text = formatCurrency(cents);
     }
   ]]></mx:Script>
   <mx:CurrencyFormatter id="currencyFormatter" precision="2" rounding="none"
