@@ -24,11 +24,11 @@ package org.ruboss {
   
   import org.ruboss.collections.RubossCollection;
   import org.ruboss.controllers.AuxHTTPController;
+  import org.ruboss.controllers.ChangeController;
   import org.ruboss.controllers.CommandsController;
   import org.ruboss.controllers.ModelsController;
   import org.ruboss.controllers.SerializersController;
   import org.ruboss.controllers.ServicesController;
-  import org.ruboss.controllers.SyncController;
   import org.ruboss.serializers.ISerializer;
   import org.ruboss.services.IServiceErrors;
   import org.ruboss.services.http.XMLHTTPServiceProvider;
@@ -80,6 +80,7 @@ package org.ruboss {
    *  @see org.ruboss.controllers.ServicesController
    *  @see org.ruboss.controllers.CommandsController
    *  @see org.ruboss.controllers.SerializersController
+   *  @see org.ruboss.controllers.ChangeController
    */
   public class Ruboss {
     
@@ -107,8 +108,8 @@ package org.ruboss {
     /** exposes commonly used serializers (XML and VO) */
     public static var serializers:SerializersController;
     
-    /** exposes the Synchronization controller */
-    public static var sync:SyncController;
+    /** exposes the Synchronization and Undo-Redo capable controller */
+    public static var changes:ChangeController;
     
     /** 
      * Exposes errors reported by a service provider. This typically happens

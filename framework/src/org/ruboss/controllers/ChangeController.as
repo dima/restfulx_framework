@@ -16,6 +16,7 @@
 package org.ruboss.controllers {
   import flash.events.EventDispatcher;
   
+  import mx.collections.ArrayCollection;
   import mx.collections.ItemResponder;
   
   import org.ruboss.Ruboss;
@@ -23,7 +24,7 @@ package org.ruboss.controllers {
   import org.ruboss.events.SyncStartEvent;
   import org.ruboss.services.ISyncingServiceProvider;
   
-  public class SyncController extends EventDispatcher {
+  public class ChangeController extends EventDispatcher {
     
     public static const DELETE:String = "D";
     
@@ -31,26 +32,34 @@ package org.ruboss.controllers {
     
     public static const UPDATE:String = "U";
     
+    public var stack:ArrayCollection;
+    
     private var source:ISyncingServiceProvider;
     
     private var destination:ISyncingServiceProvider;
 	
-  	public function SyncController(source:ISyncingServiceProvider, destination:ISyncingServiceProvider) {
+  	public function ChangeController(source:ISyncingServiceProvider, destination:ISyncingServiceProvider) {
   	  super();
+  	  this.stack = new ArrayCollection();
   		this.source = source;
   		this.destination = destination;
+  	}
+  	
+  	public function undo():void {
+  	  
+  	}
+  	
+  	public function redo():void {
+  	  
   	}
 	
 	  public function push():void {
 	    for each (var model:Class in Ruboss.models.state.models) {
-	      source.dirty(model, new ItemResponder(onDirtySuccess, onDirtyFault));
+	      source.dirty(model, new ItemResponder(onDirtyChanges, onDirtyFault));
 	    }
 	  }
-
-    public function pull():void {
-    }
 	  
-	  private function onDirtySuccess(result:Object, token:Object = null):void {
+	  private function onDirtyChanges(result:Object, token:Object = null):void {
 	    dispatchEvent(new SyncStartEvent);
 	    for each (var instance:Object in result as Array) {
 	      switch (instance["sync"]) {
