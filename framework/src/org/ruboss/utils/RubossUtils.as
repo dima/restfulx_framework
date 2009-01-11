@@ -46,7 +46,7 @@ package org.ruboss.utils {
     private static const RESERVED_NAMES:Array = [
       "id",
       "rev",
-      "fetched",
+      "sync",
       "attachment",
       "prototype"
     ];

@@ -15,17 +15,13 @@
  ******************************************************************************/
 package org.ruboss.services {
   import mx.rpc.IResponder;
-  
-  /**
-   * This interface adds versioning to the contract between service providers (such as HTTP, 
-   * AIR, etc) and the rest of the framework.
-   */
-  public interface IVersioningServiceProvider extends IServiceProvider {
-    
+
+  public interface ISyncingServiceProvider {
     /**
-     * Idenfies existing versions for this object
+     * Idenfies all the instances for a particular class of models that need to be
+     *  synchronized
      *
-     * @param object object to find versions for (typically a model instance)
+     * @param object object to find versions for (typically a model class)
      * @param responder the responder that must be called on versions
      * @param metadata any metadata that must be appended with the index request
      * @param nestedBy an array of model instances that will be used to nest this request, e.g.:
@@ -34,12 +30,13 @@ package org.ruboss.services {
      *  If you are using Rails see config/routes.rb for more details.
      * @return an ArrayCollection of versions that are currently known for this object
      */
-	  function versions(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
+	  function dirty(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
 
     /**
-     * Removes all versions of this object except the most recent one
+     * Idenfies all the instances for a particular class of models that need to be
+     *  *really* deleted = purged from the database as opposed to just being marked as deleted.
      *
-     * @param object object to find versions for (typically a model instance)
+     * @param object object to find versions for (typically a model class)
      * @param responder the responder that must be called on versions
      * @param metadata any metadata that must be appended with the index request
      * @param nestedBy an array of model instances that will be used to nest this request, e.g.:
@@ -48,7 +45,7 @@ package org.ruboss.services {
      *  If you are using Rails see config/routes.rb for more details.
      * @return an ArrayCollection of versions that are currently known for this object
      */
-    function cleanup(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
+    function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
   }
 }
 

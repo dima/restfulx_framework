@@ -26,6 +26,7 @@
     <class>org.ruboss.controllers.RubossApplicationController</class>
     <class>org.ruboss.controllers.SerializersController</class>
     <class>org.ruboss.controllers.ServicesController</class>
+    <class>org.ruboss.controllers.SyncController</class>
     <class>org.ruboss.controllers.mock.MockAuxHTTPController</class>
     <class>org.ruboss.events.CacheUpdateEvent</class>
     <class>org.ruboss.events.CommandExecutionEvent</class>
@@ -44,6 +45,8 @@
     <class>org.ruboss.services.GenericServiceErrors</class>
     <class>org.ruboss.services.IServiceErrors</class>
     <class>org.ruboss.services.IServiceProvider</class>
+    <class>org.ruboss.services.IVersioningServiceProvider</class>
+    <class>org.ruboss.services.ISyncingServiceProvider</class>
     <class>org.ruboss.services.ServiceResponder</class>
     <class>org.ruboss.services.XMLServiceErrors</class>
     <class>org.ruboss.services.air.AIRServiceProvider</class>

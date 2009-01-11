@@ -30,6 +30,9 @@ package org.ruboss.models {
     
     /** some models have a revision number */
     public var rev:String;
+    
+    /** tracks of this model need to be synchornized */
+    public var sync:String;
 
     /** any model can have one attachment */
     public var attachment:RubossFileReference;

@@ -33,6 +33,7 @@ package org.ruboss.services.air {
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.RubossUtils;
+  import org.ruboss.utils.UUID;
 
   /**
    * AIR Service Provider implementation.
@@ -150,7 +151,7 @@ package org.ruboss.services.air {
      */
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
-      var statement:SQLStatement = getSQLStatement(sql[fqn]["select"] + " WHERE id=" + object["id"]);
+      var statement:SQLStatement = getSQLStatement(sql[fqn]["select"] + " and id = '" + object["id"] + "'");
       try {
         statement.execute();
       
@@ -170,9 +171,8 @@ package org.ruboss.services.air {
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
       var sqlText:String = sql[fqn]["insert"];
-      if (!RubossUtils.isEmpty(object["id"])) {
-        sqlText = sqlText.replace(")", ", id)");
-        sqlText = sqlText.replace(/\)$/, ", \:id)");
+      if (RubossUtils.isEmpty(object["id"])) {
+        object["id"] = UUID.createRandom().toString().replace(new RegExp("-", "g"), "");
       }
       var statement:SQLStatement = getSQLStatement(sqlText);
       for each (var node:XML in describeType(object)..accessor) {
@@ -202,13 +202,10 @@ package org.ruboss.services.air {
       }
       
       try {
-        if (!RubossUtils.isEmpty(object["id"])) {
-          statement.parameters[":id"] = object["id"];
-        }
+        statement.parameters[":id"] = object["id"];
+        statement.parameters[":rev"] = 0;
+        statement.parameters[":sync"] = 'N';
         statement.execute();
-        if (RubossUtils.isEmpty(object["id"])) {
-          object["id"] = statement.getResult().lastInsertRowID;
-        }
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
         if (responder) responder.fault(e);
@@ -222,6 +219,7 @@ package org.ruboss.services.air {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["update"];
       statement = statement.replace("{id}", object["id"]);
+      statement = statement.replace("{rev}", object["rev"]);
       var sqlStatement:SQLStatement = getSQLStatement(statement);
       for each (var node:XML in describeType(object)..accessor) {
         var localName:String = node.@name;
@@ -247,6 +245,8 @@ package org.ruboss.services.air {
         }
       }
       try {
+        sqlStatement.parameters[":rev"] = 0;
+        sqlStatement.parameters[":sync"] = 'U'; 
         sqlStatement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -261,6 +261,7 @@ package org.ruboss.services.air {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["delete"];
       statement = statement.replace("{id}", object["id"]);
+      statement = statement.replace("{rev}", object["rev"]);
       try {
         getSQLStatement(statement).execute();
         invokeResponderResult(responder, object);
@@ -324,7 +325,11 @@ package org.ruboss.services.air {
         updateStatement += snakeName + "=:" + snakeName + ",";
       }
       
-      createStatement += "id INTEGER PRIMARY KEY AUTOINCREMENT)";      
+      insertStatement += "rev, sync, id, ";
+      insertParams += ":rev, :sync, :id, ";
+      updateStatement += "rev=:rev,sync=:sync,";
+      
+      createStatement += "rev INTEGER, sync TEXT, id TEXT, PRIMARY KEY(id, rev))";      
       sql[modelName]["create"] = createStatement;
             
       insertParams = insertParams.substr(0, insertParams.length - 2);
@@ -333,13 +338,13 @@ package org.ruboss.services.air {
       sql[modelName]["insert"] = insertStatement;
       
       updateStatement = updateStatement.substring(0, updateStatement.length - 1);
-      updateStatement += " WHERE id={id}";
+      updateStatement += " WHERE id={id} and rev={rev}";
       sql[modelName]["update"] = updateStatement;
 
-      var deleteStatement:String = "DELETE FROM " + tableName + " WHERE id={id}";
+      var deleteStatement:String = "DELETE FROM " + tableName + " WHERE id={id} and rev={rev}";
       sql[modelName]["delete"] = deleteStatement;
       
-      var selectStatement:String = "SELECT * FROM " + tableName;
+      var selectStatement:String = "SELECT * FROM " + tableName + " WHERE sync != 'D' and rev = 0";
       sql[modelName]["select"] = selectStatement;
     }
     

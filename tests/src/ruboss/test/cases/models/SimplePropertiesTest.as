@@ -119,23 +119,6 @@ package ruboss.test.cases.models {
         assertEquals("Foobar", result.name);
       });
     }
-    
-    public function testCreateFollowedByUpdate():void {
-      establishService();
-      var model:SimpleProperty = getNewSimpleProperty();
-      model.create(function(result:SimpleProperty):void {
-        assertTrue(result.id);
-        assertEquals(2, result.amount);
-        assertTrue(result.available);
-        assertEquals("Foobar", result.name);
-        
-        result.name = "Hello";
-        result.update(function(updated:SimpleProperty):void {
-          assertEquals(result.id, updated.id);
-          assertEquals("Hello", updated.name);
-        });
-      });            
-    }
 
     private function getNewSimpleProperty():SimpleProperty {
       var model:SimpleProperty = new SimpleProperty;

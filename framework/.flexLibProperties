@@ -19,6 +19,7 @@
 <classEntry path="org.ruboss.controllers.RubossApplicationController"/>
 <classEntry path="org.ruboss.controllers.SerializersController"/>
 <classEntry path="org.ruboss.controllers.ServicesController"/>
+<classEntry path="org.ruboss.controllers.SyncController"/>
 <classEntry path="org.ruboss.controllers.mock.MockAuxHTTPController"/>
 <classEntry path="org.ruboss.events.CacheUpdateEvent"/>
 <classEntry path="org.ruboss.events.CommandExecutionEvent"/>
@@ -37,6 +38,8 @@
 <classEntry path="org.ruboss.services.GenericServiceErrors"/>
 <classEntry path="org.ruboss.services.IServiceErrors"/>
 <classEntry path="org.ruboss.services.IServiceProvider"/>
+<classEntry path="org.ruboss.services.ISyncingServiceProvider"/>
+<classEntry path="org.ruboss.services.IVersioningServiceProvider"/>
 <classEntry path="org.ruboss.services.ServiceResponder"/>
 <classEntry path="org.ruboss.services.XMLServiceErrors"/>
 <classEntry path="org.ruboss.services.air.AIRServiceProvider"/>
