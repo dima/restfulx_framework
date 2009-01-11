@@ -20,10 +20,10 @@ package org.ruboss.components {
   import flash.ui.Keyboard;
   import flash.utils.Timer;
   
+  import mx.collections.ArrayCollection;
   import mx.controls.ComboBox;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.collections.RubossCollection;
   import org.ruboss.models.RubossModel;
   import org.ruboss.utils.RubossUtils;
   
@@ -116,7 +116,7 @@ package org.ruboss.components {
   
     public function RubossAutoComplete() {
       super();
-      dataProvider = new RubossCollection;      
+      dataProvider = new ArrayCollection;      
       
       //cruft to make ComboBox look-n-feel appropriate in the context
       editable = true;
@@ -167,9 +167,9 @@ package org.ruboss.components {
     }
   
     private function onTypedTextChange(event:Event):void {
-      RubossCollection(dataProvider).refresh();
+      ArrayCollection(dataProvider).refresh();
       
-      if (RubossCollection(dataProvider).length == 0) resourceSearched = false;
+      if (ArrayCollection(dataProvider).length == 0) resourceSearched = false;
 
       if (!resourceSearched && !searchInProgress) {
         searchInProgress = true;
@@ -193,14 +193,16 @@ package org.ruboss.components {
     private function onResourceSearch(results:Object):void {
       resourceSearched = true;
       searchInProgress = false;
-      dataProvider = Ruboss.filter(Ruboss.models.cached(resource), filterFunction);
-      dataProvider.refresh();
-      
-      if (RubossCollection(dataProvider).length > 1) {
-        typedTextChanged = true;
-        invalidateProperties();
-        invalidateDisplayList();
-        dispatchEvent(new Event("typedTextChange"));
+      if (Ruboss.models.cached(resource).length) {
+        dataProvider = Ruboss.filter(Ruboss.models.cached(resource), filterFunction);
+        dataProvider.refresh();
+        
+        if (ArrayCollection(dataProvider).length > 1) {
+          typedTextChanged = true;
+          invalidateProperties();
+          invalidateDisplayList();
+          dispatchEvent(new Event("typedTextChange"));
+        }
       }
     }
 
@@ -217,7 +219,7 @@ package org.ruboss.components {
         if (typedTextChanged) {
           cursorPosition = textInput.selectionBeginIndex;
     
-          if (RubossCollection(dataProvider).length) {
+          if (ArrayCollection(dataProvider).length) {
             if (!clearingText) showDropdown = true;
           } else {
             dropdownClosed = true;
@@ -278,7 +280,7 @@ package org.ruboss.components {
           showingDropdown = false;
           dropdownClosed = true;
         } else if (event.keyCode == Keyboard.ENTER) {
-          if (selectedItem != null) {
+          if (selectedItem != null && selectedItem is RubossModel) {
             if (!Ruboss.models.shown(selectedItem)) {
               RubossModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
             }
