@@ -31,6 +31,9 @@ package org.ruboss.models {
     /** some models have a revision number */
     public var rev:String;
     
+    /** if we have a revision number, it's also a good idea to keep track of the previous one */
+    public var prerev:String;
+    
     /** tracks of this model need to be synchornized */
     public var sync:String;
 

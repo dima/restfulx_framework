@@ -245,13 +245,12 @@ package org.ruboss.services.air {
         }
       }
       try {
-        sqlStatement.parameters[":rev"] = 0;
+        sqlStatement.parameters[":rev"] = object["rev"];
         if (object["sync"] == 'N') {
           sqlStatement.parameters[":sync"] = 'N';
         } else {
           sqlStatement.parameters[":sync"] = 'U';
         }
-        sqlStatement.parameters[":sync"] = 'U'; 
         sqlStatement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -331,14 +330,19 @@ package org.ruboss.services.air {
     private function updateSyncStatus(object:Object, responder:IResponder, syncStatus:String = ""):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["sync"];
+      if (RubossUtils.isEmpty(object["prerev"])) {
+        object["prerev"] = object["rev"];
+      }
       statement = statement.replace("{id}", object["id"]);
-      statement = statement.replace("{rev}", object["rev"]);
+      statement = statement.replace("{pre}", object["prerev"]);
       var sqlStatement:SQLStatement = getSQLStatement(statement);
       sqlStatement.parameters[":sync"] = syncStatus;
+      sqlStatement.parameters[":rev"] = object["rev"];
       
       try {
         sqlStatement.execute();
         object["sync"] = syncStatus;
+        object["prerev"] = null;
         invokeResponderResult(responder, object);
       } catch (e:Error) {
         if (responder) responder.fault(e);
@@ -401,18 +405,18 @@ package org.ruboss.services.air {
       sql[modelName]["insert"] = insertStatement;
       
       updateStatement = updateStatement.substring(0, updateStatement.length - 1);
-      updateStatement += " WHERE id={id} and rev={rev}";
+      updateStatement += " WHERE id='{id}' and rev='{rev}'";
       sql[modelName]["update"] = updateStatement;
       
-      sql[modelName]["sync"] = "UPDATE " + tableName + " SET sync=:sync WHERE id='{id}' and rev='{rev}'";
+      sql[modelName]["sync"] = "UPDATE " + tableName + " SET sync=:sync,rev=:rev WHERE id='{id}' and rev='{pre}'";
 
       var deleteStatement:String = "DELETE FROM " + tableName + " WHERE id='{id}' and rev='{rev}'";
       sql[modelName]["delete"] = deleteStatement;
       
-      var selectStatement:String = "SELECT * FROM " + tableName + " WHERE sync != 'D' and rev = 0";
+      var selectStatement:String = "SELECT * FROM " + tableName + " WHERE sync != 'D'";
       sql[modelName]["select"] = selectStatement;
       
-      sql[modelName]["dirty"] = "SELECT * FROM " + tableName + " WHERE sync != '' and rev = 0";
+      sql[modelName]["dirty"] = "SELECT * FROM " + tableName + " WHERE sync != ''";
     }
     
     protected function initializeConnection(databaseName:String, 

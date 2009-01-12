@@ -22,6 +22,7 @@ package org.ruboss.controllers {
   import org.ruboss.Ruboss;
   import org.ruboss.events.SyncEndEvent;
   import org.ruboss.events.SyncStartEvent;
+  import org.ruboss.services.ChangeResponder;
   import org.ruboss.services.IServiceProvider;
   import org.ruboss.services.ISyncingServiceProvider;
   
@@ -63,21 +64,24 @@ package org.ruboss.controllers {
 	  protected function onDirtyChanges(result:Object, token:Object = null):void {
 	    dispatchEvent(new SyncStartEvent);
 	    for each (var instance:Object in result as Array) {
+	      if (instance["rev"] == 0) instance["rev"] = "";
 	      switch (instance["sync"]) {
 	        case DELETE:
-	          trace("deleting: " + instance);
+	          Ruboss.log.debug("destroying instance: " + instance);
+	          destination.destroy(instance, new ChangeResponder(instance, this, source, destination, DELETE));
 	          break;
 	        case CREATE:
-	          trace("creating: " + instance);
+	          Ruboss.log.debug("creating instance: " + instance);
+ 	          destination.create(instance, new ChangeResponder(instance, this, source, destination, CREATE));
 	          break;
 	        case UPDATE:
-	          trace("updating: " + instance);
+	          Ruboss.log.debug("updating instance: " + instance);
+	          destination.update(instance, new ChangeResponder(instance, this, source, destination, UPDATE));
 	          break;
 	        default:
-	          trace("don't know what to do with: " + instance["sync"]);
+	          Ruboss.log.error("don't know what to do with: " + instance["sync"]);
 	      }
 	    }
-	    dispatchEvent(new SyncEndEvent);
 	  }
 	  
 	  protected function onDirtyFault(info:Object, token:Object = null):void {

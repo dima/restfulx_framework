@@ -24,8 +24,12 @@ package org.ruboss.events {
     /** Event identifier */
     public static var ID:String = "syncItem";
     
-    public function SyncItemEvent() {
+    /** the model object that was synchronized */
+    public var item:Object;
+    
+    public function SyncItemEvent(item:Object) {
       super(ID, false, false);
+      this.item = item;
     }
   }
 }

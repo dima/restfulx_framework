@@ -24,8 +24,16 @@ package org.ruboss.events {
     /** Event identifier */
     public static var ID:String = "syncError";
     
-    public function SyncErrorEvent() {
+    /** the item that caused error while synchronizing */
+    public var item:Object;
+    
+    /** the error reported, if any */
+    public var info:Object;
+    
+    public function SyncErrorEvent(item:Object, info:Object) {
       super(ID, false, false);
+      this.item = item;
+      this.info = info;
     }
   }
 }

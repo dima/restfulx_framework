@@ -92,6 +92,8 @@ package org.ruboss.utils {
         var cloned:Object = new clazz;
         cloned["id"] = object["id"];
         cloned["rev"] = object["rev"];
+        cloned["sync"] = object["sync"];
+        cloned["prerev"] = object["prerev"];
         for each (var node:XML in describeType(object)..accessor) {
           if (!isInvalidPropertyName(node.@name) && !RubossUtils.isIgnored(node)) {
             try {
