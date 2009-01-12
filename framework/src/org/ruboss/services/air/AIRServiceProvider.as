@@ -246,6 +246,11 @@ package org.ruboss.services.air {
       }
       try {
         sqlStatement.parameters[":rev"] = 0;
+        if (object["sync"] == 'N') {
+          sqlStatement.parameters[":sync"] = 'N';
+        } else {
+          sqlStatement.parameters[":sync"] = 'U';
+        }
         sqlStatement.parameters[":sync"] = 'U'; 
         sqlStatement.execute();
         show(object, responder, metadata, nestedBy);

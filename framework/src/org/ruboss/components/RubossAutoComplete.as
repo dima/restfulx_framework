@@ -63,7 +63,7 @@ package org.ruboss.components {
    *  @example And the filter function:
    *  
    *  <listing version="3.0"> 
-   *    private function filterProjectsByname(item:Project):Boolean { 
+   *    private function filterProjectsByName(item:Project):Boolean { 
    *            var regexp:RegExp = new RegExp(autoComplete.typedText, "i"); 
    *            return item.name.search(regexp) != -1; 
    *    } 
@@ -112,6 +112,8 @@ package org.ruboss.components {
     private var showingDropdown:Boolean = false;
 
     private var clearingText:Boolean = false;
+    
+    private var preselectedItem:Boolean = false;
 
     private var dropdownClosed:Boolean = true;
 
@@ -158,6 +160,17 @@ package org.ruboss.components {
       invalidateProperties();
       invalidateDisplayList();
       dispatchEvent(new Event("typedTextChange"));
+    }
+    
+    public function set chosenItem(input:String):void {
+      _typedText = input;
+      typedTextChanged = true;
+      
+      preselectedItem = true;
+      
+      invalidateProperties();
+      invalidateDisplayList();
+      dispatchEvent(new Event("typedTextChange"));      
     }
   
     /**
@@ -231,7 +244,7 @@ package org.ruboss.components {
           cursorPosition = textInput.selectionBeginIndex;
     
           if (ArrayCollection(dataProvider).length) {
-            if (!clearingText) showDropdown = true;
+            if (!clearingText && !preselectedItem) showDropdown = true;
           } else {
             dropdownClosed = true;
             showDropdown = false;
@@ -264,6 +277,7 @@ package org.ruboss.components {
         }
         
         clearingText = false;
+        preselectedItem = false;
         
         if (showDropdown && !dropdown.visible) {
           // This is needed to control the open duration of the dropdown
