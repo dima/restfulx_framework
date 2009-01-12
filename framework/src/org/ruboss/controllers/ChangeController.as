@@ -16,11 +16,10 @@
 package org.ruboss.controllers {
   import flash.events.EventDispatcher;
   
-  import mx.collections.ArrayCollection;
   import mx.collections.ItemResponder;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.events.SyncEndEvent;
+  import org.ruboss.collections.RubossCollection;
   import org.ruboss.events.SyncStartEvent;
   import org.ruboss.services.ChangeResponder;
   import org.ruboss.services.IServiceProvider;
@@ -34,7 +33,11 @@ package org.ruboss.controllers {
     
     public static const UPDATE:String = "U";
     
-    public var stack:ArrayCollection;
+    public var stack:RubossCollection;
+    
+    public var errors:RubossCollection;
+    
+    public var count:int;
     
     private var source:ISyncingServiceProvider;
     
@@ -42,7 +45,7 @@ package org.ruboss.controllers {
 	
   	public function ChangeController(source:ISyncingServiceProvider, destination:IServiceProvider) {
   	  super();
-  	  this.stack = new ArrayCollection();
+  	  this.stack = new RubossCollection();
   		this.source = source;
   		this.destination = destination;
   	}
@@ -56,6 +59,7 @@ package org.ruboss.controllers {
   	}
 	
 	  public function push():void {
+	    errors = new RubossCollection;
 	    for each (var model:Class in Ruboss.models.state.models) {
 	      source.dirty(model, new ItemResponder(onDirtyChanges, onDirtyFault));
 	    }
@@ -63,6 +67,7 @@ package org.ruboss.controllers {
 	  
 	  protected function onDirtyChanges(result:Object, token:Object = null):void {
 	    dispatchEvent(new SyncStartEvent);
+	    count += (result as Array).length;
 	    for each (var instance:Object in result as Array) {
 	      if (instance["rev"] == 0) instance["rev"] = "";
 	      switch (instance["sync"]) {
@@ -80,6 +85,7 @@ package org.ruboss.controllers {
 	          break;
 	        default:
 	          Ruboss.log.error("don't know what to do with: " + instance["sync"]);
+	          count--;
 	      }
 	    }
 	  }

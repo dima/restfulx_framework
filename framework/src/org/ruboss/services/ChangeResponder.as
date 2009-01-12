@@ -21,6 +21,7 @@ package org.ruboss.services {
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.CacheController;
   import org.ruboss.controllers.ChangeController;
+  import org.ruboss.events.SyncEndEvent;
   import org.ruboss.events.SyncErrorEvent;
   import org.ruboss.events.SyncItemEvent;
   import org.ruboss.utils.RubossUtils;
@@ -55,24 +56,39 @@ package org.ruboss.services {
     }
 
     public function result(event:Object):void {
-      var target:Object = destination.unmarshall(event.result, true);
-      target["prerev"] = item["rev"];
-      switch (action) {
-        case ChangeController.CREATE :
-        case ChangeController.UPDATE :
-          source.sync(target, new ServiceResponder(Ruboss.models.cache.update, source, modelType));
-          break;
-        case ChangeController.DELETE :
-          source.purge(target, null);
-          break;
-        default :
-          Ruboss.log.error("don't know what to do with: " + item["sync"]);
+      if (!destination.hasErrors(event.result)) {
+        controller.count--;
+        var target:Object = destination.unmarshall(event.result, true);
+        target["prerev"] = item["rev"];
+        switch (action) {
+          case ChangeController.CREATE :
+          case ChangeController.UPDATE :
+            source.sync(target, new ServiceResponder(Ruboss.models.cache.update, source, modelType));
+            break;
+          case ChangeController.DELETE :
+            source.purge(target, null);
+            break;
+          default :
+            Ruboss.log.error("don't know what to do with: " + item["sync"]);
+        }
+        controller.dispatchEvent(new SyncItemEvent(target));
+        
+        if (controller.count == 0) {
+          controller.dispatchEvent(new SyncEndEvent);
+        }
+      } else {
+        fault(Ruboss.errors);
       }
-      controller.dispatchEvent(new SyncItemEvent(target));
     }
     
     public function fault(info:Object):void {
-      controller.dispatchEvent(new SyncErrorEvent(item, info));
+      controller.count--;
+      var error:SyncErrorEvent = new SyncErrorEvent(item, info);
+      controller.errors.addItem(error);
+      controller.dispatchEvent(error);
+      if (controller.count == 0) {
+        controller.dispatchEvent(new SyncEndEvent);
+      }
     }
   }
 }
