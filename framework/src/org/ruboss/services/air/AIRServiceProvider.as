@@ -173,6 +173,10 @@ package org.ruboss.services.air {
       var sqlText:String = sql[fqn]["insert"];
       if (RubossUtils.isEmpty(object["id"])) {
         object["id"] = UUID.createRandom().toString().replace(new RegExp("-", "g"), "");
+        object["rev"] = 0;
+        object["sync"] = 'N';
+      } else {
+        object["sync"] = "";
       }
       var statement:SQLStatement = getSQLStatement(sqlText);
       for each (var node:XML in describeType(object)..accessor) {
@@ -203,8 +207,8 @@ package org.ruboss.services.air {
       
       try {
         statement.parameters[":id"] = object["id"];
-        statement.parameters[":rev"] = 0;
-        statement.parameters[":sync"] = 'N';
+        statement.parameters[":rev"] = object["rev"];
+        statement.parameters[":sync"] = object["sync"];
         statement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -262,7 +266,11 @@ package org.ruboss.services.air {
      * @see org.ruboss.services.IServiceProvider#destroy
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      updateSyncStatus(object, responder, "D");
+      if (object["sync"] == 'N') {
+        purge(object, responder, metadata, nestedBy);
+      } else {
+        updateSyncStatus(object, responder, "D");
+      }
     }
     
     /**
