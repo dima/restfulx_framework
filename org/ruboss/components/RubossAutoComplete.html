@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="RubossAutoComplete,org.ruboss.components.RubossAutoComplete,filterFunction,lookupDelay,lookupMinChars,resource,typedText,close,commitProperties,getStyle,keyDownHandler,measure,textInput_changeHandler,updateDisplayList" name="keywords">
+<meta content="RubossAutoComplete,org.ruboss.components.RubossAutoComplete,clearTextAfterFind,filterCategory,filterFunction,lookupDelay,lookupMinChars,resource,showOnEnter,typedText,chosenItem,clearTypedText,close,commitProperties,getStyle,keyDownHandler,textInput_changeHandler,updateDisplayList" name="keywords">
 <title>org.ruboss.components.RubossAutoComplete</title>
 </head>
 <body>
@@ -70,13 +70,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
     <div class='listing'><pre>
     &lt;components:RubossAutoComplete id=&quot;autoComplete&quot;   
       resource=&quot;{Project}&quot; filterFunction=&quot;filterProjectsByName&quot; 
-      selectedItemShown=&quot;onProjectShow(event)&quot;/&gt;
+      &quot;/&gt;
     </pre></div>
     
     <p></p>And the filter function:
     
     <div class='listing'><pre> 
-      private function filterProjectsByname(item:Project):Boolean { 
+      private function filterProjectsByName(item:Project):Boolean { 
               var regexp:RegExp = new RegExp(autoComplete.typedText, "i"); 
               return item.name.search(regexp) != -1; 
       } 
@@ -93,23 +93,42 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#filterFunction">filterFunction</a> : Function<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#chosenItem">chosenItem</a> : String<div class="summaryTableDescription">[write-only]</div>
 </td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lookupDelay">lookupDelay</a> : int = 500<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#clearTextAfterFind">clearTextAfterFind</a> : Boolean = false<div class="summaryTableDescription"> Indicates if the search area should be cleared after a specific item has been found/shown </div>
 </td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lookupMinChars">lookupMinChars</a> : int = 1<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#filterCategory">filterCategory</a> : String<div class="summaryTableDescription"> If provided this indicates which property should be used for filtering/search </div>
 </td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#resource">resource</a> : Class<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#filterFunction">filterFunction</a> : Function<div class="summaryTableDescription"> 
+     Client-side filter function.</div>
 </td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#typedText">typedText</a> : String<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lookupDelay">lookupDelay</a> : int = 500<div class="summaryTableDescription"> Indicates how long we should wait for before firing server request </div>
+</td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lookupMinChars">lookupMinChars</a> : int = 1<div class="summaryTableDescription"> Minimum number of characters that must be provided before server request will be made </div>
+</td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#resource">resource</a> : Class<div class="summaryTableDescription"> Ruboss model class this auto complete component is bound to </div>
+</td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#showOnEnter">showOnEnter</a> : Boolean = true<div class="summaryTableDescription"> Indicates if a Ruboss.models.show operation should be performed on enter </div>
+</td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#typedText">typedText</a> : String<div class="summaryTableDescription">
+     Contains currently typed text
+     </div>
 </td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
 </tr>
 </table>
@@ -126,6 +145,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#RubossAutoComplete()">RubossAutoComplete</a>()</div>
 <div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clearTypedText()">clearTypedText</a>():void</div>
+<div class="summaryTableDescription">
+     Clear typed text without triggering dropdown show
+     </div>
 </td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
 </tr>
 <tr class="">
@@ -168,13 +196,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#measure()">measure</a>():void</div>
-<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
-<div class="summarySignature">
 <a class="signatureLink" href="#textInput_changeHandler()">textInput_changeHandler</a>(event:Event):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
@@ -198,7 +219,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#event:selectedItemShown">selectedItemShown</a>
+<a class="signatureLink" href="#event:selectedItemChange">selectedItemChange</a>
 </div>
 </td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol">RubossAutoComplete</td>
 </tr>
@@ -218,15 +239,46 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
-<a name="filterFunction"></a>
+<a name="chosenItem"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">filterFunction</td><td class="detailHeaderType">property</td>
+<td class="detailHeaderName">chosenItem</td><td class="detailHeaderType">property</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public var filterFunction:Function</code>
+<code>chosenItem:String</code>&nbsp;&nbsp;[write-only]<p>This property can be used as the source for data binding.</p>
+<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set chosenItem(value:String):void</code>
+<br>
 </div>
+<a name="clearTextAfterFind"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clearTextAfterFind</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var clearTextAfterFind:Boolean = false</code><p> Indicates if the search area should be cleared after a specific item has been found/shown </p></div>
+<a name="filterCategory"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">filterCategory</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var filterCategory:String</code><p> If provided this indicates which property should be used for filtering/search </p></div>
+<a name="filterFunction"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">filterFunction</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var filterFunction:Function</code><p> 
+     Client-side filter function. This should be complemented by the
+      appropriate server-side search action/method.
+     </p></div>
 <a name="lookupDelay"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -234,8 +286,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var lookupDelay:int = 500</code>
-</div>
+<code>public var lookupDelay:int = 500</code><p> Indicates how long we should wait for before firing server request </p></div>
 <a name="lookupMinChars"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -243,8 +294,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var lookupMinChars:int = 1</code>
-</div>
+<code>public var lookupMinChars:int = 1</code><p> Minimum number of characters that must be provided before server request will be made </p></div>
 <a name="resource"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -252,8 +302,15 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var resource:Class</code>
-</div>
+<code>public var resource:Class</code><p> Ruboss model class this auto complete component is bound to </p></div>
+<a name="showOnEnter"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">showOnEnter</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var showOnEnter:Boolean = true</code><p> Indicates if a Ruboss.models.show operation should be performed on enter </p></div>
 <a name="typedText"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -261,7 +318,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>typedText:String</code>&nbsp;&nbsp;[read-write]<p>This property can be used as the source for data binding.</p>
+<code>typedText:String</code>&nbsp;&nbsp;[read-write]<p>
+     Contains currently typed text
+     </p><p>This property can be used as the source for data binding.</p>
 <span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get typedText():String</code>
@@ -282,10 +341,20 @@ showHideInherited();
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
+<a name="clearTypedText()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clearTypedText</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function clearTypedText():void</code><p>
+     Clear typed text without triggering dropdown show
+     </p></div>
 <a name="close()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">close</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+<td class="detailHeaderName">close</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -340,15 +409,6 @@ showHideInherited();
 </tr>
 </table>
 </div>
-<a name="measure()"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">measure</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>protected override function measure():void</code>
-</div>
 <a name="textInput_changeHandler()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -384,10 +444,10 @@ showHideInherited();
 </table>
 </div>
 <div class="detailSectionHeader">Event detail</div>
-<a name="event:selectedItemShown"></a>
+<a name="event:selectedItemChange"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">selectedItemShown</td><td class="detailHeaderType">event&nbsp;</td>
+<td class="detailHeaderName">selectedItemChange</td><td class="detailHeaderType">event&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
