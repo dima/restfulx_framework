@@ -93,9 +93,9 @@
 //        MockDirectCouchDBHTTPServiceProvider(Ruboss.services.getServiceProvider(MockDirectCouchDBHTTPServiceProvider.ID)).loadTestData(testData);
 			  
 			  var testSuite:TestSuite = new TestSuite;
-////			  addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
-//			  
-////			  addServiceDependentTests(testSuite, AIRServiceProvider.ID);
+        addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
+			  
+			  addServiceDependentTests(testSuite, AIRServiceProvider.ID);
 			  // enable only if you have CouchDB installed and ruboss_tests database prepopulated with test data, see above
 //			  addServiceDependentTests(testSuite, DirectCouchDBHTTPServiceProvider.ID);
 			  
