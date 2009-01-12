@@ -20,17 +20,15 @@ package org.ruboss.components {
   import flash.ui.Keyboard;
   import flash.utils.Timer;
   
+  import mx.collections.ArrayCollection;
   import mx.controls.ComboBox;
-  import mx.core.UIComponent;
   
   import org.ruboss.Ruboss;
-  import org.ruboss.collections.RubossCollection;
   import org.ruboss.models.RubossModel;
   import org.ruboss.utils.RubossUtils;
   
-  [Exclude(name="editable", kind="property")]
   [Event(name="typedTextChange", type="flash.events.Event")]
-  [Event(name="selectedItemShown", type="flash.events.Event")]
+  [Event(name="selectedItemChange", type="flash.events.Event")]
   
   [Bindable]
   /**
@@ -59,13 +57,13 @@ package org.ruboss.components {
    *  <listing version="3.0">
    *  &lt;components:RubossAutoComplete id=&quot;autoComplete&quot;   
    *    resource=&quot;{Project}&quot; filterFunction=&quot;filterProjectsByName&quot; 
-   *    selectedItemShown=&quot;onProjectShow(event)&quot;/&gt;
+   *    &quot;/&gt;
    *  </listing>
    *  
    *  @example And the filter function:
    *  
    *  <listing version="3.0"> 
-   *    private function filterProjectsByname(item:Project):Boolean { 
+   *    private function filterProjectsByName(item:Project):Boolean { 
    *            var regexp:RegExp = new RegExp(autoComplete.typedText, "i"); 
    *            return item.name.search(regexp) != -1; 
    *    } 
@@ -73,42 +71,64 @@ package org.ruboss.components {
    */
   public class RubossAutoComplete extends ComboBox {
     
-    // TODO: document these properties clean up, etc
+    /** Ruboss model class this auto complete component is bound to */
     public var resource:Class;
     
+    /** If provided this indicates which property should be used for filtering/search */
+    public var filterCategory:String;
+    
+    /** 
+     * Client-side filter function. This should be complemented by the
+     *  appropriate server-side search action/method.
+     */
     public var filterFunction:Function;
     
+    /** Indicates how long we should wait for before firing server request */
     public var lookupDelay:int = 500;
     
+    /** Minimum number of characters that must be provided before server request will be made */
     public var lookupMinChars:int = 1;
-  
-    private var resourceSearched:Boolean;
     
-    private var currentSearch:String;
+    /** Indicates if the search area should be cleared after a specific item has been found/shown */
+    public var clearTextAfterFind:Boolean = false;
     
-    private var searchInProgress:Boolean;
+    /** Indicates if a Ruboss.models.show operation should be performed on enter */
+    public var showOnEnter:Boolean = true;
 
     private var _typedText:String = "";
 
     private var typedTextChanged:Boolean;
   
+    private var resourceSearched:Boolean;
+            
+    private var searchInProgress:Boolean;
+  
     private var cursorPosition:Number = 0;
 
     private var prevIndex:Number = -1;
+    
+    private var showDropdown:Boolean = false;
 
-    private var showDropdown:Boolean=false;
+    private var showingDropdown:Boolean = false;
 
-    private var showingDropdown:Boolean=false;
+    private var clearingText:Boolean = false;
+    
+    private var preselectedItem:Boolean = false;
 
-    private var dropdownClosed:Boolean=true;
+    private var dropdownClosed:Boolean = true;
 
     private var delayTimer:Timer;
-
-    private var searchResults:RubossCollection;
   
     public function RubossAutoComplete() {
       super();
-      searchResults = new RubossCollection;
+      if (Ruboss.models.cached(resource) && Ruboss.models.cached(resource).length) {
+        dataProvider = Ruboss.filter(Ruboss.models.cached(resource), filterFunction);
+        dataProvider.refresh();
+      } else {
+        dataProvider = new ArrayCollection;
+      }
+      
+      //cruft to make ComboBox look-n-feel appropriate in the context
       editable = true;
       setStyle("arrowButtonWidth",0);
       setStyle("fontWeight","normal");
@@ -117,20 +137,61 @@ package org.ruboss.components {
       setStyle("paddingRight",0);
       rowCount = 7;
       
-      addEventListener("typedTextChange",onTextChange);
+      addEventListener("typedTextChange", onTypedTextChange);
+    }
+
+    [Bindable("typedTextChange")]
+    /**
+     * Contains currently typed text
+     * @return current typed text
+     */
+    public function get typedText():String {
+        return _typedText;
     }
   
-    private function onTextChange(event:Event):void {
-      searchResults.refresh();
-      if (RubossUtils.isEmpty(typedText)) {
-        if (!searchResults.length) resourceSearched = false;
-        return;
-      }
+    /**
+     * Set currently typed text
+     * @param input text string to use
+     */
+    public function set typedText(input:String):void {
+      _typedText = input;
+      typedTextChanged = true;
       
-      if (typedText != currentSearch) {
-        if (!searchResults.length) resourceSearched = false;
-      }
+      invalidateProperties();
+      invalidateDisplayList();
+      dispatchEvent(new Event("typedTextChange"));
+    }
+    
+    public function set chosenItem(input:String):void {
+      _typedText = input;
+      typedTextChanged = true;
       
+      preselectedItem = true;
+      
+      invalidateProperties();
+      invalidateDisplayList();
+      dispatchEvent(new Event("typedTextChange"));      
+    }
+  
+    /**
+     * Clear typed text without triggering dropdown show
+     */
+    public function clearTypedText():void {
+      _typedText = "";
+      typedTextChanged = true;
+      
+      clearingText = true;
+      
+      invalidateProperties();
+      invalidateDisplayList();
+      dispatchEvent(new Event("typedTextChange"));      
+    }
+  
+    private function onTypedTextChange(event:Event):void {
+      ArrayCollection(dataProvider).refresh();
+      
+      if (ArrayCollection(dataProvider).length == 0) resourceSearched = false;
+
       if (!resourceSearched && !searchInProgress) {
         searchInProgress = true;
         if (delayTimer != null && delayTimer.running) {
@@ -144,58 +205,124 @@ package org.ruboss.components {
     }
     
     private function invokeSearch(event:TimerEvent):void {
-      if (RubossUtils.isEmpty(typedText)) return;
-      Ruboss.http(onResourceSearch).invoke({URL:
-        RubossUtils.nestResource(resource), data: {search: typedText}, cacheBy: "index"});
+      if (RubossUtils.isEmpty(typedText)) {
+        searchInProgress = false;
+        return;
+      }
+      Ruboss.http(onResourceSearch).invoke(
+        {URL: RubossUtils.nestResource(resource), data: {search: typedText, category: filterCategory}, 
+        cacheBy: "index"});
     }
         
     private function onResourceSearch(results:Object):void {
-      searchResults = Ruboss.filter(Ruboss.models.cached(resource), filterFunction);
-      searchResults.refresh();
       resourceSearched = true;
       searchInProgress = false;
-      dataProvider = searchResults;
-    }
-  
-    private function onSearchFault(info:Object, token:Object = null):void {
-      trace("Not Happy: ",info);  
-    }
-  
-    [Bindable("typedTextChange")]
-    [Inspectable(category="Data")]
-    public function get typedText():String {
-        return _typedText;
-    }
-    
-    public function set typedText(input:String):void {
-      _typedText = input;
-      typedTextChanged = true;
+      if (Ruboss.models.cached(resource).length) {
+        dataProvider = Ruboss.filter(Ruboss.models.cached(resource), filterFunction);
+        dataProvider.refresh();
         
-      invalidateProperties();
-      invalidateDisplayList();
-      dispatchEvent(new Event("typedTextChange"));
-    }
-  
-    override protected function commitProperties():void {
-      super.commitProperties();
-    
-      if(!dropdown) selectedIndex = -1;
-      if(dropdown) {
-        if(typedTextChanged) {
-          cursorPosition = textInput.selectionBeginIndex;
-    
-          //In case there are no suggestions there is no need to show the dropdown
-          if(searchResults.length == 0) {
-            dropdownClosed = true;
-            showDropdown = false;
-          } else {
-            showDropdown = true;
-            selectedIndex = 0;
-          }
+        if (ArrayCollection(dataProvider).length > 1) {
+          typedTextChanged = true;
+          invalidateProperties();
+          invalidateDisplayList();
+          dispatchEvent(new Event("typedTextChange"));
         }
       }
     }
+
+    private function onResourceShow(result:Object):void {
+      selectedItem = result;
+      if (clearTextAfterFind) clearTypedText();
+      dispatchEvent(new Event("selectedItemChange"));
+    }
       
+    override protected function commitProperties():void {
+      super.commitProperties();
+    
+      if (dropdown) {
+        if (typedTextChanged) {
+          cursorPosition = textInput.selectionBeginIndex;
+    
+          if (ArrayCollection(dataProvider).length) {
+            if (!clearingText && !preselectedItem) showDropdown = true;
+          } else {
+            dropdownClosed = true;
+            showDropdown = false;
+          }
+        }
+      } else {
+        selectedIndex = -1;
+      }
+    }
+  
+    override protected function updateDisplayList(unscaledWidth:Number, 
+      unscaledHeight:Number):void {
+      super.updateDisplayList(unscaledWidth, unscaledHeight);
+      
+      if (selectedIndex == -1) {
+        textInput.text = typedText;
+      }
+  
+      if (dropdown) {
+        if (typedTextChanged) {
+          //This is needed because a call to super.updateDisplayList() set the text
+          // in the textInput to "" and the value typed by the user gets losts
+          textInput.text = _typedText;
+          textInput.setSelection(cursorPosition, cursorPosition);
+          typedTextChanged = false;
+        } else if (typedText) {
+          //Sets the selection when user navigates the suggestion list through
+          //arrows keys.
+          textInput.setSelection(_typedText.length, textInput.text.length);
+        }
+        
+        clearingText = false;
+        preselectedItem = false;
+        
+        if (showDropdown && !dropdown.visible) {
+          // This is needed to control the open duration of the dropdown
+          super.open();
+          showDropdown = false;
+          showingDropdown = true;
+  
+          if (dropdownClosed) dropdownClosed = false;
+        }
+      }
+    }
+
+    override protected function keyDownHandler(event:KeyboardEvent):void {
+      super.keyDownHandler(event);
+  
+      if (!event.ctrlKey) {
+        // An UP "keydown" event on the top-most item in the drop-down
+        // or an ESCAPE "keydown" event should change the text in text
+        // field to original text
+        if (event.keyCode == Keyboard.UP && prevIndex == 0) {
+          textInput.text = _typedText;
+          textInput.setSelection(textInput.text.length, textInput.text.length);
+          selectedIndex = -1; 
+        } else if (event.keyCode == Keyboard.ESCAPE && showingDropdown) {
+          textInput.text = _typedText;
+          textInput.setSelection(textInput.text.length, textInput.text.length);
+          showingDropdown = false;
+          dropdownClosed = true;
+        } else if (event.keyCode == Keyboard.ENTER) {
+          if (selectedItem != null && selectedItem is RubossModel) {
+            if (showOnEnter && !Ruboss.models.shown(selectedItem)) {
+              RubossModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
+            } else {
+              if (clearTextAfterFind) clearTypedText();
+              dispatchEvent(new Event("selectedItemChange"));
+            }
+          }
+        }
+      } else if (event.ctrlKey && event.keyCode == Keyboard.UP) {
+        dropdownClosed = true;
+      }
+  
+      prevIndex = selectedIndex;
+    }
+
     override public function getStyle(styleProp:String):* {
       if (styleProp != "openDuration") {
         return super.getStyle(styleProp);
@@ -207,83 +334,6 @@ package org.ruboss.components {
         }
       }
     }
-  
-    override protected function keyDownHandler(event:KeyboardEvent):void {
-      super.keyDownHandler(event);
-    
-      if(!event.ctrlKey) {
-        //An UP "keydown" event on the top-most item in the drop-down
-        //or an ESCAPE "keydown" event should change the text in text
-        // field to original text
-        if(event.keyCode == Keyboard.UP && prevIndex == 0) {
-          textInput.text = _typedText;
-          textInput.setSelection(textInput.text.length, textInput.text.length);
-          selectedIndex = -1; 
-        } else if(event.keyCode == Keyboard.ESCAPE && showingDropdown) {
-          textInput.text = _typedText;
-          textInput.setSelection(textInput.text.length, textInput.text.length);
-          showingDropdown = false;
-          dropdownClosed = true;
-        } else if (event.keyCode == Keyboard.ENTER) {
-          if (selectedItem != null) {
-            if (Ruboss.models.shown(selectedItem)) {
-              onResourceShow(selectedItem);
-            } else {
-              RubossModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
-            }       
-          }
-        }
-      } else if (event.ctrlKey && event.keyCode == Keyboard.UP) {
-        dropdownClosed = true;
-      }
-    
-      prevIndex = selectedIndex;
-    }
-    
-    private function onResourceShow(result:Object):void {
-      textInput.text = "";
-      textInput.setSelection(0, 0);
-      selectedIndex = -1;
-      showingDropdown = false;
-      dropdownClosed = true;
-      typedText = "";
-    }
-    
-    override protected function measure():void {
-      super.measure();
-      measuredWidth = mx.core.UIComponent.DEFAULT_MEASURED_WIDTH;
-    }
-  
-    override protected function updateDisplayList(unscaledWidth:Number, 
-      unscaledHeight:Number):void {
-      
-      super.updateDisplayList(unscaledWidth, unscaledHeight);
-      if (selectedIndex == -1) textInput.text = typedText;
-  
-      if (dropdown) {
-        if (typedTextChanged) {
-          //This is needed because a call to super.updateDisplayList() set the text
-          // in the textInput to "" and thus the value 
-          //typed by the user losts
-          textInput.text = _typedText;
-          textInput.setSelection(cursorPosition, cursorPosition);
-          typedTextChanged = false;
-        } else if (typedText) {
-          //Sets the selection when user navigates the suggestion list through
-          //arrows keys.
-          textInput.setSelection(_typedText.length,textInput.text.length);
-        }
-        
-        if (showDropdown && !dropdown.visible) {
-          //This is needed to control the open duration of the dropdown
-          super.open();
-          showDropdown = false;
-          showingDropdown = true;
-  
-          if (dropdownClosed) dropdownClosed=false;
-        }
-      }
-    }
     
     override protected function textInput_changeHandler(event:Event):void {
       super.textInput_changeHandler(event);
@@ -292,7 +342,6 @@ package org.ruboss.components {
     
     override public function close(event:Event = null):void {
       super.close(event);
-        
       if (selectedIndex == 0) {
         textInput.text = selectedLabel;
         textInput.setSelection(cursorPosition, textInput.text.length);      
