@@ -20,6 +20,7 @@ package org.ruboss.controllers {
   
   import org.ruboss.Ruboss;
   import org.ruboss.collections.RubossCollection;
+  import org.ruboss.events.SyncEndEvent;
   import org.ruboss.events.SyncStartEvent;
   import org.ruboss.services.ChangeResponder;
   import org.ruboss.services.IServiceProvider;
@@ -40,6 +41,10 @@ package org.ruboss.controllers {
     private var source:ISyncingServiceProvider;
     
     private var destination:IServiceProvider;
+    
+    private var canUndoRedo:Boolean;
+    
+    private var notifiedSyncStart:Boolean;
 	
   	public function ChangeController(source:ISyncingServiceProvider, destination:IServiceProvider) {
   	  super();
@@ -54,9 +59,22 @@ package org.ruboss.controllers {
 	    }
 	  }
 	  
+	  public function notifySyncEnd():void {
+	   Ruboss.undoredo.stack.clear();
+	   Ruboss.enableUndoRedo = canUndoRedo;
+	   notifiedSyncStart = false;
+     dispatchEvent(new SyncEndEvent);
+	  }
+	  
 	  protected function onDirtyChanges(result:Object, token:Object = null):void {
-	    dispatchEvent(new SyncStartEvent);
 	    count += (result as Array).length;
+	    // no undo-redo for synchronization, and the stack is lost after undo-redo
+	    if (count) {
+	      dispatchEvent(new SyncStartEvent);
+	      notifiedSyncStart = true;
+	      canUndoRedo = Ruboss.enableUndoRedo;
+	      Ruboss.enableUndoRedo = false;
+	    }
 	    for each (var instance:Object in result as Array) {
 	      if (instance["rev"] == 0) instance["rev"] = "";
 	      switch (instance["sync"]) {

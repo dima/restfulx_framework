@@ -34,10 +34,12 @@ package org.ruboss.controllers {
     }
     
     public function undo():void {
-      var op:Object = stack.pop();
-      var service:IServiceProvider = IServiceProvider(op["service"]);
-      var fn:Function = (service[op["action"]] as Function);
-      fn.apply(service, (op["elms"] as Array).concat(false));
+      if (stack.size) {
+        var op:Object = stack.pop();
+        var service:IServiceProvider = IServiceProvider(op["service"]);
+        var fn:Function = (service[op["action"]] as Function);
+        fn.apply(service, (op["elms"] as Array).concat(false));
+      }
     }
     
     public function redo():void {

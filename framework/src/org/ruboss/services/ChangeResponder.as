@@ -21,7 +21,6 @@ package org.ruboss.services {
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.CacheController;
   import org.ruboss.controllers.ChangeController;
-  import org.ruboss.events.SyncEndEvent;
   import org.ruboss.events.SyncErrorEvent;
   import org.ruboss.events.SyncItemEvent;
   import org.ruboss.utils.RubossUtils;
@@ -74,7 +73,7 @@ package org.ruboss.services {
         controller.dispatchEvent(new SyncItemEvent(target));
         
         if (controller.count == 0) {
-          controller.dispatchEvent(new SyncEndEvent);
+          controller.notifySyncEnd();
         }
       } else {
         fault(Ruboss.models.errors);
@@ -87,7 +86,7 @@ package org.ruboss.services {
       controller.errors.addItem(error);
       controller.dispatchEvent(error);
       if (controller.count == 0) {
-        controller.dispatchEvent(new SyncEndEvent);
+        controller.notifySyncEnd();
       }
     }
   }

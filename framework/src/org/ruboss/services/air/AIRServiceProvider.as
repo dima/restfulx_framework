@@ -29,6 +29,7 @@ package org.ruboss.services.air {
   import mx.rpc.events.ResultEvent;
   
   import org.ruboss.Ruboss;
+  import org.ruboss.collections.ModelsCollection;
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.ISyncingServiceProvider;
   import org.ruboss.services.UndoRedoResponder;
@@ -276,7 +277,8 @@ package org.ruboss.services.air {
           sqlStatement.parameters[":sync"] = object["sync"];
         }
         if (Ruboss.enableUndoRedo && canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "update", 
-          elms: [RubossUtils.clone(object), responder, metadata, nestedBy]});
+          elms: [RubossUtils.clone(ModelsCollection(Ruboss.models.cache.data[fqn]).withId(object["id"])), 
+            responder, metadata, nestedBy]});
         sqlStatement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
