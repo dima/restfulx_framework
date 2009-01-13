@@ -28,9 +28,9 @@ package org.ruboss.services {
   /**
    * Central response manager for RESTful CRUD operations.
    */
-  public class ServiceResponder implements IResponder {
+  public class ServiceResponder implements IFunctionalResponder {
 
-    private var handler:Function;
+    private var fn:Function;
     private var service:IServiceProvider;
     private var modelType:String;
     private var onSuccess:Object;
@@ -51,6 +51,14 @@ package org.ruboss.services {
       this.modelType = modelType;
       this.onSuccess = onSuccess;
       this.onFailure = onFailure;
+    }
+    
+    public function get handler():Function {
+      return fn;
+    }
+    
+    public function set handler(fn:Function):void {
+      this.fn = fn;
     }
 
     /**
@@ -87,11 +95,11 @@ package org.ruboss.services {
           }
         } else {
           // route reported (e.g. server-side validations) to onFailure or fault handler
-          Ruboss.models.dispatchEvent(new ServiceErrorEvent(Ruboss.errors));
+          Ruboss.models.dispatchEvent(new ServiceErrorEvent(Ruboss.models.errors));
           if (onSuccess is IResponder) {
-            IResponder(onSuccess).fault(Ruboss.errors);
+            IResponder(onSuccess).fault(Ruboss.models.errors);
           } else if (onFailure != null && onFailure is Function) {
-            onFailure(Ruboss.errors);
+            onFailure(Ruboss.models.errors);
           }          
         }
       }

@@ -135,7 +135,8 @@ package org.ruboss.services.as3http {
     /**
      * @see org.ruboss.services.IServiceProvider#create
      */
-    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       var client:HttpClient = getCreateOrUpdateHttpClient(object, responder);
 
       if (RubossUtils.isEmpty(object["id"])) {
@@ -150,7 +151,8 @@ package org.ruboss.services.as3http {
     /**
      * @see org.ruboss.services.IServiceProvider#update
      */
-    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       if (!modelCanBeUpdatedOrDestroyed(object)) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be updated.");
       }
@@ -164,7 +166,8 @@ package org.ruboss.services.as3http {
     /**
      * @see org.ruboss.services.IServiceProvider#destroy
      */
-    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       if (!modelCanBeUpdatedOrDestroyed(object)) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be destroyed.");
       }

@@ -73,7 +73,7 @@ package org.ruboss.services.http {
       var xmlFragmentName:String = response.localName().toString();
       if (xmlFragmentName == "errors" && RubossUtils.isEmpty(response.@type)) {
         Ruboss.log.debug("received service error response, terminating processing:\n" + response.toXMLString());
-        Ruboss.errors = new XMLServiceErrors(response);
+        Ruboss.models.errors = new XMLServiceErrors(response);
         return true;
       }
       return false;
@@ -134,7 +134,8 @@ package org.ruboss.services.http {
     /**
      * @see org.ruboss.services.IServiceProvider#create
      */    
-    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
+      canUndo:Boolean = true):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
       httpService.request = marshallToVO(object, false, metadata);
@@ -144,7 +145,8 @@ package org.ruboss.services.http {
     /**
      * @see org.ruboss.services.IServiceProvider#update
      */
-    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
       httpService.headers = {'X-HTTP-Method-Override': 'PUT'};
@@ -157,7 +159,8 @@ package org.ruboss.services.http {
     /**
      * @see org.ruboss.services.IServiceProvider#destroy
      */
-    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
       httpService.headers = {'X-HTTP-Method-Override': 'DELETE'};

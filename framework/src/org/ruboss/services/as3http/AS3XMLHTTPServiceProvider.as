@@ -113,7 +113,8 @@ package org.ruboss.services.as3http {
     /**
      * @see org.ruboss.services.IServiceProvider#create
      */    
-    public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
+    public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {      
       var url:String = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
       trace("sending create request to: " + url);
 
@@ -131,7 +132,8 @@ package org.ruboss.services.as3http {
     /**
      * @see org.ruboss.services.IServiceProvider#update
      */
-    public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
+    public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {      
       var url:String = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
       url = RubossUtils.addObjectIdToResourceURL(url, object);
       trace("sending update request to: " + url);
@@ -150,7 +152,8 @@ package org.ruboss.services.as3http {
     /**
      * @see org.ruboss.services.IServiceProvider#destroy
      */
-    public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       var url:String = Ruboss.httpRootUrl + RubossUtils.nestResource(object, nestedBy);
       url = RubossUtils.addObjectIdToResourceURL(url, object);
         

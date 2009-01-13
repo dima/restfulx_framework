@@ -31,6 +31,7 @@ package org.ruboss.services.air {
   import org.ruboss.Ruboss;
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.services.ISyncingServiceProvider;
+  import org.ruboss.services.UndoRedoResponder;
   import org.ruboss.utils.ModelsMetadata;
   import org.ruboss.utils.RubossUtils;
   import org.ruboss.utils.UUID;
@@ -168,16 +169,21 @@ package org.ruboss.services.air {
     /**
      * @see org.ruboss.services.IServiceProvider#create
      */
-    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
+      canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
       var sqlText:String = sql[fqn]["insert"];
       if (RubossUtils.isEmpty(object["id"])) {
         object["id"] = UUID.createRandom().toString().replace(new RegExp("-", "g"), "");
         object["rev"] = 0;
         object["sync"] = 'N';
-      } else {
-        object["sync"] = "";
+      } else if (!canUndo) {
+        if (object["sync"] == 'D') {
+          updateSyncStatus(object, responder);
+          return;
+        }
       }
+      
       var statement:SQLStatement = getSQLStatement(sqlText);
       for each (var node:XML in describeType(object)..accessor) {
         var localName:String = node.@name;
@@ -206,9 +212,20 @@ package org.ruboss.services.air {
       }
       
       try {
+        if (object["rev"] == null) {
+          object["rev"] = 0;
+        }
+        
+        if (object["sync"] == null) {
+          object["sync"] = "";
+        }
+        
         statement.parameters[":id"] = object["id"];
         statement.parameters[":rev"] = object["rev"];
         statement.parameters[":sync"] = object["sync"];
+        if (canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "destroy", 
+          elms: [RubossUtils.clone(object), new UndoRedoResponder(responder, Ruboss.models.cache.destroy), metadata, 
+            nestedBy]});
         statement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -219,7 +236,8 @@ package org.ruboss.services.air {
     /**
      * @see org.ruboss.services.IServiceProvider#update
      */    
-    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["update"];
       statement = statement.replace("{id}", object["id"]);
@@ -252,9 +270,13 @@ package org.ruboss.services.air {
         sqlStatement.parameters[":rev"] = object["rev"];
         if (object["sync"] == 'N') {
           sqlStatement.parameters[":sync"] = 'N';
-        } else {
+        } else if (canUndo) {
           sqlStatement.parameters[":sync"] = 'U';
+        } else {
+          sqlStatement.parameters[":sync"] = object["sync"];
         }
+        if (canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "update", 
+          elms: [RubossUtils.clone(object), responder, metadata, nestedBy]});
         sqlStatement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -265,7 +287,11 @@ package org.ruboss.services.air {
     /**
      * @see org.ruboss.services.IServiceProvider#destroy
      */
-    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
+      if (canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "create",
+        elms: [RubossUtils.clone(object), new UndoRedoResponder(responder, Ruboss.models.cache.create), metadata, 
+          nestedBy]});
       if (object["sync"] == 'N') {
         purge(object, responder, metadata, nestedBy);
       } else {

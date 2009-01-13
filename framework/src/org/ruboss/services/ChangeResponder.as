@@ -77,7 +77,7 @@ package org.ruboss.services {
           controller.dispatchEvent(new SyncEndEvent);
         }
       } else {
-        fault(Ruboss.errors);
+        fault(Ruboss.models.errors);
       }
     }
     

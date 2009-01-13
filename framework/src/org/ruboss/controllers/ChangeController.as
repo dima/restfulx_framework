@@ -32,9 +32,7 @@ package org.ruboss.controllers {
     public static const CREATE:String = "N";
     
     public static const UPDATE:String = "U";
-    
-    public var stack:RubossCollection;
-    
+        
     public var errors:RubossCollection;
     
     public var count:int;
@@ -45,17 +43,8 @@ package org.ruboss.controllers {
 	
   	public function ChangeController(source:ISyncingServiceProvider, destination:IServiceProvider) {
   	  super();
-  	  this.stack = new RubossCollection();
   		this.source = source;
   		this.destination = destination;
-  	}
-  	
-  	public function undo():void {
-  	  
-  	}
-  	
-  	public function redo():void {
-  	  
   	}
 	
 	  public function push():void {

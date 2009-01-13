@@ -29,6 +29,7 @@ package org.ruboss {
   import org.ruboss.controllers.ModelsController;
   import org.ruboss.controllers.SerializersController;
   import org.ruboss.controllers.ServicesController;
+  import org.ruboss.controllers.UndoRedoController;
   import org.ruboss.serializers.ISerializer;
   import org.ruboss.services.IServiceErrors;
   import org.ruboss.services.http.XMLHTTPServiceProvider;
@@ -108,54 +109,11 @@ package org.ruboss {
     /** exposes commonly used serializers (XML and VO) */
     public static var serializers:SerializersController;
     
-    /** exposes the Synchronization and Undo-Redo capable controller */
+    /** exposes the undo-redo capable controller */
+    public static var undoredo:UndoRedoController;
+
+    /** exposes the Synchronization capable controller */
     public static var changes:ChangeController;
-    
-    /** 
-     * Exposes errors reported by a service provider. This typically happens
-     * as a result of <code>Ruboss.models.create</code> or <code>Ruboss.models.update</code>
-     * call and gives the back-end service (such as RubyOnRails or Merb) to validate 
-     * incoming data and report any errors back to Flex/AIR client.
-     *  
-     * @example Here's an example of how to use <code>Ruboss.errors</code> in your application.
-     * Let's say you have an MXML component that provides a sign-up form:
-     *  
-     * <listing version="3.0">
-     * &lt;mx:Canvas xmlns:mx=&quot;http://www.adobe.com/2006/mxml&quot; height=&quot;400&quot; width=&quot;300&quot; 
-     *   xmlns:validators=&quot;org.ruboss.validators.*&quot;&gt;
-     *   &lt;!-- Proxies for Rails Validators --&gt;
-     *   &lt;validators:ServiceErrorValidator id=&quot;signUpLoginNameValidator&quot; field=&quot;login&quot; listener=&quot;{signUpUsername}&quot; 
-     *      serviceErrors=&quot;{Ruboss.errors}&quot;/&gt;
-     *   &lt;validators:ServiceErrorValidator id=&quot;signUpPasswordValidator&quot; field=&quot;password&quot; listener=&quot;{signUpPassword}&quot; 
-     *      serviceErrors=&quot;{Ruboss.errors}&quot;/&gt;
-     *   &lt;mx:Form&gt;
-     *     &lt;mx:FormItem label=&quot;Username&quot; required=&quot;true&quot;&gt;
-     *        &lt;mx:TextInput id=&quot;signUpUsername&quot; width=&quot;190&quot;/&gt;
-     *     &lt;/mx:FormItem&gt;
-     *     &lt;mx:FormItem label=&quot;Email&quot; required=&quot;true&quot;&gt;
-     *        &lt;mx:TextInput id=&quot;signUpEmail&quot; width=&quot;190&quot;/&gt;
-     *       &lt;/mx:FormItem&gt;
-     *     &lt;mx:FormItem label=&quot;Password&quot; required=&quot;true&quot;&gt;
-     *        &lt;mx:TextInput id=&quot;signUpPassword&quot; width=&quot;190&quot; displayAsPassword=&quot;true&quot;/&gt;
-     *      &lt;/mx:FormItem&gt;
-     *   &lt;/mx:Form&gt;
-     * &lt;/mx:Canvas&gt;
-     * </listing>
-     *  
-     * @example When you perform an actual CRUD action on the object that binds to this 
-     *  form, all errors that have been reported by the service provider will be 
-     *  automatically displayed on the appropriate form fields:
-     *  
-     * <listing version="3.0">
-     * private function signUp():void {
-     *   var account:Account = new Account;
-     *   account.login = signUpUsername.text;
-     *   account.password = signUpPassword.text;
-     *   account.create();
-     * }
-     * </listing>
-     */
-    public static var errors:IServiceErrors;
     
     /** default root URL for HTTP requests, gets prefixed to CRUD and AUX HTTP operations */
     public static var httpRootUrl:String = "/";
@@ -452,7 +410,7 @@ package org.ruboss {
      * reload the app on logout.)
      */
     public static function reset():void {
-      errors = null;
+      models.errors = null;
       defaultMetadata = null;
       sessionToken = null;
     }

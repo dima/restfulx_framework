@@ -68,7 +68,8 @@ package org.ruboss.services.mock {
       responder.result(new ResultEvent(ResultEvent.RESULT, false, false, marshalled));
     }
   
-    public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
       
       Ruboss.log.debug("attempting to create :" + fqn);
@@ -79,7 +80,8 @@ package org.ruboss.services.mock {
       responder.result(new ResultEvent(ResultEvent.RESULT, false, false, marshalled));
     }
     
-    public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
 
       Ruboss.log.debug("attempting to update :" + fqn);
@@ -89,7 +91,8 @@ package org.ruboss.services.mock {
       responder.result(new ResultEvent(ResultEvent.RESULT, false, false, marshalled));
     }
     
-    public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
 
       Ruboss.log.debug("attempting to destroy :" + fqn);

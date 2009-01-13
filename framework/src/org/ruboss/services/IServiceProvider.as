@@ -113,8 +113,10 @@ package org.ruboss.services {
      *  [project, user] where project is some Project model instance and user is some User model
      *  instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
      *  If you are using Rails see config/routes.rb for more details.
+     * @param canUndo indicates if undo-redo should be enabled
      */
-    function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
+    function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
+      canUndo:Boolean = true):void;
     
     /**
      * RESTful CRUD contract: update method. Same semantics as Rails RESTful controller update.
@@ -126,8 +128,10 @@ package org.ruboss.services {
      *  [project, user] where project is some Project model instance and user is some User model
      *  instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
      *  If you are using Rails see config/routes.rb for more details.
+     * @param canUndo indicates if undo-redo should be enabled
      */
-    function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
+    function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void;
     
     /**
      * RESTful CRUD contract: destroy method. Same semantics as Rails RESTful controller destroy.
@@ -139,7 +143,9 @@ package org.ruboss.services {
      *  [project, user] where project is some Project model instance and user is some User model
      *  instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
      *  If you are using Rails see config/routes.rb for more details.
+     * @param canUndo indicates if undo-redo should be enabled
      */
-    function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void; 
+    function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
+      canUndo:Boolean = true):void; 
   }
 }
