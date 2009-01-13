@@ -46,6 +46,7 @@ package org.ruboss.utils {
     private static const RESERVED_NAMES:Array = [
       "id",
       "rev",
+      "prerev",
       "sync",
       "attachment",
       "prototype"
@@ -92,8 +93,8 @@ package org.ruboss.utils {
         var cloned:Object = new clazz;
         cloned["id"] = object["id"];
         cloned["rev"] = object["rev"];
-        cloned["sync"] = object["sync"];
         cloned["prerev"] = object["prerev"];
+        cloned["sync"] = object["sync"];
         for each (var node:XML in describeType(object)..accessor) {
           if (!isInvalidPropertyName(node.@name) && !RubossUtils.isIgnored(node)) {
             try {

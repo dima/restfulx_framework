@@ -162,8 +162,8 @@ package org.ruboss.components {
       dispatchEvent(new Event("typedTextChange"));
     }
     
-    public function set chosenItem(input:String):void {
-      _typedText = input;
+    public function set chosenItem(input:Object):void {
+      _typedText = input.toString();
       typedTextChanged = true;
       
       preselectedItem = true;
@@ -217,7 +217,7 @@ package org.ruboss.components {
     private function onResourceSearch(results:Object):void {
       resourceSearched = true;
       searchInProgress = false;
-      if (Ruboss.models.cached(resource).length) {
+      if ((results as Array).length) {
         dataProvider = Ruboss.filter(Ruboss.models.cached(resource), filterFunction);
         dataProvider.refresh();
         
@@ -226,6 +226,8 @@ package org.ruboss.components {
           invalidateProperties();
           invalidateDisplayList();
           dispatchEvent(new Event("typedTextChange"));
+        } else if (ArrayCollection(dataProvider).length == 1) {
+          selectedItem = ArrayCollection(dataProvider).getItemAt(0);
         }
       }
     }
