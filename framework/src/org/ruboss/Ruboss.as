@@ -201,6 +201,8 @@ package org.ruboss {
      */
     public static var sessionToken:String;
     
+    public static var enableUndoRedo:Boolean = false;
+    
     /** default error namespace used by service providers */
     public static const DEFAULT_ERROR_FIELD:String = ":base";
     

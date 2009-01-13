@@ -223,7 +223,7 @@ package org.ruboss.services.air {
         statement.parameters[":id"] = object["id"];
         statement.parameters[":rev"] = object["rev"];
         statement.parameters[":sync"] = object["sync"];
-        if (canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "destroy", 
+        if (Ruboss.enableUndoRedo && canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "destroy", 
           elms: [RubossUtils.clone(object), new UndoRedoResponder(responder, Ruboss.models.cache.destroy), metadata, 
             nestedBy]});
         statement.execute();
@@ -275,7 +275,7 @@ package org.ruboss.services.air {
         } else {
           sqlStatement.parameters[":sync"] = object["sync"];
         }
-        if (canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "update", 
+        if (Ruboss.enableUndoRedo && canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "update", 
           elms: [RubossUtils.clone(object), responder, metadata, nestedBy]});
         sqlStatement.execute();
         show(object, responder, metadata, nestedBy);
@@ -289,7 +289,7 @@ package org.ruboss.services.air {
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       canUndo:Boolean = true):void {
-      if (canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "create",
+      if (Ruboss.enableUndoRedo && canUndo) Ruboss.undoredo.addChangeAction({service: this, action: "create",
         elms: [RubossUtils.clone(object), new UndoRedoResponder(responder, Ruboss.models.cache.create), metadata, 
           nestedBy]});
       if (object["sync"] == 'N') {
