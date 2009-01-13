@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.ruboss.services.air {
   import flash.data.SQLConnection;
+  import flash.data.SQLMode;
   import flash.data.SQLStatement;
   import flash.events.TimerEvent;
   import flash.filesystem.File;
@@ -457,7 +458,11 @@ package org.ruboss.services.air {
     
     protected function initializeConnection(databaseName:String, 
       databaseFile:File):void {
-      connection.open(databaseFile);
+      if (Ruboss.airEncryptionKey != null) {
+        connection.open(databaseFile, SQLMode.CREATE, false, 1024, Ruboss.airEncryptionKey);
+      } else {
+        connection.open(databaseFile);
+      }
       for (var modelName:String in sql) {
         var statement:SQLStatement = getSQLStatement(sql[modelName]["create"]);
         statement.execute();

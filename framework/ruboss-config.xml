@@ -8,6 +8,7 @@
     </library-path>
   </compiler>
   <include-classes>
+    <class>com.adobe.data.encryption.EncryptionKeyGenerator</class>
     <class>org.ruboss.Ruboss</class>
     <class>org.ruboss.collections.ModelsCollection</class>
     <class>org.ruboss.collections.RubossCollection</class>

@@ -14,6 +14,8 @@
  * commercial license, please go to http://ruboss.com. 
  ******************************************************************************/
 package org.ruboss {
+  import flash.utils.ByteArray;
+  
   import mx.collections.ArrayCollection;
   import mx.collections.Sort;
   import mx.collections.SortField;
@@ -31,7 +33,6 @@ package org.ruboss {
   import org.ruboss.controllers.ServicesController;
   import org.ruboss.controllers.UndoRedoController;
   import org.ruboss.serializers.ISerializer;
-  import org.ruboss.services.IServiceErrors;
   import org.ruboss.services.http.XMLHTTPServiceProvider;
   import org.ruboss.utils.RubossUtils;
   
@@ -150,6 +151,12 @@ package org.ruboss {
      * </listing>
      */
     public static var airDatabaseName:String = "rubossdb";
+    
+    /** 
+     * Encryption key to use for connection to AIR SQLite database (if this field is empty connection
+     * will be unencrypted = default). Use EncryptionKeyGenerator to generate the key if necessary.
+     */ 
+    public static var airEncryptionKey:ByteArray;
     
     /** default service provider to use. <code>XMLHTTPServiceProvider.ID</code> is default. */
     public static var defaultServiceId:int = XMLHTTPServiceProvider.ID;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flexLibProperties version="1">
 <includeClasses>
+<classEntry path="com.adobe.data.encryption.EncryptionKeyGenerator"/>
 <classEntry path="org.ruboss.Ruboss"/>
 <classEntry path="org.ruboss.collections.ModelsCollection"/>
 <classEntry path="org.ruboss.collections.RubossCollection"/>
