@@ -144,7 +144,12 @@ package ruboss.test.cases.serializers {
     }
     
     public function testRecursiveObjectMarshalling():void {
+      var projectXML:XML = TestApp(Application.application).project_with_contractor_and_tasks;
+      var project:Project = xml.unmarshall(projectXML) as Project;
       
+      var marshalled:XML = xml.marshall(project, true) as XML;
+      assertTrue(marshalled.toXMLString().indexOf("tasks"));
+      assertTrue(marshalled.toXMLString().indexOf("contractor"));
     }
 
     private function getNewSimpleProperty():SimpleProperty {
