@@ -1,9 +1,10 @@
-= Ruboss Framework
+= restfulX framework
 
 == Description
 
-The Ruboss Framework brings the design principles and productivity of 
-Rails to Flex development, and makes integration with RESTful APIs as simple as possible.
+The RESTful way to develop Adobe Flex and AIR applications.
+
+Ruboss framework will become restfulX as of 1.2 and will be released under MIT.
 
 Here's some of the things you can do:
 
@@ -50,4 +51,4 @@ Get involved with the community:
     
 == License
 
-Copyright (c) 2008 Ruboss Technology Corporation, released under dual GPLv3 and Ruboss Commercial License
+Copyright (c) 2008 Dima Berastau and Contributors, released under MIT License
