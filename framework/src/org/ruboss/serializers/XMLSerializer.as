@@ -91,7 +91,7 @@ package org.ruboss.serializers {
         var type:String = node.@type;
         var snakeName:String = RubossUtils.toSnakeCase(nodeName);
         
-        if (RubossUtils.isInvalidPropertyName(nodeName) || RubossUtils.isInvalidPropertyType(type)) continue;
+        if (RubossUtils.isInvalidPropertyName(nodeName)) continue;
         
         if (RubossUtils.isHasMany(node)) {
           if (!recursive || object[nodeName] == null) continue;
@@ -119,7 +119,7 @@ package org.ruboss.serializers {
           } else {
             vars.push("<" + snakeName + "_id/>");
           }
-        } else {
+        } else if (!RubossUtils.isInvalidPropertyType(type)) {
           if (object[nodeName] != null) {
             vars.push(("<" + snakeName + " type=\"" + getType(node) + "\">" + 
               RubossUtils.uncast(object, nodeName) + "</" + snakeName + ">"));
