@@ -31,7 +31,7 @@ Here's some of the things you can do with *RestfulX*:
 
 == Getting Started
 
-For details on how to get started with the Rx framework refer to:
+For details on how to get started with the RestfulX framework refer to:
 
     http://github.com/dima/restfulx_framework/wikis/home 
     
@@ -49,4 +49,4 @@ Get involved with the community:
     
 == License
 
-Copyright (c) 2008 Dima Berastau and Contributors, released under MIT License
+Copyright (c) 2008-2009 Dima Berastau and Contributors, released under MIT License
