@@ -136,10 +136,14 @@ package org.ruboss.services.http {
      */    
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
       canUndo:Boolean = true):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.POST;
-      httpService.request = marshallToVO(object, false, metadata);
-      sendOrUpload(httpService, object, responder);   
+      if (RubossUtils.isEmpty(object["id"])) {
+        var httpService:HTTPService = getHTTPService(object, nestedBy);
+        httpService.method = URLRequestMethod.POST;
+        httpService.request = marshallToVO(object, false, metadata);
+        sendOrUpload(httpService, object, responder);
+      } else {
+        update(object, responder, metadata, nestedBy, canUndo);
+      }
     }
     
     /**
