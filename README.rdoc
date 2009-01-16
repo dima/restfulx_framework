@@ -2,7 +2,7 @@
 
 == Description
 
-With *RestfulX* you can:
+Here's some of the things you can do with *RestfulX*:
 
 * *Create* a complete _Adobe_ _Flex_ or _AIR_ application in less than 5 minutes.
 
@@ -16,16 +16,18 @@ With *RestfulX* you can:
     rx-gen -h
 
 * *Integrate* with _Ruby_ _On_ _Rails_, _Merb_ or _Sinatra_ applications 
-  that use _ActiveRecord_, _DataMapper_, _CouchRest_, _ActiveCouch_, etc.
+  that use _ActiveRecord_, _DataMapper_, _CouchRest_, _ActiveCouch_ and so on.
 
-* *Communicate* between your Flex/AIR rich client and service providers 
+* *Communicate* between your Flex/AIR Rich Internet Application and service providers 
   using either _XML_ or _JSON_.
   
-* *Persist* your data directly in Adobe AIR's _SQLite_ database or _CouchDB_ 
+* *Persist* your data directly in Adobe AIR _SQLite_ database or _CouchDB_ 
   without any additional infrastructure or intermediate servers.
   
-* *Deploy* your Rx application on the Google App Engine and use Google
+* *Deploy* your RestfulX application on the Google App Engine and use Google
   DataStore for persistence.
+  
+* *Synchronize* your data between AIR _SQLite_ and other service providers. 
 
 == Getting Started
 
@@ -39,8 +41,8 @@ For details on how to get started with the Rx framework refer to:
 
 Report bugs or track framework development progress:
 
-    http://restfulx.lighthouseapp.com/projects/12668-restfulx-framework/overview
-    
+    http://restfulx.lighthouseapp.com/projects/23641-restfulx-framework  
+  
 Get involved with the community:
       
     http://groups.google.com/group/restfulx-framework
