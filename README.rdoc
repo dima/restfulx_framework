@@ -1,23 +1,19 @@
-= restfulX framework
+= RestfulX Framework: The RESTful way to create Adobe Flex and AIR applications.
 
 == Description
 
-The RESTful way to develop Adobe Flex and AIR applications.
-
-Ruboss framework will become restfulX as of 1.2 and will be released under MIT.
-
-Here's some of the things you can do:
+With *RestfulX* you can:
 
 * *Create* a complete _Adobe_ _Flex_ or _AIR_ application in less than 5 minutes.
 
   Use our lightweight Ruby-based code generation toolkit to create a fully functional
   CRUD application. Simply do:
   
-    sudo gem install ruboss4ruby
+    sudo gem install restfulx
   
   And then run:
   
-    ruboss-gen -h
+    rx-gen -h
 
 * *Integrate* with _Ruby_ _On_ _Rails_, _Merb_ or _Sinatra_ applications 
   that use _ActiveRecord_, _DataMapper_, _CouchRest_, _ActiveCouch_, etc.
@@ -28,26 +24,26 @@ Here's some of the things you can do:
 * *Persist* your data directly in Adobe AIR's _SQLite_ database or _CouchDB_ 
   without any additional infrastructure or intermediate servers.
   
-* *Deploy* your Ruboss application on the Google App Engine and use Google
+* *Deploy* your Rx application on the Google App Engine and use Google
   DataStore for persistence.
 
 == Getting Started
 
-For details on how to get started with the Ruboss framework refer to:
+For details on how to get started with the Rx framework refer to:
 
-    http://github.com/dima/ruboss_framework/wikis/home 
+    http://github.com/dima/restfulx_framework/wikis/home 
     
-    http://github.com/dima/ruboss4ruby/wikis/home
+    http://github.com/dima/restfulx/wikis/home
     
 == Getting Involved
 
 Report bugs or track framework development progress:
 
-    http://ruboss.lighthouseapp.com/projects/12668-ruboss-framework/overview
+    http://restfulx.lighthouseapp.com/projects/12668-restfulx-framework/overview
     
 Get involved with the community:
       
-    http://groups.google.com/group/ruboss-framework
+    http://groups.google.com/group/restfulx-framework
     
 == License
 

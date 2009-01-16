@@ -1,9 +1,7 @@
-require 'rubygems'
-
 # how to update the gh-pages docs branch automatically
 # 1. rake docs in master branch and commit
 # 2. checkout gh-pages
-# 3. git read-tree --prefix=master -u master
+# 3. git read-tree --prefix=master/ -u master
 # 4. cp -r master/docs/api/* .
 # 5. rm -rf master
 # 6. git commit
@@ -24,7 +22,7 @@ task :default => [:build]
 desc "Build the framework"
 task :build do
   libs = Dir.glob(File.join(ROOT_DIR, 'tests/lib', '*.swc'))
-  system("#{get_executable('compc')} +configname=air -load-config+=framework/ruboss-config.xml -library-path+=#{libs.join(',')}")
+  system("#{get_executable('compc')} +configname=air -load-config+=framework/restfulx-config.xml -library-path+=#{libs.join(',')}")
 end
 
 desc "Compile and run test application"
@@ -33,23 +31,23 @@ task :test => ["test:build", "test:run"]
 desc "Build API documentation"
 task :doc do
   libs = Dir.glob(File.join(ROOT_DIR, 'framework/lib', '*.swc'))
-  packages = ['-package org.ruboss "Provides central access to a number of frequently used subsystems, configuration options and helpers."']
-  packages << '-package org.ruboss.collections "ArrayCollection extensions that help dealing with RubossModels."'
-  packages << '-package org.ruboss.commands "Command pattern specific classes."'
-  packages << '-package org.ruboss.components "Reusable MXML components that maybe used the Code generation engine."'
-  packages << '-package org.ruboss.controllers "Various framework controllers such as RubossApplicationController and ModelsController."'
-  packages << '-package org.ruboss.controllers.mock "Adds a few testing specific controllers."'
-  packages << '-package org.ruboss.events "Events dispatched by the framework."'
-  packages << '-package org.ruboss.models "Classes used by Ruboss models."'
-  packages << '-package org.ruboss.serializers "Serializers provided by the framework, including XML, ValueObject and JSON."'
-  packages << '-package org.ruboss.services "Services provided by the framework including XML-over-HTTP, JSON-over-HTTP, CouchDB and AIR."'
-  packages << '-package org.ruboss.services.air "Adobe AIR service provider classes."'
-  packages << '-package org.ruboss.services.as3http "Direct CouchDB, XML and JSON service providers based on the as3httpclientlib."'
-  packages << '-package org.ruboss.services.http "XML and JSON service providers based on the default Flex HTTPService."'
-  packages << '-package org.ruboss.services.mock "Adds a few testing specific service providers."'
-  packages << '-package org.ruboss.utils "Framework utilties."'
-  packages << '-package org.ruboss.validators "Validation classes for proxying server-side/service provider errors to the UI."'
-  system("#{get_executable('asdoc')} +configname=air -main-title 'Ruboss Framework 1.1.1 API Documenation' -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{packages.join(" ")} -output doc/api")
+  packages = ['-package org.restfulx "Provides central access to a number of frequently used subsystems, configuration options and helpers."']
+  packages << '-package org.restfulx.collections "ArrayCollection extensions that help dealing with RxModels."'
+  packages << '-package org.restfulx.commands "Command pattern specific classes."'
+  packages << '-package org.restfulx.components "Reusable MXML components that maybe used the Code generation engine."'
+  packages << '-package org.restfulx.controllers "Various framework controllers such as RXApplicationController and ModelsController."'
+  packages << '-package org.restfulx.controllers.mock "Adds a few testing specific controllers."'
+  packages << '-package org.restfulx.events "Events dispatched by the framework."'
+  packages << '-package org.restfulx.models "Classes used by RX models."'
+  packages << '-package org.restfulx.serializers "Serializers provided by the framework, including XML, ValueObject and JSON."'
+  packages << '-package org.restfulx.services "Services provided by the framework including XML-over-HTTP, JSON-over-HTTP, CouchDB and AIR."'
+  packages << '-package org.restfulx.services.air "Adobe AIR service provider classes."'
+  packages << '-package org.restfulx.services.as3http "Direct CouchDB, XML and JSON service providers based on the as3httpclientlib."'
+  packages << '-package org.restfulx.services.http "XML and JSON service providers based on the default Flex HTTPService."'
+  packages << '-package org.restfulx.services.mock "Adds a few testing specific service providers."'
+  packages << '-package org.restfulx.utils "Framework utilties."'
+  packages << '-package org.restfulx.validators "Validation classes for proxying server-side/service provider errors to the UI."'
+  system("#{get_executable('asdoc')} +configname=air -main-title 'RestfulX Framework 1.2.0 API Documenation' -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{packages.join(" ")} -output doc/api")
 end
 
 namespace :test do  

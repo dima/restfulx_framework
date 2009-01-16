@@ -19,9 +19,9 @@
     <debug>true</debug>
   </compiler>
   <metadata>
-    <title>RubossTestApp</title>
+    <title>RxTestApp</title>
     <description></description>
-    <publisher>Ruboss</publisher>
+    <publisher>Rx</publisher>
     <creator>Dima Berastau</creator>
     <language>EN</language>
   </metadata>

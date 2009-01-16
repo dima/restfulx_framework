@@ -15,13 +15,13 @@
 -->
 
   <!-- The application identifier string, unique to this application. Required. -->
-  <id>RubossTest</id>
+  <id>RxTest</id>
 
   <!-- Used as the filename for the application. Required. -->
-  <filename>RubossTest</filename>
+  <filename>RxTest</filename>
 
   <!-- The name that is displayed in the AIR application installer. Optional. -->
-  <name>RubossTest</name>
+  <name>RxTest</name>
 
   <!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
   <version>v1</version>
