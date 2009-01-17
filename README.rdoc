@@ -32,8 +32,6 @@ Here's some of the things you can do with *RestfulX*:
 == Getting Started
 
 For details on how to get started with the RestfulX framework refer to:
-
-    http://github.com/dima/restfulx_framework/wikis/home 
     
     http://github.com/dima/restfulx/wikis/home
     
@@ -41,7 +39,7 @@ For details on how to get started with the RestfulX framework refer to:
 
 Report bugs or track framework development progress:
 
-    http://restfulx.lighthouseapp.com/projects/23641-restfulx-framework  
+    http://restfulx.lighthouseapp.com/dashboard
   
 Get involved with the community:
       
