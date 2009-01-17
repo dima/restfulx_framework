@@ -1,4 +1,4 @@
-= RestfulX Framework: The RESTful way to create Adobe Flex and AIR applications
+= RestfulX Framework: The RESTful way to develop Adobe Flex and AIR applications
 
 == Description
 
