@@ -122,19 +122,23 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#create
      */    
     public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {      
-      var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
-      trace("sending create request to: " + url);
+      canUndo:Boolean = true):void {
+      if (RxUtils.isEmpty(object["id"])) {
+        var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
+        trace("sending create request to: " + url);
 
-      var uri:URI = new URI(url);
+        var uri:URI = new URI(url);
 
-      var data:ByteArray = new ByteArray();
-      data.writeUTFBytes(serializer.marshall(object, false, metadata).toString());
-      data.position = 0;
+        var data:ByteArray = new ByteArray();
+        data.writeUTFBytes(serializer.marshall(object, false, metadata).toString());
+        data.position = 0;
       
-      getHttpClient(responder).post(uri, data, contentType);
+        getHttpClient(responder).post(uri, data, contentType);
       
-      //client.postFormData(uri, [marshallToVO(object, false, metadata)]);  
+        //client.postFormData(uri, [marshallToVO(object, false, metadata)]);
+      } else {
+        update(object, responder, metadata, nestedBy, canUndo);
+      }
     }
     
     /**
