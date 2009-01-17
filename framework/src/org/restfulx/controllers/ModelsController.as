@@ -59,7 +59,7 @@ package org.restfulx.controllers {
     /** encapsulates models control metadata and state */
     public var state:ModelsMetadata;
 
-    
+    [Bindable]
     /** 
      * Exposes errors reported by a service provider. This typically happens
      * as a result of <code>Rx.models.create</code> or <code>Rx.models.update</code>
