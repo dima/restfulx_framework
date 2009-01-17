@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TextInput xmlns:mx="http://www.adobe.com/2006/mxml"
+  text="{formatCurrency(cents)}" focusOut="updateCurrency()">
+  <mx:Script><![CDATA[
+    import flash.events.Event;
+    import mx.utils.StringUtil;
+
+    [Bindable]
+    /** Number of cents */
+    public var cents:int;
+
+    [Bindable]
+    /**
+     * Get the number of dollars.  Ideally this would be a decimal type.
+     */
+    public function get dollars():Number {
+      return cents / 100.0;
+    }
+
+    /**
+     * Set the number of dollars.  Ideally this would be a decimal type.
+     */
+    public function set dollars(d:Number):void {
+      cents = int(Math.round(Math.max(minDollars, d) * 100));
+    }
+
+    /** Minimum valid number of dollars */
+    public var minDollars:Number = 0.0;
+    
+    private function formatCurrency(cents:int):String {
+      if (isNaN(cents)) {
+        return '';
+      } else {
+        var tempDollars:Number = cents / 100.0;
+        return currencyFormatter.format(tempDollars);
+      }
+    }
+
+    private function updateCurrency():void {
+      var trimText:String = StringUtil.trim(text);
+      if (trimText.length > 0) {
+        if (trimText.charAt(0) == "$") {
+          dollars = Number(trimText.substr(1));
+        } else {
+          dollars = Number(trimText.substr(0));
+        }
+      } else {
+        dollars = 0;
+      }
+      // needed in case binding doesn't trigger
+      text = formatCurrency(cents);
+    }
+  ]]></mx:Script>
+  <mx:CurrencyFormatter id="currencyFormatter" precision="2" rounding="none"
+      decimalSeparatorTo="." thousandsSeparatorTo=","
+      useThousandsSeparator="true" useNegativeSign="true"
+      currencySymbol="$" alignSymbol="left"/>
+</mx:TextInput>

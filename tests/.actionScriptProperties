@@ -5,7 +5,7 @@
 <libraryPath defaultLinkType="1">
 <libraryPathEntry kind="4" path=""/>
 <libraryPathEntry kind="1" linkType="1" path="lib"/>
-<libraryPathEntry kind="3" linkType="1" path="/ruboss/bin/ruboss.swc" useDefaultLinkType="false"/>
+<libraryPathEntry kind="3" linkType="1" path="/restfulx/bin/restfulx.swc" useDefaultLinkType="false"/>
 </libraryPath>
 <sourceAttachmentPath/>
 </compiler>
