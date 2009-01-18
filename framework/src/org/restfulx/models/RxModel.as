@@ -23,7 +23,6 @@
  ******************************************************************************/
 package org.restfulx.models {
   import org.restfulx.Rx;
-  import org.restfulx.utils.RxFileReference;
 
   [Bindable]
   /**
@@ -40,13 +39,16 @@ package org.restfulx.models {
     public var rev:String;
     
     /** if we have a revision number, it's also a good idea to keep track of the previous one */
-    public var prerev:String;
+    public var xrev:String;
     
-    /** tracks of this model need to be synchornized */
+    /** tracks if this model needs to be synchornized */
     public var sync:String;
+    
+    /** can be used to see if this model's properties have been changed */
+    public var dirty:Boolean;
 
-    /** any model can have one attachment */
-    public var attachment:RxFileReference;
+    /** any model can have one attachment, this can be either RxFileRefrence or BinaryAttachment */
+    public var attachment:Object;
 
     /**
      * @param label default model property to use when doing toString().

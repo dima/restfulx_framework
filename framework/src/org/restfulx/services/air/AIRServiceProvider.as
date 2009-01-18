@@ -375,11 +375,11 @@ package org.restfulx.services.air {
     private function updateSyncStatus(object:Object, responder:IResponder, syncStatus:String = ""):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["sync"];
-      if (RxUtils.isEmpty(object["prerev"])) {
-        object["prerev"] = object["rev"];
+      if (RxUtils.isEmpty(object["xrev"])) {
+        object["xrev"] = object["rev"];
       }
       statement = statement.replace("{id}", object["id"]);
-      statement = statement.replace("{pre}", object["prerev"]);
+      statement = statement.replace("{pre}", object["xrev"]);
       var sqlStatement:SQLStatement = getSQLStatement(statement);
       sqlStatement.parameters[":sync"] = syncStatus;
       sqlStatement.parameters[":rev"] = object["rev"];
@@ -387,7 +387,7 @@ package org.restfulx.services.air {
       try {
         sqlStatement.execute();
         object["sync"] = syncStatus;
-        object["prerev"] = null;
+        object["xrev"] = null;
         invokeResponderResult(responder, object);
       } catch (e:Error) {
         if (responder) responder.fault(e);

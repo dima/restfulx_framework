@@ -23,10 +23,13 @@
  ******************************************************************************/
 package org.restfulx.services.http {
   import flash.events.DataEvent;
+  import flash.events.Event;
   import flash.events.IOErrorEvent;
+  import flash.net.URLLoader;
   import flash.net.URLRequest;
   import flash.net.URLRequestMethod;
   import flash.net.URLVariables;
+  import flash.utils.ByteArray;
   import flash.utils.getQualifiedClassName;
   
   import mx.rpc.AsyncToken;
@@ -39,7 +42,9 @@ package org.restfulx.services.http {
   import org.restfulx.serializers.ISerializer;
   import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.XMLServiceErrors;
+  import org.restfulx.utils.BinaryAttachment;
   import org.restfulx.utils.ModelsMetadata;
+  import org.restfulx.utils.MultiPartRequestBuilder;
   import org.restfulx.utils.RxFileReference;
   import org.restfulx.utils.RxUtils;
 
@@ -228,8 +233,43 @@ package org.restfulx.services.http {
       if (object["attachment"] == null) {
         invokeHTTPService(httpService, responder);
       } else {
-        uploadFile(httpService, object, responder);  
+        if (object["attachment"] is RxFileReference) {
+          uploadFile(httpService, object, responder);
+        } else if (object["attachment"] is BinaryAttachment) {
+          invokeMultiPartRequest(httpService, object, responder);
+        }
       }       
+    }
+    
+    protected function invokeMultiPartRequest(httpService:HTTPService, object:Object, responder:IResponder):void {
+      var fqn:String = getQualifiedClassName(object);
+      var localName:String = RxUtils.toSnakeCase(fqn.split("::")[1]);
+      var file:BinaryAttachment = BinaryAttachment(object["attachment"]);
+      
+      var payload:URLVariables = new URLVariables;
+      for (var key:String in httpService.request) {
+        payload[key] = httpService.request[key];
+      }
+      
+      payload[localName + "[" + file.key + "]"] = object["attachment"];
+      
+      var request:URLRequest = new MultiPartRequestBuilder(payload).build();
+      request.url = httpService.url;
+      request.method = httpService.method;
+      
+      if (Rx.sessionToken) {
+        request.url = request.url + "?_swfupload_session_id=" + Rx.sessionToken;
+      }   
+      
+      var loader:URLLoader = new URLLoader();
+      loader.addEventListener(Event.COMPLETE, function(event:Event):void {
+        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, event.target.data));
+      });
+      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault, false, 0, true);
+      Rx.log.debug("issuing multi-part request to: " + request.url);
+      Rx.log.debug(String(request.data));
+
+      loader.load(request);
     }
 
     protected function getHTTPService(object:Object, nestedBy:Array = null):HTTPService {

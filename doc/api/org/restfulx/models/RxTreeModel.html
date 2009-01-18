@@ -64,8 +64,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="RxModel.html#attachment">attachment</a> : <a href="../utils/RxFileReference.html">RxFileReference</a>
-<div class="summaryTableDescription"> any model can have one attachment </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="RxModel.html#attachment">attachment</a> : Object<div class="summaryTableDescription"> any model can have one attachment, this can be either RxFileRefrence or BinaryAttachment </div>
 </td><td class="summaryTableOwnerCol"><a href="RxModel.html">RxModel</a></td>
 </tr>
 <tr class="">
@@ -74,11 +73,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">RxTreeModel</td>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="RxModel.html#id">id</a> : String<div class="summaryTableDescription"> all models have an id.</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="RxModel.html#dirty">dirty</a> : Boolean<div class="summaryTableDescription"> can be used to see if this model's properties have been changed </div>
 </td><td class="summaryTableOwnerCol"><a href="RxModel.html">RxModel</a></td>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="RxModel.html#prerev">prerev</a> : String<div class="summaryTableDescription"> if we have a revision number, it's also a good idea to keep track of the previous one </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="RxModel.html#id">id</a> : String<div class="summaryTableDescription"> all models have an id.</div>
 </td><td class="summaryTableOwnerCol"><a href="RxModel.html">RxModel</a></td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -86,7 +85,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="RxModel.html">RxModel</a></td>
 </tr>
 <tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="RxModel.html#sync">sync</a> : String<div class="summaryTableDescription"> tracks of this model need to be synchornized </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="RxModel.html#sync">sync</a> : String<div class="summaryTableDescription"> tracks if this model needs to be synchornized </div>
+</td><td class="summaryTableOwnerCol"><a href="RxModel.html">RxModel</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="RxModel.html#xrev">xrev</a> : String<div class="summaryTableDescription"> if we have a revision number, it's also a good idea to keep track of the previous one </div>
 </td><td class="summaryTableOwnerCol"><a href="RxModel.html">RxModel</a></td>
 </tr>
 </table>

@@ -109,6 +109,7 @@ package org.restfulx.serializers {
       }  
       
       if (!disconnected) processHasManyThroughRelationships(object, fqn);
+      object["dirty"] = false;
 
       return object;         
     }
@@ -124,7 +125,7 @@ package org.restfulx.serializers {
         var type:String = node.@type;
         var snakeName:String = RxUtils.toSnakeCase(nodeName);
         
-        if (RxUtils.isInvalidPropertyType(type) || RxUtils.isInvalidPropertyName(nodeName)) continue;
+        if (RxUtils.isInvalidPropertyName(nodeName)) continue;
         
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
@@ -140,7 +141,7 @@ package org.restfulx.serializers {
           } else {
             result[snakeName + "_id"] = null;
           }
-        } else {
+        } else if (!RxUtils.isInvalidPropertyType(type))  {
           result[snakeName] = uncastAttribute(object, nodeName)
         }
       }

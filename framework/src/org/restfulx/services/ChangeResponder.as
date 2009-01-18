@@ -66,7 +66,7 @@ package org.restfulx.services {
       if (!destination.hasErrors(event.result)) {
         controller.count--;
         var target:Object = destination.unmarshall(event.result, true);
-        target["prerev"] = item["rev"];
+        target["xrev"] = item["rev"];
         switch (action) {
           case ChangeController.CREATE :
           case ChangeController.UPDATE :

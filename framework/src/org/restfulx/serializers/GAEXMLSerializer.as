@@ -122,7 +122,8 @@ package org.restfulx.serializers {
       }
       
       if (!disconnected) processHasManyThroughRelationships(object, fqn);
-
+      object["dirty"] = false;
+      
       return object;        
     }
     

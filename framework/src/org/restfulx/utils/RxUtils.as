@@ -54,7 +54,7 @@ package org.restfulx.utils {
     private static const RESERVED_NAMES:Array = [
       "id",
       "rev",
-      "prerev",
+      "xrev",
       "sync",
       "attachment",
       "prototype"
@@ -101,7 +101,7 @@ package org.restfulx.utils {
         var cloned:Object = new clazz;
         cloned["id"] = object["id"];
         cloned["rev"] = object["rev"];
-        cloned["prerev"] = object["prerev"];
+        cloned["xrev"] = object["xrev"];
         cloned["sync"] = object["sync"];
         for each (var node:XML in describeType(object)..accessor) {
           if (!isInvalidPropertyName(node.@name) && !RxUtils.isIgnored(node)) {
