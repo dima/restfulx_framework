@@ -87,13 +87,15 @@ package org.restfulx.controllers {
         var service:IServiceProvider = IServiceProvider(op["service"]);
         var action:String = map[op["action"]];
         var elms:Array = (op["elms"] as Array);
-        
-        var responder:IFunctionalResponder = IWrappingFunctionalResponder(elms[1]).source;
-        responder.handler = (Rx.models.cache[action] as Function);
-        
+
         // replace the arguments
-        elms[0] = op["copy"];
-        elms[1] = responder;
+        elms[0] = op["copy"];        
+        
+        if (elms[1] is IWrappingFunctionalResponder) {
+          var responder:IFunctionalResponder = IWrappingFunctionalResponder(elms[1]).source;
+          responder.handler = (Rx.models.cache[action] as Function);
+          elms[1] = responder;
+        }
         
         (service[action] as Function).apply(service, elms);
       }
