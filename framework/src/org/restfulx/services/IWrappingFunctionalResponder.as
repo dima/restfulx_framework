@@ -24,42 +24,8 @@
 package org.restfulx.services {
   import mx.rpc.IResponder;
   
-  public class UndoRedoResponder implements IWrappingFunctionalResponder {
-    private var _source:IFunctionalResponder;
-    private var fn:Function;
-    
-    public function UndoRedoResponder(source:IResponder, fn:Function) {
-      this.source = IFunctionalResponder(source);
-      this.fn = fn;
-    }
-
-    public function get handler():Function {
-      return fn;
-    }
-    
-    public function set handler(fn:Function):void {
-      this.fn = fn;
-    }
-    
-    public function get source():IFunctionalResponder {
-      return _source;
-    }
-    
-    public function set source(responder:IFunctionalResponder):void {
-      this._source = responder;
-    }
-
-    public function result(data:Object):void {
-      pushHandlerToSource();
-      source.result(data);
-    }
-    
-    public function fault(info:Object):void {
-      source.fault(info);
-    }
-    
-    private function pushHandlerToSource():void {
-      source.handler = fn; 
-    }
+  public interface IWrappingFunctionalResponder extends IFunctionalResponder {
+    function get source():IFunctionalResponder;
+    function set source(responder:IFunctionalResponder):void;    
   }
 }

@@ -84,15 +84,16 @@ package org.restfulx.controllers {
     public function RxApplicationController(commands:Array, models:Array, 
       extraServices:Array = null, targetServiceId:int = -1) {
         
-      // set up commands controller
+      // set up commands controller (does anyone even use this thing?)
       Rx.commands = new CommandsController(commands);
-
-      Rx.undoredo = new UndoRedoController;
       
       // The order is important. ModelsController must be initialized before ServicesController
+      // and UndoRedo controller
       
       // set up models controller
       Rx.models = new ModelsController(models);
+
+      Rx.undoredo = new UndoRedoController;
 
       Rx.serializers = new SerializersController;      
 

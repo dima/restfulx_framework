@@ -22,36 +22,91 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.controllers {
+  
   import de.polygonal.ds.ArrayedStack;
   
+  import flash.events.Event;
   import flash.events.EventDispatcher;
   
+  import org.restfulx.Rx;
+  import org.restfulx.events.CacheUpdateEvent;
+  import org.restfulx.services.IFunctionalResponder;
   import org.restfulx.services.IServiceProvider;
+  import org.restfulx.services.IWrappingFunctionalResponder;
 
   public class UndoRedoController extends EventDispatcher {
+    
+    private var map:Object = {
+      create: "destroy",
+      destroy: "create",
+      update: "update"
+    };
 
-    public var stack:ArrayedStack;
+    private var undoStack:ArrayedStack;
+    
+    private var redoStack:ArrayedStack;
+    
+    private var maxSize:int;
     
     public function UndoRedoController(size:int = 10) {
       super();
-      this.stack = new ArrayedStack(size);
+      this.maxSize = size;
+      this.undoStack = new ArrayedStack(size);
+      this.redoStack = new ArrayedStack(size);
+      Rx.models.addEventListener(CacheUpdateEvent.ID, onCacheUpdate);
     }
     
-    public function addChangeAction(action:Object):void {
-      stack.push(action);
-    }
-    
-    public function undo():void {
-      if (stack.size) {
-        var op:Object = stack.pop();
-        var service:IServiceProvider = IServiceProvider(op["service"]);
-        var fn:Function = (service[op["action"]] as Function);
-        fn.apply(service, (op["elms"] as Array).concat(false));
+    private function onCacheUpdate(event:CacheUpdateEvent):void {
+      if (Rx.enableUndoRedo && (event.isCreate() || event.isUpdate() || event.isDestroy())) {
+        dispatchEvent(new Event("stackChanged"));
       }
     }
     
+    public function addChangeAction(action:Object):void {
+      undoStack.push(action);
+    }
+    
+    public function undo():void {
+      if (undoStack.size) {
+        var op:Object = undoStack.pop();
+        redoStack.push(op);
+        
+        var service:IServiceProvider = IServiceProvider(op["service"]);
+        (service[op["action"]] as Function).apply(service, (op["elms"] as Array).concat(false));
+      }
+    }
+    
+    [Bindable("stackChanged")]
+    public function canUndo():Boolean {
+      return undoStack.size > 0;
+    }
+    
     public function redo():void {
-      
+      if (redoStack.size) {
+        var op:Object = redoStack.pop();
+        var service:IServiceProvider = IServiceProvider(op["service"]);
+        var action:String = map[op["action"]];
+        var elms:Array = (op["elms"] as Array);
+        
+        var responder:IFunctionalResponder = IWrappingFunctionalResponder(elms[1]).source;
+        responder.handler = (Rx.models.cache[action] as Function);
+        
+        // replace the arguments
+        elms[0] = op["copy"];
+        elms[1] = responder;
+        
+        (service[action] as Function).apply(service, elms);
+      }
+    }
+    
+    [Bindable("stackChanged")]
+    public function canRedo():Boolean {
+      return redoStack.size > 0;
+    }
+    
+    public function clear():void {
+      this.undoStack = new ArrayedStack(maxSize);
+      this.redoStack = new ArrayedStack(maxSize);
     }
   }
 }

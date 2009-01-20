@@ -233,9 +233,12 @@ package org.restfulx.services.air {
         statement.parameters[":id"] = object["id"];
         statement.parameters[":rev"] = object["rev"];
         statement.parameters[":sync"] = object["sync"];
-        if (Rx.enableUndoRedo && canUndo) Rx.undoredo.addChangeAction({service: this, action: "destroy", 
-          elms: [RxUtils.clone(object), new UndoRedoResponder(responder, Rx.models.cache.destroy), metadata, 
-            nestedBy]});
+        if (Rx.enableUndoRedo && canUndo) {
+          var clone:Object = RxUtils.clone(object);
+          Rx.undoredo.addChangeAction({service: this, action: "destroy", copy: clone,
+            elms: [clone, new UndoRedoResponder(responder, Rx.models.cache.destroy), metadata, 
+              nestedBy]});
+        }
         statement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -285,9 +288,12 @@ package org.restfulx.services.air {
         } else {
           sqlStatement.parameters[":sync"] = object["sync"];
         }
-        if (Rx.enableUndoRedo && canUndo) Rx.undoredo.addChangeAction({service: this, action: "update", 
-          elms: [RxUtils.clone(ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"])), 
-            responder, metadata, nestedBy]});
+        if (Rx.enableUndoRedo && canUndo) {
+          var clone:Object = RxUtils.clone(object);
+          Rx.undoredo.addChangeAction({service: this, action: "update", copy: clone,
+            elms: [RxUtils.clone(ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"])), 
+              responder, metadata, nestedBy]});
+        }
         sqlStatement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -300,9 +306,12 @@ package org.restfulx.services.air {
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       canUndo:Boolean = true):void {
-      if (Rx.enableUndoRedo && canUndo) Rx.undoredo.addChangeAction({service: this, action: "create",
-        elms: [RxUtils.clone(object), new UndoRedoResponder(responder, Rx.models.cache.create), metadata, 
-          nestedBy]});
+      if (Rx.enableUndoRedo && canUndo) {
+        var clone:Object = RxUtils.clone(object);
+        Rx.undoredo.addChangeAction({service: this, action: "create", copy: clone,
+          elms: [clone, new UndoRedoResponder(responder, Rx.models.cache.create), metadata, 
+            nestedBy]});
+      }
       if (object["sync"] == 'N') {
         purge(object, responder, metadata, nestedBy);
       } else {
