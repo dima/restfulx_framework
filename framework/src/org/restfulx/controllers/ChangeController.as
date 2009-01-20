@@ -68,7 +68,7 @@ package org.restfulx.controllers {
 	  }
 	  
 	  public function notifySyncEnd():void {
-	   Rx.undoredo.stack.clear();
+	   Rx.undoredo.clear();
 	   Rx.enableUndoRedo = canUndoRedo;
 	   notifiedSyncStart = false;
      dispatchEvent(new SyncEndEvent);

@@ -56,6 +56,7 @@ package org.restfulx.utils {
       "rev",
       "xrev",
       "sync",
+      "dirty",
       "attachment",
       "prototype"
     ];
@@ -116,6 +117,30 @@ package org.restfulx.utils {
         return cloned;
       } else {
         return ObjectUtil.copy(object);
+      }
+    }
+    
+    /**
+     * Do a shallow copy on two RxModel instances. Must of the same type.
+     *  
+     * @param source source object
+     * @param target target object
+     * @fqn FQN, must be the same for both source and target
+     */
+    public static function shallowCopy(source:Object, target:Object, fqn:String):void {
+      target["id"] = source["id"];
+      target["rev"] = source["rev"];
+      target["xrev"] = source["xrev"];
+      target["sync"] = source["sync"];
+      for each (var node:XML in describeType(source)..accessor) {
+        if (!isInvalidPropertyName(node.@name) && !RxUtils.isIgnored(node)) {
+          try {
+            var name:String = node.@name;
+            target[name] = source[name];
+          } catch (e:Error) {
+            // we can fail cloning if the property is read-only, etc.
+          }
+        }
       }
     }
     
