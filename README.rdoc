@@ -33,7 +33,7 @@ Here's some of the things you can do with *RestfulX*:
 
 For details on how to get started with the RestfulX framework refer to:
     
-    http://github.com/dima/restfulx/wikis/home
+    http://restfulx.org
     
 == Getting Involved
 
