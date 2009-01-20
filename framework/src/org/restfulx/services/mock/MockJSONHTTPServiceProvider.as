@@ -77,7 +77,7 @@ package org.restfulx.services.mock {
     }
   
     public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
       
       Rx.log.debug("attempting to create :" + fqn);
@@ -89,7 +89,7 @@ package org.restfulx.services.mock {
     }
     
     public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
 
       Rx.log.debug("attempting to update :" + fqn);
@@ -100,7 +100,7 @@ package org.restfulx.services.mock {
     }
     
     public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
 
       Rx.log.debug("attempting to destroy :" + fqn);

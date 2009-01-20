@@ -79,8 +79,8 @@ package org.restfulx.models {
      * @copy org.restfulx.controller.ModelsController#create
      */
     public function create(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
-      targetServiceId:int = -1):void {
-      Rx.models.create(this, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId);
+      recursive:Boolean = false, targetServiceId:int = -1):void {
+      Rx.models.create(this, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId);
     }
 
     /**
@@ -91,8 +91,8 @@ package org.restfulx.models {
      * @copy org.restfulx.controller.ModelsController#update
      */
     public function update(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
-      targetServiceId:int = -1):void {
-      Rx.models.update(this, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId);
+      recursive:Boolean = false, targetServiceId:int = -1):void {
+      Rx.models.update(this, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId);
     }
 
     /**
@@ -103,8 +103,8 @@ package org.restfulx.models {
      * @copy org.restfulx.controllers.ModelsController#show
      */
     public function destroy(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
-      targetServiceId:int = -1):void {
-      Rx.models.destroy(this, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId);
+      recursive:Boolean = false, targetServiceId:int = -1):void {
+      Rx.models.destroy(this, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId);
     }
 
     /**

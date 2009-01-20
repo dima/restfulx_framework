@@ -180,7 +180,7 @@ package org.restfulx.services.air {
      * @see org.restfulx.services.IServiceProvider#create
      */
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
       var sqlText:String = sql[fqn]["insert"];
       if (RxUtils.isEmpty(object["id"])) {
@@ -250,7 +250,7 @@ package org.restfulx.services.air {
      * @see org.restfulx.services.IServiceProvider#update
      */    
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["update"];
       statement = statement.replace("{id}", object["id"]);
@@ -305,7 +305,7 @@ package org.restfulx.services.air {
      * @see org.restfulx.services.IServiceProvider#destroy
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       if (Rx.enableUndoRedo && canUndo) {
         var clone:Object = RxUtils.clone(object);
         Rx.undoredo.addChangeAction({service: this, action: "create", copy: clone,

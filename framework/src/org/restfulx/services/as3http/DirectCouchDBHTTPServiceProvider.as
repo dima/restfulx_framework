@@ -145,7 +145,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#create
      */
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, canUndo, true);
 
       object["rev"] = "";
@@ -162,7 +162,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#update
      */
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       if (!modelCanBeUpdatedOrDestroyed(object)) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be updated.");
       }
@@ -177,7 +177,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#destroy
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       if (!modelCanBeUpdatedOrDestroyed(object)) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be destroyed.");
       }

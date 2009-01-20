@@ -363,7 +363,7 @@ package org.restfulx.controllers {
      * @param targetServiceId service provider to use
      */
     public function update(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, targetServiceId:int = -1):void {
+      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -373,13 +373,14 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
           if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
           if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
+          if (optsOrOnSuccess['recursive']) recursive = optsOrOnSuccess['recursive'];
           if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
         }
       }
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(cache.update, service, fqn, onSuccess, onFailure);
-      invokeService(service.update, service, object, serviceResponder, metadata, nestedBy);
+      invokeCUDService(service.update, service, object, serviceResponder, metadata, nestedBy, recursive);
     }
     
     /**
@@ -403,7 +404,7 @@ package org.restfulx.controllers {
      * @param targetServiceId service provider to use
      */
     public function create(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, targetServiceId:int = -1):void {
+      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -413,13 +414,14 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
           if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
           if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
+          if (optsOrOnSuccess['recursive']) recursive = optsOrOnSuccess['recursive'];
           if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
         }
       }
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(cache.create, service, fqn, onSuccess, onFailure);
-      invokeService(service.create, service, object, serviceResponder, metadata, nestedBy);
+      invokeCUDService(service.create, service, object, serviceResponder, metadata, nestedBy, recursive);
     }
 
     /**
@@ -443,7 +445,7 @@ package org.restfulx.controllers {
      * @param targetServiceId service provider to use
      */
     public function destroy(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, targetServiceId:int = -1):void {
+      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -453,13 +455,14 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
           if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
           if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
+          if (optsOrOnSuccess['recursive']) recursive = optsOrOnSuccess['recursive'];
           if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
         }
       }
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(cache.destroy, service, fqn, onSuccess, onFailure);
-      invokeService(service.destroy, service, object, serviceResponder, metadata, nestedBy);
+      invokeCUDService(service.destroy, service, object, serviceResponder, metadata, nestedBy, recursive);
     }
     
     /**
@@ -579,6 +582,15 @@ package org.restfulx.controllers {
       metadata = setServiceMetadata(metadata);
       dispatchEvent(new ServiceCallStartEvent);   
       method.call(service, operand, serviceResponder, metadata, nestedBy);   
+    }
+
+    private function invokeCUDService(method:Function, service:IServiceProvider, operand:Object, 
+      serviceResponder:ServiceResponder, metadata:Object = null, nestedBy:Array = null, 
+      recursive:Boolean = false):void {
+      CursorManager.setBusyCursor();
+      metadata = setServiceMetadata(metadata);
+      dispatchEvent(new ServiceCallStartEvent);   
+      method.call(service, operand, serviceResponder, metadata, nestedBy, recursive);   
     }
   }
 }

@@ -122,7 +122,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#create
      */    
     public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       if (RxUtils.isEmpty(object["id"])) {
         var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
         trace("sending create request to: " + url);
@@ -130,7 +130,7 @@ package org.restfulx.services.as3http {
         var uri:URI = new URI(url);
 
         var data:ByteArray = new ByteArray();
-        data.writeUTFBytes(serializer.marshall(object, false, metadata).toString());
+        data.writeUTFBytes(serializer.marshall(object, recursive, metadata).toString());
         data.position = 0;
       
         getHttpClient(responder).post(uri, data, contentType);
@@ -145,7 +145,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#update
      */
     public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {      
+      recursive:Boolean = false, canUndo:Boolean = true):void {      
       var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
       url = RxUtils.addObjectIdToResourceURL(url, object);
       trace("sending update request to: " + url);
@@ -153,7 +153,7 @@ package org.restfulx.services.as3http {
       var uri:URI = new URI(url);
 
       var data:ByteArray = new ByteArray();
-      data.writeUTFBytes(serializer.marshall(object, false, metadata).toString());
+      data.writeUTFBytes(serializer.marshall(object, recursive, metadata).toString());
       data.position = 0;
       
       getHttpClient(responder).put(uri, data, contentType); 
@@ -165,7 +165,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#destroy
      */
     public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
       url = RxUtils.addObjectIdToResourceURL(url, object);
         

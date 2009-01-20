@@ -148,11 +148,11 @@ package org.restfulx.services.http {
      * @see org.restfulx.services.IServiceProvider#create
      */    
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       if (RxUtils.isEmpty(object["id"])) {
         var httpService:HTTPService = getHTTPService(object, nestedBy);
         httpService.method = URLRequestMethod.POST;
-        httpService.request = marshallToVO(object, false, metadata);
+        httpService.request = marshallToVO(object, recursive, metadata);
         sendOrUpload(httpService, object, responder);
       } else {
         update(object, responder, metadata, nestedBy, canUndo);
@@ -163,11 +163,11 @@ package org.restfulx.services.http {
      * @see org.restfulx.services.IServiceProvider#update
      */
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
       httpService.headers = {'X-HTTP-Method-Override': 'PUT'};
-      httpService.request = marshallToVO(object, false, metadata);
+      httpService.request = marshallToVO(object, recursive, metadata);
       httpService.request["_method"] = "PUT";
       httpService.url = RxUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
       sendOrUpload(httpService, object, responder); 
@@ -177,7 +177,7 @@ package org.restfulx.services.http {
      * @see org.restfulx.services.IServiceProvider#destroy
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void {
+      recursive:Boolean = false, canUndo:Boolean = true):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
       httpService.headers = {'X-HTTP-Method-Override': 'DELETE'};
@@ -301,7 +301,7 @@ package org.restfulx.services.http {
     }
     
     protected function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      var vo:Object = Rx.serializers.vo.marshall(object, false, metadata);
+      var vo:Object = Rx.serializers.vo.marshall(object, recursive, metadata);
       var result:Object = new Object;
       var localName:String = RxUtils.toSnakeCase(vo["clazz"]);
       delete vo["clazz"];

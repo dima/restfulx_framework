@@ -124,7 +124,7 @@ package org.restfulx.services {
      * @param canUndo indicates if undo-redo should be enabled
      */
     function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
-      canUndo:Boolean = true):void;
+      recursive:Boolean = false, canUndo:Boolean = true):void;
     
     /**
      * RESTful CRUD contract: update method. Same semantics as Rails RESTful controller update.
@@ -139,7 +139,7 @@ package org.restfulx.services {
      * @param canUndo indicates if undo-redo should be enabled
      */
     function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void;
+      recursive:Boolean = false, canUndo:Boolean = true):void;
     
     /**
      * RESTful CRUD contract: destroy method. Same semantics as Rails RESTful controller destroy.
@@ -154,6 +154,6 @@ package org.restfulx.services {
      * @param canUndo indicates if undo-redo should be enabled
      */
     function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      canUndo:Boolean = true):void; 
+      recursive:Boolean = false, canUndo:Boolean = true):void; 
   }
 }
