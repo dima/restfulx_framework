@@ -58,7 +58,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#create
      */    
     public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      recursive:Boolean = false, canUndo:Boolean = true):void {
+      recursive:Boolean = false, undoRedoFlag:int = 0):void {
       if (RxUtils.isEmpty(object["id"])) {
         var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
         trace("sending create request to: " + url);
@@ -66,7 +66,7 @@ package org.restfulx.services.as3http {
         var uri:URI = new URI(url);
         getHttpClient(responder).postFormData(uri, [marshallToVO(object, recursive, metadata)]);
       } else {
-        update(object, responder, metadata, nestedBy, canUndo);
+        update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
       }
     }
     
@@ -74,7 +74,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#update
      */
     public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      recursive:Boolean = false, canUndo:Boolean = true):void {      
+      recursive:Boolean = false, undoRedoFlag:int = 0):void {      
       var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
       url = RxUtils.addObjectIdToResourceURL(url, object);
       trace("sending update request to: " + url);

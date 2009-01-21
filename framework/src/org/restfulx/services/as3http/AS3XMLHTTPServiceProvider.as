@@ -30,13 +30,10 @@ package org.restfulx.services.as3http {
   import mx.rpc.events.ResultEvent;
   
   import org.httpclient.HttpClient;
-  import org.httpclient.events.HttpDataEvent;
   import org.httpclient.events.HttpDataListener;
   import org.httpclient.events.HttpResponseEvent;
-  import org.httpclient.events.HttpStatusEvent;
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
-  import org.restfulx.serializers.ISerializer;
   import org.restfulx.serializers.XMLSerializer;
   import org.restfulx.services.http.XMLHTTPServiceProvider;
   import org.restfulx.utils.RxUtils;
@@ -122,7 +119,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#create
      */    
     public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      recursive:Boolean = false, canUndo:Boolean = true):void {
+      recursive:Boolean = false, undoRedoFlag:int = 0):void {
       if (RxUtils.isEmpty(object["id"])) {
         var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
         trace("sending create request to: " + url);
@@ -137,7 +134,7 @@ package org.restfulx.services.as3http {
       
         //client.postFormData(uri, [marshallToVO(object, false, metadata)]);
       } else {
-        update(object, responder, metadata, nestedBy, canUndo);
+        update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
       }
     }
     
@@ -145,7 +142,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#update
      */
     public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      recursive:Boolean = false, canUndo:Boolean = true):void {      
+      recursive:Boolean = false, undoRedoFlag:int = 0):void {      
       var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
       url = RxUtils.addObjectIdToResourceURL(url, object);
       trace("sending update request to: " + url);
@@ -165,7 +162,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#destroy
      */
     public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      recursive:Boolean = false, canUndo:Boolean = true):void {
+      recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
       url = RxUtils.addObjectIdToResourceURL(url, object);
         

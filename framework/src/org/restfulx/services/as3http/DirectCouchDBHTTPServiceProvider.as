@@ -25,6 +25,7 @@ package org.restfulx.services.as3http {
   import com.adobe.net.URI;
   import com.adobe.serialization.json.JSON;
   
+  import flash.events.Event;
   import flash.utils.ByteArray;
   import flash.utils.getQualifiedClassName;
   
@@ -145,8 +146,8 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#create
      */
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      recursive:Boolean = false, canUndo:Boolean = true):void {
-      var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, canUndo, true);
+      recursive:Boolean = false, undoRedoFlag:int = 0):void {
+      var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, undoRedoFlag, true);
 
       object["rev"] = "";
       if (RxUtils.isEmpty(object["id"])) {
@@ -162,12 +163,12 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#update
      */
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      recursive:Boolean = false, canUndo:Boolean = true):void {
+      recursive:Boolean = false, undoRedoFlag:int = 0):void {
       if (!modelCanBeUpdatedOrDestroyed(object)) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be updated.");
       }
       
-      var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, canUndo);
+      var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, undoRedoFlag);
       
       client.put(getCouchDBURI(Rx.couchDbDatabaseName + object["id"]), marshallToJSONAndConvertToByteArray(object), 
         contentType);      
@@ -177,7 +178,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#destroy
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-      recursive:Boolean = false, canUndo:Boolean = true):void {
+      recursive:Boolean = false, undoRedoFlag:int = 0):void {
       if (!modelCanBeUpdatedOrDestroyed(object)) {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be destroyed.");
       }
@@ -188,11 +189,14 @@ package org.restfulx.services.as3http {
         if (event.response.code != "200") {
           if (responder) responder.fault(event);
         } else {
-          if (Rx.enableUndoRedo && canUndo) {
+          if (Rx.enableUndoRedo && undoRedoFlag == Rx.undoredo.UNDO) {
             var clone:Object = RxUtils.clone(object);
             Rx.undoredo.addChangeAction({service: instance, action: "create", copy: clone,
               elms: [clone, new UndoRedoResponder(responder, Rx.models.cache.create), metadata, 
                 nestedBy]});
+          }
+          if (Rx.enableUndoRedo && Rx.undoredo.NORMAL) {
+            Rx.undoredo.dispatchEvent(new Event("normalAction"));  
           }
           if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
         }     
@@ -236,7 +240,7 @@ package org.restfulx.services.as3http {
     }
 
     protected function getCreateOrUpdateHttpClient(object:Object, responder:IResponder, metadata:Object, nestedBy:Array,
-      canUndo:Boolean, creating:Boolean = false):HttpClient {
+      undoRedoFlag:int = 0, creating:Boolean = false):HttpClient {
       
       var instance:DirectCouchDBHTTPServiceProvider = this;
       
@@ -259,7 +263,7 @@ package org.restfulx.services.as3http {
             cached = ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]);
           }
           
-          if (Rx.enableUndoRedo && canUndo) {
+          if (Rx.enableUndoRedo && undoRedoFlag == Rx.undoredo.UNDO) {
             var target:Object;
             var clone:Object = RxUtils.clone(object);
             var action:String = "destroy";
@@ -282,6 +286,11 @@ package org.restfulx.services.as3http {
             RxUtils.shallowCopy(object, cached, fqn);
             object = cached;
           }
+
+          if (Rx.enableUndoRedo && Rx.undoredo.NORMAL) {
+            Rx.undoredo.dispatchEvent(new Event("normalAction"));  
+          }
+
           if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
         }
       }, function(event:HttpErrorEvent):void {

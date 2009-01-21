@@ -36,6 +36,12 @@ package org.restfulx.controllers {
 
   public class UndoRedoController extends EventDispatcher {
     
+    public const NORMAL:int = 0;
+    
+    public const UNDO:int = 1;
+    
+    public const REDO:int = 2;
+    
     private var map:Object = {
       create: "destroy",
       destroy: "create",
@@ -53,13 +59,18 @@ package org.restfulx.controllers {
       this.maxSize = size;
       this.undoStack = new ArrayedStack(size);
       this.redoStack = new ArrayedStack(size);
-      Rx.models.addEventListener(CacheUpdateEvent.ID, onCacheUpdate);
+      addEventListener("normalAction", onNormalAction);
     }
     
     private function onCacheUpdate(event:CacheUpdateEvent):void {
       if (Rx.enableUndoRedo && (event.isCreate() || event.isUpdate() || event.isDestroy())) {
         dispatchEvent(new Event("stackChanged"));
       }
+    }
+    
+    private function onNormalAction(event:Event):void {
+      this.redoStack = new ArrayedStack(maxSize);
+      dispatchEvent(new Event("stackChanged"));
     }
     
     public function addChangeAction(action:Object):void {
@@ -72,7 +83,7 @@ package org.restfulx.controllers {
         redoStack.push(op);
         
         var service:IServiceProvider = IServiceProvider(op["service"]);
-        (service[op["action"]] as Function).apply(service, (op["elms"] as Array).concat(false));
+        (service[op["action"]] as Function).apply(service, (op["elms"] as Array).concat(UNDO));
       }
     }
     
@@ -97,7 +108,7 @@ package org.restfulx.controllers {
           elms[1] = responder;
         }
         
-        (service[action] as Function).apply(service, elms);
+        (service[action] as Function).apply(service, elms.concat(REDO));
       }
     }
     
