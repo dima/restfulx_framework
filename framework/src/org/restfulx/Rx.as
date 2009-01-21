@@ -124,6 +124,13 @@ package org.restfulx {
     /** exposes the Synchronization capable controller */
     public static var changes:ChangeController;
     
+    /** 
+     * Control the size of the undo-redo stack. the default is 10
+     * (undo redo must be enabled with Rx.enableUndoRedo = true) before this
+     * will have any effect
+     */
+    public static var undoRedoStackSize:int = 10;
+     
     /** default root URL for HTTP requests, gets prefixed to CRUD and AUX HTTP operations */
     public static var httpRootUrl:String = "/";
     

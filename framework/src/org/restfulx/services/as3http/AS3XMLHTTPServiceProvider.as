@@ -130,9 +130,7 @@ package org.restfulx.services.as3http {
         data.writeUTFBytes(serializer.marshall(object, recursive, metadata).toString());
         data.position = 0;
       
-        getHttpClient(responder).post(uri, data, contentType);
-      
-        //client.postFormData(uri, [marshallToVO(object, false, metadata)]);
+        getHttpClient(responder).post(uri, data, contentType);      
       } else {
         update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
       }
@@ -154,8 +152,6 @@ package org.restfulx.services.as3http {
       data.position = 0;
       
       getHttpClient(responder).put(uri, data, contentType); 
-
-      //client.putFormData(uri, [marshallToVO(object, false, metadata)]);
     }
     
     /**

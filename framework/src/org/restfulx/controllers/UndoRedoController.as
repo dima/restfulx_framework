@@ -22,9 +22,7 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.controllers {
-  
-  import de.polygonal.ds.ArrayedStack;
-  
+    
   import flash.events.Event;
   import flash.events.EventDispatcher;
   
@@ -53,9 +51,9 @@ package org.restfulx.controllers {
         
     private var maxSize:int;
     
-    public function UndoRedoController(size:int = 10) {
+    public function UndoRedoController() {
       super();
-      this.maxSize = size;
+      this.maxSize = Rx.undoRedoStackSize;
       this.undoStack = new Array;
       this.redoStack = new Array;
       addEventListener("normalAction", onNormalAction);
