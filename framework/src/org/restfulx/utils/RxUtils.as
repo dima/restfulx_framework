@@ -22,6 +22,7 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.utils {
+  import flash.events.Event;
   import flash.net.URLRequest;
   import flash.net.navigateToURL;
   import flash.utils.describeType;
@@ -140,6 +141,24 @@ package org.restfulx.utils {
           } catch (e:Error) {
             // we can fail cloning if the property is read-only, etc.
           }
+        }
+      }
+    }
+    
+    public static function fireUndoRedoActionEvent(undoRedoFlag:int = 0):void {
+      if (Rx.enableUndoRedo) {
+        switch (undoRedoFlag) {
+          case Rx.undoredo.NORMAL :
+            Rx.undoredo.dispatchEvent(new Event("normalAction"));
+            break;
+          case Rx.undoredo.REDO :
+            Rx.undoredo.dispatchEvent(new Event("redoAction"));
+            break;
+          case Rx.undoredo.UNDO :
+            Rx.undoredo.dispatchEvent(new Event("undoAction"));
+            break;
+          default :
+            throw new Error("Don't know what to do with undoRedoFlag: " + undoRedoFlag);
         }
       }
     }

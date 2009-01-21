@@ -29,7 +29,6 @@ package org.restfulx.controllers {
   import flash.events.EventDispatcher;
   
   import org.restfulx.Rx;
-  import org.restfulx.events.CacheUpdateEvent;
   import org.restfulx.services.IFunctionalResponder;
   import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.IWrappingFunctionalResponder;
@@ -60,16 +59,20 @@ package org.restfulx.controllers {
       this.undoStack = new ArrayedStack(size);
       this.redoStack = new ArrayedStack(size);
       addEventListener("normalAction", onNormalAction);
-    }
-    
-    private function onCacheUpdate(event:CacheUpdateEvent):void {
-      if (Rx.enableUndoRedo && (event.isCreate() || event.isUpdate() || event.isDestroy())) {
-        dispatchEvent(new Event("stackChanged"));
-      }
+      addEventListener("undoAction", onUndoAction);
+      addEventListener("redoAction", onRedoAction);
     }
     
     private function onNormalAction(event:Event):void {
       this.redoStack = new ArrayedStack(maxSize);
+      dispatchEvent(new Event("stackChanged"));
+    }
+    
+    private function onUndoAction(event:Event):void {
+      dispatchEvent(new Event("stackChanged"));
+    }
+    
+    private function onRedoAction(event:Event):void {
       dispatchEvent(new Event("stackChanged"));
     }
     

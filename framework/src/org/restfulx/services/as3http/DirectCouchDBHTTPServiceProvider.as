@@ -25,7 +25,6 @@ package org.restfulx.services.as3http {
   import com.adobe.net.URI;
   import com.adobe.serialization.json.JSON;
   
-  import flash.events.Event;
   import flash.utils.ByteArray;
   import flash.utils.getQualifiedClassName;
   
@@ -147,7 +146,8 @@ package org.restfulx.services.as3http {
      */
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
-      var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, undoRedoFlag, true);
+      var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
+        undoRedoFlag, true);
 
       object["rev"] = "";
       if (RxUtils.isEmpty(object["id"])) {
@@ -168,7 +168,8 @@ package org.restfulx.services.as3http {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be updated.");
       }
       
-      var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, undoRedoFlag);
+      var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive,
+        undoRedoFlag);
       
       client.put(getCouchDBURI(Rx.couchDbDatabaseName + object["id"]), marshallToJSONAndConvertToByteArray(object), 
         contentType);      
@@ -189,15 +190,15 @@ package org.restfulx.services.as3http {
         if (event.response.code != "200") {
           if (responder) responder.fault(event);
         } else {
-          if (Rx.enableUndoRedo && undoRedoFlag == Rx.undoredo.UNDO) {
+          if (Rx.enableUndoRedo && undoRedoFlag == Rx.undoredo.NORMAL) {
             var clone:Object = RxUtils.clone(object);
             Rx.undoredo.addChangeAction({service: instance, action: "create", copy: clone,
               elms: [clone, new UndoRedoResponder(responder, Rx.models.cache.create), metadata, 
-                nestedBy]});
+                nestedBy, recursive]});
           }
-          if (Rx.enableUndoRedo && Rx.undoredo.NORMAL) {
-            Rx.undoredo.dispatchEvent(new Event("normalAction"));  
-          }
+    
+          RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
+
           if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
         }     
       }, function(event:HttpErrorEvent):void {
@@ -240,7 +241,7 @@ package org.restfulx.services.as3http {
     }
 
     protected function getCreateOrUpdateHttpClient(object:Object, responder:IResponder, metadata:Object, nestedBy:Array,
-      undoRedoFlag:int = 0, creating:Boolean = false):HttpClient {
+      recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):HttpClient {
       
       var instance:DirectCouchDBHTTPServiceProvider = this;
       
@@ -263,7 +264,7 @@ package org.restfulx.services.as3http {
             cached = ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]);
           }
           
-          if (Rx.enableUndoRedo && undoRedoFlag == Rx.undoredo.UNDO) {
+          if (Rx.enableUndoRedo && undoRedoFlag == Rx.undoredo.NORMAL) {
             var target:Object;
             var clone:Object = RxUtils.clone(object);
             var action:String = "destroy";
@@ -280,16 +281,14 @@ package org.restfulx.services.as3http {
             
             Rx.undoredo.addChangeAction({service: instance, action: action, copy: clone,
               elms: [target, new UndoRedoResponder(responder, fn), metadata, 
-                nestedBy]});
+                nestedBy, recursive]});
           }
           if (!creating) {
             RxUtils.shallowCopy(object, cached, fqn);
             object = cached;
           }
 
-          if (Rx.enableUndoRedo && Rx.undoredo.NORMAL) {
-            Rx.undoredo.dispatchEvent(new Event("normalAction"));  
-          }
+          RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
 
           if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
         }
