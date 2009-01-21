@@ -47,24 +47,24 @@ package org.restfulx.controllers {
       update: "update"
     };
 
-    private var undoStack:ArrayedStack;
+    private var undoStack:Array;
     
-    private var redoStack:ArrayedStack;
-    
+    private var redoStack:Array;
+        
     private var maxSize:int;
     
     public function UndoRedoController(size:int = 10) {
       super();
       this.maxSize = size;
-      this.undoStack = new ArrayedStack(size);
-      this.redoStack = new ArrayedStack(size);
+      this.undoStack = new Array;
+      this.redoStack = new Array;
       addEventListener("normalAction", onNormalAction);
       addEventListener("undoAction", onUndoAction);
       addEventListener("redoAction", onRedoAction);
     }
     
     private function onNormalAction(event:Event):void {
-      this.redoStack = new ArrayedStack(maxSize);
+      this.redoStack = new Array;
       dispatchEvent(new Event("stackChanged"));
     }
     
@@ -77,12 +77,18 @@ package org.restfulx.controllers {
     }
     
     public function addChangeAction(action:Object):void {
+      if (undoStack.length == maxSize) {
+        undoStack.shift();
+      }
       undoStack.push(action);
     }
     
     public function undo():void {
-      if (undoStack.size) {
+      if (undoStack.length) {
         var op:Object = undoStack.pop();
+        if (redoStack.length == maxSize) {
+          redoStack.shift();
+        }
         redoStack.push(op);
         
         var service:IServiceProvider = IServiceProvider(op["service"]);
@@ -92,11 +98,11 @@ package org.restfulx.controllers {
     
     [Bindable("stackChanged")]
     public function canUndo():Boolean {
-      return undoStack.size > 0;
+      return undoStack.length > 0;
     }
     
     public function redo():void {
-      if (redoStack.size) {
+      if (redoStack.length) {
         var op:Object = redoStack.pop();
         var service:IServiceProvider = IServiceProvider(op["service"]);
         var action:String = map[op["action"]];
@@ -117,12 +123,12 @@ package org.restfulx.controllers {
     
     [Bindable("stackChanged")]
     public function canRedo():Boolean {
-      return redoStack.size > 0;
+      return redoStack.length > 0;
     }
     
     public function clear():void {
-      this.undoStack = new ArrayedStack(maxSize);
-      this.redoStack = new ArrayedStack(maxSize);
+      this.undoStack = new Array;
+      this.redoStack = new Array;
     }
   }
 }

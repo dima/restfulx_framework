@@ -190,7 +190,7 @@ package org.restfulx.services.as3http {
         if (event.response.code != "200") {
           if (responder) responder.fault(event);
         } else {
-          if (Rx.enableUndoRedo && undoRedoFlag == Rx.undoredo.NORMAL) {
+          if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
             var clone:Object = RxUtils.clone(object);
             Rx.undoredo.addChangeAction({service: instance, action: "create", copy: clone,
               elms: [clone, new UndoRedoResponder(responder, Rx.models.cache.create), metadata, 
@@ -264,7 +264,7 @@ package org.restfulx.services.as3http {
             cached = ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]);
           }
           
-          if (Rx.enableUndoRedo && undoRedoFlag == Rx.undoredo.NORMAL) {
+          if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
             var target:Object;
             var clone:Object = RxUtils.clone(object);
             var action:String = "destroy";
