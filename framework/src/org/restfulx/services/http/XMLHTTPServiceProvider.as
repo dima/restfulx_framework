@@ -295,9 +295,11 @@ package org.restfulx.services.http {
     }
     
     protected function onHttpResult(event:ResultEvent):void {
-      var service:HTTPService = HTTPService(event.currentTarget);
-      service.disconnect();
-      service.removeEventListener(ResultEvent.RESULT, onHttpResult);
+      if (event.currentTarget is HTTPService) {
+        var service:HTTPService = HTTPService(event.currentTarget);
+        service.disconnect();
+        service.removeEventListener(ResultEvent.RESULT, onHttpResult);
+      }
     }
     
     protected function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
