@@ -269,19 +269,21 @@ package org.restfulx.controllers {
       }
       
       var fqn:String;
-      if (object is RxModel) {
-        fqn = getQualifiedClassName(object);
-      } else {
-        // try to digest attributes if this is just an anonymous object
+      var objectId:String = object["id"];
+
+      if (!(object is RxModel)) {
         if (object["clazz"] is Class) {
           fqn = state.types[object["clazz"]];
         } else {
           fqn = object["clazz"];
         }
+        object = new (getDefinitionByName(fqn) as Class);
+        object["id"] = objectId;
+      } else {
+        fqn = getQualifiedClassName(object);
       }
       
       var shown:ArrayCollection = ArrayCollection(state.shown[fqn]);
-      var objectId:String = object["id"];
       
       var currentInstance:Object = ModelsCollection(cache.data[fqn]).withId(objectId);
       

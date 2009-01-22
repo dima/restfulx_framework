@@ -25,15 +25,46 @@ package restfulx.test.cases {
   import flexunit.framework.TestCase;
   
   import org.restfulx.Rx;
+  import org.restfulx.services.mock.MockXMLHTTPServiceProvider;
   
-  import restfulx.test.commands.TestCommand;
-  import restfulx.test.commands.TestNameCommand;
-  import restfulx.test.controllers.RxTestController;
+  import restfulx.test.models.Article;
 
   public class ModelsControllerTest extends TestCase {
     
     public function ModelsControllerTest(methodName:String) {
       super(methodName);
+    }
+    
+    public function testShowById():void {
+      Rx.models.showById(Article, '12345', {onSuccess: onSuccess, onFailure: onFailure, 
+        targetServiceId: MockXMLHTTPServiceProvider.ID});
+    }
+    
+    public function testShowV2():void {
+      var article:Article = new Article;
+      article.id = '12345';
+      Rx.models.reset(article);
+        
+      Rx.models.show({clazz: Article, id: '12345'}, {onSuccess: onSuccess, onFailure: onFailure, targetServiceId:
+        MockXMLHTTPServiceProvider.ID});
+    }
+    
+    public function testShowV1():void {      
+      var article:Article = new Article;
+      article.id = '12345';
+      Rx.models.reset(article);
+      
+      Rx.models.show(article, {onSuccess: onSuccess, onFailure: onFailure,
+       targetServiceId: MockXMLHTTPServiceProvider.ID});
+    }
+    
+    private function onSuccess(result:Object):void {
+      assertTrue(result is Article);
+      assertEquals("12345", result["id"]);
+    }
+    
+    private function onFailure(result:Object):void {
+      fail();
     }
   }
 }

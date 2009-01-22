@@ -3,6 +3,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
   <mx:Script>
     <![CDATA[
+      import restfulx.test.cases.ModelsControllerTest;
       import org.restfulx.serializers.JSONSerializer;
       import org.restfulx.services.http.XMLHTTPServiceProvider;
       import org.restfulx.services.as3http.AS3JSONHTTPServiceProvider;
@@ -123,11 +124,11 @@
           ts.addTest(new SimplePropertiesTest("testCreateWithFalseBoolean", serviceProviderId));
         }
 
-         ts.addTest(new RxUtilTest("testResourceNesting"));
+        ts.addTest(new RxUtilTest("testResourceNesting"));
         ts.addTest(new RxUtilTest("testCamelCasing"));
-         ts.addTest(new InflectorTest("testInflector"));
+        ts.addTest(new InflectorTest("testInflector"));
          
-         ts.addTest(new CommandsControllerTest("testCommandExecutionByClass"));
+        ts.addTest(new CommandsControllerTest("testCommandExecutionByClass"));
         ts.addTest(new CommandsControllerTest("testCommandExecutionByName"));
         
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasOneAndHasManies"));
@@ -173,6 +174,10 @@
         ts.addTest(new Bug26Test("testUserShow"));
         ts.addTest(new Bug26Test("testContactAShow"));
         ts.addTest(new Bug26Test("testContactBShow"));
+        
+        ts.addTest(new ModelsControllerTest("testShowById"));
+        ts.addTest(new ModelsControllerTest("testShowV1"));
+        ts.addTest(new ModelsControllerTest("testShowV2"));
        }
        
        private function addIntegrationTests(ts:TestSuite):void {
