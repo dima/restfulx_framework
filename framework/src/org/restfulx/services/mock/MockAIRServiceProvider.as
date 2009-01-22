@@ -22,17 +22,11 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.services.mock {
-  import flash.data.SQLStatement;
   import flash.filesystem.File;
-  import flash.utils.describeType;
-  import flash.utils.getQualifiedClassName;
-  
-  import mx.rpc.IResponder;
   
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
   import org.restfulx.services.air.AIRServiceProvider;
-  import org.restfulx.utils.RxUtils;
 
   /**
    * Adds testing specific methods to AIRServiceProvider.
@@ -45,14 +39,15 @@ package org.restfulx.services.mock {
       return ID;
     }
     
-    public function MockAIRServiceProvider() {
-      var databaseName:String = Rx.airDatabaseName;
-      var dbFile:File = File.userDirectory.resolvePath(databaseName + ".db");
+    public function MockAIRServiceProvider(dbFile:File = null) {
+      if (dbFile == null || !dbFile.exists) {
+        dbFile = File.userDirectory.resolvePath(Rx.airDatabaseName + ".db");
+      }
       if (dbFile.exists) {
         dbFile.deleteFile();
       }
       
-      super();
+      super(dbFile);
     }
     
     public function loadTestData(dataSets:Object):void {

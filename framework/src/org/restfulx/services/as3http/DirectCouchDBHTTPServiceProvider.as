@@ -57,10 +57,27 @@ package org.restfulx.services.as3http {
     
     protected var contentType:String;
     
+    protected var rootUrl:String;
+    
+    protected var dbName:String;
+    
     protected var state:ModelsMetadata;
 
-    public function DirectCouchDBHTTPServiceProvider() {
+    public function DirectCouchDBHTTPServiceProvider(couchDbRootUrl:String = null, couchDbName:String = null) {
       state = Rx.models.state;
+      
+      if (couchDbRootUrl == null) {
+        rootUrl = Rx.couchDBRootUrl;
+      } else {
+        rootUrl = couchDbRootUrl;
+      }
+      
+      if (couchDbName == null) {
+        dbName = Rx.couchDbDatabaseName.replace(/\/$/, "").concat("/");
+      } else {
+        dbName = couchDbName.replace(/\/$/, "").concat("/");
+      }
+      
       serializer = new CouchDBJSONSerializer;
       contentType = "application/json";
     }

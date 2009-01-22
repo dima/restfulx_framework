@@ -51,10 +51,16 @@ package org.restfulx.services.as3http {
     protected var contentType:String;
                     
     /**
-     * @param controller reference to RxModelsController instance
+     * @param httpRootUrl root URL that this service provider will prefix to all requests.
+     *  By default this will be equal to Rx.httpRootUrl parameter
      */
-    public function AS3XMLHTTPServiceProvider() {
+    public function AS3XMLHTTPServiceProvider(httpRootUrl:String = null) {
       state = Rx.models.state;
+      if (httpRootUrl == null) {
+        rootUrl = Rx.httpRootUrl;
+      } else {
+        rootUrl = httpRootUrl;
+      }
       serializer = new XMLSerializer;
       contentType = "application/xml";
     }
@@ -86,7 +92,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#index
      */
     public override function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
-      var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
+      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
       trace("sending index request to: " + url);
         
       var urlParams:String = urlEncodeMetadata(metadata);
@@ -102,7 +108,7 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#show
      */
     public override function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
-      var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
+      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
       url = RxUtils.addObjectIdToResourceURL(url, object);
       trace("sending show request to: " + url);
         
@@ -121,7 +127,7 @@ package org.restfulx.services.as3http {
     public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
       if (RxUtils.isEmpty(object["id"])) {
-        var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
+        var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
         trace("sending create request to: " + url);
 
         var uri:URI = new URI(url);
@@ -141,7 +147,7 @@ package org.restfulx.services.as3http {
      */
     public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {      
-      var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
+      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
       url = RxUtils.addObjectIdToResourceURL(url, object);
       trace("sending update request to: " + url);
 
@@ -159,7 +165,7 @@ package org.restfulx.services.as3http {
      */
     public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
-      var url:String = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy);
+      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
       url = RxUtils.addObjectIdToResourceURL(url, object);
         
       var urlParams:String = urlEncodeMetadata(metadata);

@@ -37,8 +37,12 @@ package org.restfulx.services.http {
     /** service id */
     public static const ID:int = ServicesController.generateId();
     
-    public function JSONHTTPServiceProvider() {
-      state = Rx.models.state;
+    /**
+     * @param httpRootUrl root URL that this service provider will prefix to all requests.
+     *  By default this will be equal to Rx.httpRootUrl parameter
+     */
+    public function JSONHTTPServiceProvider(httpRootUrl:String = null) {
+      super(httpRootUrl);
       serializer = new JSONSerializer;
       urlSuffix = "json";
     }

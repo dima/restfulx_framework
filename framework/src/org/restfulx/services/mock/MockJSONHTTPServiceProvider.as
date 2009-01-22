@@ -45,8 +45,12 @@ package org.restfulx.services.mock {
       return ID;
     }
   
-    public function MockJSONHTTPServiceProvider() {
-      super();
+    /**
+     * @param httpRootUrl root URL that this service provider will prefix to all requests.
+     *  By default this will be equal to Rx.httpRootUrl parameter
+     */
+    public function MockJSONHTTPServiceProvider(httpRootUrl:String = null) {
+      super(httpRootUrl);
       data = new Dictionary;
     }
 

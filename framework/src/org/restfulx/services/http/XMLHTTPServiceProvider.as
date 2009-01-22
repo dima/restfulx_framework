@@ -29,7 +29,6 @@ package org.restfulx.services.http {
   import flash.net.URLRequest;
   import flash.net.URLRequestMethod;
   import flash.net.URLVariables;
-  import flash.utils.ByteArray;
   import flash.utils.getQualifiedClassName;
   
   import mx.rpc.AsyncToken;
@@ -55,18 +54,30 @@ package org.restfulx.services.http {
     
     /** service id */
     public static const ID:int = ServicesController.generateId();
-        
+
+    /** 
+     * Root URL that this service provider will prefix to all requests.
+     * By default this will be equal to Rx.httpRootUrl parameter
+     */
+    public var rootUrl:String;
+
     protected var state:ModelsMetadata;
-    
+        
     protected var urlSuffix:String;
     
     protected var serializer:ISerializer;
     
     /**
-     * @param controller reference to RxModelsController instance
+     * @param httpRootUrl root URL that this service provider will prefix to all requests.
+     *  By default this will be equal to Rx.httpRootUrl parameter
      */
-    public function XMLHTTPServiceProvider() {
+    public function XMLHTTPServiceProvider(httpRootUrl:String = null) {
       state = Rx.models.state;
+      if (httpRootUrl == null) {
+        rootUrl = Rx.httpRootUrl;
+      } else {
+        rootUrl = httpRootUrl;
+      }
       urlSuffix = "fxml";
       serializer = Rx.serializers.xml;
     }
@@ -277,7 +288,7 @@ package org.restfulx.services.http {
       service.resultFormat = "e4x";
       service.useProxy = false;
       service.contentType = "application/x-www-form-urlencoded";
-      service.url = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
+      service.url = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
       return service;
     }
     

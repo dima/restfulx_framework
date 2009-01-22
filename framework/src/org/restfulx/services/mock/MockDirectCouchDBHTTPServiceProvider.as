@@ -41,8 +41,8 @@ package org.restfulx.services.mock {
       return ID;
     }
     
-    public function MockDirectCouchDBHTTPServiceProvider() {
-      super();
+    public function MockDirectCouchDBHTTPServiceProvider(couchDbRootUrl:String = null, couchDbName:String = null) {
+      super(couchDbRootUrl, couchDbName);
     }
     
     public function recreateTestDatabase(callback:Function):void {

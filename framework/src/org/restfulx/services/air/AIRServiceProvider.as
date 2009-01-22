@@ -54,13 +54,6 @@ package org.restfulx.services.air {
     /** service id */
     public static const ID:int = ServicesController.generateId();
     
-    /**
-     * Target directory for AIR SQLite database file. If you want to use
-     * the default target directory and just want to configure the name Rx.airDatabaseName
-     * property should be used.
-     */
-    public var dbFile:File;
-    
     private static var types:Object = {
       "int" : "INTEGER",
       "uint" : "INTEGER",
@@ -83,7 +76,12 @@ package org.restfulx.services.air {
     
     private var timer:Timer;
 
-    public function AIRServiceProvider() {
+    /**
+     * @params dbFile target directory for AIR SQLite database file. If you want to use
+     *  the default target directory and just want to configure the name Rx.airDatabaseName
+     *  property should be used.
+     */
+    public function AIRServiceProvider(dbFile:File = null) {
       var databaseName:String = Rx.airDatabaseName;
       var targetFile:File = File.userDirectory.resolvePath(databaseName + ".db");
       if (dbFile != null && !dbFile.isDirectory) {

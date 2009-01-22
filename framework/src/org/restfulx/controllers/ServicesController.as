@@ -50,8 +50,13 @@ package org.restfulx.controllers {
       services[XMLHTTPServiceProvider.ID] = new XMLHTTPServiceProvider;
 
       // hook up available services (e.g. AIR, AMF, SimpleDB)
-      for each (var availableService:Class in availableServices) {
-        var service:IServiceProvider = new availableService() as IServiceProvider;
+      for each (var availableService:Object in availableServices) {
+        var service:IServiceProvider;
+        if (availableService is Class) {
+          service = new availableService() as IServiceProvider;
+        } else {
+          service = IServiceProvider(availableService);
+        }
         services[service.id] = service;
       }
       
@@ -82,6 +87,17 @@ package org.restfulx.controllers {
      */
     public function getServiceProvider(id:int):IServiceProvider {
       return services[id];
+    }
+    
+    /**
+     * Adds a specific service provider instance to the array of
+     * available services
+     *  
+     * @param id service provider id
+     * @return IServiceProvider instance that corresponds to the ID provided
+     */
+    public function addServiceProvider(serviceProvider:IServiceProvider):void {
+      services[serviceProvider.id] = serviceProvider;
     }
     
     /**

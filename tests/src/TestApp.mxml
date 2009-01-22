@@ -45,6 +45,10 @@
       
       private function onCreationComplete():void {
         Rx.enableLogging();
+        
+        Rx.couchDBRootUrl = "http://127.0.0.1:5984/";
+        Rx.couchDbDatabaseName = "restfulx_tests/";
+        
         RxTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider, AS3XMLHTTPServiceProvider,
           JSONHTTPServiceProvider, XMLHTTPServiceProvider, MockDirectCouchDBHTTPServiceProvider, AIRServiceProvider, 
           DirectCouchDBHTTPServiceProvider, AS3JSONHTTPServiceProvider], 
@@ -72,9 +76,6 @@
           facebook_users: facebook_users,
           nothing: nothing
         }
-        
-        Rx.couchDBRootUrl = "http://127.0.0.1:5984/";
-        Rx.couchDbDatabaseName = "restfulx_tests/";
 
         MockXMLHTTPServiceProvider(Rx.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
         MockAIRServiceProvider(Rx.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
