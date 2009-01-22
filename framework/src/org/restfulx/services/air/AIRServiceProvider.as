@@ -25,7 +25,6 @@ package org.restfulx.services.air {
   import flash.data.SQLConnection;
   import flash.data.SQLMode;
   import flash.data.SQLStatement;
-  import flash.events.Event;
   import flash.events.TimerEvent;
   import flash.filesystem.File;
   import flash.utils.Dictionary;
@@ -55,6 +54,13 @@ package org.restfulx.services.air {
     /** service id */
     public static const ID:int = ServicesController.generateId();
     
+    /**
+     * Target directory for AIR SQLite database file. If you want to use
+     * the default target directory and just want to configure the name Rx.airDatabaseName
+     * property should be used.
+     */
+    public var dbFile:File;
+    
     private static var types:Object = {
       "int" : "INTEGER",
       "uint" : "INTEGER",
@@ -79,7 +85,10 @@ package org.restfulx.services.air {
 
     public function AIRServiceProvider() {
       var databaseName:String = Rx.airDatabaseName;
-      var dbFile:File = File.userDirectory.resolvePath(databaseName + ".db");
+      var targetFile:File = File.userDirectory.resolvePath(databaseName + ".db");
+      if (dbFile != null && !dbFile.isDirectory) {
+        targetFile = dbFile;
+      }
       
       state = Rx.models.state;
       
@@ -99,7 +108,7 @@ package org.restfulx.services.air {
         extractMetadata(elm);
       });
       
-      initializeConnection(databaseName, dbFile);
+      initializeConnection(databaseName, targetFile);
     }
 
     /**
