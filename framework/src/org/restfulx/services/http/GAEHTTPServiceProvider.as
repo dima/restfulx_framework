@@ -36,8 +36,12 @@ package org.restfulx.services.http {
     /** service id */
     public static const ID:int = ServicesController.generateId();
     
-    public function GAEHTTPServiceProvider() {
-      super();
+    /**
+     * @param httpRootUrl root URL that this service provider will prefix to all requests.
+     *  By default this will be equal to Rx.httpRootUrl parameter
+     */
+    public function GAEHTTPServiceProvider(httpRootUrl:String = null) {
+      super(httpRootUrl);
       serializer = new GAEXMLSerializer;
       urlSuffix = "xml";
     }

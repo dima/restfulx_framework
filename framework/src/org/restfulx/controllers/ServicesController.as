@@ -93,8 +93,7 @@ package org.restfulx.controllers {
      * Adds a specific service provider instance to the array of
      * available services
      *  
-     * @param id service provider id
-     * @return IServiceProvider instance that corresponds to the ID provided
+     * @param serviceProvider IServiceProvider instance to add
      */
     public function addServiceProvider(serviceProvider:IServiceProvider):void {
       services[serviceProvider.id] = serviceProvider;
