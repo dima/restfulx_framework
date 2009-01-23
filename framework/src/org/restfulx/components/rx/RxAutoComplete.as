@@ -21,7 +21,7 @@
  *
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
-package org.restfulx.components {
+package org.restfulx.components.rx {
   import flash.events.Event;
   import flash.events.KeyboardEvent;
   import flash.events.TimerEvent;

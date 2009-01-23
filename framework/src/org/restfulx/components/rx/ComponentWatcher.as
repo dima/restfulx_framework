@@ -21,22 +21,21 @@
  *
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
-package org.restfulx.components {
-  import flash.display.DisplayObject;
- 
-  import mx.binding.utils.BindingUtils;
+package org.restfulx.components.rx {
+  import flash.events.Event;
+  
   import mx.binding.utils.ChangeWatcher;
  
-  public class TwoWayBinding {
+  public class ComponentWatcher {
  
-    private var modelWatcher:ChangeWatcher;
     private var componentWatcher:ChangeWatcher;
-    private var bindingsAreEstablished:Boolean = false;
-    
+
     private var _model:Object;
     private var _field:String;
     private var _target:Object;
     private var _property:String = "text";
+    
+    private var bound:Boolean;
 
     public function set model(value:Object):void {
       _model = value;
@@ -75,29 +74,29 @@ package org.restfulx.components {
     }
  
     private function updateBinding():void {
-      if (bindingsAreEstablished) clearBindings();
+      if (bound) clearBinding();
  
       if (model != null &&  model.hasOwnProperty(field)
-        && target != null && target.hasOwnProperty(property) && model[field] != target[property]) {
-        modelWatcher = BindingUtils.bindProperty(target, property, model, field);
-        componentWatcher = BindingUtils.bindProperty(model, field, target, property);
-        bindingsAreEstablished = true;
-        if (model.hasOwnProperty("dirty")) model["dirty"] = true;
+        && target != null && target.hasOwnProperty(property)) {
+        componentWatcher = ChangeWatcher.watch(target, property, onChange, true);
+        bound = true;
       }
     }
  
-    private function clearBindings():void {
-      if (modelWatcher != null) {
-        modelWatcher.unwatch();
-        modelWatcher = null;
-      }
- 
+    private function clearBinding():void {
       if (componentWatcher != null) {
         componentWatcher.unwatch();
         componentWatcher = null;
       }
       
-      bindingsAreEstablished = false;
+      bound = false;
+    }
+    
+    private function onChange(event:Event):void {
+      if (model[field] != event.target[property]) {
+        model[field] = event.target[property];
+        model["dirty"] = true;
+      }
     }
   }
 }

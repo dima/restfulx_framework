@@ -14,10 +14,11 @@
     <class>org.restfulx.collections.RxCollection</class>
     <class>org.restfulx.commands.CommandsEventDispatcher</class>
     <class>org.restfulx.commands.ICommand</class>
-    <class>org.restfulx.components.DateTextInput</class>
-    <class>org.restfulx.components.DateTimeTextInput</class>
-    <class>org.restfulx.components.MoneyTextInput</class>
-    <class>org.restfulx.components.RxAutoComplete</class>
+    <class>org.restfulx.components.rx.ComponentWatcher</class>
+    <class>org.restfulx.components.rx.DateTextInput</class>
+    <class>org.restfulx.components.rx.DateTimeTextInput</class>
+    <class>org.restfulx.components.rx.MoneyTextInput</class>
+    <class>org.restfulx.components.rx.RxAutoComplete</class>
     <class>org.restfulx.controllers.AuxAIRController</class>
     <class>org.restfulx.controllers.AuxHTTPController</class>
     <class>org.restfulx.controllers.CacheController</class>
@@ -54,6 +55,7 @@
     <class>org.restfulx.services.IServiceProvider</class>
     <class>org.restfulx.services.ISyncingServiceProvider</class>
     <class>org.restfulx.services.IVersioningServiceProvider</class>
+    <class>org.restfulx.services.IWrappingFunctionalResponder</class>
     <class>org.restfulx.services.ServiceResponder</class>
     <class>org.restfulx.services.UndoRedoResponder</class>
     <class>org.restfulx.services.XMLServiceErrors</class>
@@ -69,8 +71,10 @@
     <class>org.restfulx.services.mock.MockDirectCouchDBHTTPServiceProvider</class>
     <class>org.restfulx.services.mock.MockJSONHTTPServiceProvider</class>
     <class>org.restfulx.services.mock.MockXMLHTTPServiceProvider</class>
+    <class>org.restfulx.utils.BinaryAttachment</class>
     <class>org.restfulx.utils.Inflector</class>
     <class>org.restfulx.utils.ModelsMetadata</class>
+    <class>org.restfulx.utils.MultiPartRequestBuilder</class>
     <class>org.restfulx.utils.RxFileReference</class>
     <class>org.restfulx.utils.RxUtils</class>
     <class>org.restfulx.utils.TypedArray</class>
@@ -79,7 +83,7 @@
   </include-classes>
   <metadata>
     <creator>Dima Berastau</creator>
-    <description>http://github.com/dima/restfulx_framework/wikis</description>
+    <description>http://restfulx.org</description>
     <language>EN</language>
     <title>RestfulX Framework</title>
   </metadata>

@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rx:DateTimeTextInput xmlns:mx="http://www.adobe.com/2006/mxml" 
+  xmlns:rx="org.restfulx.components.rx.*" formatString="MM/DD/YYYY"/>
