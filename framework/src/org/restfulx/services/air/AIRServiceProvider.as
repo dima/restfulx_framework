@@ -453,7 +453,7 @@ package org.restfulx.services.air {
          
           snakeName = snakeName + "_id";
           
-          createStatement += snakeName + " " +  types["int"] + ", ";
+          createStatement += snakeName + " " +  types["String"] + ", ";
         } else {   
           createStatement += snakeName + " " +  getSQLType(node) + ", ";
         }

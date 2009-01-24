@@ -25,16 +25,20 @@ package org.restfulx.services.as3http {
   import com.adobe.net.URI;
   
   import flash.utils.ByteArray;
+  import flash.utils.getQualifiedClassName;
   
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
   
   import org.httpclient.HttpClient;
   import org.httpclient.events.HttpDataListener;
+  import org.httpclient.events.HttpErrorEvent;
   import org.httpclient.events.HttpResponseEvent;
   import org.restfulx.Rx;
+  import org.restfulx.collections.ModelsCollection;
   import org.restfulx.controllers.ServicesController;
   import org.restfulx.serializers.XMLSerializer;
+  import org.restfulx.services.UndoRedoResponder;
   import org.restfulx.services.http.XMLHTTPServiceProvider;
   import org.restfulx.utils.RxUtils;
 
@@ -71,22 +75,6 @@ package org.restfulx.services.as3http {
     public override function get id():int {
       return ID;
     }
-    
-    protected function getHttpClient(responder:IResponder):HttpClient {
-      var client:HttpClient = new HttpClient;
-      var listener:HttpDataListener = new HttpDataListener;
-      listener.onComplete = function(event:HttpResponseEvent, data:ByteArray):void {
-        if (event.response.code != "200") {
-          responder.fault(event);
-        } else {
-          data.position = 0;
-          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, XML(data.readUTFBytes(data.length))));         
-        }
-      }
-      
-      client.listener = listener;
-      return client;
-    }
         
     /**
      * @see org.restfulx.services.IServiceProvider#index
@@ -101,7 +89,7 @@ package org.restfulx.services.as3http {
       }
       
       var uri:URI = new URI(url);
-      getHttpClient(responder).get(uri);
+      getIndexOrShowHttpClient(responder).get(uri);
     }
     
     /**
@@ -118,7 +106,7 @@ package org.restfulx.services.as3http {
       }
       
       var uri:URI = new URI(url);
-      getHttpClient(responder).get(uri);
+      getIndexOrShowHttpClient(responder).get(uri);
     }
 
     /**
@@ -136,7 +124,8 @@ package org.restfulx.services.as3http {
         data.writeUTFBytes(serializer.marshall(object, recursive, metadata).toString());
         data.position = 0;
       
-        getHttpClient(responder).post(uri, data, contentType);      
+        getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
+          undoRedoFlag, true).post(uri, data, contentType);
       } else {
         update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
       }
@@ -157,7 +146,8 @@ package org.restfulx.services.as3http {
       data.writeUTFBytes(serializer.marshall(object, recursive, metadata).toString());
       data.position = 0;
       
-      getHttpClient(responder).put(uri, data, contentType); 
+      getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
+        undoRedoFlag).put(uri, data, contentType); 
     }
     
     /**
@@ -175,7 +165,105 @@ package org.restfulx.services.as3http {
       
       var uri:URI = new URI(url);
       
-      getHttpClient(responder).del(uri);
+      var instance:Object = this;
+      
+      var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
+        if (event.response.code != "200") {
+          if (responder) responder.fault(event);
+        } else {
+          if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
+            var clone:Object = RxUtils.clone(object);
+            Rx.undoredo.addChangeAction({service: instance, action: "create", copy: clone,
+              elms: [clone, new UndoRedoResponder(responder, Rx.models.cache.create), metadata, 
+                nestedBy, recursive]});
+          }
+    
+          RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
+
+          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
+        }     
+      }, function(event:HttpErrorEvent):void {
+        if (responder) responder.fault(event);
+      });
+      
+      client.del(uri);
+    }
+    
+    
+    protected function getIndexOrShowHttpClient(responder:IResponder):HttpClient {
+      return getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
+        if (event.response.code != "200") {
+          responder.fault(event);
+        } else {
+          data.position = 0;
+          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, XML(data.readUTFBytes(data.length))));         
+        }
+      });
+    }
+
+    protected function getCreateOrUpdateHttpClient(object:Object, responder:IResponder, metadata:Object, nestedBy:Array,
+      recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):HttpClient {
+      
+      var instance:Object = this;
+      
+      var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
+        if (event.response.code != "200") {
+          if (responder) responder.fault(event);
+        } else {
+          data.position = 0;
+          var result:Object = data.readUTFBytes(data.length);
+          if (hasErrors(result)) {
+            if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, result));
+          } else {           
+            var fqn:String = getQualifiedClassName(object);
+
+            if (!creating) {
+              var cached:Object = RxUtils.clone(ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]));
+            }
+            
+            var response:Object = unmarshall(result);
+            
+            if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
+              var target:Object;
+              var clone:Object = RxUtils.clone(response);
+              var action:String = "destroy";
+              var fn:Function = Rx.models.cache.destroy;
+              
+              if (!creating) {
+                target = cached;
+                target["rev"] = object["rev"];
+                action = "update";
+                fn = Rx.models.cache.update;
+              } else {
+                target = RxUtils.clone(response);
+              }
+              
+              Rx.undoredo.addChangeAction({service: instance, action: action, copy: clone,
+                elms: [target, new UndoRedoResponder(responder, fn), metadata, 
+                  nestedBy, recursive]});
+            }
+  
+            RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
+  
+            if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));
+          }
+        }
+      }, function(event:HttpErrorEvent):void {
+        if (responder) responder.fault(event);
+      });
+      
+      return client;      
+    }
+        
+    protected function getHttpClient(onDataComplete:Function, onError:Function = null):HttpClient {
+      var client:HttpClient = new HttpClient();
+      var listener:HttpDataListener = new HttpDataListener;
+      listener.onDataComplete = onDataComplete;
+      listener.onError = onError;
+      
+      client.listener = listener;
+      
+      return client; 
     }
   }
 }

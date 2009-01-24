@@ -201,7 +201,7 @@ package org.restfulx.services.as3http {
         throw new Error("model: " + object + " does not have 'id' or 'rev' properties set => cannot be destroyed.");
       }
       
-      var instance:DirectCouchDBHTTPServiceProvider = this;
+      var instance:Object = this;
       
       var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
         if (event.response.code != "200") {
@@ -260,7 +260,7 @@ package org.restfulx.services.as3http {
     protected function getCreateOrUpdateHttpClient(object:Object, responder:IResponder, metadata:Object, nestedBy:Array,
       recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):HttpClient {
       
-      var instance:DirectCouchDBHTTPServiceProvider = this;
+      var instance:Object = this;
       
       var client:HttpClient = getHttpClient(function(event:HttpResponseEvent, data:ByteArray):void {
         if (event.response.code != "201") {

@@ -68,7 +68,8 @@ package org.restfulx.services.as3http {
         trace("sending create request to: " + url);
 
         var uri:URI = new URI(url);
-        getHttpClient(responder).postFormData(uri, [marshallToVO(object, recursive, metadata)]);
+        getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
+          undoRedoFlag, true).postFormData(uri, [marshallToVO(object, recursive, metadata)]);
       } else {
         update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
       }
@@ -84,7 +85,8 @@ package org.restfulx.services.as3http {
       trace("sending update request to: " + url);
 
       var uri:URI = new URI(url);
-      getHttpClient(responder).putFormData(uri, [marshallToVO(object, recursive, metadata)]);
+      getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
+          undoRedoFlag).putFormData(uri, [marshallToVO(object, recursive, metadata)]);
     }
   }
 }
