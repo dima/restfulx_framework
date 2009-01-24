@@ -69,6 +69,7 @@ package org.restfulx.controllers {
 	  
 	  public function notifySyncEnd():void {
      Rx.enableUndoRedo = canUndoRedo;
+     canUndoRedo = false;
 	   Rx.undoredo.clear();
 	   notifiedSyncStart = false;
      dispatchEvent(new SyncEndEvent);
@@ -80,8 +81,10 @@ package org.restfulx.controllers {
 	    if (count) {
 	      dispatchEvent(new SyncStartEvent);
 	      notifiedSyncStart = true;
-	      canUndoRedo = Rx.enableUndoRedo;
-	      Rx.enableUndoRedo = false;
+	      if (!canUndoRedo) {
+  	      canUndoRedo = Rx.enableUndoRedo;
+	        Rx.enableUndoRedo = false;
+	      }
 	    }
 	    for each (var instance:Object in result as Array) {
 	      if (instance["rev"] == 0) instance["rev"] = "";
