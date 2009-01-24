@@ -127,6 +127,7 @@ package org.restfulx.controllers {
     public function clear():void {
       this.undoStack = new Array;
       this.redoStack = new Array;
+      dispatchEvent(new Event("stackChanged"));
     }
   }
 }
