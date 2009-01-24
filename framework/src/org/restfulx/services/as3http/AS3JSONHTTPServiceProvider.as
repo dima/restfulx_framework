@@ -42,6 +42,7 @@ package org.restfulx.services.as3http {
     public function AS3JSONHTTPServiceProvider(httpRootUrl:String = null) {
       super(httpRootUrl);
       serializer = new JSONSerializer;
+      urlSuffix = "json";
       contentType = "application/json";
     }
   }
