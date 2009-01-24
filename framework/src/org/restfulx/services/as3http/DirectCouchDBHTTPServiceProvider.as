@@ -143,7 +143,7 @@ package org.restfulx.services.as3http {
       data.writeUTFBytes(query);
       data.position = 0;  
       
-      client.post(getCouchDBURI(Rx.couchDbDatabaseName + "_temp_view"), data, contentType);
+      client.post(getCouchDBURI(dbName + "_temp_view"), data, contentType);
     }
     
     /**
@@ -155,7 +155,7 @@ package org.restfulx.services.as3http {
       }
       
       var client:HttpClient = getShowHttpClient(object, responder);
-      client.get(getCouchDBURI(Rx.couchDbDatabaseName + object["id"]));
+      client.get(getCouchDBURI(dbName + object["id"]));
     }
     
     /**
@@ -168,10 +168,10 @@ package org.restfulx.services.as3http {
 
       object["rev"] = "";
       if (RxUtils.isEmpty(object["id"])) {
-        client.post(getCouchDBURI(Rx.couchDbDatabaseName), marshallToJSONAndConvertToByteArray(object), 
+        client.post(getCouchDBURI(dbName), marshallToJSONAndConvertToByteArray(object), 
           contentType);
       } else {
-        client.put(getCouchDBURI(Rx.couchDbDatabaseName + object["id"]), marshallToJSONAndConvertToByteArray(object),
+        client.put(getCouchDBURI(dbName + object["id"]), marshallToJSONAndConvertToByteArray(object),
           contentType);
       }
     }
@@ -188,7 +188,7 @@ package org.restfulx.services.as3http {
       var client:HttpClient = getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive,
         undoRedoFlag);
       
-      client.put(getCouchDBURI(Rx.couchDbDatabaseName + object["id"]), marshallToJSONAndConvertToByteArray(object), 
+      client.put(getCouchDBURI(dbName + object["id"]), marshallToJSONAndConvertToByteArray(object), 
         contentType);      
     }
     
@@ -239,7 +239,7 @@ package org.restfulx.services.as3http {
     }
     
     protected function getModelDestroyURI(object:Object):URI {
-      return getCouchDBURI(Rx.couchDbDatabaseName + object["id"] + "?rev=" + object["rev"]);
+      return getCouchDBURI(dbName + object["id"] + "?rev=" + object["rev"]);
     }
     
     protected function modelCanBeUpdatedOrDestroyed(model:Object):Boolean {
@@ -344,7 +344,7 @@ package org.restfulx.services.as3http {
     }
     
     protected function getCouchDBURI(url:String):URI {
-      var url:String = Rx.couchDBRootUrl + url;
+      var url:String = rootUrl + url;
       Rx.log.debug("sending request to: " + url);
       return new URI(url);
     }
@@ -369,7 +369,7 @@ package org.restfulx.services.as3http {
         } else {
           callback(false);
         }
-      }).put(getCouchDBURI(Rx.couchDbDatabaseName), "", contentType);  
+      }).put(getCouchDBURI(dbName), "", contentType);  
     }
     
     public function getDatabaseInfo(callback:Function):void {
@@ -381,7 +381,7 @@ package org.restfulx.services.as3http {
           var response:String = data.readUTFBytes(data.length);
           callback(JSON.decode(response));
         }
-      }).get(getCouchDBURI(Rx.couchDbDatabaseName));        
+      }).get(getCouchDBURI(dbName));        
     }
     
     public function deleteDatabase(callback:Function):void {
@@ -391,7 +391,7 @@ package org.restfulx.services.as3http {
         } else {
           callback(false);
         }    
-      }).del(getCouchDBURI(Rx.couchDbDatabaseName));
+      }).del(getCouchDBURI(dbName));
     }
   }
 }
