@@ -158,7 +158,7 @@ package org.restfulx.services.as3http {
     public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var url:String = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
-      url = RxUtils.addObjectIdToResourceURL(url, object);
+      url = RxUtils.addObjectIdToResourceURL(url, object, urlSuffix);
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
