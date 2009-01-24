@@ -66,7 +66,7 @@ package org.restfulx.controllers {
       } else if (targetServiceId != -1) {
         // -1 is the default in case nothing is specified and default service provider is 
         // exactly what's required
-        Rx.log.error("requested service provider doesn't exist, defaulting to: HTTPServiceProvider");
+        Rx.log.error("requested service provider doesn't exist, defaulting to: XMLHTTPServiceProvider");
       }
     }
     

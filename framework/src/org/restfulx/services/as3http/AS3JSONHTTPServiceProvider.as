@@ -45,5 +45,19 @@ package org.restfulx.services.as3http {
       urlSuffix = "json";
       contentType = "application/json";
     }
+
+    /**
+     * @see org.restfulx.services.IServiceProvider#id
+     */
+    public override function get id():int {
+      return ID;
+    }
+    
+    /**
+     * @see org.restfulx.services.IServiceProvider#hasErrors
+     */
+    public override function hasErrors(object:Object):Boolean {
+      return false;
+    }
   }
 }

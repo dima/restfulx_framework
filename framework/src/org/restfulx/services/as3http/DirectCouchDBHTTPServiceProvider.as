@@ -345,7 +345,7 @@ package org.restfulx.services.as3http {
     
     protected function getCouchDBURI(url:String):URI {
       var url:String = Rx.couchDBRootUrl + url;
-      trace("sending request to: " + url);
+      Rx.log.debug("sending request to: " + url);
       return new URI(url);
     }
     

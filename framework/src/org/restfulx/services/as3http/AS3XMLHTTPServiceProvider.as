@@ -80,8 +80,8 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#index
      */
     public override function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
-      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
-      trace("sending index request to: " + url);
+      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
+      Rx.log.debug("sending index request to: " + url);
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
@@ -96,9 +96,9 @@ package org.restfulx.services.as3http {
      * @see org.restfulx.services.IServiceProvider#show
      */
     public override function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
-      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
-      url = RxUtils.addObjectIdToResourceURL(url, object);
-      trace("sending show request to: " + url);
+      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
+      url = RxUtils.addObjectIdToResourceURL(url, object, urlSuffix);
+      Rx.log.debug("sending show request to: " + url);
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
@@ -115,13 +115,14 @@ package org.restfulx.services.as3http {
     public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
       if (RxUtils.isEmpty(object["id"])) {
-        var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
-        trace("sending create request to: " + url);
+        var url:String = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
+        Rx.log.debug("sending create request to: " + url);
 
         var uri:URI = new URI(url);
 
         var data:ByteArray = new ByteArray();
-        data.writeUTFBytes(serializer.marshall(object, recursive, metadata).toString());
+        var serialized:String = serializer.marshall(object, recursive, metadata).toString();
+        data.writeUTFBytes(serialized);
         data.position = 0;
       
         getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
@@ -136,14 +137,15 @@ package org.restfulx.services.as3http {
      */
     public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {      
-      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
-      url = RxUtils.addObjectIdToResourceURL(url, object);
-      trace("sending update request to: " + url);
+      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
+      url = RxUtils.addObjectIdToResourceURL(url, object, urlSuffix);
+      Rx.log.debug("sending update request to: " + url);
 
       var uri:URI = new URI(url);
 
       var data:ByteArray = new ByteArray();
-      data.writeUTFBytes(serializer.marshall(object, recursive, metadata).toString());
+      var serialized:String = serializer.marshall(object, recursive, metadata).toString();
+      data.writeUTFBytes(serialized);
       data.position = 0;
       
       getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
@@ -155,7 +157,7 @@ package org.restfulx.services.as3http {
      */
     public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
-      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
+      var url:String = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
       url = RxUtils.addObjectIdToResourceURL(url, object);
         
       var urlParams:String = urlEncodeMetadata(metadata);
@@ -196,7 +198,7 @@ package org.restfulx.services.as3http {
           responder.fault(event);
         } else {
           data.position = 0;
-          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, XML(data.readUTFBytes(data.length))));         
+          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, data.readUTFBytes(data.length)));         
         }
       });
     }
