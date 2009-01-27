@@ -211,6 +211,7 @@ package org.restfulx.services.http {
        ((httpService.request == null) ? "null" : "\r" + httpService.request.toString()));
 
       httpService.addEventListener(ResultEvent.RESULT, function(event:ResultEvent):void {
+        onHttpResult(event);
         var result:Object = event.result;
         if (hasErrors(result)) {
           if (responder) responder.result(event);
@@ -229,7 +230,6 @@ package org.restfulx.services.http {
       httpService.addEventListener(FaultEvent.FAULT, function(event:FaultEvent):void {
         if (responder) responder.fault(event);
       });
-      httpService.addEventListener(ResultEvent.RESULT, onHttpResult);
       httpService.send();
     }
 
@@ -389,6 +389,7 @@ package org.restfulx.services.http {
       var instance:Object = this;
 
       service.addEventListener(ResultEvent.RESULT, function(event:ResultEvent):void {
+        onHttpResult(event);
         var result:Object = event.result;
         if (hasErrors(result)) {
           if (responder) responder.result(event);
@@ -428,7 +429,6 @@ package org.restfulx.services.http {
       service.addEventListener(FaultEvent.FAULT, function(event:FaultEvent):void {
         if (responder) responder.fault(event);
       });
-      service.addEventListener(ResultEvent.RESULT, onHttpResult);
       service.send();
     }
     
