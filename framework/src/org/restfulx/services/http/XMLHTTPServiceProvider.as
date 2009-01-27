@@ -34,13 +34,16 @@ package org.restfulx.services.http {
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
+  import mx.rpc.events.FaultEvent;
   import mx.rpc.http.HTTPService;
   
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
+  import org.restfulx.collections.ModelsCollection;
   import org.restfulx.serializers.ISerializer;
   import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.XMLServiceErrors;
+  import org.restfulx.services.UndoRedoResponder;
   import org.restfulx.utils.BinaryAttachment;
   import org.restfulx.utils.ModelsMetadata;
   import org.restfulx.utils.MultiPartRequestBuilder;
@@ -93,12 +96,14 @@ package org.restfulx.services.http {
      * @see org.restfulx.services.IServiceProvider#hasErrors
      */    
     public function hasErrors(object:Object):Boolean {
-      var response:XML = XML(object);
-      var xmlFragmentName:String = response.localName().toString();
-      if (xmlFragmentName == "errors" && RxUtils.isEmpty(response.@type)) {
-        Rx.log.debug("received service error response, terminating processing:\n" + response.toXMLString());
-        Rx.models.errors = new XMLServiceErrors(response);
-        return true;
+      if (object is XML) {
+        var response:XML = XML(object);
+        var xmlFragmentName:String = response.localName().toString();
+        if (xmlFragmentName == "errors" && RxUtils.isEmpty(response.@type)) {
+          Rx.log.debug("received service error response, terminating processing:\n" + response.toXMLString());
+          Rx.models.errors = new XMLServiceErrors(response);
+          return true;
+        }
       }
       return false;
     }
@@ -164,7 +169,7 @@ package org.restfulx.services.http {
         var httpService:HTTPService = getHTTPService(object, nestedBy);
         httpService.method = URLRequestMethod.POST;
         httpService.request = marshallToVO(object, recursive, metadata);
-        sendOrUpload(httpService, object, responder);
+        sendOrUpload(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag, true);
       } else {
         update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
       }
@@ -181,7 +186,7 @@ package org.restfulx.services.http {
       httpService.request = marshallToVO(object, recursive, metadata);
       httpService.request["_method"] = "PUT";
       httpService.url = RxUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
-      sendOrUpload(httpService, object, responder); 
+      sendOrUpload(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag); 
     }
     
     /**
@@ -194,13 +199,38 @@ package org.restfulx.services.http {
       httpService.headers = {'X-HTTP-Method-Override': 'DELETE'};
       httpService.request["_method"] = "DELETE";
       httpService.url = RxUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
+      var instance:Object = this;
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
         httpService.url += "?" + urlParams;  
-      }
-      
-      invokeHTTPService(httpService, responder);
+      }      
+
+      Rx.log.debug("sending request to URL:" + httpService.url + 
+       " with method: " + httpService.method + " and content:" + 
+       ((httpService.request == null) ? "null" : "\r" + httpService.request.toString()));
+
+      httpService.addEventListener(ResultEvent.RESULT, function(event:ResultEvent):void {
+        var result:Object = event.result;
+        if (hasErrors(result)) {
+          if (responder) responder.result(event);
+        } else {
+          if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
+            var clone:Object = RxUtils.clone(object);
+            Rx.undoredo.addChangeAction({service: instance, action: "create", copy: clone,
+              elms: [clone, new UndoRedoResponder(responder, Rx.models.cache.create), metadata, 
+                nestedBy, recursive]});
+          }
+
+          RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
+          if (responder) responder.result(event);
+        }
+      });
+      httpService.addEventListener(FaultEvent.FAULT, function(event:FaultEvent):void {
+        if (responder) responder.fault(event);
+      });
+      httpService.addEventListener(ResultEvent.RESULT, onHttpResult);
+      httpService.send();
     }
 
     protected function urlEncodeMetadata(metadata:Object = null):String {
@@ -213,7 +243,9 @@ package org.restfulx.services.http {
       return result.replace(/&$/, "");
     }
 
-    protected function uploadFile(httpService:HTTPService, object:Object, responder:IResponder):void {      
+    protected function uploadFile(httpService:HTTPService, object:Object, responder:IResponder,
+      metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0,
+      creating:Boolean = false):void {      
       var fqn:String = getQualifiedClassName(object);
       var localName:String = RxUtils.toSnakeCase(fqn.split("::")[1]);
       var file:RxFileReference = RxFileReference(object["attachment"]);
@@ -222,6 +254,8 @@ package org.restfulx.services.http {
       for (var key:String in httpService.request) {
         payload[key] = httpService.request[key];
       }
+      
+      var instance:Object = this;
       
       var request:URLRequest = new URLRequest;
       request.url = httpService.url;
@@ -233,26 +267,66 @@ package org.restfulx.services.http {
       }
       
       file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(event:DataEvent):void {
-        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, event.data));
+        var result:Object = event.data;
+        if (hasErrors(result)) {
+          if (responder) responder.result(event);
+        } else {           
+          var fqn:String = getQualifiedClassName(object);
+
+          if (!creating) {
+            var cached:Object = RxUtils.clone(ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]));
+          }
+          
+          var response:Object = unmarshall(result);
+          
+          if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
+            var target:Object;
+            var clone:Object = RxUtils.clone(response);
+            var action:String = "destroy";
+            var fn:Function = Rx.models.cache.destroy;
+            
+            if (!creating) {
+              target = cached;
+              target["rev"] = object["rev"];
+              action = "update";
+              fn = Rx.models.cache.update;
+            } else {
+              target = RxUtils.clone(response);
+            }
+            
+            Rx.undoredo.addChangeAction({service: instance, action: action, copy: clone,
+              elms: [target, new UndoRedoResponder(responder, fn), metadata, 
+                nestedBy, recursive]});
+          }
+
+          RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
+          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));
+        }
       }, false, 0, true);
       file.addEventListener(IOErrorEvent.IO_ERROR, responder.fault, false, 0, true);
       
       file.upload(request, localName + "[" + file.keyName + "]");
     }
     
-    protected function sendOrUpload(httpService:HTTPService, object:Object, responder:IResponder):void {
+    protected function sendOrUpload(httpService:HTTPService, object:Object, responder:IResponder,
+      metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0,
+      creating:Boolean = false):void {
       if (object["attachment"] == null) {
-        invokeHTTPService(httpService, responder);
+        invokeCreateOrUpdateHTTPService(httpService, responder, object, metadata, nestedBy, recursive, 
+          undoRedoFlag, creating);
       } else {
         if (object["attachment"] is RxFileReference) {
-          uploadFile(httpService, object, responder);
+          uploadFile(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag, creating);
         } else if (object["attachment"] is BinaryAttachment) {
-          invokeMultiPartRequest(httpService, object, responder);
+          invokeMultiPartRequest(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag,
+            creating);
         }
       }       
     }
     
-    protected function invokeMultiPartRequest(httpService:HTTPService, object:Object, responder:IResponder):void {
+    protected function invokeMultiPartRequest(httpService:HTTPService, object:Object, responder:IResponder,
+      metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0,
+      creating:Boolean = false):void {
       var fqn:String = getQualifiedClassName(object);
       var localName:String = RxUtils.toSnakeCase(fqn.split("::")[1]);
       var file:BinaryAttachment = BinaryAttachment(object["attachment"]);
@@ -303,6 +377,59 @@ package org.restfulx.services.http {
       if (responder != null) {
         call.addResponder(responder);
       }
+    }
+    
+    protected function invokeCreateOrUpdateHTTPService(service:HTTPService, responder:IResponder,
+      object:Object, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, 
+      undoRedoFlag:int = 0, creating:Boolean = false):void {
+      Rx.log.debug("sending request to URL:" + service.url + 
+        " with method: " + service.method + " and content:" + 
+        ((service.request == null) ? "null" : "\r" + service.request.toString()));
+        
+      var instance:Object = this;
+
+      service.addEventListener(ResultEvent.RESULT, function(event:ResultEvent):void {
+        var result:Object = event.result;
+        if (hasErrors(result)) {
+          if (responder) responder.result(event);
+        } else {           
+          var fqn:String = getQualifiedClassName(object);
+
+          if (!creating) {
+            var cached:Object = RxUtils.clone(ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]));
+          }
+          
+          var response:Object = unmarshall(result);
+          
+          if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
+            var target:Object;
+            var clone:Object = RxUtils.clone(response);
+            var action:String = "destroy";
+            var fn:Function = Rx.models.cache.destroy;
+            
+            if (!creating) {
+              target = cached;
+              target["rev"] = object["rev"];
+              action = "update";
+              fn = Rx.models.cache.update;
+            } else {
+              target = RxUtils.clone(response);
+            }
+            
+            Rx.undoredo.addChangeAction({service: instance, action: action, copy: clone,
+              elms: [target, new UndoRedoResponder(responder, fn), metadata, 
+                nestedBy, recursive]});
+          }
+
+          RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
+          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));
+        }
+      });
+      service.addEventListener(FaultEvent.FAULT, function(event:FaultEvent):void {
+        if (responder) responder.fault(event);
+      });
+      service.addEventListener(ResultEvent.RESULT, onHttpResult);
+      service.send();
     }
     
     protected function onHttpResult(event:ResultEvent):void {
