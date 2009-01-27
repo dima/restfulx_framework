@@ -170,6 +170,10 @@ package org.restfulx.components.rx {
       dispatchEvent(new Event("typedTextChange"));
     }
     
+    /**
+     * Sets currently chosen item
+     * @param input the model to choose
+     */
     public function set chosenItem(input:Object):void {
       _typedText = input.toString();
       typedTextChanged = true;
@@ -180,7 +184,7 @@ package org.restfulx.components.rx {
       invalidateDisplayList();
       dispatchEvent(new Event("typedTextChange"));      
     }
-  
+      
     /**
      * Clear typed text without triggering dropdown show
      */
@@ -333,6 +337,9 @@ package org.restfulx.components.rx {
       prevIndex = selectedIndex;
     }
 
+    /**
+     *  @inheritDoc
+     */
     override public function getStyle(styleProp:String):* {
       if (styleProp != "openDuration") {
         return super.getStyle(styleProp);
@@ -350,6 +357,9 @@ package org.restfulx.components.rx {
       typedText = text;
     }
     
+    /**
+     *  @inheritDoc
+     */
     override public function close(event:Event = null):void {
       super.close(event);
       if (selectedIndex == 0) {

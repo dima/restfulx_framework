@@ -130,6 +130,12 @@ package org.restfulx {
      * will have any effect
      */
     public static var undoRedoStackSize:int = 10;
+
+    /**
+     * If set to true, undo/redo for create(), update() and destroy()
+     *  is enabled.
+     */
+    public static var enableUndoRedo:Boolean = false;
      
     /** default root URL for HTTP requests, gets prefixed to CRUD and AUX HTTP operations */
     public static var httpRootUrl:String = "/";
@@ -222,9 +228,7 @@ package org.restfulx {
      * important for file uploads.
      */
     public static var sessionToken:String;
-    
-    public static var enableUndoRedo:Boolean = false;
-    
+        
     /** default error namespace used by service providers */
     public static const DEFAULT_ERROR_FIELD:String = ":base";
     
