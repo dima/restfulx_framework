@@ -37,6 +37,7 @@ package org.restfulx.components.rx {
   
   [Event(name="typedTextChange", type="flash.events.Event")]
   [Event(name="selectedItemChange", type="flash.events.Event")]
+  [Event(name="chosenItemChange", type="flash.events.Event")]
   
   [Bindable]
   /**
@@ -184,6 +185,18 @@ package org.restfulx.components.rx {
       invalidateDisplayList();
       dispatchEvent(new Event("typedTextChange"));      
     }
+    
+    [Bindable("chosenItemChange")]
+    /**
+     * Gets currently chosen item
+     * @return currently chosen model instance
+     */
+    public function get chosenItem():Object {
+      if (selectedItem is RxModel) {
+        return selectedItem;
+      }
+      return null;
+    }
       
     /**
      * Clear typed text without triggering dropdown show
@@ -240,14 +253,15 @@ package org.restfulx.components.rx {
           dispatchEvent(new Event("typedTextChange"));
         } else if (ArrayCollection(dataProvider).length == 1) {
           selectedItem = ArrayCollection(dataProvider).getItemAt(0);
+          dispatchEvent(new Event("selectedItemChange"));
         }
       }
     }
 
     private function onResourceShow(result:Object):void {
-      selectedItem = result;
+      //selectedItem = result;
       if (clearTextAfterFind) clearTypedText();
-      dispatchEvent(new Event("selectedItemChange"));
+      dispatchEvent(new Event("chosenItemChange"));
     }
       
     override protected function commitProperties():void {
@@ -326,7 +340,7 @@ package org.restfulx.components.rx {
               RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
             } else {
               if (clearTextAfterFind) clearTypedText();
-              dispatchEvent(new Event("selectedItemChange"));
+              dispatchEvent(new Event("chosenItemChange"));
             }
           }
         }
