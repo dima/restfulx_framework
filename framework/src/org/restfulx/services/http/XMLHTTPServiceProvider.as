@@ -352,7 +352,6 @@ package org.restfulx.services.http {
       });
       loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault, false, 0, true);
       Rx.log.debug("issuing multi-part request to: " + request.url);
-      Rx.log.debug(String(request.data));
 
       loader.load(request);
     }

@@ -23,22 +23,39 @@
  ******************************************************************************/
 package org.restfulx.utils {
   import flash.net.URLRequest;
+  import flash.net.URLRequestHeader;
   import flash.net.URLVariables;
   import flash.utils.ByteArray;
-  
-  import org.restfulx.Rx;
 
   public class MultiPartRequestBuilder {
-    private static const MULTIPART_BOUNDARY:String  = "Ij5ae0ae0KM7GI3KM7ei4cH2ei4gL6";
+    
+    private static const BOUNDARY_CHARS:String = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";    
+    private static const MULTIPART_BOUNDARY:String = "----------------314159265358979323846";
     private static const MULTIPART_MARK:String   = "--";
     private static const LF:String = "\n";
     private static const CR:String = "\r";
     private static const EOL:String = CR + LF;
 
     private var variables:URLVariables;
+    private var boundary:String;
 
     public function MultiPartRequestBuilder(variables:URLVariables) {
        this.variables = variables;
+       this.boundary = generateBoundary();
+    }
+    
+    /**
+     * Generate random boundary (see java httpclient MultipartRequestEntity).
+     * @return Random boundary
+     */
+    private static function generateBoundary():String {      
+      var length:Number = Math.round(Math.random() * 10) * 30;
+      var boundary:String = "";
+      for(var i:Number = 0; i < length; i++) {
+        var index:Number = Math.round(Math.random() * (BOUNDARY_CHARS.length - 1));
+        boundary += BOUNDARY_CHARS.charAt(index);
+      }
+      return boundary;
     }
 
     public function build():URLRequest {
@@ -58,6 +75,9 @@ package org.restfulx.utils {
 
     private function buildMultipartBody():ByteArray {
       var body:ByteArray = new ByteArray();
+
+      body.writeUTFBytes(MULTIPART_MARK + MULTIPART_BOUNDARY + EOL +
+                "Content-Disposition: form-data; name=\"Upload\"" + EOL + EOL + "Submit Query");
 
       for (var id:String in variables) {
         body.writeBytes(encodeMultipartVariable(id, variables[id]));
@@ -95,6 +115,11 @@ package org.restfulx.utils {
     
     private function addMultipartHeadersTo(request:URLRequest):void {
       request.contentType  = "multipart/form-data; boundary=" + MULTIPART_BOUNDARY;
+      request.requestHeaders =
+      [
+          new URLRequestHeader("Accept", "*/*"),
+          new URLRequestHeader("Cache-Control", "no-cache")
+      ];
     }
   }
 }

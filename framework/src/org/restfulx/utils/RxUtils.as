@@ -106,7 +106,7 @@ package org.restfulx.utils {
         cloned["xrev"] = object["xrev"];
         cloned["sync"] = object["sync"];
         for each (var node:XML in describeType(object)..accessor) {
-          if (!isInvalidPropertyName(node.@name) && !RxUtils.isIgnored(node)) {
+          if (!isInvalidPropertyName(node.@name)) {
             try {
               var name:String = node.@name;
               cloned[name] = object[name];
@@ -134,7 +134,7 @@ package org.restfulx.utils {
       target["xrev"] = source["xrev"];
       target["sync"] = source["sync"];
       for each (var node:XML in describeType(source)..accessor) {
-        if (!isInvalidPropertyName(node.@name) && !RxUtils.isIgnored(node)) {
+        if (!isInvalidPropertyName(node.@name)) {
           try {
             var name:String = node.@name;
             target[name] = source[name];
@@ -145,6 +145,11 @@ package org.restfulx.utils {
       }
     }
     
+    /**
+     * Dispatches appropriate Undo/Redo event depending on the flag.
+     *  
+     * @param undoRedoFlag flag indicating what action is being performed
+     */
     public static function fireUndoRedoActionEvent(undoRedoFlag:int = 0):void {
       if (Rx.enableUndoRedo) {
         switch (undoRedoFlag) {
