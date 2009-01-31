@@ -115,11 +115,7 @@ package org.restfulx.utils {
     
     private function addMultipartHeadersTo(request:URLRequest):void {
       request.contentType  = "multipart/form-data; boundary=" + MULTIPART_BOUNDARY;
-      request.requestHeaders =
-      [
-          new URLRequestHeader("Accept", "*/*"),
-          new URLRequestHeader("Cache-Control", "no-cache")
-      ];
+      request.requestHeaders = [new URLRequestHeader("Cache-Control", "no-cache")];
     }
   }
 }

@@ -151,7 +151,14 @@ package org.restfulx.services.air {
       var fqn:String = Rx.models.state.types[clazz];
       if (indexing[fqn]) return;
       
-      var statement:SQLStatement = getSQLStatement(sql[fqn]["select"]);
+      var queryText:String = sql[fqn]["select"] + " AND ";
+      for (var prop:String in metadata) {
+        queryText += RxUtils.toSnakeCase(prop) + " LIKE '%" + metadata[prop] + "%' AND ";
+      }
+      
+      queryText = queryText.substr(0, queryText.length - 5);
+
+      var statement:SQLStatement = getSQLStatement(queryText);
       
       var token:AsyncToken = new AsyncToken(null);
       token.addResponder(responder);
