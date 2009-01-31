@@ -23,12 +23,56 @@
  ******************************************************************************/
 package org.restfulx.controllers {
   
+  import org.restfulx.models.RxModel;
+  import org.restfulx.utils.TypedArray;
+  
   /**
    * Custom AIR controller that allows performing arbitrary operations (as 
    * opposed to CRUD on models) against local SQLite database.
    */
   public class AuxAIRController {
-    public function AuxAIRController() {
+    
+    private var resultHandler:Function;
+    private var faultHandler:Function;
+    
+    /**
+     * @param optsOrOnResult can be either an anonymous object of options or a result handler 
+     *  function.
+     * @param onFault function to call if there was an error or if unmarshalling fails
+     */
+    public function AuxAIRController(optsOrOnResult:Object = null, onFault:Function = null) {
+      if (optsOrOnResult == null) optsOrOnResult = {};
+      this.faultHandler = onFault;
+      if (optsOrOnResult is Function) {
+        this.resultHandler = optsOrOnResult as Function;
+      } else {
+        if (optsOrOnResult['onResult']) this.resultHandler = optsOrOnResult['onResult'];
+        if (optsOrOnResult['onFault']) this.faultHandler = optsOrOnResult['onFault'];
+      }
+    }
+    
+    public function find(object:Object, conditions:Array, unmarshall:Boolean = false, cacheBy:String = null):Object {
+      return null;
+    }
+    
+    public function findFirst(object:Object, conditions:Array, unmarshall:Boolean = false, cacheBy:String = null):RxModel {
+      return null;
+    }
+    
+    public function findAll(object:Object, conditions:Array, unmarshall:Boolean = false, cacheBy:String = null):TypedArray {
+      return null;
+    }
+    
+    public function findBySQL(object:Object, sql:String, unmarshall:Boolean = false, cacheBy:String = null):Object {
+      return null;
+    }
+    
+    public function execute(sql:String, unmarshall:Boolean = false, cacheBy:String = null):Object {
+      return null;
+    }
+    
+    public function count(object:Object):int {
+      return 0;
     }
   }
 }
