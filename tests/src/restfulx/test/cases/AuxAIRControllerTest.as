@@ -23,11 +23,28 @@
  ******************************************************************************/
 package restfulx.test.cases {
   import flexunit.framework.TestCase;
+  
+  import org.restfulx.controllers.AuxAIRController;
+  import org.restfulx.utils.TypedArray;
+  
+  import restfulx.test.models.SimpleProperty;
 
-  public class AuxHTTPControllerTest extends TestCase {
-    
-    public function AuxHTTPControllerTest(methodName:String) {
+  public class AuxAIRControllerTest extends TestCase {
+        
+    public function AuxAIRControllerTest(methodName:String) {
       super(methodName);
+    }
+    
+    public function testFindAll():void {
+      var controller:AuxAIRController = new AuxAIRController(onResult);
+      controller.findAll(SimpleProperty, ["name LIKE :name AND available = true", {":name": "%2%"}]);
+    }
+    
+    private function onResult(result:Object):void {
+      assertTrue(result is TypedArray);
+      assertEquals(1, TypedArray(result).length);
+      assertEquals("SimpleProperty2NameString", SimpleProperty(result[0]).name);
+      assertTrue(SimpleProperty(result[0]).available);
     }
   }
 }

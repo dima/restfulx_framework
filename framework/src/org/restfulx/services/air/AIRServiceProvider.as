@@ -106,7 +106,7 @@ package org.restfulx.services.air {
         extractMetadata(elm);
       });
       
-      initializeConnection(databaseName, targetFile);
+      initializeConnection(targetFile);
     }
 
     /**
@@ -497,8 +497,7 @@ package org.restfulx.services.air {
       sql[modelName]["dirty"] = "SELECT * FROM " + tableName + " WHERE sync != ''";
     }
     
-    protected function initializeConnection(databaseName:String, 
-      databaseFile:File):void {
+    protected function initializeConnection(databaseFile:File):void {
       if (Rx.airEncryptionKey != null) {
         connection.open(databaseFile, SQLMode.CREATE, false, 1024, Rx.airEncryptionKey);
       } else {

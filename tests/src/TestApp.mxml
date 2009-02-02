@@ -3,6 +3,7 @@
   creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
   <mx:Script>
     <![CDATA[
+      import restfulx.test.cases.AuxAIRControllerTest;
       import flexunit.framework.TestSuite;
 
       import org.restfulx.Rx;
@@ -128,6 +129,8 @@
           ts.addTest(new SimplePropertiesTest("testCreateWithTrueBoolean", serviceProviderId));
           ts.addTest(new SimplePropertiesTest("testCreateWithFalseBoolean", serviceProviderId));
         }
+        
+        ts.addTest(new AuxAIRControllerTest("testFindAll"));
 
         ts.addTest(new RxUtilTest("testResourceNesting"));
         ts.addTest(new RxUtilTest("testCamelCasing"));
