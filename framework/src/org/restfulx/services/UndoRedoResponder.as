@@ -24,7 +24,12 @@
 package org.restfulx.services {
   import mx.rpc.IResponder;
   
-  public class UndoRedoResponder implements IWrappingFunctionalResponder {
+  /**
+   * Undo/Redo responder wraps around another Functional responder
+   * (typically ServiceResponder) and allows us to attach a different
+   * handler function to the responder than was originally provided.
+   */
+  public class UndoRedoResponder implements IFunctionalResponder {
     private var _source:IFunctionalResponder;
     private var fn:Function;
     
@@ -33,27 +38,54 @@ package org.restfulx.services {
       this.fn = fn;
     }
 
+    /**
+     * Get the handler function associated with *this* responder
+     * @return handler function
+     */
     public function get handler():Function {
       return fn;
     }
     
+    /**
+     * Set the handler function associated with *this* responder
+     * @param fn handler function
+     */
     public function set handler(fn:Function):void {
       this.fn = fn;
     }
     
+    /**
+     * Get the source IFunctionalResponder we wrap around
+     * @return the source functional respoder
+     */
     public function get source():IFunctionalResponder {
       return _source;
     }
     
+    /**
+     * Set the source IFunctionalResponder to wrap around
+     * @param the source functional respoder
+     */
     public function set source(responder:IFunctionalResponder):void {
       this._source = responder;
     }
 
+    /**
+     * Push *our* handler function into the source IFunctionalResponder and
+     * invoke its result implementation.
+     * 
+     * @see mx.rpc.IResponder#result
+     */
     public function result(data:Object):void {
       pushHandlerToSource();
       source.result(data);
     }
     
+    /**
+     * Invoke source IFunctionalResponder fault implementation.
+     * 
+     * @see mx.rpc.IResponder#fault
+     */
     public function fault(info:Object):void {
       source.fault(info);
     }

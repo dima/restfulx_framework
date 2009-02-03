@@ -29,7 +29,7 @@ package org.restfulx.controllers {
   import org.restfulx.Rx;
   import org.restfulx.services.IFunctionalResponder;
   import org.restfulx.services.IServiceProvider;
-  import org.restfulx.services.IWrappingFunctionalResponder;
+  import org.restfulx.services.UndoRedoResponder;
 
   /**
    * Adds undo redo support to the application.
@@ -154,8 +154,8 @@ package org.restfulx.controllers {
         // replace the arguments
         elms[0] = op["copy"];        
         
-        if (elms[1] is IWrappingFunctionalResponder) {
-          var responder:IFunctionalResponder = IWrappingFunctionalResponder(elms[1]).source;
+        if (elms[1] is UndoRedoResponder) {
+          var responder:IFunctionalResponder = UndoRedoResponder(elms[1]).source;
           responder.handler = (Rx.models.cache[action] as Function);
           elms[1] = responder;
         }

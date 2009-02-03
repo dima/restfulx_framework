@@ -25,7 +25,7 @@ package org.restfulx.events {
   import flash.events.Event;
 
   /**
-   * This event is dispatched when synchronization is about to begin.
+   * This event is dispatched when synchronization is about to begin
    */
   public class SyncStartEvent extends Event {
     

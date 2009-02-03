@@ -47,7 +47,6 @@
 <classEntry path="org.restfulx.services.IServiceProvider"/>
 <classEntry path="org.restfulx.services.ISyncingServiceProvider"/>
 <classEntry path="org.restfulx.services.IVersioningServiceProvider"/>
-<classEntry path="org.restfulx.services.IWrappingFunctionalResponder"/>
 <classEntry path="org.restfulx.services.ServiceResponder"/>
 <classEntry path="org.restfulx.services.UndoRedoResponder"/>
 <classEntry path="org.restfulx.services.XMLServiceErrors"/>

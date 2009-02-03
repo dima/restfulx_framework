@@ -24,8 +24,21 @@
 package org.restfulx.services {
   import mx.rpc.IResponder;
   
+  /**
+   * If a responder delegates final response processing to an arbitrary function, this
+   * interface allows us to get access to that handler function.
+   */
   public interface IFunctionalResponder extends IResponder {
+    /**
+     * Get access to the handler function associated with this responder
+     * @return handler function
+     */
     function get handler():Function;
+    
+    /**
+     * Overrides the handler function used by this responder
+     * @param new handler function to use
+     */
     function set handler(fn:Function):void;
   }
 }

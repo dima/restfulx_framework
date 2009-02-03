@@ -24,9 +24,23 @@
 package org.restfulx.utils {
   import flash.utils.ByteArray;
   
+  /**
+   * BinaryAttachments work much the same way RxFileReferences do, except they allow
+   * you to attach arbitrary binary data to models instead of files. This is quite
+   * useful for things like screenshots, webcam output, etc.
+   */
   public class BinaryAttachment {
+    
+    /** The name to use for this attachment (can be something like snapshot.png) */
     public var name:String;
+    
+    /** 
+     * The key this attachment should be submitted under, can be things like 
+     * "avatar", or "uploaded_data" or whatever user server expects as the variable
+     */
     public var key:String;
+    
+    /** actual binary data to send */
     public var data:ByteArray;
     
     public function BinaryAttachment(name:String, key:String, data:ByteArray) {

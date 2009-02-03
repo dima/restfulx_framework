@@ -54,7 +54,6 @@
     <class>org.restfulx.services.IServiceProvider</class>
     <class>org.restfulx.services.ISyncingServiceProvider</class>
     <class>org.restfulx.services.IVersioningServiceProvider</class>
-    <class>org.restfulx.services.IWrappingFunctionalResponder</class>
     <class>org.restfulx.services.ServiceResponder</class>
     <class>org.restfulx.services.UndoRedoResponder</class>
     <class>org.restfulx.services.XMLServiceErrors</class>

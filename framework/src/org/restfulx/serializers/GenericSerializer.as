@@ -229,7 +229,7 @@ package org.restfulx.serializers {
     }
     
     protected function getRefId(id:Object):String {
-      return id.toString()
+      return id.toString();
     }
 
     protected function getPolymorphicRef(source:Object, name:String):String {

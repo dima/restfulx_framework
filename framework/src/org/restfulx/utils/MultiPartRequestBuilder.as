@@ -27,6 +27,9 @@ package org.restfulx.utils {
   import flash.net.URLVariables;
   import flash.utils.ByteArray;
 
+  /**
+   * This class performs custom multi-part request construction for binary attachments.
+   */
   public class MultiPartRequestBuilder {
     
     private static const BOUNDARY_CHARS:String = "-_1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";    
@@ -58,6 +61,10 @@ package org.restfulx.utils {
       return boundary;
     }
 
+    /**
+     * Build the multipart request.
+     * @return multi-part ready URLRequest object
+     */
     public function build():URLRequest {
       var request:URLRequest = new URLRequest();
       request.data = buildMultipartBody();

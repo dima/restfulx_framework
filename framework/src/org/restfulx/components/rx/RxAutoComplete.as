@@ -130,6 +130,7 @@ package org.restfulx.components.rx {
   
     public function RxAutoComplete() {
       super();
+      
       if (Rx.models.cached(resource) && Rx.models.cached(resource).length) {
         dataProvider = Rx.filter(Rx.models.cached(resource), filterFunction);
         dataProvider.refresh();
