@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/MultiPartRequestBuilder.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/MultiPartRequestBuilder.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MultiPartRequestBuilder</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a></td>
@@ -39,7 +39,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+   This class performs custom multi-part request construction for binary attachments.
+   <p></p>
 <br>
 <hr>
 </div>
@@ -61,7 +62,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#build()">build</a>():URLRequest</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     Build the multipart request.</div>
 </td><td class="summaryTableOwnerCol">MultiPartRequestBuilder</td>
 </tr>
 </table>
@@ -96,12 +98,14 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function build():URLRequest</code>
-<p></p>
+<code>public function build():URLRequest</code><p>
+     Build the multipart request.
+     </p><p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>URLRequest</code></td>
+<td width="20"></td><td><code>URLRequest</code> &mdash; multi-part ready URLRequest object
+     </td>
 </tr>
 </table>
 </div>

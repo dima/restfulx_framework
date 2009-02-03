@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
-<meta content="XMLHTTPServiceProvider,org.restfulx.services.http.XMLHTTPServiceProvider,ID,serializer,state,urlSuffix,id,canLazyLoad,create,destroy,getHTTPService,hasErrors,index,invokeHTTPService,invokeMultiPartRequest,marshall,marshallToVO,onHttpResult,sendOrUpload,show,unmarshall,update,uploadFile,urlEncodeMetadata" name="keywords">
+<meta content="XMLHTTPServiceProvider,org.restfulx.services.http.XMLHTTPServiceProvider,ID,rootUrl,serializer,state,urlSuffix,id,canLazyLoad,create,destroy,getHTTPService,hasErrors,index,invokeCreateOrUpdateHTTPService,invokeHTTPService,invokeMultiPartRequest,marshall,marshallToVO,onHttpResult,sendOrUpload,show,unmarshall,update,uploadFile,urlEncodeMetadata" name="keywords">
 <title>org.restfulx.services.http.XMLHTTPServiceProvider</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/http/XMLHTTPServiceProvider.html&amp;org/restfulx/services/http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/http/XMLHTTPServiceProvider.html&amp;org/restfulx/services/http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;XMLHTTPServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -62,6 +62,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
      </div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#rootUrl">rootUrl</a> : String<div class="summaryTableDescription"> 
+     Root URL that this service provider will prefix to all requests.</div>
+</td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
+</tr>
 </table>
 </div>
 <a name="protectedPropertySummary"></a>
@@ -97,7 +102,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#XMLHTTPServiceProvider()">XMLHTTPServiceProvider</a>()</div>
+<a class="signatureLink" href="#XMLHTTPServiceProvider()">XMLHTTPServiceProvider</a>(httpRootUrl:String = null)</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
@@ -113,7 +118,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
@@ -121,7 +126,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
@@ -169,7 +174,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
@@ -193,6 +198,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#invokeCreateOrUpdateHTTPService()">invokeCreateOrUpdateHTTPService</a>(service:HTTPService, responder:IResponder, object:Object, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#invokeHTTPService()">invokeHTTPService</a>(service:HTTPService, responder:IResponder):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
@@ -200,7 +212,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#invokeMultiPartRequest()">invokeMultiPartRequest</a>(httpService:HTTPService, object:Object, responder:IResponder):void</div>
+<a class="signatureLink" href="#invokeMultiPartRequest()">invokeMultiPartRequest</a>(httpService:HTTPService, object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
@@ -221,14 +233,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#sendOrUpload()">sendOrUpload</a>(httpService:HTTPService, object:Object, responder:IResponder):void</div>
+<a class="signatureLink" href="#sendOrUpload()">sendOrUpload</a>(httpService:HTTPService, object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#uploadFile()">uploadFile</a>(httpService:HTTPService, object:Object, responder:IResponder):void</div>
+<a class="signatureLink" href="#uploadFile()">uploadFile</a>(httpService:HTTPService, object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
@@ -280,6 +292,17 @@ showHideInherited();
 <a href="../../services/IServiceProvider.html#id" target="">org.restfulx.services.IServiceProvider.id</a>
 </div>
 </div>
+<a name="rootUrl"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">rootUrl</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var rootUrl:String</code><p> 
+     Root URL that this service provider will prefix to all requests.
+     By default this will be equal to Rx.httpRootUrl parameter
+     </p></div>
 <a name="serializer"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -316,8 +339,16 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function XMLHTTPServiceProvider()</code><p>
-     </p></div>
+<code>public function XMLHTTPServiceProvider(httpRootUrl:String = null)</code><p>
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">httpRootUrl</span>:String</code> (default = <code>null</code>)<code></code> &mdash; root URL that this service provider will prefix to all requests.
+      By default this will be equal to Rx.httpRootUrl parameter
+     </td>
+</tr>
+</table>
+</div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
 <a name="canLazyLoad()"></a>
@@ -349,7 +380,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</code><p>
+<code>public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -377,7 +408,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">canUndo</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -394,7 +431,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</code><p>
+<code>public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -422,7 +459,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">canUndo</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -526,6 +569,62 @@ showHideInherited();
 <a href="../../services/IServiceProvider.html#index" target="">org.restfulx.services.IServiceProvider.index</a>
 </div>
 </div>
+<a name="invokeCreateOrUpdateHTTPService()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">invokeCreateOrUpdateHTTPService</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function invokeCreateOrUpdateHTTPService(service:HTTPService, responder:IResponder, object:Object, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">service</span>:HTTPService</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">creating</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+</table>
+</div>
 <a name="invokeHTTPService()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -553,7 +652,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected function invokeMultiPartRequest(httpService:HTTPService, object:Object, responder:IResponder):void</code><span class="label">Parameters</span>
+<code>protected function invokeMultiPartRequest(httpService:HTTPService, object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">httpService</span>:HTTPService</code></td>
@@ -569,6 +668,36 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">creating</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
 </tr>
 </table>
 </div>
@@ -666,7 +795,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected function sendOrUpload(httpService:HTTPService, object:Object, responder:IResponder):void</code><span class="label">Parameters</span>
+<code>protected function sendOrUpload(httpService:HTTPService, object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">httpService</span>:HTTPService</code></td>
@@ -682,6 +811,36 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">creating</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
 </tr>
 </table>
 </div>
@@ -765,7 +924,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</code><p>
+<code>public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -793,7 +952,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">canUndo</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -810,7 +975,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected function uploadFile(httpService:HTTPService, object:Object, responder:IResponder):void</code><span class="label">Parameters</span>
+<code>protected function uploadFile(httpService:HTTPService, object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">httpService</span>:HTTPService</code></td>
@@ -826,6 +991,36 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">creating</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
 </tr>
 </table>
 </div>

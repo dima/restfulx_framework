@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
-<meta content="DirectCouchDBHTTPServiceProvider,org.restfulx.services.as3http.DirectCouchDBHTTPServiceProvider,ID,contentType,serializer,state,id,canLazyLoad,create,createDatabase,deleteDatabase,destroy,getCouchDBURI,getCreateOrUpdateHttpClient,getDatabaseInfo,getHttpClient,getModelDestroyURI,getShowHttpClient,hasErrors,index,listDatabases,marshall,marshallToJSON,marshallToJSONAndConvertToByteArray,modelCanBeUpdatedOrDestroyed,show,unmarshall,update" name="keywords">
+<meta content="DirectCouchDBHTTPServiceProvider,org.restfulx.services.as3http.DirectCouchDBHTTPServiceProvider,ID,contentType,dbName,rootUrl,serializer,state,id,canLazyLoad,create,createDatabase,deleteDatabase,destroy,getCouchDBURI,getCreateOrUpdateHttpClient,getDatabaseInfo,getHttpClient,getModelDestroyURI,getShowHttpClient,hasErrors,index,listDatabases,marshall,marshallToJSON,marshallToJSONAndConvertToByteArray,modelCanBeUpdatedOrDestroyed,show,unmarshall,update" name="keywords">
 <title>org.restfulx.services.as3http.DirectCouchDBHTTPServiceProvider</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/as3http/DirectCouchDBHTTPServiceProvider.html&amp;org/restfulx/services/as3http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/as3http/DirectCouchDBHTTPServiceProvider.html&amp;org/restfulx/services/as3http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;DirectCouchDBHTTPServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -76,6 +76,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">DirectCouchDBHTTPServiceProvider</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#dbName">dbName</a> : String<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">DirectCouchDBHTTPServiceProvider</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#rootUrl">rootUrl</a> : String<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">DirectCouchDBHTTPServiceProvider</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#serializer">serializer</a> : <a href="../../serializers/ISerializer.html">ISerializer</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">DirectCouchDBHTTPServiceProvider</td>
@@ -97,7 +105,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#DirectCouchDBHTTPServiceProvider()">DirectCouchDBHTTPServiceProvider</a>()</div>
+<a class="signatureLink" href="#DirectCouchDBHTTPServiceProvider()">DirectCouchDBHTTPServiceProvider</a>(couchDbRootUrl:String = null, couchDbName:String = null)</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">DirectCouchDBHTTPServiceProvider</td>
 </tr>
@@ -112,7 +120,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">DirectCouchDBHTTPServiceProvider</td>
@@ -134,7 +142,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">DirectCouchDBHTTPServiceProvider</td>
@@ -196,7 +204,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">DirectCouchDBHTTPServiceProvider</td>
@@ -220,7 +228,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#getCreateOrUpdateHttpClient()">getCreateOrUpdateHttpClient</a>(object:Object, responder:IResponder):HttpClient</div>
+<a class="signatureLink" href="#getCreateOrUpdateHttpClient()">getCreateOrUpdateHttpClient</a>(object:Object, responder:IResponder, metadata:Object, nestedBy:Array, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):HttpClient</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">DirectCouchDBHTTPServiceProvider</td>
 </tr>
@@ -297,6 +305,15 @@ showHideInherited();
 <div class="detailBody">
 <code>protected var contentType:String</code>
 </div>
+<a name="dbName"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">dbName</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected var dbName:String</code>
+</div>
 <a name="id"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -315,6 +332,15 @@ showHideInherited();
 <div class="seeAlso">
 <a href="../../services/IServiceProvider.html#id" target="">org.restfulx.services.IServiceProvider.id</a>
 </div>
+</div>
+<a name="rootUrl"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">rootUrl</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected var rootUrl:String</code>
 </div>
 <a name="serializer"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -343,7 +369,18 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function DirectCouchDBHTTPServiceProvider()</code>
+<code>public function DirectCouchDBHTTPServiceProvider(couchDbRootUrl:String = null, couchDbName:String = null)</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">couchDbRootUrl</span>:String</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">couchDbName</span>:String</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
@@ -376,7 +413,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</code><p>
+<code>public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -404,7 +441,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">canUndo</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -449,7 +492,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</code><p>
+<code>public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -477,7 +520,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">canUndo</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -515,7 +564,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected function getCreateOrUpdateHttpClient(object:Object, responder:IResponder):HttpClient</code><span class="label">Parameters</span>
+<code>protected function getCreateOrUpdateHttpClient(object:Object, responder:IResponder, metadata:Object, nestedBy:Array, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):HttpClient</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
@@ -525,6 +574,36 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">creating</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
 </tr>
 </table>
 <p></p>
@@ -900,7 +979,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</code><p>
+<code>public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -928,7 +1007,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">canUndo</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 <p>

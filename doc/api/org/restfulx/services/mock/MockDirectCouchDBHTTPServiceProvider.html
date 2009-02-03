@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/mock/MockDirectCouchDBHTTPServiceProvider.html&amp;org/restfulx/services/mock/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/mock/MockDirectCouchDBHTTPServiceProvider.html&amp;org/restfulx/services/mock/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MockDirectCouchDBHTTPServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -80,6 +80,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedProtectedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#dbName">dbName</a> : String<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
+</tr>
+<tr class="hideInheritedProtectedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#rootUrl">rootUrl</a> : String<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
+</tr>
+<tr class="hideInheritedProtectedProperty">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#serializer">serializer</a> : <a href="../../serializers/ISerializer.html">ISerializer</a>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
@@ -109,7 +117,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#MockDirectCouchDBHTTPServiceProvider()">MockDirectCouchDBHTTPServiceProvider</a>()</div>
+<a class="signatureLink" href="#MockDirectCouchDBHTTPServiceProvider()">MockDirectCouchDBHTTPServiceProvider</a>(couchDbRootUrl:String = null, couchDbName:String = null)</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">MockDirectCouchDBHTTPServiceProvider</td>
 </tr>
@@ -124,7 +132,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
@@ -146,7 +154,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
@@ -222,7 +230,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
@@ -254,7 +262,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#getCreateOrUpdateHttpClient()">getCreateOrUpdateHttpClient</a>(object:Object, responder:IResponder):HttpClient</div>
+<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#getCreateOrUpdateHttpClient()">getCreateOrUpdateHttpClient</a>(object:Object, responder:IResponder, metadata:Object, nestedBy:Array, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):HttpClient</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
@@ -343,7 +351,18 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function MockDirectCouchDBHTTPServiceProvider()</code>
+<code>public function MockDirectCouchDBHTTPServiceProvider(couchDbRootUrl:String = null, couchDbName:String = null)</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">couchDbRootUrl</span>:String</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">couchDbName</span>:String</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>

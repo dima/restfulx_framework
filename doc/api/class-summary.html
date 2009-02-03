@@ -15,7 +15,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('all-classes.html')" href="package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('index-list.html')" href="all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="index.html?class-summary.html&amp;all-classes.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('all-classes.html')" href="package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('index-list.html')" href="all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="index.html?class-summary.html&amp;all-classes.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">All&nbsp;Classes</td><td align="right" id="subNav" class="titleTableSubNav"></td>
@@ -77,7 +77,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/utils/BinaryAttachment.html">BinaryAttachment</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/utils/class-list.html');" href="org/restfulx/utils/package-detail.html">org.restfulx.utils</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/utils/class-list.html');" href="org/restfulx/utils/package-detail.html">org.restfulx.utils</a></td><td class="summaryTableLastCol">
+   BinaryAttachments work much the same way RxFileReferences do, except they allow
+   you to attach arbitrary binary data to models instead of files.</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/controllers/CacheController.html">CacheController</a>
@@ -95,12 +97,18 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/controllers/ChangeController.html">ChangeController</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/package-detail.html">org.restfulx.controllers</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/package-detail.html">org.restfulx.controllers</a></td><td class="summaryTableLastCol">
+    If Synchronization is enabled, Change controller can be hooked up to 
+    Rx.changes to perform synchronization between 2 different service providers.</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/services/ChangeResponder.html">ChangeResponder</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/package-detail.html">org.restfulx.services</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/package-detail.html">org.restfulx.services</a></td><td class="summaryTableLastCol">
+    This responder hanldes synchronization responses from the destination service provider
+    and syncs successful operations back to source service provider and/or reports relevant
+    errors
+   </td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/events/CommandExecutionEvent.html">CommandExecutionEvent</a>
@@ -121,32 +129,35 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
    Manages restfulx command related event registration.</td>
 </tr>
 <tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/rx/ComponentWatcher.html">ComponentWatcher</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/rx/class-list.html');" href="org/restfulx/components/rx/package-detail.html">org.restfulx.components.rx</a></td><td class="summaryTableLastCol">
+   This is a non-visual component that works in a similar way to &lt;mx:Binding/&gt;
+    It is particularly useful for binding visual components to RxModel instance
+    properties.</td>
+</tr>
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/serializers/CouchDBJSONSerializer.html">CouchDBJSONSerializer</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/serializers/class-list.html');" href="org/restfulx/serializers/package-detail.html">org.restfulx.serializers</a></td><td class="summaryTableLastCol">
    Serialises <code>RxModel</code> instances to JSON and back according to
    CouchDB conventions.</td>
 </tr>
-<tr class="prow0">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/DateTextInput.html">DateTextInput</a>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/rx/DateTextInput.html">DateTextInput</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/class-list.html');" href="org/restfulx/components/package-detail.html">org.restfulx.components</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/rx/class-list.html');" href="org/restfulx/components/rx/package-detail.html">org.restfulx.components.rx</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/rx/DateTimeTextInput.html">DateTimeTextInput</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/rx/class-list.html');" href="org/restfulx/components/rx/package-detail.html">org.restfulx.components.rx</a></td><td class="summaryTableLastCol">&nbsp;</td>
 </tr>
 <tr class="prow1">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/DateTimeTextInput.html">DateTimeTextInput</a>
-<br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/class-list.html');" href="org/restfulx/components/package-detail.html">org.restfulx.components</a></td><td class="summaryTableLastCol">&nbsp;</td>
-</tr>
-<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/services/as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/package-detail.html">org.restfulx.services.as3http</a></td><td class="summaryTableLastCol">
    Direct CouchDB Service Provider.</td>
-</tr>
-<tr class="prow1">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="com/adobe/data/encryption/EncryptionKeyGenerator.html">EncryptionKeyGenerator</a>
-<br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('com/adobe/data/encryption/class-list.html');" href="com/adobe/data/encryption/package-detail.html">com.adobe.data.encryption</a></td><td class="summaryTableLastCol">&nbsp;</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/services/http/GAEHTTPServiceProvider.html">GAEHTTPServiceProvider</a>
@@ -183,7 +194,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/services/IFunctionalResponder.html"><i>IFunctionalResponder</i></a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/package-detail.html">org.restfulx.services</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/package-detail.html">org.restfulx.services</a></td><td class="summaryTableLastCol">
+   If a responder delegates final response processing to an arbitrary function, this
+   interface allows us to get access to that handler function.</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/utils/Inflector.html">Inflector</a>
@@ -287,14 +300,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
     in this class.</td>
 </tr>
 <tr class="prow0">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/MoneyTextInput.html">MoneyTextInput</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/rx/MoneyTextInput.html">MoneyTextInput</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/class-list.html');" href="org/restfulx/components/package-detail.html">org.restfulx.components</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/rx/class-list.html');" href="org/restfulx/components/rx/package-detail.html">org.restfulx.components.rx</a></td><td class="summaryTableLastCol">&nbsp;</td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/utils/MultiPartRequestBuilder.html">MultiPartRequestBuilder</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/utils/class-list.html');" href="org/restfulx/utils/package-detail.html">org.restfulx.utils</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/utils/class-list.html');" href="org/restfulx/utils/package-detail.html">org.restfulx.utils</a></td><td class="summaryTableLastCol">
+   This class performs custom multi-part request construction for binary attachments.</td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/Rx.html">Rx</a>
@@ -311,9 +325,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
     the framework.</td>
 </tr>
 <tr class="prow0">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/RxAutoComplete.html">RxAutoComplete</a>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/rx/RxAutoComplete.html">RxAutoComplete</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/class-list.html');" href="org/restfulx/components/package-detail.html">org.restfulx.components</a></td><td class="summaryTableLastCol">
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/rx/class-list.html');" href="org/restfulx/components/rx/package-detail.html">org.restfulx.components.rx</a></td><td class="summaryTableLastCol">
    This class adds integrated search capability to your Flex/AIR applications.</td>
 </tr>
 <tr class="prow1">
@@ -397,73 +411,76 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Al
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/events/SyncEndEvent.html">SyncEndEvent</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/events/class-list.html');" href="org/restfulx/events/package-detail.html">org.restfulx.events</a></td><td class="summaryTableLastCol">
-   This event is dispatched when service provider call is about to be made.</td>
+   This event is dispatched when synchronization has been finished
+   </td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/events/SyncErrorEvent.html">SyncErrorEvent</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/events/class-list.html');" href="org/restfulx/events/package-detail.html">org.restfulx.events</a></td><td class="summaryTableLastCol">
-   This event is dispatched when service provider call is about to be made.</td>
+   This event is dispatched when there's an error during synchronization process
+   </td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/events/SyncItemEvent.html">SyncItemEvent</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/events/class-list.html');" href="org/restfulx/events/package-detail.html">org.restfulx.events</a></td><td class="summaryTableLastCol">
-   This event is dispatched when service provider call is about to be made.</td>
+   This event is dispatched when an RxModel instance is about to be synchronized
+   </td>
 </tr>
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/events/SyncStartEvent.html">SyncStartEvent</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/events/class-list.html');" href="org/restfulx/events/package-detail.html">org.restfulx.events</a></td><td class="summaryTableLastCol">
-   This event is dispatched when service provider call is about to be made.</td>
+   This event is dispatched when synchronization is about to begin
+   </td>
 </tr>
 <tr class="prow1">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/components/TwoWayBinding.html">TwoWayBinding</a>
-<br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/components/class-list.html');" href="org/restfulx/components/package-detail.html">org.restfulx.components</a></td><td class="summaryTableLastCol">&nbsp;</td>
-</tr>
-<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/utils/TypedArray.html">TypedArray</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/utils/class-list.html');" href="org/restfulx/utils/package-detail.html">org.restfulx.utils</a></td><td class="summaryTableLastCol">
    An array of items where we know what type of models it contains.</td>
 </tr>
-<tr class="prow1">
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/controllers/UndoRedoController.html">UndoRedoController</a>
 <br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/package-detail.html">org.restfulx.controllers</a></td><td class="summaryTableLastCol">&nbsp;</td>
-</tr>
-<tr class="prow0">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/services/UndoRedoResponder.html">UndoRedoResponder</a>
-<br>
-</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/package-detail.html">org.restfulx.services</a></td><td class="summaryTableLastCol">&nbsp;</td>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/package-detail.html">org.restfulx.controllers</a></td><td class="summaryTableLastCol">
+   Adds undo redo support to the application.</td>
 </tr>
 <tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/services/UndoRedoResponder.html">UndoRedoResponder</a>
+<br>
+</td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/package-detail.html">org.restfulx.services</a></td><td class="summaryTableLastCol">
+   Undo/Redo responder wraps around another Functional responder
+   (typically ServiceResponder) and allows us to attach a different
+   handler function to the responder than was originally provided.</td>
+</tr>
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/utils/UUID.html">UUID</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/utils/class-list.html');" href="org/restfulx/utils/package-detail.html">org.restfulx.utils</a></td><td class="summaryTableLastCol">
       This class implements a binary version of UUIDs as specified in the
    <a href="http://www.ietf.org/rfc/rfc4122.txt">RFC</a>.</td>
 </tr>
-<tr class="prow0">
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/serializers/VOSerializer.html">VOSerializer</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/serializers/class-list.html');" href="org/restfulx/serializers/package-detail.html">org.restfulx.serializers</a></td><td class="summaryTableLastCol">
     Serializes <code>RxModel</code> instances to Value Objects and back.</td>
 </tr>
-<tr class="prow1">
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/services/http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/services/http/class-list.html');" href="org/restfulx/services/http/package-detail.html">org.restfulx.services.http</a></td><td class="summaryTableLastCol">
    XML-over-HTTP service provider based on Flex HTTPService.</td>
 </tr>
-<tr class="prow0">
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/serializers/XMLSerializer.html">XMLSerializer</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/serializers/class-list.html');" href="org/restfulx/serializers/package-detail.html">org.restfulx.serializers</a></td><td class="summaryTableLastCol">
    Serialises <code>RxModel</code> instances to XML and back.</td>
 </tr>
-<tr class="prow1">
+<tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="org/restfulx/services/XMLServiceErrors.html">XMLServiceErrors</a>
 <br>
 </td><td class="summaryTableCol"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/package-detail.html">org.restfulx.services</a></td><td class="summaryTableLastCol">

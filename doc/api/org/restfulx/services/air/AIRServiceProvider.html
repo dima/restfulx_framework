@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/air/AIRServiceProvider.html&amp;org/restfulx/services/air/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/air/AIRServiceProvider.html&amp;org/restfulx/services/air/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;AIRServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -96,8 +96,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#AIRServiceProvider()">AIRServiceProvider</a>()</div>
-<div class="summaryTableDescription"></div>
+<a class="signatureLink" href="#AIRServiceProvider()">AIRServiceProvider</a>(dbFile:File = null)</div>
+<div class="summaryTableDescription">
+     </div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
 </tr>
 <tr class="">
@@ -111,7 +112,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
@@ -119,7 +120,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
@@ -191,7 +192,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
@@ -222,7 +223,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#initializeConnection()">initializeConnection</a>(databaseName:String, databaseFile:File):void</div>
+<a class="signatureLink" href="#initializeConnection()">initializeConnection</a>(databaseFile:File):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
 </tr>
@@ -310,7 +311,13 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function AIRServiceProvider()</code>
+<code>public function AIRServiceProvider(dbFile:File = null)</code><p>
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">dbFile</span>:File</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
@@ -343,7 +350,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</code><p>
+<code>public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -371,7 +378,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">canUndo</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -388,7 +401,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</code><p>
+<code>public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -416,7 +429,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">canUndo</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -581,14 +600,8 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected function initializeConnection(databaseName:String, databaseFile:File):void</code><span class="label">Parameters</span>
+<code>protected function initializeConnection(databaseFile:File):void</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">databaseName</span>:String</code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">databaseFile</span>:File</code></td>
 </tr>
@@ -812,7 +825,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</code><p>
+<code>public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -840,7 +853,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">canUndo</span>:Boolean</code> (default = <code>true</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
 </tr>
 </table>
 <p>

@@ -34,7 +34,7 @@ task :doc do
   packages = ['-package org.restfulx "Provides central access to a number of frequently used subsystems, configuration options and helpers."']
   packages << '-package org.restfulx.collections "ArrayCollection extensions that help dealing with RxModels."'
   packages << '-package org.restfulx.commands "Command pattern specific classes."'
-  packages << '-package org.restfulx.components "Reusable MXML components that maybe used the Code generation engine."'
+  packages << '-package org.restfulx.components.rx "Reusable MXML components that maybe used by the RestfulX code generation engine."'
   packages << '-package org.restfulx.controllers "Various framework controllers such as RXApplicationController and ModelsController."'
   packages << '-package org.restfulx.controllers.mock "Adds a few testing specific controllers."'
   packages << '-package org.restfulx.events "Events dispatched by the framework."'
@@ -47,7 +47,7 @@ task :doc do
   packages << '-package org.restfulx.services.mock "Adds a few testing specific service providers."'
   packages << '-package org.restfulx.utils "Framework utilties."'
   packages << '-package org.restfulx.validators "Validation classes for proxying server-side/service provider errors to the UI."'
-  system("#{get_executable('asdoc')} +configname=air -main-title 'RestfulX Framework 1.2.0 API Documenation' -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{packages.join(" ")} -output doc/api")
+  system("#{get_executable('asdoc')} +configname=air -main-title 'RestfulX Framework 1.2.1 API Documenation' -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{packages.join(" ")} -output doc/api")
 end
 
 namespace :test do  
