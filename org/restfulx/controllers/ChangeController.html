@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/ChangeController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/ChangeController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;ChangeController</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -42,7 +42,32 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 </table>
 <p></p>
-<p></p>
+    If Synchronization is enabled, Change controller can be hooked up to 
+    Rx.changes to perform synchronization between 2 different service providers.
+    <code>source</code> service provider must implement <code>ISynchingServiceProvider</code>
+    while <code>target</code> service provider can be anything that implements the standard
+    <code>IServiceProvider</code> interface.
+    
+    <p></p>
+<br>
+<span class="label">Example</span>
+<br>Setting up ChangeController
+    
+    <div class='listing'><pre>
+    private funtion init():void {
+      ApplicationController.initialize([AIRServiceProvider, AS3JSONHTTPServiceProvider, DirectCouchDBHTTPServiceProvider], 
+        AIRServiceProvider.ID, "yourairdbname");
+      Rx.changes = new ChangeController(ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
+        Rx.services.getServiceProvider(AS3JSONHTTPServiceProvider.ID));
+    }
+    </pre></div>
+    
+    <p></p>Synchronizing data
+    
+    <div class='listing'><pre>
+    &lt;mx:Button label=&quot;Synchronize&quot; click=&quot;{Rx.changes.push()}&quot; enabled=&quot;{online}&quot;/&gt;
+    </pre></div>
+   <p></p>
 <br>
 <hr>
 </div>
@@ -54,12 +79,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#count">count</a> : int<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#count">count</a> : int<div class="summaryTableDescription">
+     Number of objects still left to synchronize
+     </div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#errors">errors</a> : <a href="../collections/RxCollection.html">RxCollection</a>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     If there were synchronization errors (e.g.</div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 </table>
@@ -75,21 +103,25 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#ChangeController()">ChangeController</a>(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a>, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a>)</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+     </div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#notifySyncEnd()">notifySyncEnd</a>():void</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+    Used internally to finish sync session.</div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#push()">push</a>():void</div>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription">
+    Pushes changes from source service provider to target/destination service provider
+    </div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 </table>
@@ -125,15 +157,21 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#CREATE">CREATE</a> : String = "N"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#CREATE">CREATE</a> : String = "N"<div class="summaryTableDescription">[static]
+     Create flag used to tag instances marked for create but not yet created/synced
+     </div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DELETE">DELETE</a> : String = "D"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DELETE">DELETE</a> : String = "D"<div class="summaryTableDescription">[static]
+     Delete flag used to tag instances marked for deletion but not yet deleted/synced
+     </div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#UPDATE">UPDATE</a> : String = "U"<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#UPDATE">UPDATE</a> : String = "U"<div class="summaryTableDescription">[static]
+     Update flag used to tag instances marked for update but not yet updated/synced
+     </div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 </table>
@@ -152,8 +190,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var count:int</code>
-</div>
+<code>public var count:int</code><p>
+     Number of objects still left to synchronize
+     </p></div>
 <a name="errors"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -161,8 +200,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var errors:<a href="../collections/RxCollection.html">RxCollection</a></code>
-</div>
+<code>public var errors:<a href="../collections/RxCollection.html">RxCollection</a></code><p>
+     If there were synchronization errors (e.g. destiation service provider couldn't sync
+      a specific object), they are available in this collection.
+     </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="ChangeController()"></a>
@@ -172,16 +213,19 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function ChangeController(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a>, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a>)</code><span class="label">Parameters</span>
+<code>public function ChangeController(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a>, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a>)</code><p>
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">source</span>:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a></code></td>
+<td width="20px"></td><td><code><span class="label">source</span>:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a></code> &mdash; ISyncingServiceProvider implementation that changes come from
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">destination</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code></td>
+<td width="20px"></td><td><code><span class="label">destination</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> &mdash; IServiceProvider implemnetation that the changes should go to
+     </td>
 </tr>
 </table>
 </div>
@@ -194,8 +238,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function notifySyncEnd():void</code>
-</div>
+<code>public function notifySyncEnd():void</code><p>
+    Used internally to finish sync session.
+    </p></div>
 <a name="onDirtyChanges()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -243,8 +288,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function push():void</code>
-</div>
+<code>public function push():void</code><p>
+    Pushes changes from source service provider to target/destination service provider
+    </p></div>
 <a name="constantDetail"></a>
 <div class="detailSectionHeader">Constant detail</div>
 <a name="CREATE"></a>
@@ -254,8 +300,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const CREATE:String = "N"</code>
-</div>
+<code>public static const CREATE:String = "N"</code><p>
+     Create flag used to tag instances marked for create but not yet created/synced
+     </p></div>
 <a name="DELETE"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -263,8 +310,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const DELETE:String = "D"</code>
-</div>
+<code>public static const DELETE:String = "D"</code><p>
+     Delete flag used to tag instances marked for deletion but not yet deleted/synced
+     </p></div>
 <a name="UPDATE"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -272,8 +320,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static const UPDATE:String = "U"</code>
-</div>
+<code>public static const UPDATE:String = "U"</code><p>
+     Update flag used to tag instances marked for update but not yet updated/synced
+     </p></div>
 <br>
 <br>
 <hr>

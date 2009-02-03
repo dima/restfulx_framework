@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="Rx,org.restfulx.Rx,DEFAULT_ERROR_FIELD,airDatabaseName,airEncryptionKey,changes,commands,couchDBRootUrl,couchDbDatabaseName,defaultMetadata,defaultServiceId,enableUndoRedo,httpController,httpControllerHandler,httpRootUrl,log,models,serializers,services,sessionToken,undoredo,enableLogging,filter,filter$,filters,filters$,http,merge,reset,sort,sort$" name="keywords">
+<meta content="Rx,org.restfulx.Rx,DEFAULT_ERROR_FIELD,airDatabaseName,airEncryptionKey,changes,commands,couchDBRootUrl,couchDbDatabaseName,defaultMetadata,defaultServiceId,enableUndoRedo,httpController,httpControllerHandler,httpRootUrl,log,models,serializers,services,sessionToken,undoRedoStackSize,undoredo,enableLogging,filter,filter$,filters,filters$,http,merge,reset,sort,sort$" name="keywords">
 <title>org.restfulx.Rx</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?org/restfulx/Rx.html&amp;org/restfulx/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?org/restfulx/Rx.html&amp;org/restfulx/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Rx</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -62,6 +62,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
     (namely XML and Value Object) are linked in though and are accessible via:
     <code>Rx.serializers.xml</code> and <code>Rx.serializers.vo</code>
     respectively.</li>
+    <li><strong>Rx.changes</strong>: Enables synchronization between 2 different
+    service providers (e.g. AIR -> XMLHTTPServiceProvider or DirectCouchDBHTTPServiceProvider).</li>
+    <li><strong>Rx.undoredo</strong>: Adds undo/redo support for modifiation actions on
+    RxModel objects. This works much like undo/redo in your average text editor. More specifically, 
+    actions such as <code>model.create()</code>, <code>model.update()</code>, 
+    <code>model.destroy()</code> can be automatically rolled-back or forwarded.
     </ul>
     
     <p>A number of static helper functions also live in this namespace including:</p>
@@ -93,6 +99,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a href="controllers/SerializersController.html" target="">org.restfulx.controllers.SerializersController</a>
 <br>
 <a href="controllers/ChangeController.html" target="">org.restfulx.controllers.ChangeController</a>
+<br>
+<a href="controllers/UndoRedoController.html" target="">org.restfulx.controllers.UndoRedoController</a>
 </div>
 <br>
 <hr>
@@ -126,7 +134,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Rx</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#couchDbDatabaseName">couchDbDatabaseName</a> : String = "rxdb/"<div class="summaryTableDescription">[static] 
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#couchDbDatabaseName">couchDbDatabaseName</a> : String = "rxdb"<div class="summaryTableDescription">[static] 
      Default database name to use for apps talking to CouchDB directly.</div>
 </td><td class="summaryTableOwnerCol">Rx</td>
 </tr>
@@ -146,7 +154,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Rx</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#enableUndoRedo">enableUndoRedo</a> : Boolean = false<div class="summaryTableDescription">[static]</div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#enableUndoRedo">enableUndoRedo</a> : Boolean = false<div class="summaryTableDescription">[static]
+     If set to true, undo/redo for create(), update() and destroy()
+      is enabled.</div>
 </td><td class="summaryTableOwnerCol">Rx</td>
 </tr>
 <tr class="">
@@ -193,6 +203,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summaryTableDescription">[static] exposes the undo-redo capable controller </div>
 </td><td class="summaryTableOwnerCol">Rx</td>
 </tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#undoRedoStackSize">undoRedoStackSize</a> : int = 10<div class="summaryTableDescription">[static] 
+     Control the size of the undo-redo stack.</div>
+</td><td class="summaryTableOwnerCol">Rx</td>
+</tr>
 </table>
 </div>
 <a name="methodSummary"></a>
@@ -212,7 +227,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#enableLogging()">enableLogging</a>(logLevel:int):void</div>
+<a class="signatureLink" href="#enableLogging()">enableLogging</a>():void</div>
 <div class="summaryTableDescription">[static]
      Enables tracing for internal restfulx framework classes.</div>
 </td><td class="summaryTableOwnerCol">Rx</td>
@@ -342,8 +357,7 @@ showHideInherited();
       
      </p><br>
 <span class="label">Example</span>
-<br>Unlike CouchDB names, database names for AIR usually don't have any postfixes
-      
+<br>      
      <div class='listing'><pre>
      Rx.airDatabaseName = "myairdb";
      </pre></div>
@@ -358,7 +372,7 @@ showHideInherited();
 <div class="detailBody">
 <code>public static var airEncryptionKey:ByteArray</code><p> 
      Encryption key to use for connection to AIR SQLite database (if this field is empty connection
-     will be unencrypted = default). Use EncryptionKeyGenerator to generate the key if necessary.
+     will be unencrypted = default).
      </p></div>
 <a name="changes"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -383,17 +397,16 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var couchDbDatabaseName:String = "rxdb/"</code><p> 
+<code>public static var couchDbDatabaseName:String = "rxdb"</code><p> 
      Default database name to use for apps talking to CouchDB directly. Simply set
      <code>Rx.couchDbdatabaseName</code> anywhere in your code to override. This is
      usually done at application initialization. 
       
      </p><br>
 <span class="label">Example</span>
-<br>Remember to post-fix your database name with a forward slash
-      
+<br>      
      <div class='listing'><pre>
-     Rx.couchDbDatabaseName = "foobar/";
+     Rx.couchDbDatabaseName = "foobar";
      </pre></div>
      <p></p>
 </div>
@@ -409,7 +422,7 @@ showHideInherited();
       
      </p><br>
 <span class="label">Example</span>
-<br>http://localhost:5984/
+<br>http://127.0.0.1:5984/
      <p></p>
 </div>
 <a name="defaultMetadata"></a>
@@ -450,8 +463,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static var enableUndoRedo:Boolean = false</code>
-</div>
+<code>public static var enableUndoRedo:Boolean = false</code><p>
+     If set to true, undo/redo for create(), update() and destroy()
+      is enabled.
+     </p></div>
 <a name="httpController"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -562,6 +577,18 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static var undoredo:<a href="controllers/UndoRedoController.html">UndoRedoController</a></code><p> exposes the undo-redo capable controller </p></div>
+<a name="undoRedoStackSize"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">undoRedoStackSize</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var undoRedoStackSize:int = 10</code><p> 
+     Control the size of the undo-redo stack. the default is 10
+     (undo redo must be enabled with Rx.enableUndoRedo = true) before this
+     will have any effect
+     </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="Rx()"></a>
@@ -587,25 +614,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function enableLogging(logLevel:int):void</code><p>
+<code>public static function enableLogging():void</code><p>
      Enables tracing for internal restfulx framework classes. This is useful for debugging
      purposes. The log can be seen in the console of Flex Builder when you are ebugging     as opposed to running your project.
-     
-     </p><span class="label">Parameters</span>
-<table border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td width="20px"></td><td><code><span class="label">logLevel</span>:int</code> &mdash; allows you to control loggin level. By default this is set to
-       <code>LogEventLevel.ALL</code>, you can tweak it to show <em>INFO</em> messages
-       for example.
-     
-     </td>
-</tr>
-</table>
-<p>
-<span class="label">See also</span>
-</p>
-<div class="seeAlso">mx.logging.LogEventLevel</div>
-</div>
+     </p></div>
 <a name="filter()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>

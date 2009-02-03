@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
-<meta content="AS3JSONHTTPServiceProvider,org.restfulx.services.as3http.AS3JSONHTTPServiceProvider,ID" name="keywords">
+<meta content="AS3JSONHTTPServiceProvider,org.restfulx.services.as3http.AS3JSONHTTPServiceProvider,ID,id,hasErrors" name="keywords">
 <title>org.restfulx.services.as3http.AS3JSONHTTPServiceProvider</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/as3http/AS3JSONHTTPServiceProvider.html&amp;org/restfulx/services/as3http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/as3http/AS3JSONHTTPServiceProvider.html&amp;org/restfulx/services/as3http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;AS3JSONHTTPServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -60,14 +60,19 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
 </div>
 </div>
-<table id="summaryTableProperty" class="summaryTable hideInheritedProperty" cellpadding="3" cellspacing="0">
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
-<tr class="hideInheritedProperty">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#id">id</a> : int<div class="summaryTableDescription">
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#id">id</a> : int<div class="summaryTableDescription">[read-only]
      </div>
-</td><td class="summaryTableOwnerCol"><a href="AS3XMLHTTPServiceProvider.html">AS3XMLHTTPServiceProvider</a></td>
+</td><td class="summaryTableOwnerCol">AS3JSONHTTPServiceProvider</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#rootUrl">rootUrl</a> : String<div class="summaryTableDescription"> 
+     Root URL that this service provider will prefix to all requests.</div>
+</td><td class="summaryTableOwnerCol"><a href="../http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 </table>
 </div>
@@ -124,8 +129,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#AS3JSONHTTPServiceProvider()">AS3JSONHTTPServiceProvider</a>()</div>
-<div class="summaryTableDescription"></div>
+<a class="signatureLink" href="#AS3JSONHTTPServiceProvider()">AS3JSONHTTPServiceProvider</a>(httpRootUrl:String = null)</div>
+<div class="summaryTableDescription">
+     </div>
 </td><td class="summaryTableOwnerCol">AS3JSONHTTPServiceProvider</td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -139,7 +145,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol"><a href="AS3XMLHTTPServiceProvider.html">AS3XMLHTTPServiceProvider</a></td>
@@ -147,18 +153,18 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol"><a href="AS3XMLHTTPServiceProvider.html">AS3XMLHTTPServiceProvider</a></td>
 </tr>
-<tr class="hideInheritedMethod">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#hasErrors()">hasErrors</a>(object:Object):Boolean</div>
+<a class="signatureLink" href="#hasErrors()">hasErrors</a>(object:Object):Boolean</div>
 <div class="summaryTableDescription">
      </div>
-</td><td class="summaryTableOwnerCol"><a href="../http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
+</td><td class="summaryTableOwnerCol">AS3JSONHTTPServiceProvider</td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -195,7 +201,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, canUndo:Boolean = true):void</div>
+<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol"><a href="AS3XMLHTTPServiceProvider.html">AS3XMLHTTPServiceProvider</a></td>
@@ -220,7 +226,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#getHttpClient()">getHttpClient</a>(responder:IResponder):HttpClient</div>
+<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#getCreateOrUpdateHttpClient()">getCreateOrUpdateHttpClient</a>(object:Object, responder:IResponder, metadata:Object, nestedBy:Array, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):HttpClient</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="AS3XMLHTTPServiceProvider.html">AS3XMLHTTPServiceProvider</a></td>
+</tr>
+<tr class="hideInheritedProtectedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#getHttpClient()">getHttpClient</a>(onDataComplete:Function, onError:Function = null):HttpClient</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="AS3XMLHTTPServiceProvider.html">AS3XMLHTTPServiceProvider</a></td>
 </tr>
@@ -234,6 +247,20 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="AS3XMLHTTPServiceProvider.html#getIndexOrShowHttpClient()">getIndexOrShowHttpClient</a>(responder:IResponder):HttpClient</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="AS3XMLHTTPServiceProvider.html">AS3XMLHTTPServiceProvider</a></td>
+</tr>
+<tr class="hideInheritedProtectedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#invokeCreateOrUpdateHTTPService()">invokeCreateOrUpdateHTTPService</a>(service:HTTPService, responder:IResponder, object:Object, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="../http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
+</tr>
+<tr class="hideInheritedProtectedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#invokeHTTPService()">invokeHTTPService</a>(service:HTTPService, responder:IResponder):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="../http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
@@ -241,7 +268,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#invokeMultiPartRequest()">invokeMultiPartRequest</a>(httpService:HTTPService, object:Object, responder:IResponder):void</div>
+<a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#invokeMultiPartRequest()">invokeMultiPartRequest</a>(httpService:HTTPService, object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="../http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
@@ -262,14 +289,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#sendOrUpload()">sendOrUpload</a>(httpService:HTTPService, object:Object, responder:IResponder):void</div>
+<a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#sendOrUpload()">sendOrUpload</a>(httpService:HTTPService, object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="../http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#uploadFile()">uploadFile</a>(httpService:HTTPService, object:Object, responder:IResponder):void</div>
+<a class="signatureLink" href="../http/XMLHTTPServiceProvider.html#uploadFile()">uploadFile</a>(httpService:HTTPService, object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0, creating:Boolean = false):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="../http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
@@ -300,6 +327,27 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 showHideInherited();
 --></script>
 <div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="id"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">id</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>id:int</code>&nbsp;&nbsp;[read-only]<p>
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get id():int</code>
+<br>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../../services/IServiceProvider.html#id" target="">org.restfulx.services.IServiceProvider.id</a>
+</div>
+</div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="AS3JSONHTTPServiceProvider()"></a>
@@ -309,7 +357,45 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function AS3JSONHTTPServiceProvider()</code>
+<code>public function AS3JSONHTTPServiceProvider(httpRootUrl:String = null)</code><p>
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">httpRootUrl</span>:String</code> (default = <code>null</code>)<code></code> &mdash; root URL that this service provider will prefix to all requests.
+      By default this will be equal to Rx.httpRootUrl parameter
+     </td>
+</tr>
+</table>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="hasErrors()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">hasErrors</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public override function hasErrors(object:Object):Boolean</code><p>
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code></td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../../services/IServiceProvider.html#hasErrors" target="">org.restfulx.services.IServiceProvider.hasErrors</a>
+</div>
 </div>
 <a name="constantDetail"></a>
 <div class="detailSectionHeader">Constant detail</div>

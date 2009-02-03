@@ -15,7 +15,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('all-classes.html')" href="package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('all-classes.html')" href="class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a href="index.html?all-index-U.html&amp;index-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('all-classes.html')" href="package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('all-classes.html')" href="class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a href="index.html?all-index-U.html&amp;index-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">U&nbsp;Index</td><td align="right" id="subNav" class="titleTableSubNav"></td>
@@ -52,7 +52,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/UndoRedoController.html#undo()">undo</a>() &mdash; Method in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/UndoRedoController.html">UndoRedoController</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+     Performs undo
+     </td>
+</tr>
+<tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/UndoRedoController.html#UNDO">UNDO</a> &mdash; Constant property in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/UndoRedoController.html">UndoRedoController</a></td>
+</tr>
+<tr>
+<td width="20"></td><td> Flag indicating the invocation is an undo operation </td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/class-list.html');" href="org/restfulx/Rx.html#undoredo">undoredo</a> &mdash; Static property in class org.restfulx.<a onclick="javascript:loadClassListFrame('org/restfulx/class-list.html');" href="org/restfulx/Rx.html">Rx</a></td>
@@ -64,10 +72,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/UndoRedoController.html">UndoRedoController</a> &mdash; Class in package <a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/package-detail.html">org.restfulx.controllers</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+   Adds undo redo support to the application.</td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/UndoRedoController.html#UndoRedoController()">UndoRedoController</a>(size) &mdash; Constructor in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/UndoRedoController.html">UndoRedoController</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/UndoRedoController.html#UndoRedoController()">UndoRedoController</a>() &mdash; Constructor in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/UndoRedoController.html">UndoRedoController</a></td>
 </tr>
 <tr>
 <td width="20"></td><td></td>
@@ -76,10 +85,26 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/UndoRedoResponder.html">UndoRedoResponder</a> &mdash; Class in package <a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/package-detail.html">org.restfulx.services</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+   Undo/Redo responder wraps around another Functional responder
+   (typically ServiceResponder) and allows us to attach a different
+   handler function to the responder than was originally provided.</td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/UndoRedoResponder.html#UndoRedoResponder()">UndoRedoResponder</a>(source, fn) &mdash; Constructor in class org.restfulx.services.<a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/UndoRedoResponder.html">UndoRedoResponder</a></td>
+</tr>
+<tr>
+<td width="20"></td><td></td>
+</tr>
+<tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/class-list.html');" href="org/restfulx/Rx.html#undoRedoStackSize">undoRedoStackSize</a> &mdash; Static property in class org.restfulx.<a onclick="javascript:loadClassListFrame('org/restfulx/class-list.html');" href="org/restfulx/Rx.html">Rx</a></td>
+</tr>
+<tr>
+<td width="20"></td><td> 
+     Control the size of the undo-redo stack.</td>
+</tr>
+<tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxAIRController.html#unmarshall()">unmarshall</a>(data) &mdash; Method in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxAIRController.html">AuxAIRController</a></td>
 </tr>
 <tr>
 <td width="20"></td><td></td>
@@ -174,6 +199,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
      </td>
 </tr>
 <tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxAIRController.html#unmarshallAndCacheResultHandler()">unmarshallAndCacheResultHandler</a>(data, token) &mdash; Method in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxAIRController.html">AuxAIRController</a></td>
+</tr>
+<tr>
+<td width="20"></td><td></td>
+</tr>
+<tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxHTTPController.html#unmarshallAndCacheResultHandler()">unmarshallAndCacheResultHandler</a>(data, token) &mdash; Method in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxHTTPController.html">AuxHTTPController</a></td>
 </tr>
 <tr>
@@ -216,6 +247,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
 <td width="20"></td><td></td>
 </tr>
 <tr>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxAIRController.html#unmarshallResultHandler()">unmarshallResultHandler</a>(data, token) &mdash; Method in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxAIRController.html">AuxAIRController</a></td>
+</tr>
+<tr>
+<td width="20"></td><td></td>
+</tr>
+<tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxHTTPController.html#unmarshallResultHandler()">unmarshallResultHandler</a>(data, token) &mdash; Method in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/AuxHTTPController.html">AuxHTTPController</a></td>
 </tr>
 <tr>
@@ -229,14 +266,14 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
      Cache version of the <code>update</code> call.</td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/ModelsController.html#update()">update</a>(object, optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId) &mdash; Method in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/ModelsController.html">ModelsController</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/ModelsController.html#update()">update</a>(object, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId) &mdash; Method in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/ModelsController.html">ModelsController</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
      Perform REST update operation.</td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/models/class-list.html');" href="org/restfulx/models/RxModel.html#update()">update</a>(optsOrOnSuccess, onFailure, nestedBy, metadata, targetServiceId) &mdash; Method in class org.restfulx.models.<a onclick="javascript:loadClassListFrame('org/restfulx/models/class-list.html');" href="org/restfulx/models/RxModel.html">RxModel</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/models/class-list.html');" href="org/restfulx/models/RxModel.html#update()">update</a>(optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId) &mdash; Method in class org.restfulx.models.<a onclick="javascript:loadClassListFrame('org/restfulx/models/class-list.html');" href="org/restfulx/models/RxModel.html">RxModel</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
@@ -244,55 +281,55 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
           </td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/IServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, canUndo) &mdash; Method in interface org.restfulx.services.<a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/IServiceProvider.html">IServiceProvider</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/IServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, recursive, undoRedoFlag) &mdash; Method in interface org.restfulx.services.<a onclick="javascript:loadClassListFrame('org/restfulx/services/class-list.html');" href="org/restfulx/services/IServiceProvider.html">IServiceProvider</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
      RESTful CRUD contract: update method.</td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/air/class-list.html');" href="org/restfulx/services/air/AIRServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, canUndo) &mdash; Method in class org.restfulx.services.air.<a onclick="javascript:loadClassListFrame('org/restfulx/services/air/class-list.html');" href="org/restfulx/services/air/AIRServiceProvider.html">AIRServiceProvider</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/air/class-list.html');" href="org/restfulx/services/air/AIRServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, recursive, undoRedoFlag) &mdash; Method in class org.restfulx.services.air.<a onclick="javascript:loadClassListFrame('org/restfulx/services/air/class-list.html');" href="org/restfulx/services/air/AIRServiceProvider.html">AIRServiceProvider</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
      </td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/AS3GAEHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, canUndo) &mdash; Method in class org.restfulx.services.as3http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/AS3GAEHTTPServiceProvider.html">AS3GAEHTTPServiceProvider</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/AS3GAEHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, recursive, undoRedoFlag) &mdash; Method in class org.restfulx.services.as3http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/AS3GAEHTTPServiceProvider.html">AS3GAEHTTPServiceProvider</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
      </td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/AS3XMLHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, canUndo) &mdash; Method in class org.restfulx.services.as3http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/AS3XMLHTTPServiceProvider.html">AS3XMLHTTPServiceProvider</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/AS3XMLHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, recursive, undoRedoFlag) &mdash; Method in class org.restfulx.services.as3http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/AS3XMLHTTPServiceProvider.html">AS3XMLHTTPServiceProvider</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
      </td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/DirectCouchDBHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, canUndo) &mdash; Method in class org.restfulx.services.as3http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/DirectCouchDBHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, recursive, undoRedoFlag) &mdash; Method in class org.restfulx.services.as3http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/as3http/class-list.html');" href="org/restfulx/services/as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
      </td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/http/class-list.html');" href="org/restfulx/services/http/XMLHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, canUndo) &mdash; Method in class org.restfulx.services.http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/http/class-list.html');" href="org/restfulx/services/http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/http/class-list.html');" href="org/restfulx/services/http/XMLHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, recursive, undoRedoFlag) &mdash; Method in class org.restfulx.services.http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/http/class-list.html');" href="org/restfulx/services/http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr>
 <td width="20"></td><td>
      </td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/mock/class-list.html');" href="org/restfulx/services/mock/MockJSONHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, canUndo) &mdash; Method in class org.restfulx.services.mock.<a onclick="javascript:loadClassListFrame('org/restfulx/services/mock/class-list.html');" href="org/restfulx/services/mock/MockJSONHTTPServiceProvider.html">MockJSONHTTPServiceProvider</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/mock/class-list.html');" href="org/restfulx/services/mock/MockJSONHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, recursive, undoRedoFlag) &mdash; Method in class org.restfulx.services.mock.<a onclick="javascript:loadClassListFrame('org/restfulx/services/mock/class-list.html');" href="org/restfulx/services/mock/MockJSONHTTPServiceProvider.html">MockJSONHTTPServiceProvider</a></td>
 </tr>
 <tr>
 <td width="20"></td><td></td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/mock/class-list.html');" href="org/restfulx/services/mock/MockXMLHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, canUndo) &mdash; Method in class org.restfulx.services.mock.<a onclick="javascript:loadClassListFrame('org/restfulx/services/mock/class-list.html');" href="org/restfulx/services/mock/MockXMLHTTPServiceProvider.html">MockXMLHTTPServiceProvider</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/mock/class-list.html');" href="org/restfulx/services/mock/MockXMLHTTPServiceProvider.html#update()">update</a>(object, responder, metadata, nestedBy, recursive, undoRedoFlag) &mdash; Method in class org.restfulx.services.mock.<a onclick="javascript:loadClassListFrame('org/restfulx/services/mock/class-list.html');" href="org/restfulx/services/mock/MockXMLHTTPServiceProvider.html">MockXMLHTTPServiceProvider</a></td>
 </tr>
 <tr>
 <td width="20"></td><td></td>
@@ -301,7 +338,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/ChangeController.html#UPDATE">UPDATE</a> &mdash; Constant static property in class org.restfulx.controllers.<a onclick="javascript:loadClassListFrame('org/restfulx/controllers/class-list.html');" href="org/restfulx/controllers/ChangeController.html">ChangeController</a></td>
 </tr>
 <tr>
-<td width="20"></td><td></td>
+<td width="20"></td><td>
+     Update flag used to tag instances marked for update but not yet updated/synced
+     </td>
 </tr>
 <tr>
 <td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/events/class-list.html');" href="org/restfulx/events/CacheUpdateEvent.html#UPDATE">UPDATE</a> &mdash; Static property in class org.restfulx.events.<a onclick="javascript:loadClassListFrame('org/restfulx/events/class-list.html');" href="org/restfulx/events/CacheUpdateEvent.html">CacheUpdateEvent</a></td>
@@ -310,7 +349,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
 <td width="20"></td><td></td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/components/class-list.html');" href="org/restfulx/components/RxAutoComplete.html#updateDisplayList()">updateDisplayList</a>(unscaledWidth, unscaledHeight) &mdash; Method in class org.restfulx.components.<a onclick="javascript:loadClassListFrame('org/restfulx/components/class-list.html');" href="org/restfulx/components/RxAutoComplete.html">RxAutoComplete</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/components/rx/class-list.html');" href="org/restfulx/components/rx/RxAutoComplete.html#updateDisplayList()">updateDisplayList</a>(unscaledWidth, unscaledHeight) &mdash; Method in class org.restfulx.components.rx.<a onclick="javascript:loadClassListFrame('org/restfulx/components/rx/class-list.html');" href="org/restfulx/components/rx/RxAutoComplete.html">RxAutoComplete</a></td>
 </tr>
 <tr>
 <td width="20"></td><td></td>
@@ -323,7 +362,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("UÂ
       Updates an parent references with this item if their ids match.</td>
 </tr>
 <tr>
-<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/http/class-list.html');" href="org/restfulx/services/http/XMLHTTPServiceProvider.html#uploadFile()">uploadFile</a>(httpService, object, responder) &mdash; Method in class org.restfulx.services.http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/http/class-list.html');" href="org/restfulx/services/http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
+<td colspan="2" class="idxrow"><a onclick="javascript:loadClassListFrame('org/restfulx/services/http/class-list.html');" href="org/restfulx/services/http/XMLHTTPServiceProvider.html#uploadFile()">uploadFile</a>(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag, creating) &mdash; Method in class org.restfulx.services.http.<a onclick="javascript:loadClassListFrame('org/restfulx/services/http/class-list.html');" href="org/restfulx/services/http/XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr>
 <td width="20"></td><td></td>

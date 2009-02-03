@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.0 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/ModelsController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/ModelsController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;ModelsController</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
@@ -106,7 +106,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#create()">create</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</div>
+<a class="signatureLink" href="#create()">create</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</div>
 <div class="summaryTableDescription">
      Perform REST create operation.</div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
@@ -114,7 +114,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</div>
+<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</div>
 <div class="summaryTableDescription">
      Perform REST destroy operation.</div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
@@ -193,7 +193,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#update()">update</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</div>
+<a class="signatureLink" href="#update()">update</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</div>
 <div class="summaryTableDescription">
      Perform REST update operation.</div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
@@ -335,7 +335,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function create(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</code><p>
+<code>public function create(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</code><p>
      Perform REST create operation.
       
      </p><span class="label">Parameters</span>
@@ -378,8 +378,14 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; service provider to use
      </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -404,7 +410,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function destroy(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</code><p>
+<code>public function destroy(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</code><p>
      Perform REST destroy operation. For example:
       
      </p><span class="label">Parameters</span>
@@ -447,8 +453,14 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; service provider to use
      </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -951,7 +963,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function update(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, targetServiceId:int = -1):void</code><p>
+<code>public function update(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</code><p>
      Perform REST update operation. For example:
       
        Rx.models.update(project);
@@ -991,6 +1003,12 @@ showHideInherited();
 <tr>
 <td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; service provider to use
      </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
