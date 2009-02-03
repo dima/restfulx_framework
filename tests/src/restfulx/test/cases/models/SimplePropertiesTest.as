@@ -98,7 +98,14 @@ package restfulx.test.cases.models {
       // date
       assertEquals(2008, firstModel.deliveredOn.getFullYear());
       assertEquals(11, firstModel.deliveredOn.getMonth());
-      assertEquals(8, firstModel.deliveredOn.getDate());      
+      assertEquals(8, firstModel.deliveredOn.getDate());
+
+      // unspecified strings
+      var lastModel:SimpleProperty = SimpleProperty(results.withId("943245828"));
+      assertEquals("", lastModel.name);
+
+      var emptyNameModel:SimpleProperty = SimpleProperty(results.withId("482976022"));
+      assertEquals("", emptyNameModel.name);
     }
     
     private function onTestIndexFail(info:Object):void {

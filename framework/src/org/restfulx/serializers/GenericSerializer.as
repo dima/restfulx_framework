@@ -211,7 +211,15 @@ package org.restfulx.serializers {
             object[targetName] = nestedRef;
           }
         } else {
-          object[targetName] = defaultValue;
+          if (defaultValue == null) {
+            try {
+              object[targetName] = "";
+            } catch (e:Error) {
+              object[targetName] = null;
+            }
+          } else {
+            object[targetName] = defaultValue;
+          }
         }
       }      
     }

@@ -177,6 +177,7 @@ package org.restfulx.serializers {
         if (targetName.search(/.+\_id$/) == -1 && element.text().length() == 1) {
           defaultValue = RxUtils.cast(element.@type, element.toString());
         }
+                
         unmarshallAttribute(node, object, element, fqn, targetName, defaultValue, 
           updatingExistingReference, disconnected); 
       }
