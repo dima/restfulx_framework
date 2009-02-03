@@ -26,6 +26,34 @@ package org.restfulx.components.rx {
   
   import mx.binding.utils.ChangeWatcher;
  
+  /**
+   * This is a non-visual component that works in a similar way to &lt;mx:Binding/&gt;
+   *  It is particularly useful for binding visual components to RxModel instance
+   *  properties. Unlike Flex Binding, it only updates the model instance property 
+   *  if it's different from what's in the visual component. If the target property is
+   *  indeed different, then model instance is updated and its "dirty" flag is set to 
+   *  true which can be used to do slightly more "intelligent" updates.
+   *  
+   *  @example Using ComponentWatcher
+   *  
+   * <listing version="3.0">
+   *    &lt;rx:ComponentWatcher model=&quot;{project}&quot; field=&quot;name&quot; target=&quot;{projectName}&quot;/&gt;
+   * </listing>
+   *  
+   * @example Doing CRUD based on ComponentWatchers
+   *  
+   * <listing version="3.0">
+   *  public function createOrUpdateProject():void {
+   *   if (project.dirty) {
+   *     if (project.id) {
+   *       project.update();
+   *     } else {
+   *       project.create({onSuccess: onProjectCreate});
+   *     }
+   *   }
+   * }
+   * </listing>
+   */
   public class ComponentWatcher {
  
     private var componentWatcher:ChangeWatcher;
@@ -37,38 +65,72 @@ package org.restfulx.components.rx {
     
     private var bound:Boolean;
 
+    /**
+     * Sets the RxModel instance to set properties on
+     *  @param value RxModel instance
+     */
     public function set model(value:Object):void {
       _model = value;
       updateBinding();
     }
  
+    /**
+     * Get the RxModel instance that is used for data bindings
+     *  @return RxModel instance
+     */
     public function get model():Object {
       return _model;
     }
 
+    /**
+     * Sets the RxModel instance field/property to update
+     *  @param value RxModel field/property to update
+     */
     public function set field(value:String):void {
       _field = value;
       updateBinding();
     }
  
+    /**
+     * Get the RxModel field that will be updated by this binding
+     *  @return RxModel field/property
+     */
     public function get field():String {
       return _field;
     }
  
+    /**
+     * Sets the visual component that will be watched for changes
+     *  @param value visual component to watch
+     */
     public function set target(value:Object):void {
       _target = value;
       updateBinding();
     }
  
+    /**
+     * Gets the visual component that is currently watched for changes
+     *  @return watched visual component
+     */
     public function get target():Object {
       return _target;
     }
  
+    /**
+     * Indiciates which property to watch on the visual component, by
+     *  default this is "text".
+     *  @param value visual component property to bind to
+     */
     public function set property(value:String):void {
       _property = value;
       updateBinding();
     }
  
+    /**
+     * Indiciates which property of the visual component is currently watched,
+     *  by default this is "text".
+     *  @return visual component property currently watched
+     */
     public function get property():String {
       return _property;
     }

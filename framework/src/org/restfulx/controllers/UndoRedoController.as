@@ -31,6 +31,33 @@ package org.restfulx.controllers {
   import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.IWrappingFunctionalResponder;
 
+  /**
+   * Adds undo redo support to the application.
+   *  
+   *  <p><strong>Warning:</strong> This will require matching support on the server-side
+   *  unless you are using DirectCouchDBHTTPServiceProvider or AIRServiceProvider which 
+   *  implement this functionality out of the box.</p>
+   *  
+   *  <p>You'll probably want to combine this with a general undo/redo solution for your
+   *  application that works on other state not just RxModel instances.
+   *  
+   *  @example Enabling Undo/Redo support
+   *  
+   *  <listing version="3.0">
+   *  private function init():void {
+   *    Rx.enableUndoRedo = true;
+   *  }
+   *  </listing>
+   *  
+   *  @example Using Undo/Redo in your application
+   *  
+   *  <listing version="3.0">
+   *  &lt;mx:HBox&gt;
+   *    &lt;mx:Button label=&quot;Undo&quot; click=&quot;{Rx.undoredo.undo()}&quot; enabled=&quot;{Rx.undoredo.canUndo()}&quot;/&gt;
+   *    &lt;mx:Button label=&quot;Redo&quot; click=&quot;{Rx.undoredo.redo()}&quot; enabled=&quot;{Rx.undoredo.canRedo()}&quot;/&gt;
+   *  &lt;/mx:HBox&gt;
+   *  </listing>
+   */
   public class UndoRedoController extends EventDispatcher {
     
     public const NORMAL:int = 0;
@@ -80,6 +107,7 @@ package org.restfulx.controllers {
       }
       undoStack.push(action);
     }
+    
     
     public function undo():void {
       if (undoStack.length) {

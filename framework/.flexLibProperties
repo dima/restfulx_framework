@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flexLibProperties version="1">
 <includeClasses>
-<classEntry path="com.adobe.data.encryption.EncryptionKeyGenerator"/>
 <classEntry path="org.restfulx.Rx"/>
 <classEntry path="org.restfulx.collections.ModelsCollection"/>
 <classEntry path="org.restfulx.collections.RxCollection"/>

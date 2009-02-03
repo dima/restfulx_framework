@@ -34,16 +34,57 @@ package org.restfulx.controllers {
   import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.ISyncingServiceProvider;
   
+  [Bindable]
+  /**
+   *  If Synchronization is enabled, Change controller can be hooked up to 
+   *  Rx.changes to perform synchronization between 2 different service providers.
+   *  <code>source</code> service provider must implement <code>ISynchingServiceProvider</code>
+   *  while <code>target</code> service provider can be anything that implements the standard
+   *  <code>IServiceProvider</code> interface.
+   *  
+   *  @example Setting up ChangeController
+   *  
+   *  <listing version="3.0">
+   *  private funtion init():void {
+   *    ApplicationController.initialize([AIRServiceProvider, AS3JSONHTTPServiceProvider, DirectCouchDBHTTPServiceProvider], 
+   *      AIRServiceProvider.ID, "yourairdbname");
+   *    Rx.changes = new ChangeController(ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
+   *      Rx.services.getServiceProvider(AS3JSONHTTPServiceProvider.ID));
+   *  }
+   *  </listing>
+   *  
+   *  @example Synchronizing data
+   *  
+   *  <listing version="3.0">
+   *  &lt;mx:Button label=&quot;Synchronize&quot; click=&quot;{Rx.changes.push()}&quot; enabled=&quot;{online}&quot;/&gt;
+   *  </listing>
+   */
   public class ChangeController extends EventDispatcher {
     
+    /**
+     * Delete flag used to tag instances marked for deletion but not yet deleted/synced
+     */
     public static const DELETE:String = "D";
     
+    /**
+     * Create flag used to tag instances marked for create but not yet created/synced
+     */
     public static const CREATE:String = "N";
     
+    /**
+     * Update flag used to tag instances marked for update but not yet updated/synced
+     */
     public static const UPDATE:String = "U";
-        
-    public var errors:RxCollection;
     
+    /**
+     * If there were synchronization errors (e.g. destiation service provider couldn't sync
+     *  a specific object), they are available in this collection.
+     */
+    public var errors:RxCollection;
+
+    /**
+     * Number of objects still left to synchronize
+     */
     public var count:int;
     
     private var source:ISyncingServiceProvider;
@@ -54,12 +95,19 @@ package org.restfulx.controllers {
     
     private var notifiedSyncStart:Boolean;
 	
+    /**
+     * @param source ISyncingServiceProvider implementation that changes come from
+     * @param destination IServiceProvider implemnetation that the changes should go to
+     */
   	public function ChangeController(source:ISyncingServiceProvider, destination:IServiceProvider) {
   	  super();
   		this.source = source;
   		this.destination = destination;
   	}
 	
+	  /**
+	   * Pushes changes from source service provider to target/destination service provider
+	   */
 	  public function push():void {
 	    errors = new RxCollection;
 	    for each (var model:Class in Rx.models.state.models) {
@@ -67,6 +115,9 @@ package org.restfulx.controllers {
 	    }
 	  }
 	  
+	  /**
+	   * Used internally to finish sync session.
+	   */
 	  public function notifySyncEnd():void {
      Rx.enableUndoRedo = canUndoRedo;
      canUndoRedo = false;
@@ -77,6 +128,7 @@ package org.restfulx.controllers {
 	  
 	  protected function onDirtyChanges(result:Object, token:Object = null):void {
 	    count += (result as Array).length;
+	    
 	    // no undo-redo for synchronization, and the stack is lost after undo-redo
 	    if (count) {
 	      dispatchEvent(new SyncStartEvent);
@@ -86,6 +138,7 @@ package org.restfulx.controllers {
 	        Rx.enableUndoRedo = false;
 	      }
 	    }
+	    
 	    for each (var instance:Object in result as Array) {
 	      if (instance["rev"] == 0) instance["rev"] = "";
 	      switch (instance["sync"]) {

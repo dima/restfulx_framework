@@ -8,7 +8,6 @@
     </library-path>
   </compiler>
   <include-classes>
-    <class>com.adobe.data.encryption.EncryptionKeyGenerator</class>
     <class>org.restfulx.Rx</class>
     <class>org.restfulx.collections.ModelsCollection</class>
     <class>org.restfulx.collections.RxCollection</class>

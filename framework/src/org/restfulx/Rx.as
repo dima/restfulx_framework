@@ -69,6 +69,12 @@ package org.restfulx {
    *  (namely XML and Value Object) are linked in though and are accessible via:
    *  <code>Rx.serializers.xml</code> and <code>Rx.serializers.vo</code>
    *  respectively.</li>
+   *  <li><strong>Rx.changes</strong>: Enables synchronization between 2 different
+   *  service providers (e.g. AIR -> XMLHTTPServiceProvider or DirectCouchDBHTTPServiceProvider).</li>
+   *  <li><strong>Rx.undoredo</strong>: Adds undo/redo support for modifiation actions on
+   *  RxModel objects. This works much like undo/redo in your average text editor. More specifically, 
+   *  actions such as <code>model.create()</code>, <code>model.update()</code>, 
+   *  <code>model.destroy()</code> can be automatically rolled-back or forwarded.
    *  </ul>
    *  
    *  <p>A number of static helper functions also live in this namespace including:</p>
@@ -91,6 +97,7 @@ package org.restfulx {
    *  @see org.restfulx.controllers.CommandsController
    *  @see org.restfulx.controllers.SerializersController
    *  @see org.restfulx.controllers.ChangeController
+   *  @see org.restfulx.controllers.UndoRedoController
    */
   public class Rx {
     
@@ -143,7 +150,7 @@ package org.restfulx {
     /** 
      * Root URL for CouchDB requests. 
      *  
-     * @example http://localhost:5984/
+     * @example http://127.0.0.1:5984/
      */
     public static var couchDBRootUrl:String = "http://127.0.0.1:5984/";
     
@@ -152,20 +159,20 @@ package org.restfulx {
      * <code>Rx.couchDbdatabaseName</code> anywhere in your code to override. This is
      * usually done at application initialization. 
      *  
-     * @example Remember to post-fix your database name with a forward slash
+     * @example
      *  
      * <listing version="3.0">
-     * Rx.couchDbDatabaseName = "foobar/";
+     * Rx.couchDbDatabaseName = "foobar";
      * </listing>
      */
-    public static var couchDbDatabaseName:String = "rxdb/";
+    public static var couchDbDatabaseName:String = "rxdb";
 
     /** 
      * Default database name to use for AIR applications. Simply set
      * <code>Rx.airDatabaseName</code> anywhere in your code to override. This is
      * usually done at application initialization.
      *  
-     * @example Unlike CouchDB names, database names for AIR usually don't have any postfixes
+     * @example
      *  
      * <listing version="3.0">
      * Rx.airDatabaseName = "myairdb";
@@ -175,7 +182,7 @@ package org.restfulx {
     
     /** 
      * Encryption key to use for connection to AIR SQLite database (if this field is empty connection
-     * will be unencrypted = default). Use EncryptionKeyGenerator to generate the key if necessary.
+     * will be unencrypted = default).
      */ 
     public static var airEncryptionKey:ByteArray;
     
@@ -393,17 +400,11 @@ package org.restfulx {
      * Enables tracing for internal restfulx framework classes. This is useful for debugging
      * purposes. The log can be seen in the console of Flex Builder when you are *debugging*
      * as opposed to running your project.
-     * 
-     * @param logLevel allows you to control loggin level. By default this is set to
-     *   <code>LogEventLevel.ALL</code>, you can tweak it to show <em>INFO</em> messages
-     *   for example.
-     * 
-     * @see mx.logging.LogEventLevel
      */
-    public static function enableLogging(logLevel:int = LogEventLevel.ALL):void {
+    public static function enableLogging():void {
       var target:TraceTarget = new TraceTarget();
       target.filters = ["org.restfulx.*"];
-      target.level = logLevel;
+      target.level = LogEventLevel.ALL;
       target.includeDate = true;
       target.includeTime = true;
       target.includeCategory = true;

@@ -74,6 +74,37 @@ package org.restfulx.controllers {
       initializeConnection(targetFile);
     }
     
+    /**
+     * If you find Rx.models.index in combination with Rx.filter and/or metadata not sufficiently
+     *  expressive you can perform finds against local SQLite database in a samilar manner to
+     *  ActiveRecord's find(:all) with conditions. You can optially unmarshall the result and
+     *  simulate one of:
+     *  <ul>
+     *  <li>index</li>
+     *  <li>create</li>
+     *  <li>update</li>
+     *  <li>destroy</li>
+     *  <li>show</li>
+     *  </ul>
+     *  
+     *  <p>The motivation for this is quite similar to Rx.http(AuxHTTPController) with the big
+     *  difference in that works against local SQLite instead of an arbitrary HTTP service.</p>
+     *  
+     *  <p>You can basically use this to perform non-RESTful finds against local SQLite DB
+     *  when necessary.</p>
+     *  
+     *  @example Find projects
+     *  
+     *  <listing version="3.0">
+     *  var controller:AuxAIRController = new AuxAIRController(onResult);
+     *  controller.findAll(SimpleProperty, ["name LIKE :name AND available = true", {":name": "%2%"}]);
+     *  </listing>
+     *  
+     *  @param clazz RxModel clazz to do the find on
+     *  @param conditions list of conditions
+     *  @param unmarshall boolean indiciating if the result should be unmarshalled into RxModel instances
+     *  @param cacheBy RESTful cache method to simulate
+     */
     public function findAll(clazz:Class, conditions:Array = null, unmarshall:Boolean = true, cacheBy:String = "index"):void {
       var fqn:String = Rx.models.state.types[clazz];
       
@@ -93,6 +124,19 @@ package org.restfulx.controllers {
       execute(fqn, statement, unmarshall, cacheBy);
     }
     
+    /**
+     *  If you don't want to bother with formatting conditions you can default to writing SQL for SQLite
+     *  queries yourself.
+     *  
+     *  @see #findAll
+     *  
+     *  @param clazz RxModel clazz to do the find on
+     *  @param sql the SQL query to run
+     *  @param conditions list of conditions
+     *  @param unmarshall boolean indiciating if the result should be unmarshalled into RxModel instances
+     *  @param cacheBy RESTful cache method to simulate
+     *  
+     */
     public function findAllBySQL(clazz:Class, sql:String, unmarshall:Boolean = true, cacheBy:String = "index"):void {
       var fqn:String = Rx.models.state.types[clazz];
       execute(fqn, getSQLStatement(sql), unmarshall, cacheBy);
