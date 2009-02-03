@@ -3,6 +3,7 @@
   <contractor>
     <address>Contractor1AddressString</address>
     <city>Contractor1CityString</city>
+    <code type="integer">7</code>
     <created_at type="datetime">2008/12/09 00:02:40</created_at>
     <id type="integer">31860404</id>
     <name>Contractor1NameString</name>
@@ -12,6 +13,7 @@
   <contractor>
     <address>Contractor2AddressString</address>
     <city>Contractor2CityString</city>
+    <code type="integer">6</code>
     <created_at type="datetime">2008/12/09 00:02:40</created_at>
     <id type="integer">59150087</id>
     <name>Contractor2NameString</name>
@@ -21,6 +23,7 @@
   <contractor>
     <address>Contractor3AddressString</address>
     <city>Contractor3CityString</city>
+    <code type="integer">5</code>
     <created_at type="datetime">2008/12/09 00:02:40</created_at>
     <id type="integer">744539545</id>
     <name>Contractor3NameString</name>
@@ -30,6 +33,7 @@
   <contractor>
     <address>Contractor4AddressString</address>
     <city>Contractor4CityString</city>
+    <code type="integer">4</code>
     <created_at type="datetime">2008/12/09 00:02:40</created_at>
     <id type="integer">820532840</id>
     <name>Contractor4NameString</name>

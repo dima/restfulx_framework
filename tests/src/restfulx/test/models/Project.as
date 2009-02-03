@@ -35,7 +35,7 @@ package restfulx.test.models {
     [HasOne]
     public var contractor:Contractor;
     
-    [HasOne(conditions="name:2")]
+    [HasOne(conditions="code:6")]
     public var randomContractor:Contractor;
         
     [HasMany]

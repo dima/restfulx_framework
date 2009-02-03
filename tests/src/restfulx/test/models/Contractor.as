@@ -34,6 +34,8 @@ package restfulx.test.models {
     public var address:String;
 
     public var city:String;
+    
+    public var code:int;
 
     [BelongsTo(referAs="contractor, randomContractor")]
     public var project:Project;
