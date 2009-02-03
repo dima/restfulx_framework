@@ -25,7 +25,7 @@ package org.restfulx.events {
   import flash.events.Event;
 
   /**
-   * This event is dispatched when service provider call is about to be made.
+   * This event is dispatched when an RxModel instance is about to be synchronized
    */
   public class SyncItemEvent extends Event {
     

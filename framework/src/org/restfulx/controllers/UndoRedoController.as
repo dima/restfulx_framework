@@ -60,10 +60,13 @@ package org.restfulx.controllers {
    */
   public class UndoRedoController extends EventDispatcher {
     
+    /** Flag indicating the invocation is normal */
     public const NORMAL:int = 0;
     
+    /** Flag indicating the invocation is an undo operation */
     public const UNDO:int = 1;
     
+    /** Flag indicating the invocation is a redo operation */
     public const REDO:int = 2;
     
     private var map:Object = {
@@ -101,6 +104,11 @@ package org.restfulx.controllers {
       dispatchEvent(new Event("stackChanged"));
     }
     
+    /**
+     * Pushes given composite action object onto the undo stack.
+     *  
+     *  @param action Composite Action object that represents the state of the operation
+     */
     public function addChangeAction(action:Object):void {
       if (undoStack.length == maxSize) {
         undoStack.shift();
@@ -108,7 +116,9 @@ package org.restfulx.controllers {
       undoStack.push(action);
     }
     
-    
+    /**
+     * Performs undo
+     */
     public function undo():void {
       if (undoStack.length) {
         var op:Object = undoStack.pop();
@@ -123,10 +133,17 @@ package org.restfulx.controllers {
     }
     
     [Bindable("stackChanged")]
+    /**
+     * Indicates if undo can be performed
+     *  @return true if undo can be performed
+     */
     public function canUndo():Boolean {
       return undoStack.length > 0;
     }
     
+    /**
+     * Performs redo
+     */
     public function redo():void {
       if (redoStack.length) {
         var op:Object = redoStack.pop();
@@ -148,10 +165,17 @@ package org.restfulx.controllers {
     }
     
     [Bindable("stackChanged")]
+    /**
+     * Indicates if redo can be performed
+     *  @return true if redo can be performed
+     */
     public function canRedo():Boolean {
       return redoStack.length > 0;
     }
     
+    /**
+     * Clear the undo/redo stacks
+     */
     public function clear():void {
       this.undoStack = new Array;
       this.redoStack = new Array;

@@ -25,7 +25,7 @@ package org.restfulx.events {
   import flash.events.Event;
 
   /**
-   * This event is dispatched when service provider call is about to be made.
+   * This event is dispatched when there's an error during synchronization process
    */
   public class SyncErrorEvent extends Event {
     

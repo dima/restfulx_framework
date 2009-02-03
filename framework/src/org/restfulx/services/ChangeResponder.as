@@ -33,6 +33,11 @@ package org.restfulx.services {
   import org.restfulx.events.SyncItemEvent;
   import org.restfulx.utils.RxUtils;
 
+  /**
+   *  This responder hanldes synchronization responses from the destination service provider
+   *  and syncs successful operations back to source service provider and/or reports relevant
+   *  errors
+   */
   public class ChangeResponder implements IResponder {
     
     private var item:Object;
@@ -62,6 +67,9 @@ package org.restfulx.services {
       this.action = action;
     }
 
+    /**
+     *  @see mx.rpc.IResponder#result
+     */
     public function result(event:Object):void {
       if (!destination.hasErrors(event.result)) {
         controller.count--;
@@ -88,6 +96,9 @@ package org.restfulx.services {
       }
     }
     
+    /**
+     *  @see mx.rpc.IResponder#fault
+     */
     public function fault(info:Object):void {
       controller.count--;
       var error:SyncErrorEvent = new SyncErrorEvent(item, info);
