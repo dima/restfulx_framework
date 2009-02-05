@@ -172,14 +172,14 @@ package org.restfulx.controllers {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
           onSuccess = optsOrOnSuccess;
         } else {
-          if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
-          if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
-          if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
-          if (optsOrOnSuccess['fetchDependencies']) fetchDependencies = optsOrOnSuccess['fetchDependencies'];
-          if (optsOrOnSuccess['useLazyMode']) useLazyMode = optsOrOnSuccess['useLazyMode'];
-          if (optsOrOnSuccess['append']) append = optsOrOnSuccess['append'];
-          if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
+          if (optsOrOnSuccess.hasOwnProperty("onSuccess")) onSuccess = optsOrOnSuccess["onSuccess"];
+          if (optsOrOnSuccess.hasOwnProperty("onFailure")) onFailure = optsOrOnSuccess["onFailure"];
+          if (optsOrOnSuccess.hasOwnProperty("nestedBy")) nestedBy = optsOrOnSuccess["nestedBy"];
+          if (optsOrOnSuccess.hasOwnProperty("metadata")) metadata = optsOrOnSuccess["metadata"];
+          if (optsOrOnSuccess.hasOwnProperty("fetchDependencies")) fetchDependencies = optsOrOnSuccess["fetchDependencies"];
+          if (optsOrOnSuccess.hasOwnProperty("useLazyMode")) useLazyMode = optsOrOnSuccess["useLazyMode"];
+          if (optsOrOnSuccess.hasOwnProperty("append")) append = optsOrOnSuccess["append"];
+          if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
         }
       }
       var fqn:String = state.types[clazz];
@@ -258,13 +258,13 @@ package org.restfulx.controllers {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
           onSuccess = optsOrOnSuccess;
         } else {
-          if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
-          if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
-          if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
-          if (optsOrOnSuccess['fetchDependencies']) fetchDependencies = optsOrOnSuccess['fetchDependencies'];
-          if (optsOrOnSuccess['useLazyMode']) useLazyMode = optsOrOnSuccess['useLazyMode'];
-          if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
+          if (optsOrOnSuccess.hasOwnProperty("onSuccess")) onSuccess = optsOrOnSuccess["onSuccess"];
+          if (optsOrOnSuccess.hasOwnProperty("onFailure")) onFailure = optsOrOnSuccess["onFailure"];
+          if (optsOrOnSuccess.hasOwnProperty("nestedBy")) nestedBy = optsOrOnSuccess["nestedBy"];
+          if (optsOrOnSuccess.hasOwnProperty("metadata")) metadata = optsOrOnSuccess["metadata"];
+          if (optsOrOnSuccess.hasOwnProperty("fetchDependencies")) fetchDependencies = optsOrOnSuccess["fetchDependencies"];
+          if (optsOrOnSuccess.hasOwnProperty("useLazyMode")) useLazyMode = optsOrOnSuccess["useLazyMode"];
+          if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
         }
       }
       
@@ -371,12 +371,12 @@ package org.restfulx.controllers {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
           onSuccess = optsOrOnSuccess;
         } else {
-          if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
-          if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
-          if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
-          if (optsOrOnSuccess['recursive']) recursive = optsOrOnSuccess['recursive'];
-          if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
+          if (optsOrOnSuccess.hasOwnProperty("onSuccess")) onSuccess = optsOrOnSuccess["onSuccess"];
+          if (optsOrOnSuccess.hasOwnProperty("onFailure")) onFailure = optsOrOnSuccess["onFailure"];
+          if (optsOrOnSuccess.hasOwnProperty("nestedBy")) nestedBy = optsOrOnSuccess["nestedBy"];
+          if (optsOrOnSuccess.hasOwnProperty("metadata")) metadata = optsOrOnSuccess["metadata"];
+          if (optsOrOnSuccess.hasOwnProperty("recursive")) recursive = optsOrOnSuccess["recursive"];
+          if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
         }
       }
       var fqn:String = getQualifiedClassName(object);
@@ -412,12 +412,12 @@ package org.restfulx.controllers {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
           onSuccess = optsOrOnSuccess;
         } else {
-          if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
-          if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
-          if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
-          if (optsOrOnSuccess['recursive']) recursive = optsOrOnSuccess['recursive'];
-          if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
+          if (optsOrOnSuccess.hasOwnProperty("onSuccess")) onSuccess = optsOrOnSuccess["onSuccess"];
+          if (optsOrOnSuccess.hasOwnProperty("onFailure")) onFailure = optsOrOnSuccess["onFailure"];
+          if (optsOrOnSuccess.hasOwnProperty("nestedBy")) nestedBy = optsOrOnSuccess["nestedBy"];
+          if (optsOrOnSuccess.hasOwnProperty("metadata")) metadata = optsOrOnSuccess["metadata"];
+          if (optsOrOnSuccess.hasOwnProperty("recursive")) recursive = optsOrOnSuccess["recursive"];
+          if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
         }
       }
       var fqn:String = getQualifiedClassName(object);
@@ -453,12 +453,12 @@ package org.restfulx.controllers {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
           onSuccess = optsOrOnSuccess;
         } else {
-          if (optsOrOnSuccess['onSuccess']) onSuccess = optsOrOnSuccess['onSuccess'];
-          if (optsOrOnSuccess['onFailure']) onFailure = optsOrOnSuccess['onFailure'];
-          if (optsOrOnSuccess['nestedBy']) nestedBy = optsOrOnSuccess['nestedBy'];
-          if (optsOrOnSuccess['metadata']) metadata = optsOrOnSuccess['metadata'];
-          if (optsOrOnSuccess['recursive']) recursive = optsOrOnSuccess['recursive'];
-          if (optsOrOnSuccess['targetServiceId']) targetServiceId = optsOrOnSuccess['targetServiceId'];
+          if (optsOrOnSuccess.hasOwnProperty("onSuccess")) onSuccess = optsOrOnSuccess["onSuccess"];
+          if (optsOrOnSuccess.hasOwnProperty("onFailure")) onFailure = optsOrOnSuccess["onFailure"];
+          if (optsOrOnSuccess.hasOwnProperty("nestedBy")) nestedBy = optsOrOnSuccess["nestedBy"];
+          if (optsOrOnSuccess.hasOwnProperty("metadata")) metadata = optsOrOnSuccess["metadata"];
+          if (optsOrOnSuccess.hasOwnProperty("recursive")) recursive = optsOrOnSuccess["recursive"];
+          if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
         }
       }
       var fqn:String = getQualifiedClassName(object);
@@ -555,7 +555,6 @@ package org.restfulx.controllers {
         } else if (object is Class) {
           cache.data[state.types[object]] = new ModelsCollection;
         }
-        trace('foobar');
       }
     }
 

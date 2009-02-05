@@ -115,12 +115,12 @@ package org.restfulx.controllers {
       if (optsOrOnResult is Function) {
         this.resultHandler = optsOrOnResult as Function;
       } else {
-        if (optsOrOnResult['onResult']) this.resultHandler = optsOrOnResult['onResult'];
-        if (optsOrOnResult['onFault']) this.faultHandler = optsOrOnResult['onFault'];
-        if (optsOrOnResult['contentType']) this.contentType = optsOrOnResult['contentType'];
-        if (optsOrOnResult['resultFormat']) this.resultFormat = optsOrOnResult['resultFormat'];
-        if (optsOrOnResult['serializer']) this.serializer = optsOrOnResult['serializer'];
-        if (optsOrOnResult['rootUrl']) this.rootUrl = optsOrOnResult['rootUrl'];
+        if (optsOrOnResult.hasOwnProperty("onResult")) this.resultHandler = optsOrOnResult["onResult"];
+        if (optsOrOnResult.hasOwnProperty("onFault")) this.faultHandler = optsOrOnResult["onFault"];
+        if (optsOrOnResult.hasOwnProperty("contentType")) this.contentType = optsOrOnResult["contentType"];
+        if (optsOrOnResult.hasOwnProperty("resultFormat")) this.resultFormat = optsOrOnResult["resultFormat"];
+        if (optsOrOnResult.hasOwnProperty("serializer")) this.serializer = optsOrOnResult["serializer"];
+        if (optsOrOnResult.hasOwnProperty("rootUrl")) this.rootUrl = optsOrOnResult["rootUrl"];
       }
     }
     
@@ -150,11 +150,11 @@ package org.restfulx.controllers {
       if (optsOrURL is String) {
         url = String(optsOrURL);
       } else {
-        if (optsOrURL['URL']) url = optsOrURL['URL'];
-        if (optsOrURL['data']) data = optsOrURL['data'];
-        if (optsOrURL['method']) method = optsOrURL['method'];
-        if (optsOrURL['unmarshall']) unmarshall = optsOrURL['unmarshall'];
-        if (optsOrURL['cacheBy']) cacheBy = optsOrURL['cacheBy'];
+        if (optsOrURL.hasOwnProperty("URL")) url = optsOrURL["URL"];
+        if (optsOrURL.hasOwnProperty("data")) data = optsOrURL["data"];
+        if (optsOrURL.hasOwnProperty("method")) method = optsOrURL["method"];
+        if (optsOrURL.hasOwnProperty("unmarshall")) unmarshall = optsOrURL["unmarshall"];
+        if (optsOrURL.hasOwnProperty("cacheBy")) cacheBy = optsOrURL["cacheBy"];
       }
       
       if (!data) {

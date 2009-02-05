@@ -56,12 +56,12 @@ package org.restfulx.controllers {
      */
     public function AuxAIRController(optsOrOnResult:Object = null, onFault:Function = null, dbFile:File = null) {
       if (optsOrOnResult == null) optsOrOnResult = {};
-      this.faultHandler = onFault;
+      faultHandler = onFault;
       if (optsOrOnResult is Function) {
-        this.resultHandler = optsOrOnResult as Function;
+        resultHandler = optsOrOnResult as Function;
       } else {
-        if (optsOrOnResult['onResult']) this.resultHandler = optsOrOnResult['onResult'];
-        if (optsOrOnResult['onFault']) this.faultHandler = optsOrOnResult['onFault'];
+        if (optsOrOnResult.hasOwnProperty("onResult")) resultHandler = optsOrOnResult["onResult"];
+        if (optsOrOnResult.hasOwnProperty("onFault")) faultHandler = optsOrOnResult["onFault"];
       }
 
       this.connection = new SQLConnection;

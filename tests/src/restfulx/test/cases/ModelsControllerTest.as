@@ -28,6 +28,9 @@ package restfulx.test.cases {
   import org.restfulx.services.mock.MockXMLHTTPServiceProvider;
   
   import restfulx.test.models.Article;
+  import restfulx.test.models.BillableWeek;
+  import restfulx.test.models.Client;
+  import restfulx.test.models.Timesheet;
 
   public class ModelsControllerTest extends TestCase {
     
@@ -36,7 +39,7 @@ package restfulx.test.cases {
     }
     
     public function testShowById():void {
-      Rx.models.showById(Article, '12345', {onSuccess: onSuccess, onFailure: onFailure, 
+      Rx.models.showById(Article, '12345', {onSuccess: onShowSuccess, onFailure: onShowFailure, 
         targetServiceId: MockXMLHTTPServiceProvider.ID});
     }
     
@@ -45,7 +48,7 @@ package restfulx.test.cases {
       article.id = '12345';
       Rx.models.reset(article);
         
-      Rx.models.show({clazz: Article, id: '12345'}, {onSuccess: onSuccess, onFailure: onFailure, targetServiceId:
+      Rx.models.show({clazz: Article, id: '12345'}, {onSuccess: onShowSuccess, onFailure: onShowFailure, targetServiceId:
         MockXMLHTTPServiceProvider.ID});
     }
     
@@ -54,16 +57,27 @@ package restfulx.test.cases {
       article.id = '12345';
       Rx.models.reset(article);
       
-      Rx.models.show(article, {onSuccess: onSuccess, onFailure: onFailure,
+      Rx.models.show(article, {onSuccess: onShowSuccess, onFailure: onShowFailure,
        targetServiceId: MockXMLHTTPServiceProvider.ID});
     }
     
-    private function onSuccess(result:Object):void {
+    public function testIndexWithNoDependencies():void {
+      Rx.models.reset(null, true);
+      Rx.models.index(BillableWeek, {fetchDependencies: false, onSuccess: onBillableWeekIndex, 
+        targetServiceId: MockXMLHTTPServiceProvider.ID});
+    }
+    
+    private function onBillableWeekIndex(result:Object):void {
+      assertFalse(Rx.models.indexed(Client, Timesheet));
+      assertTrue(Rx.models.indexed(BillableWeek));
+    }
+    
+    private function onShowSuccess(result:Object):void {
       assertTrue(result is Article);
       assertEquals("12345", result["id"]);
     }
     
-    private function onFailure(result:Object):void {
+    private function onShowFailure(result:Object):void {
       fail();
     }
   }

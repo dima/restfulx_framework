@@ -186,6 +186,7 @@
         ts.addTest(new ModelsControllerTest("testShowById"));
         ts.addTest(new ModelsControllerTest("testShowV1"));
         ts.addTest(new ModelsControllerTest("testShowV2"));
+        ts.addTest(new ModelsControllerTest("testIndexWithNoDependencies"));
        }
        
        private function addIntegrationTests(ts:TestSuite):void {
