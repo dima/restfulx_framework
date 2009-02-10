@@ -538,6 +538,18 @@ package org.restfulx.controllers {
           targetServiceId);
       }
     }
+
+    /**
+     * A shortcut to reload multiple models at once. Useful if you don't want to define any special options,
+     * such as callbacks, metadata, etc.
+     * 
+     * @param models a list of models to reload
+     */    
+    public function reloadAll(... models):void {
+      for each (var model:Class in models) {
+        reload(model);
+      }
+    }
     
     /**
      * Resets model metadata.
