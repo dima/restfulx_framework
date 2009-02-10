@@ -437,7 +437,7 @@ package org.restfulx.services.air {
       
       var createStatement:String = "CREATE TABLE IF NOT EXISTS " + tableName + "(";
       
-      var insertStatement:String = "INSERT INTO " + tableName + "(";
+      var insertStatement:String = "INSERT OR REPLACE INTO " + tableName + "(";
       var insertParams:String = "";
       
       var updateStatement:String = "UPDATE " + tableName + " SET ";
