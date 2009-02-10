@@ -127,6 +127,8 @@ package org.restfulx.components.rx {
     private var dropdownClosed:Boolean = true;
 
     private var delayTimer:Timer;
+    
+    private var preselectedObject:Object;
   
     public function RxAutoComplete() {
       super();
@@ -177,14 +179,21 @@ package org.restfulx.components.rx {
      * @param input the model to choose
      */
     public function set chosenItem(input:Object):void {
-      _typedText = input.toString();
+      if (input == null) {
+        _typedText = "";
+      } else {
+        _typedText = input.toString();
+      }
+      
       typedTextChanged = true;
       
       preselectedItem = true;
+      preselectedObject = input;
       
       invalidateProperties();
       invalidateDisplayList();
       dispatchEvent(new Event("typedTextChange"));      
+      dispatchEvent(new Event("chosenItemChange"));
     }
     
     [Bindable("chosenItemChange")]
@@ -193,7 +202,9 @@ package org.restfulx.components.rx {
      * @return currently chosen model instance
      */
     public function get chosenItem():Object {
-      if (selectedItem is RxModel) {
+      if (preselectedObject is RxModel) {
+        return preselectedObject;
+      } else if (selectedItem is RxModel) {
         return selectedItem;
       }
       return null;
@@ -218,7 +229,7 @@ package org.restfulx.components.rx {
       
       if (ArrayCollection(dataProvider).length == 0) resourceSearched = false;
 
-      if (!resourceSearched && !searchInProgress) {
+      if (!preselectedItem && !resourceSearched && !searchInProgress) {
         searchInProgress = true;
         if (delayTimer != null && delayTimer.running) {
           delayTimer.stop();
@@ -254,6 +265,8 @@ package org.restfulx.components.rx {
           dispatchEvent(new Event("typedTextChange"));
         } else if (ArrayCollection(dataProvider).length == 1) {
           selectedItem = ArrayCollection(dataProvider).getItemAt(0);
+          preselectedItem = false;
+          preselectedObject = null;
           dispatchEvent(new Event("selectedItemChange"));
         }
       }
@@ -261,6 +274,8 @@ package org.restfulx.components.rx {
 
     private function onResourceShow(result:Object):void {
       //selectedItem = result;
+      preselectedItem = false;
+      preselectedObject = null;
       if (clearTextAfterFind) clearTypedText();
       dispatchEvent(new Event("chosenItemChange"));
     }
@@ -306,7 +321,9 @@ package org.restfulx.components.rx {
         }
         
         clearingText = false;
-        preselectedItem = false;
+        if (preselectedItem) {
+          preselectedItem = false;
+        }
         
         if (showDropdown && !dropdown.visible) {
           // This is needed to control the open duration of the dropdown
@@ -335,7 +352,7 @@ package org.restfulx.components.rx {
           textInput.setSelection(textInput.text.length, textInput.text.length);
           showingDropdown = false;
           dropdownClosed = true;
-        } else if (event.keyCode == Keyboard.ENTER) {
+        } else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB) {
           if (selectedItem != null && selectedItem is RxModel) {
             if (showOnEnter && !Rx.models.shown(selectedItem)) {
               RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
