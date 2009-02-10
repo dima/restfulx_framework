@@ -58,6 +58,7 @@ package org.restfulx.utils {
       "xrev",
       "sync",
       "dirty",
+      "cloned",
       "attachment",
       "prototype"
     ];
@@ -92,11 +93,15 @@ package org.restfulx.utils {
     
     /**
      * If the object cloned is a RxModel do clone based on reflection, else
-     * default to binary ObjectUtil clone.
+     * default to binary ObjectUtil clone. Recursive cloning can be very slow
+     * and should be avoided for large trees.
      *  
      * @param object object to clone
+     * @param recursive indicates if references RxModels should be cloned too
+     * 
+     * @return cloned RxModel instance
      */
-    public static function clone(object:Object):Object {
+    public static function clone(object:Object, recursive:Boolean = false):Object {
       if (object is RxModel) {
         var fqn:String = getQualifiedClassName(object);
         var clazz:Class = getDefinitionByName(fqn) as Class;
@@ -105,11 +110,16 @@ package org.restfulx.utils {
         cloned["rev"] = object["rev"];
         cloned["xrev"] = object["xrev"];
         cloned["sync"] = object["sync"];
+        cloned["cloned"] = true;
         for each (var node:XML in describeType(object)..accessor) {
           if (!isInvalidPropertyName(node.@name)) {
             try {
               var name:String = node.@name;
-              cloned[name] = object[name];
+              if (recursive && object[name] is RxModel && object[name] != null && !object[name]["cloned"]) {
+                cloned[name] = clone(object[name]);
+              } else {
+                cloned[name] = object[name];
+              }
             } catch (e:Error) {
               // we can fail cloning if the property is read-only, etc.
             }

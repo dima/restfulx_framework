@@ -46,6 +46,9 @@ package org.restfulx.models {
     
     /** can be used to see if this model's properties have been changed */
     public var dirty:Boolean;
+    
+    /** indicates if this is a clone */
+    public var cloned:Boolean;
 
     /** any model can have one attachment, this can be either RxFileRefrence or BinaryAttachment */
     public var attachment:Object;

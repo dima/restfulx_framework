@@ -273,7 +273,7 @@ package org.restfulx.components.rx {
     }
 
     private function onResourceShow(result:Object):void {
-      //selectedItem = result;
+      selectedItem = result;
       preselectedItem = false;
       preselectedObject = null;
       if (clearTextAfterFind) clearTypedText();

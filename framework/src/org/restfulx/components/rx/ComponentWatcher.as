@@ -71,7 +71,6 @@ package org.restfulx.components.rx {
      */
     public function set model(value:Object):void {
       _model = value;
-      updateBinding();
     }
  
     /**
@@ -88,7 +87,6 @@ package org.restfulx.components.rx {
      */
     public function set field(value:String):void {
       _field = value;
-      updateBinding();
     }
  
     /**
@@ -138,8 +136,7 @@ package org.restfulx.components.rx {
     private function updateBinding():void {
       if (bound) clearBinding();
  
-      if (model != null &&  model.hasOwnProperty(field)
-        && target != null && target.hasOwnProperty(property)) {
+      if (target && target.hasOwnProperty(property)) {
         componentWatcher = ChangeWatcher.watch(target, property, onChange, true);
         bound = true;
       }
@@ -155,7 +152,7 @@ package org.restfulx.components.rx {
     }
     
     private function onChange(event:Event):void {
-      if (model[field] != event.target[property]) {
+      if (model && model.hasOwnProperty(field) && model[field] != event.target[property]) {
         model[field] = event.target[property];
         model["dirty"] = true;
       }
