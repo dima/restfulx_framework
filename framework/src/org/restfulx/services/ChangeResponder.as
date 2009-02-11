@@ -29,8 +29,8 @@ package org.restfulx.services {
   import org.restfulx.Rx;
   import org.restfulx.controllers.CacheController;
   import org.restfulx.controllers.ChangeController;
-  import org.restfulx.events.SyncErrorEvent;
-  import org.restfulx.events.SyncItemEvent;
+  import org.restfulx.events.PushErrorEvent;
+  import org.restfulx.events.PushItemEvent;
   import org.restfulx.utils.RxUtils;
 
   /**
@@ -89,7 +89,7 @@ package org.restfulx.services {
           default :
             Rx.log.error("don't know what to do with: " + item["sync"]);
         }
-        controller.dispatchEvent(new SyncItemEvent(target));
+        controller.dispatchEvent(new PushItemEvent(target));
         
         if (controller.count == 0) {
           controller.notifySyncEnd();
@@ -104,7 +104,7 @@ package org.restfulx.services {
      */
     public function fault(info:Object):void {
       controller.count--;
-      var error:SyncErrorEvent = new SyncErrorEvent(item, info);
+      var error:PushErrorEvent = new PushErrorEvent(item, info);
       controller.errors.addItem(error);
       controller.dispatchEvent(error);
       if (controller.count == 0) {

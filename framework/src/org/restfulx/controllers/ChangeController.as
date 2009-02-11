@@ -28,8 +28,11 @@ package org.restfulx.controllers {
   
   import org.restfulx.Rx;
   import org.restfulx.collections.RxCollection;
-  import org.restfulx.events.SyncEndEvent;
-  import org.restfulx.events.SyncStartEvent;
+  import org.restfulx.events.CacheUpdateEvent;
+  import org.restfulx.events.PullEndEvent;
+  import org.restfulx.events.PullStartEvent;
+  import org.restfulx.events.PushEndEvent;
+  import org.restfulx.events.PushStartEvent;
   import org.restfulx.services.ChangeResponder;
   import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.ISyncingServiceProvider;
@@ -83,9 +86,13 @@ package org.restfulx.controllers {
     public var errors:RxCollection;
 
     /**
-     * Number of objects still left to synchronize
+     * Number of objects still left to push
      */
     public var count:int;
+    
+    private var pushModels:Array;
+    
+    private var pullModels:Array;
     
     private var source:ISyncingServiceProvider;
     
@@ -99,19 +106,56 @@ package org.restfulx.controllers {
      * @param source ISyncingServiceProvider implementation that changes come from
      * @param destination IServiceProvider implemnetation that the changes should go to
      */
-  	public function ChangeController(source:ISyncingServiceProvider, destination:IServiceProvider) {
+  	public function ChangeController(source:ISyncingServiceProvider = null, destination:IServiceProvider = null) {
   	  super();
-  		this.source = source;
-  		this.destination = destination;
+      setSyncProviders(source, destination);
+  		Rx.models.addEventListener(CacheUpdateEvent.ID, onCacheUpdate);
+  		this.pullModels = new Array;
+  		this.pushModels = new Array;
+  	}
+  	
+    /**
+     * Set sync providers on existing reference.
+     * 
+     * @param source ISyncingServiceProvider implementation that changes come from
+     * @param destination IServiceProvider implemnetation that the changes should go to
+     */
+  	public function setSyncProviders(source:ISyncingServiceProvider, destination:IServiceProvider):void {
+  	  this.source = source;
+  	  this.destination = destination;
   	}
 	
 	  /**
 	   * Pushes changes from source service provider to target/destination service provider
+	   * 
+	   * @params list of model classes to push, if none provided all models will be pushed
 	   */
-	  public function push():void {
+	  public function push(... models):void {
+	    if (!Rx.enableSync || source == null || destination == null) {
+	      throw new Error("Sync can be performed only if Rx.enableSync is true and source and destination providers are set");
+	    }
 	    errors = new RxCollection;
-	    for each (var model:Class in Rx.models.state.models) {
+	    if (!models.length) models = Rx.models.state.models;
+	    for each (var model:Class in models) {
 	      source.dirty(model, new ItemResponder(onDirtyChanges, onDirtyFault));
+	    }
+	  }
+	  
+	  /**
+	   * Pulls changes from destination service provider and passes them to the source service
+	   * provider
+	   * 
+	   * @params list of models to pull, if non provided allmodels will be pulled
+	   */
+	  public function pull(... models):void {
+      if (!Rx.enableSync || source == null || destination == null) {
+        throw new Error("Sync can be performed only if Rx.enableSync is true and source and destination providers are set");
+      }
+	    if (!models.length) models = Rx.models.state.models;
+	    dispatchEvent(new PullStartEvent);
+	    for each (var model:Class in models) {
+	      pullModels.push(Rx.models.state.types[model]);
+	      Rx.models.reload(model, {targetServiceId: destination.id});
 	    }
 	  }
 	  
@@ -123,7 +167,7 @@ package org.restfulx.controllers {
      canUndoRedo = false;
 	   Rx.undoredo.clear();
 	   notifiedSyncStart = false;
-     dispatchEvent(new SyncEndEvent);
+     dispatchEvent(new PushEndEvent);
 	  }
 	  
 	  protected function onDirtyChanges(result:Object, token:Object = null):void {
@@ -131,7 +175,7 @@ package org.restfulx.controllers {
 	    
 	    // no undo-redo for synchronization, and the stack is lost after undo-redo
 	    if (count) {
-	      dispatchEvent(new SyncStartEvent);
+	      dispatchEvent(new PushStartEvent);
 	      notifiedSyncStart = true;
 	      if (!canUndoRedo) {
   	      canUndoRedo = Rx.enableUndoRedo;
@@ -163,6 +207,22 @@ package org.restfulx.controllers {
 	  
 	  protected function onDirtyFault(info:Object, token:Object = null):void {
 	    throw new Error(info);
+	  }
+	  
+	  protected function onCacheUpdate(event:CacheUpdateEvent):void {
+	    if (Rx.enableSync && Rx.defaultServiceId == destination.id) {
+	      if (pullModels.indexOf(event.fqn) != -1 && event.data != null) {
+	        pullModels = pullModels.filter(function(item:*, index:int, a:Array):Boolean {
+	         return item != event.fqn;
+	        });
+  	      for each (var instance:Object in event.data) {
+  	        Rx.services.getServiceProvider(source.id).create(instance, null);
+  	      }
+  	    }
+  	    if (!pullModels.length) {
+          dispatchEvent(new PullEndEvent);
+       }
+	    }
 	  }
   }
 }

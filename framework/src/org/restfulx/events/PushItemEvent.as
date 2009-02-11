@@ -25,23 +25,19 @@ package org.restfulx.events {
   import flash.events.Event;
 
   /**
-   * This event is dispatched when there's an error during synchronization process
+   * This event is dispatched when an RxModel instance is about to be synchronized
    */
-  public class SyncErrorEvent extends Event {
+  public class PushItemEvent extends Event {
     
     /** Event identifier */
-    public static var ID:String = "syncError";
+    public static var ID:String = "pushItem";
     
-    /** the item that caused error while synchronizing */
+    /** the model object that was synchronized */
     public var item:Object;
     
-    /** the error reported, if any */
-    public var info:Object;
-    
-    public function SyncErrorEvent(item:Object, info:Object) {
+    public function PushItemEvent(item:Object) {
       super(ID, false, false);
       this.item = item;
-      this.info = info;
     }
   }
 }

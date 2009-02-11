@@ -94,12 +94,14 @@ package org.restfulx.controllers {
       Rx.models = new ModelsController(models);
 
       Rx.undoredo = new UndoRedoController;
-
+      
       Rx.serializers = new SerializersController;      
 
       // set up services
       if (extraServices == null) extraServices = new Array;
       Rx.services = new ServicesController(extraServices, targetServiceId);
+
+      if (Rx.changes == null) Rx.changes = new ChangeController;
     }
   }
 }

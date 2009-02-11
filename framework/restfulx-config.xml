@@ -31,13 +31,15 @@
     <class>org.restfulx.controllers.mock.MockAuxHTTPController</class>
     <class>org.restfulx.events.CacheUpdateEvent</class>
     <class>org.restfulx.events.CommandExecutionEvent</class>
+    <class>org.restfulx.events.PullEndEvent</class>
+    <class>org.restfulx.events.PullStartEvent</class>
+    <class>org.restfulx.events.PushEndEvent</class>
+    <class>org.restfulx.events.PushErrorEvent</class>
+    <class>org.restfulx.events.PushItemEvent</class>
+    <class>org.restfulx.events.PushStartEvent</class>
     <class>org.restfulx.events.ServiceCallStartEvent</class>
     <class>org.restfulx.events.ServiceCallStopEvent</class>
     <class>org.restfulx.events.ServiceErrorEvent</class>
-    <class>org.restfulx.events.SyncEndEvent</class>
-    <class>org.restfulx.events.SyncErrorEvent</class>
-    <class>org.restfulx.events.SyncItemEvent</class>
-    <class>org.restfulx.events.SyncStartEvent</class>
     <class>org.restfulx.models.RxModel</class>
     <class>org.restfulx.models.RxTreeModel</class>
     <class>org.restfulx.serializers.CouchDBJSONSerializer</class>

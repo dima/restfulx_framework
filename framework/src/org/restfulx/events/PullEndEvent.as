@@ -25,19 +25,15 @@ package org.restfulx.events {
   import flash.events.Event;
 
   /**
-   * This event is dispatched when an RxModel instance is about to be synchronized
+   * This event is dispatched when pull synchronization has been finished
    */
-  public class SyncItemEvent extends Event {
+  public class PullEndEvent extends Event {
     
     /** Event identifier */
-    public static var ID:String = "syncItem";
+    public static var ID:String = "pullEnd";
     
-    /** the model object that was synchronized */
-    public var item:Object;
-    
-    public function SyncItemEvent(item:Object) {
+    public function PullEndEvent() {
       super(ID, false, false);
-      this.item = item;
     }
   }
 }

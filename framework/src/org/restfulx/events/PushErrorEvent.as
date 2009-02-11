@@ -25,15 +25,23 @@ package org.restfulx.events {
   import flash.events.Event;
 
   /**
-   * This event is dispatched when synchronization has been finished
+   * This event is dispatched when there's an error during push synchronization process
    */
-  public class SyncEndEvent extends Event {
+  public class PushErrorEvent extends Event {
     
     /** Event identifier */
-    public static var ID:String = "syncEnd";
+    public static var ID:String = "pushError";
     
-    public function SyncEndEvent() {
+    /** the item that caused error while synchronizing */
+    public var item:Object;
+    
+    /** the error reported, if any */
+    public var info:Object;
+    
+    public function PushErrorEvent(item:Object, info:Object) {
       super(ID, false, false);
+      this.item = item;
+      this.info = info;
     }
   }
 }

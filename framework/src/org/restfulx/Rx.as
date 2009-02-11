@@ -143,6 +143,11 @@ package org.restfulx {
      *  is enabled.
      */
     public static var enableUndoRedo:Boolean = false;
+    
+    /**
+     * If set to true, synchronization controller will be initialized
+     */
+    public static var enableSync:Boolean = false;
      
     /** default root URL for HTTP requests, gets prefixed to CRUD and AUX HTTP operations */
     public static var httpRootUrl:String = "/";

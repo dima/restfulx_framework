@@ -25,14 +25,14 @@ package org.restfulx.events {
   import flash.events.Event;
 
   /**
-   * This event is dispatched when synchronization is about to begin
+   * This event is dispatched when pull synchronization has been finished
    */
-  public class SyncStartEvent extends Event {
+  public class PullStartEvent extends Event {
     
     /** Event identifier */
-    public static var ID:String = "syncStart";
+    public static var ID:String = "pullStart";
     
-    public function SyncStartEvent() {
+    public function PullStartEvent() {
       super(ID, false, false);
     }
   }
