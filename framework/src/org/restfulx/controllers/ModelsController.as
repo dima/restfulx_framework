@@ -296,7 +296,7 @@ package org.restfulx.controllers {
             for each (var node:XML in objectMetadata.accessor.(@type == dependency)) {
               if (RxUtils.isBelongsTo(node)) {
                 var property:String = node.@name;
-                if (object[property] != null && object[property]["id"] != 0) {
+                if (object[property] != null && !RxUtils.isEmpty(object[property]["id"])) {
                   Rx.log.debug("requesting single show dependency:" + dependency + 
                     " with id: " + object[property]["id"] + " of: " + fqn);
                   if (!shown.contains(object[property]["id"])) {

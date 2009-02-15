@@ -51,7 +51,7 @@ package org.restfulx.controllers {
    *  private funtion init():void {
    *    ApplicationController.initialize([AIRServiceProvider, AS3JSONHTTPServiceProvider, DirectCouchDBHTTPServiceProvider], 
    *      AIRServiceProvider.ID, "yourairdbname");
-   *    Rx.changes = new ChangeController(ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
+   *    Rx.changes.setSyncProviders(ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
    *      Rx.services.getServiceProvider(AS3JSONHTTPServiceProvider.ID));
    *  }
    *  </listing>
@@ -109,7 +109,7 @@ package org.restfulx.controllers {
   	public function ChangeController(source:ISyncingServiceProvider = null, destination:IServiceProvider = null) {
   	  super();
       setSyncProviders(source, destination);
-  		Rx.models.addEventListener(CacheUpdateEvent.ID, onCacheUpdate);
+      Rx.models.addEventListener(CacheUpdateEvent.ID, onCacheUpdate);
   		this.pullModels = new Array;
   		this.pushModels = new Array;
   	}
@@ -210,6 +210,8 @@ package org.restfulx.controllers {
 	  }
 	  
 	  protected function onCacheUpdate(event:CacheUpdateEvent):void {
+	    if (source == null || destination == null) return;
+	    
 	    if (Rx.enableSync && Rx.defaultServiceId == destination.id) {
 	      if (pullModels.indexOf(event.fqn) != -1 && event.data != null) {
 	        pullModels = pullModels.filter(function(item:*, index:int, a:Array):Boolean {
