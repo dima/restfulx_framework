@@ -6,7 +6,6 @@
 <classEntry path="org.restfulx.collections.RxCollection"/>
 <classEntry path="org.restfulx.commands.CommandsEventDispatcher"/>
 <classEntry path="org.restfulx.commands.ICommand"/>
-<classEntry path="org.restfulx.components.rx.ComponentWatcher"/>
 <classEntry path="org.restfulx.components.rx.DateTextInput"/>
 <classEntry path="org.restfulx.components.rx.DateTimeTextInput"/>
 <classEntry path="org.restfulx.components.rx.MoneyTextInput"/>

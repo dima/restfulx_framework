@@ -13,7 +13,6 @@
     <class>org.restfulx.collections.RxCollection</class>
     <class>org.restfulx.commands.CommandsEventDispatcher</class>
     <class>org.restfulx.commands.ICommand</class>
-    <class>org.restfulx.components.rx.ComponentWatcher</class>
     <class>org.restfulx.components.rx.DateTextInput</class>
     <class>org.restfulx.components.rx.DateTimeTextInput</class>
     <class>org.restfulx.components.rx.MoneyTextInput</class>
