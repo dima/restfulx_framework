@@ -463,9 +463,18 @@ package org.restfulx.utils {
 
     /**
      * Check if the string is null or empty
+     * @param str String to check
      */
     public static function isEmpty(str:String):Boolean {
       return str == null || str == "";
+    }
+    
+    /**
+     * Check to see if the model can be deleted
+     * @param model RxModel instance to check
+     */
+    public static function canDeleteModel(model:RxModel):Boolean {
+      return model != null && !isEmpty(model.id);
     }
 
     /**
