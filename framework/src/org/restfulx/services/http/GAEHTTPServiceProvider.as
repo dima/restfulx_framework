@@ -54,8 +54,8 @@ package org.restfulx.services.http {
     }
 
     // play with this
-    protected override function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      var vo:Object =  Rx.serializers.vo.marshall(object, false, metadata);
+    protected override function marshallToVO(object:Object, recursive:Boolean = false):Object {
+      var vo:Object =  Rx.serializers.vo.marshall(object, false);
       delete vo["clazz"];
       for (var prop:String in vo) {
         if (vo[prop] == null) {

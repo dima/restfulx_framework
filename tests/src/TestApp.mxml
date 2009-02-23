@@ -145,7 +145,6 @@
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicHasOne"));
         ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicBelongsTo"));
         ts.addTest(new XMLSerializerTest("testObjectMarshalling"));
-        ts.addTest(new XMLSerializerTest("testObjectMarshallingWithMetadata"));
         ts.addTest(new XMLSerializerTest("testObjectMarshallingWithSetRelationships"));
         ts.addTest(new XMLSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshalling"));
@@ -157,7 +156,6 @@
         ts.addTest(new CouchDBJSONSerializerTest("testCouchDBObjectUnmarshalling"));
         ts.addTest(new CouchDBJSONSerializerTest("testCouchDBObjectUnmarshallingWithRelationships"));
         ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshalling"));
-        ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshallingWithMetadata"));
         ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshallingWithSetRelationships"));
         ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new CouchDBJSONSerializerTest("testRecursiveObjectMarshalling"));
@@ -166,7 +164,6 @@
         // TODO: JSON nested resources unmarshalling
         
         ts.addTest(new VOSerializerTest("testObjectMarshalling"));
-        ts.addTest(new VOSerializerTest("testObjectMarshallingWithMetadata"));
         ts.addTest(new VOSerializerTest("testObjectMarshallingWithSetRelationships"));
         ts.addTest(new VOSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new VOSerializerTest("testRecursiveObjectMarshalling"));

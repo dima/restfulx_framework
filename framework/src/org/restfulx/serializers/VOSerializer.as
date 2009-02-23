@@ -40,8 +40,8 @@ package org.restfulx.serializers {
     /**
      *  @inheritDoc
      */
-    public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      return marshallToVO(object, metadata);  
+    public override function marshall(object:Object, recursive:Boolean = false):Object {
+      return marshallToVO(object);  
     }
 
     /**
@@ -114,7 +114,7 @@ package org.restfulx.serializers {
       return object;         
     }
 
-    protected function marshallToVO(object:Object, metadata:Object = null):Object {        
+    protected function marshallToVO(object:Object):Object {        
       var fqn:String = getQualifiedClassName(object);
       
       var result:Object = new Object;
@@ -147,11 +147,6 @@ package org.restfulx.serializers {
       }
 
       result["clazz"] = fqn.split("::")[1];
-      
-      if (metadata != null) {
-        result["_metadata"] = metadata;
-      }
-            
       return result;
     }
     

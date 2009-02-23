@@ -40,10 +40,6 @@ package restfulx.test.cases.serializers {
       
     }
     
-    public function testObjectMarshallingWithMetadata():void {
-      
-    }
-    
     public function testObjectMarshallingWithSetRelationships():void {
       
     }

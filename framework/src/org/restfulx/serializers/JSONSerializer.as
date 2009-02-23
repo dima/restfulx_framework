@@ -38,8 +38,8 @@ package org.restfulx.serializers {
     /**
      *  @inheritDoc
      */
-    public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      var vo:Object = super.marshall(object, recursive, metadata);
+    public override function marshall(object:Object, recursive:Boolean = false):Object {
+      var vo:Object = super.marshall(object, recursive);
       var localName:String = RxUtils.toSnakeCase(vo["clazz"]);
       delete vo["clazz"];
       for (var prop:String in vo) {

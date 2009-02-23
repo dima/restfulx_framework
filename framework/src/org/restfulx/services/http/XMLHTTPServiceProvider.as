@@ -33,17 +33,17 @@ package org.restfulx.services.http {
   
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
-  import mx.rpc.events.ResultEvent;
   import mx.rpc.events.FaultEvent;
+  import mx.rpc.events.ResultEvent;
   import mx.rpc.http.HTTPService;
   
   import org.restfulx.Rx;
-  import org.restfulx.controllers.ServicesController;
   import org.restfulx.collections.ModelsCollection;
+  import org.restfulx.controllers.ServicesController;
   import org.restfulx.serializers.ISerializer;
   import org.restfulx.services.IServiceProvider;
-  import org.restfulx.services.XMLServiceErrors;
   import org.restfulx.services.UndoRedoResponder;
+  import org.restfulx.services.XMLServiceErrors;
   import org.restfulx.utils.BinaryAttachment;
   import org.restfulx.utils.ModelsMetadata;
   import org.restfulx.utils.MultiPartRequestBuilder;
@@ -118,8 +118,8 @@ package org.restfulx.services.http {
     /**
      * @see org.restfulx.services.IServiceProvider#marshall
      */
-    public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      return marshallToVO(object, recursive, metadata);
+    public function marshall(object:Object, recursive:Boolean = false):Object {
+      return marshallToVO(object, recursive);
     }
 
     /**
@@ -140,6 +140,14 @@ package org.restfulx.services.http {
       if (urlParams != "") {
         httpService.url += "?" + urlParams;  
       }
+
+      if (Rx.sessionToken) {
+        httpService.url = httpService.url + "?_swfupload_session_id=" + Rx.sessionToken;
+      }
+      
+      if (Rx.authenticityToken) {
+        httpService.url = httpService.url + "?authenticity_token=" + Rx.authenticityToken;
+      }
       
       invokeHTTPService(httpService, responder);
     }
@@ -156,6 +164,14 @@ package org.restfulx.services.http {
       if (urlParams != "") {
         httpService.url += "?" + urlParams;  
       }
+
+      if (Rx.sessionToken) {
+        httpService.url = httpService.url + "?_swfupload_session_id=" + Rx.sessionToken;
+      }
+      
+      if (Rx.authenticityToken) {
+        httpService.url = httpService.url + "?authenticity_token=" + Rx.authenticityToken;
+      }
       
       invokeHTTPService(httpService, responder);
     }
@@ -168,7 +184,7 @@ package org.restfulx.services.http {
       if (RxUtils.isEmpty(object["id"])) {
         var httpService:HTTPService = getHTTPService(object, nestedBy);
         httpService.method = URLRequestMethod.POST;
-        httpService.request = marshallToVO(object, recursive, metadata);
+        httpService.request = marshallToVO(object, recursive);
         sendOrUpload(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag, true);
       } else {
         update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
@@ -183,7 +199,7 @@ package org.restfulx.services.http {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
       httpService.headers = {'X-HTTP-Method-Override': 'PUT'};
-      httpService.request = marshallToVO(object, recursive, metadata);
+      httpService.request = marshallToVO(object, recursive);
       httpService.request["_method"] = "PUT";
       httpService.url = RxUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
       sendOrUpload(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag); 
@@ -204,7 +220,15 @@ package org.restfulx.services.http {
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
         httpService.url += "?" + urlParams;  
-      }      
+      }
+      
+      if (Rx.sessionToken) {
+        httpService.url = httpService.url + "?_swfupload_session_id=" + Rx.sessionToken;
+      }
+      
+      if (Rx.authenticityToken) {
+        httpService.url = httpService.url + "?authenticity_token=" + Rx.authenticityToken;
+      } 
 
       Rx.log.debug("sending request to URL:" + httpService.url + 
        " with method: " + httpService.method + " and content:" + 
@@ -235,8 +259,18 @@ package org.restfulx.services.http {
 
     protected function urlEncodeMetadata(metadata:Object = null):String {
       var result:String = "";
-      if (metadata == null) return result;
+      if (metadata == null) {
+        metadata = {};
+      }
       
+      var tokens:Object = {'_swfupload_session_id': Rx.sessionToken, 'authenticity_token': Rx.authenticityToken}
+      
+      for (var prop:String in tokens) {
+        if (!metadata.hasOwnProperty(prop) && tokens[prop] != null) {
+          metadata[prop] = tokens[prop];
+        }
+      }
+     
       for (var tag:String in metadata) {
         result += tag + "=" + encodeURI(RxUtils.uncast(metadata, tag)) + "&";
       }
@@ -261,9 +295,10 @@ package org.restfulx.services.http {
       request.url = httpService.url;
       request.method = httpService.method;
       request.data = payload;
-      
-      if (Rx.sessionToken) {
-        request.url = request.url + "?_swfupload_session_id=" + Rx.sessionToken;
+
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        request.url += "?" + urlParams;  
       }
       
       file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(event:DataEvent):void {
@@ -341,10 +376,11 @@ package org.restfulx.services.http {
       var request:URLRequest = new MultiPartRequestBuilder(payload).build();
       request.url = httpService.url;
       request.method = httpService.method;
-      
-      if (Rx.sessionToken) {
-        request.url = request.url + "?_swfupload_session_id=" + Rx.sessionToken;
-      }   
+
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        request.url += "?" + urlParams;  
+      } 
       
       var loader:URLLoader = new URLLoader();
       loader.addEventListener(Event.COMPLETE, function(event:Event):void {
@@ -386,6 +422,11 @@ package org.restfulx.services.http {
         ((service.request == null) ? "null" : "\r" + service.request.toString()));
         
       var instance:Object = this;
+
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        service.url += "?" + urlParams;  
+      }
 
       service.addEventListener(ResultEvent.RESULT, function(event:ResultEvent):void {
         onHttpResult(event);
@@ -439,18 +480,13 @@ package org.restfulx.services.http {
       }
     }
     
-    protected function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      var vo:Object = Rx.serializers.vo.marshall(object, recursive, metadata);
+    protected function marshallToVO(object:Object, recursive:Boolean = false):Object {
+      var vo:Object = Rx.serializers.vo.marshall(object, recursive);
       var result:Object = new Object;
       var localName:String = RxUtils.toSnakeCase(vo["clazz"]);
       delete vo["clazz"];
       for (var property:String in vo) {
-        if (property == "_metadata") {
-          for (var elm:String in vo[property]) {
-            var elmName:String = RxUtils.toSnakeCase(elm);
-            result["_metadata[" + elmName + "]"] = RxUtils.uncast(metadata, elm);
-          }
-        } else if (vo[property] != null) {
+        if (vo[property] != null) {
           result[localName + "[" + property + "]"] = vo[property];
         } else {
           /* we serialize nulls using empty strings for form-based submits */

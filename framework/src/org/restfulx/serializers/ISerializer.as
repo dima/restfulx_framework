@@ -40,9 +40,8 @@ package org.restfulx.serializers {
      *  
      * @param object object to marshall into serialized form
      * @param recursive flag indicating if entire object graph should be serialized inline
-     * @param metadata metadata that gets appended to the serialized object representation
      */
-    function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object;
+    function marshall(object:Object, recursive:Boolean = false):Object;
 
     /**
      * The reverse of marshall. Takes a serialized form and turns it into

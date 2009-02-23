@@ -72,8 +72,8 @@ package org.restfulx.services.http {
     /**
      * @see org.restfulx.services.IServiceProvider#marshall
      */
-    public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      return serializer.marshall(object, recursive, metadata);
+    public override function marshall(object:Object, recursive:Boolean = false):Object {
+      return serializer.marshall(object, recursive);
     }
 
     /**

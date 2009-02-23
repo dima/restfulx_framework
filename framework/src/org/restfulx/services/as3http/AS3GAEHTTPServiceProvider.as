@@ -65,11 +65,18 @@ package org.restfulx.services.as3http {
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
       if (RxUtils.isEmpty(object["id"])) {
         var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
+      
+        var urlParams:String = urlEncodeMetadata(metadata);
+        if (urlParams != "") {
+          url += "?" + urlParams;  
+        }
+        
         trace("sending create request to: " + url);
 
         var uri:URI = new URI(url);
+      
         getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
-          undoRedoFlag, true).postFormData(uri, [marshallToVO(object, recursive, metadata)]);
+          undoRedoFlag, true).postFormData(uri, [marshallToVO(object, recursive)]);
       } else {
         update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
       }
@@ -82,11 +89,17 @@ package org.restfulx.services.as3http {
       recursive:Boolean = false, undoRedoFlag:int = 0):void {      
       var url:String = rootUrl + RxUtils.nestResource(object, nestedBy);
       url = RxUtils.addObjectIdToResourceURL(url, object);
+      
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        url += "?" + urlParams;  
+      }
+        
       trace("sending update request to: " + url);
 
       var uri:URI = new URI(url);
       getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
-          undoRedoFlag).putFormData(uri, [marshallToVO(object, recursive, metadata)]);
+          undoRedoFlag).putFormData(uri, [marshallToVO(object, recursive)]);
     }
   }
 }

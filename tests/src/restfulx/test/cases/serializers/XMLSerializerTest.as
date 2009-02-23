@@ -117,18 +117,6 @@ package restfulx.test.cases.serializers {
       assertEquals("true", marshalled.available);
     }
     
-    public function testObjectMarshallingWithMetadata():void {
-      var simpleProperty:SimpleProperty = getNewSimpleProperty();
-      var metadata:Object = {foo: 'bar', hello: 'world'};
-      var marshalled:XML = xml.marshall(simpleProperty, false, metadata) as XML;
-      assertEquals("10.05", marshalled.quantity);
-      assertEquals(0, XML(marshalled.created_at).text().length());
-      assertEquals("2", marshalled.amount);
-      assertEquals("true", marshalled.available);
-      assertEquals("world", marshalled._metadata.hello);
-      assertEquals("bar", marshalled._metadata.foo);
-    }
-    
     public function testObjectMarshallingWithSetRelationships():void {
       var task:Task = new Task;
       task.id = "21";

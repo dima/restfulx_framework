@@ -38,8 +38,8 @@ package org.restfulx.serializers {
     /**
      *  @inheritDoc
      */
-    public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      var marshalled:Object = Rx.serializers.vo.marshall(object, recursive, metadata);
+    public override function marshall(object:Object, recursive:Boolean = false):Object {
+      var marshalled:Object = Rx.serializers.vo.marshall(object, recursive);
       for (var prop:String in marshalled) {
         if (marshalled[prop] == null) {
           marshalled[prop] = "";

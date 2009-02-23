@@ -61,7 +61,7 @@ package org.restfulx.serializers {
      * @see org.restfulx.serializers.ISerializer#marshall
      * @copy org.restfulx.serializers.ISerializer#marshall
      */
-    public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
+    public function marshall(object:Object, recursive:Boolean = false):Object {
       return object;
     }
     

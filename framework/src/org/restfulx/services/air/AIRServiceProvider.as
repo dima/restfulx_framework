@@ -133,8 +133,8 @@ package org.restfulx.services.air {
     /**
      * @see org.restfulx.services.IServiceProvider#marshall
      */
-    public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      return Rx.serializers.vo.marshall(object, recursive, metadata);
+    public function marshall(object:Object, recursive:Boolean = false):Object {
+      return Rx.serializers.vo.marshall(object, recursive);
     }
 
     /**

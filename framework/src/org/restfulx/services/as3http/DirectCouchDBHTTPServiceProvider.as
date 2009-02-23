@@ -106,8 +106,8 @@ package org.restfulx.services.as3http {
     /**
      * @see org.restfulx.services.IServiceProvider#marshall
      */
-    public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      return marshallToJSON(object, recursive, metadata);
+    public function marshall(object:Object, recursive:Boolean = false):Object {
+      return marshallToJSON(object, recursive);
     }
     
     /**
@@ -316,8 +316,8 @@ package org.restfulx.services.as3http {
       return client;      
     }
 
-    protected function marshallToJSON(object:Object, recursive:Boolean = false, metadata:Object = null):String {
-      var vo:Object = Rx.serializers.vo.marshall(object, recursive, metadata);
+    protected function marshallToJSON(object:Object, recursive:Boolean = false):String {
+      var vo:Object = Rx.serializers.vo.marshall(object, recursive);
       if (object.hasOwnProperty("id") && !RxUtils.isEmpty(object["id"])) {
         vo["_id"] = object["id"];
       }

@@ -42,8 +42,8 @@ package org.restfulx.serializers {
     /**
      *  @inheritDoc
      */
-    public override function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object {
-      return marshallToXML(object, recursive, metadata);
+    public override function marshall(object:Object, recursive:Boolean = false):Object {
+      return marshallToXML(object, recursive);
     }
 
     /**
@@ -137,17 +137,7 @@ package org.restfulx.serializers {
         }
       }
 
-      var extras:String = "";
-      if (metadata != null) {
-        extras = "<_metadata>";
-        for (var elm:String in metadata) {
-          var elmName:String = RxUtils.toSnakeCase(elm);
-          extras += "<" + elmName + ">" + RxUtils.uncast(metadata, elm) + "</" + elmName + ">"; 
-        }
-        extras += "</_metadata>";
-      }
-
-      result = "<" + localName + ">" + vars.join("") + extras + "</" + localName + ">";
+      result = "<" + localName + ">" + vars.join("") + "</" + localName + ">";
       
       return new XML(result);
     }

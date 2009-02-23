@@ -120,8 +120,13 @@ package org.restfulx.services.as3http {
 
         var uri:URI = new URI(url);
 
+        var urlParams:String = urlEncodeMetadata(metadata);
+        if (urlParams != "") {
+          url += "?" + urlParams;  
+        }
+
         var data:ByteArray = new ByteArray();
-        var serialized:String = serializer.marshall(object, recursive, metadata).toString();
+        var serialized:String = serializer.marshall(object, recursive).toString();
         data.writeUTFBytes(serialized);
         data.position = 0;
       
@@ -143,8 +148,13 @@ package org.restfulx.services.as3http {
 
       var uri:URI = new URI(url);
 
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        url += "?" + urlParams;  
+      }
+
       var data:ByteArray = new ByteArray();
-      var serialized:String = serializer.marshall(object, recursive, metadata).toString();
+      var serialized:String = serializer.marshall(object, recursive).toString();
       data.writeUTFBytes(serialized);
       data.position = 0;
       
