@@ -240,6 +240,11 @@ package org.restfulx {
      * important for file uploads.
      */
     public static var sessionToken:String;
+    
+    /** 
+     * Stores current authenticity token.
+     */
+    public static var authenticityToken:String;
         
     /** default error namespace used by service providers */
     public static const DEFAULT_ERROR_FIELD:String = ":base";
