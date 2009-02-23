@@ -140,14 +140,6 @@ package org.restfulx.services.http {
       if (urlParams != "") {
         httpService.url += "?" + urlParams;  
       }
-
-      if (Rx.sessionToken) {
-        httpService.url = httpService.url + "?_swfupload_session_id=" + Rx.sessionToken;
-      }
-      
-      if (Rx.authenticityToken) {
-        httpService.url = httpService.url + "?authenticity_token=" + Rx.authenticityToken;
-      }
       
       invokeHTTPService(httpService, responder);
     }
@@ -163,14 +155,6 @@ package org.restfulx.services.http {
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
         httpService.url += "?" + urlParams;  
-      }
-
-      if (Rx.sessionToken) {
-        httpService.url = httpService.url + "?_swfupload_session_id=" + Rx.sessionToken;
-      }
-      
-      if (Rx.authenticityToken) {
-        httpService.url = httpService.url + "?authenticity_token=" + Rx.authenticityToken;
       }
       
       invokeHTTPService(httpService, responder);
@@ -221,14 +205,6 @@ package org.restfulx.services.http {
       if (urlParams != "") {
         httpService.url += "?" + urlParams;  
       }
-      
-      if (Rx.sessionToken) {
-        httpService.url = httpService.url + "?_swfupload_session_id=" + Rx.sessionToken;
-      }
-      
-      if (Rx.authenticityToken) {
-        httpService.url = httpService.url + "?authenticity_token=" + Rx.authenticityToken;
-      } 
 
       Rx.log.debug("sending request to URL:" + httpService.url + 
        " with method: " + httpService.method + " and content:" + 
