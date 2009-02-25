@@ -102,10 +102,12 @@ package org.restfulx.controllers {
      *  
      *  @param clazz RxModel clazz to do the find on
      *  @param conditions list of conditions
+     *  @param includeRelationships additional relationships to bring into scope
      *  @param unmarshall boolean indiciating if the result should be unmarshalled into RxModel instances
      *  @param cacheBy RESTful cache method to simulate
      */
-    public function findAll(clazz:Class, conditions:Array = null, unmarshall:Boolean = true, cacheBy:String = "index"):void {
+    public function findAll(clazz:Class, conditions:Array = null, includeRelationships:Array = null, 
+      unmarshall:Boolean = true, cacheBy:String = "index"):void {
       var fqn:String = Rx.models.state.types[clazz];
       
       var text:String = "SELECT * FROM " + Rx.models.state.controllers[fqn] + " WHERE sync != 'D'";

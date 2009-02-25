@@ -28,6 +28,7 @@ package org.restfulx.utils {
   import flash.utils.getQualifiedClassName;
   
   import mx.collections.ArrayCollection;
+  import mx.collections.SortField;
   import mx.utils.StringUtil;
   
   /**
@@ -74,6 +75,14 @@ package org.restfulx.utils {
     
     /** computed model inheritance heirarchy */
     public var parents:Dictionary;
+    
+    private var sortOptions:Object = {
+      caseSensitive: true,
+      caseInsensitive: false,
+      descending: true,
+      ascending: false,
+      numeric: true
+    }
 
     /**
      * Computes all relevant metadata for the models passed in as argument.
@@ -196,6 +205,7 @@ package org.restfulx.utils {
           var referAs:String;
           
           var conditions:Object;
+          var sorts:Object;
           var dependencies:Array = new Array;
           var descriptor:XML;
           
@@ -221,6 +231,7 @@ package org.restfulx.utils {
               // hook up N-N = has_many(:through) relationships
               extractHasManyThroughRelationships(node, descriptor, fqn);
               conditions = extractConditions(node, descriptor, fqn);
+              sorts = extractSorts(node, descriptor, fqn);
             }
             
             if (descriptor) {
@@ -244,7 +255,7 @@ package org.restfulx.utils {
 
           if (RxUtils.isBelongsTo(node)) extractDependencies(dependencies, node, descriptor, refType);
 
-          refs[fqn][refName] = {type: refType, referAs: referAs, conditions: conditions};
+          refs[fqn][refName] = {type: refType, referAs: referAs, conditions: conditions, sorts: sorts};
           
           for each (var dependency:String in dependencies) {
             if (controllers[dependency] && dependency != fqn && (eager[fqn] as Array).indexOf(dependency) == -1) {
@@ -301,6 +312,25 @@ package org.restfulx.utils {
         result[key] = value;
       }
       return result;
+    }
+    
+    private function extractSorts(node:XML, descriptor:XML, fqn:String):Object {
+      var sorts:String = descriptor.arg.(@key == "sort").@value.toString();
+      
+      if (RxUtils.isEmpty(sorts)) return null;
+      
+      var result:Array = new Array;
+      for each (var sort:String in sorts.split(",")) {
+        sort = StringUtil.trim(sort);
+        var keyValuePair:Array = sort.split(":");
+        var key:String = keyValuePair[0];
+        var value:String = keyValuePair[1];
+        var caseInsensitive:Boolean = value.indexOf("caseInsensitive") != -1;
+        var descending:Boolean = value.indexOf("descending") != -1;
+        var numeric:Boolean = value.indexOf("numeric") != -1;
+        result.push(new SortField(key, caseInsensitive, descending, numeric));
+      }
+      return result; 
     }
   }
 }
