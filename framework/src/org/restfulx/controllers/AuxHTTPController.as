@@ -22,7 +22,9 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.controllers {
-  import mx.collections.ItemResponder;
+
+  import mx.collections.ItemResponder;  
+  import mx.managers.CursorManager;
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.http.HTTPService;
@@ -263,7 +265,9 @@ package org.restfulx.controllers {
       Rx.log.debug("sending request to URL:" + service.url + " with method: " + 
         service.method + " and content:" + ((service.request == null) ? 
         "null" : "\r" + ObjectUtil.toString(service.request)));      
-      
+
+      CursorManager.setBusyCursor();
+
       var call:AsyncToken = service.send();
       if (responder) {
         call.addResponder(responder);
@@ -271,6 +275,7 @@ package org.restfulx.controllers {
     }
         
     protected function unmarshall(data:Object):Object {
+      CursorManager.removeBusyCursor();
       try {
         return serializer.unmarshall(data.result);
       } catch (e:Error) {
