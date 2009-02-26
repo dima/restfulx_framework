@@ -7,6 +7,7 @@
 # 6. git commit
 # 7. git checkout master
 
+
 TEST_APP_NAME = 'TestApp.mxml'
 ROOT_DIR = File.dirname(__FILE__)
 
