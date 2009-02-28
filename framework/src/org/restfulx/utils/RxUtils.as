@@ -457,6 +457,13 @@ package org.restfulx.utils {
           formatter.formatString = "YYYY-MM-DD";
         }
         return formatter.format(object[property] as Date);
+      } else if (object[property] is Number) {
+        var num:Number = Number(object[property]);
+        if (isNaN(num)) {
+          return null;
+        } else {
+          return num.toString();
+        }
       } else {
         return String(object[property]);
       }

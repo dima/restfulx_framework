@@ -61,6 +61,7 @@
                     
         var testData:Object = {
           simple_properties: simple_properties,
+          ignored_properties: ignored_properties,
           projects: projects,
           tasks: tasks,
           contractors: contractors,
@@ -188,6 +189,8 @@
        
        private function addIntegrationTests(ts:TestSuite):void {
          ts.addTest(new AIRServiceProviderTest("testIndexWithMetadata"));
+         ts.addTest(new AIRServiceProviderTest("testIndexWithIgnored"));
+         ts.addTest(new AIRServiceProviderTest("testCreateWithIgnored"));
 //         ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
 //        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
 //        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));
@@ -203,6 +206,9 @@
   </mx:Script>
   <!-- basic properties -->
   <mx:XML id="simple_properties" source="restfulx/test/responses/simple_properties.xml"/>
+  
+  <!-- basic properties with ignores defined -->
+  <mx:XML id="ignored_properties" source="restfulx/test/responses/ignored_properties.xml"/>
   
   <!-- basic relationships -->
   <mx:XML id="projects" source="restfulx/test/responses/projects.xml"/>

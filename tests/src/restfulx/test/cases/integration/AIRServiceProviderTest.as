@@ -28,6 +28,7 @@ package restfulx.test.cases.integration {
   import org.restfulx.services.air.AIRServiceProvider;
   import org.restfulx.utils.TypedArray;
   
+  import restfulx.test.models.IgnoredProperty;
   import restfulx.test.models.Project;
 
   public class AIRServiceProviderTest extends TestCase {
@@ -39,11 +40,11 @@ package restfulx.test.cases.integration {
     public function testIndexWithMetadata():void {
       Rx.models.reset(null, true);
 
-      Rx.models.index(Project, {onSuccess: onSuccess, onFailure: onFailure, 
+      Rx.models.index(Project, {onSuccess: onIndexMetadataSuccess, onFailure: onFailure, 
         metadata: {name : '4'}, targetServiceId: AIRServiceProvider.ID});
     }
 
-    private function onSuccess(result:Object):void {
+    private function onIndexMetadataSuccess(result:Object):void {
       var data:TypedArray = TypedArray(result);
       assertEquals(1, data.length);
       assertEquals("Project4NameString", data[0].name);
@@ -51,6 +52,31 @@ package restfulx.test.cases.integration {
     
     private function onFailure(result:Object):void {
       fail();
+    }
+    
+    public function testIndexWithIgnored():void {
+      Rx.models.reset(null, true);
+      Rx.models.index(IgnoredProperty, {onSuccess: onIndexIgnoredSuccess, onFailure: onFailure, 
+        targetServiceId: AIRServiceProvider.ID});
+    }
+    
+    private function onIndexIgnoredSuccess(result:Object):void {
+      var data:TypedArray = TypedArray(result);
+      assertEquals(null, data[0].name);
+    }
+    
+    public function testCreateWithIgnored():void {
+      var ip:IgnoredProperty = new IgnoredProperty;
+      ip.available = true;
+      ip.amount = 20;
+      ip.name = "Foobar";
+      ip.create({onSuccess: onCreateIgnoredSuccess, onFailure: onFailure, targetServiceId: AIRServiceProvider.ID});
+    }
+    
+    private function onCreateIgnoredSuccess(result:IgnoredProperty):void {
+      assertEquals(20, result.amount);
+      assertTrue(result.available);
+      assertNull(result.name);
     }
   }
 }

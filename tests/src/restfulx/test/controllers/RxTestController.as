@@ -38,7 +38,7 @@ package restfulx.test.controllers {
     public var testCommandData:String;
     
     public static var models:Array = [Post, Account, Actor, Author, BillableWeek, Book, Category, Client, Contractor, Customer,
-     Employee, Location, Movie, PayableAccount, Project, ReceivableAccount, SimpleProperty, Store, Task, Timesheet,
+     Employee, Location, Movie, PayableAccount, Project, ReceivableAccount, SimpleProperty, IgnoredProperty, Store, Task, Timesheet,
      Article, Section, CouchUser, CouchAddress, Contact, Key, Kv, User, UserGroup, FacebookUser, Nothing]; /* Models */
           
     public static var commands:Array = [TestCommand];

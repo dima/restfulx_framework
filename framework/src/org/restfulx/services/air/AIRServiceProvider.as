@@ -216,7 +216,7 @@ package org.restfulx.services.air {
         var snakeName:String = RxUtils.toSnakeCase(localName);
   
         if (RxUtils.isInvalidPropertyType(type) || RxUtils.isInvalidPropertyName(localName) 
-          || RxUtils.isHasOne(node)) continue;
+          || RxUtils.isHasOne(node) || RxUtils.isIgnored(node)) continue;
                     
         if (RxUtils.isBelongsTo(node)) {
           if (RxUtils.isPolymorphicBelongsTo(node)) {
@@ -280,7 +280,7 @@ package org.restfulx.services.air {
         var snakeName:String = RxUtils.toSnakeCase(localName);
   
         if (RxUtils.isInvalidPropertyType(type) || RxUtils.isInvalidPropertyName(localName) 
-          || RxUtils.isHasOne(node)) continue;
+          || RxUtils.isHasOne(node) || RxUtils.isIgnored(node)) continue;
   
         if (RxUtils.isBelongsTo(node)) {
           if (RxUtils.isPolymorphicBelongsTo(node)) {
@@ -447,7 +447,7 @@ package org.restfulx.services.air {
         var type:String = node.@type;
         
         if (RxUtils.isInvalidPropertyType(type) || RxUtils.isInvalidPropertyName(node.@name) 
-          || RxUtils.isHasOne(node)) continue;
+          || RxUtils.isHasOne(node) || RxUtils.isIgnored(node)) continue;
         
         if (RxUtils.isBelongsTo(node)) {
           if (RxUtils.isPolymorphicBelongsTo(node)) {
