@@ -22,6 +22,8 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.models {
+  import flash.events.EventDispatcher;
+  
   import org.restfulx.Rx;
 
   [Bindable]
@@ -29,7 +31,7 @@ package org.restfulx.models {
    * Encapsulates properties common to all model objects and wraps around a few
    * Rx.models.* methods to shorten access.
    */
-  public class RxModel {
+  public class RxModel extends EventDispatcher {
     private var _label:String;
 
     /** all models have an id. this is typically unique per class of models */
@@ -137,7 +139,7 @@ package org.restfulx.models {
     /**
      * Default toString implementation for models
      */
-    public function toString():String {
+    override public function toString():String {
       return this[_label] == null ? "" : this[_label].toString();
     }
   }

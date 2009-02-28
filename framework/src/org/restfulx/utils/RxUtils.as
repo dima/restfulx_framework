@@ -212,9 +212,9 @@ package org.restfulx.utils {
      * @param model model instance to clean-up references for
      * @param fqn FullyQualifiedName of the model
      */
-    public static function cleanupModelReferences(model:Object, fqn:String):void {
+    public static function cleanupModelReferences(model:Object, fqn:String, singleReference:String = ""):void {
       for (var reference:String in Rx.models.state.refs[fqn]) {
-        if (ObjectUtil.hasMetadata(model, reference, "BelongsTo") && model[reference] != null) {
+        if (ObjectUtil.hasMetadata(model, reference, "BelongsTo") && model[reference] != null && (RxUtils.isEmpty(singleReference) || singleReference == reference)) {
           var referAs:String = Rx.models.state.refs[fqn][reference]["referAs"];
           var referAsPlural:String = referAs;
           var referAsSingle:String = referAs;
@@ -238,6 +238,7 @@ package org.restfulx.utils {
               var items:ModelsCollection = ModelsCollection(model[reference][ref]);
               hasManyRel = true;
               if (items.hasItem(model)) {
+              	Rx.log.debug("remove :" + fqn + " from " + reference + "." + ref);
                 items.removeItem(model);
               }
             }

@@ -139,7 +139,7 @@ package org.restfulx.serializers {
           if (RxUtils.isEmpty(refId)) {
             Rx.log.warn("reference id :" + fqn + "." + targetName + " is empty, setting it to null.");
             if (updatingExistingReference) {
-              RxUtils.cleanupModelReferences(object, fqn);
+              RxUtils.cleanupModelReferences(object, fqn, targetName);
             }
             object[targetName] = null;
             return;
@@ -151,7 +151,7 @@ package org.restfulx.serializers {
           }
   
           if (updatingExistingReference && object[targetName] != ref) {
-            RxUtils.cleanupModelReferences(object, fqn);
+            RxUtils.cleanupModelReferences(object, fqn, targetName);
           }
           
           var pluralName:String = state.refs[fqn][targetName]["referAs"];

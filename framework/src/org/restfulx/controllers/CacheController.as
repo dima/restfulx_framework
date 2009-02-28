@@ -28,6 +28,10 @@ package org.restfulx.controllers {
   
   import org.restfulx.Rx;
   import org.restfulx.collections.ModelsCollection;
+  import org.restfulx.events.AfterCreateEvent;
+  import org.restfulx.events.AfterDestroyEvent;
+  import org.restfulx.events.AfterSaveEvent;
+  import org.restfulx.events.AfterUpdateEvent;
   import org.restfulx.events.CacheUpdateEvent;
   import org.restfulx.models.RxModel;
   import org.restfulx.services.GenericServiceErrors;
@@ -105,6 +109,8 @@ package org.restfulx.controllers {
       var fqn:String = getQualifiedClassName(model);
       Rx.models.errors = new GenericServiceErrors;
       Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.CREATE, model));
+      model.dispatchEvent(new AfterCreateEvent);
+      model.dispatchEvent(new AfterSaveEvent);
     }
 
     /**
@@ -115,7 +121,9 @@ package org.restfulx.controllers {
     public function update(model:RxModel):void {
       var fqn:String = getQualifiedClassName(model);
       Rx.models.errors = new GenericServiceErrors;
-      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.UPDATE, model));            
+      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.UPDATE, model));    
+      model.dispatchEvent(new AfterUpdateEvent);
+      model.dispatchEvent(new AfterSaveEvent);        
     }
 
     /**
@@ -128,7 +136,8 @@ package org.restfulx.controllers {
       var fqn:String = getQualifiedClassName(model);
       RxUtils.cleanupModelReferences(model, fqn);
       ModelsCollection(data[fqn]).removeItem(model);
-      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.DESTROY));           
+      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.DESTROY));  
+      model.dispatchEvent(new AfterDestroyEvent);         
     }
   }
 }
