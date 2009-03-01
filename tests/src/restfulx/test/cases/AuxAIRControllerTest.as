@@ -29,6 +29,7 @@ package restfulx.test.cases {
   
   import restfulx.test.models.Project;
   import restfulx.test.models.SimpleProperty;
+  import restfulx.test.models.Task;
 
   public class AuxAIRControllerTest extends TestCase {
         
@@ -43,7 +44,7 @@ package restfulx.test.cases {
     
     public function testFindAllWithIncludes():void {
       var controller:AuxAIRController = new AuxAIRController(onFindAllWithIncludes);
-      controller.findAll(Project, [], ["tasks"]);
+      controller.findAll(Project, ["name LIKE :name", {":name" : "%4%"}], ["tasks"]);
     }
     
     private function onFindAll(result:Object):void {
@@ -54,7 +55,13 @@ package restfulx.test.cases {
     }
     
     private function onFindAllWithIncludes(result:Object):void {
-      trace(result);
+      assertTrue(result is TypedArray);
+      assertEquals(1, TypedArray(result).length);
+      
+      var project:Project = (result as TypedArray)[0];
+      assertEquals("Project4NameString", project.name);
+      assertEquals(1, project.tasks.length);
+      assertEquals("Task4NameString", Task(project.tasks.getItemAt(0)).name);
     }
   }
 }
