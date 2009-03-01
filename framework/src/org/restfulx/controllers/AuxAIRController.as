@@ -33,9 +33,7 @@ package org.restfulx.controllers {
   import mx.rpc.events.ResultEvent;
   
   import org.restfulx.Rx;
-  import org.restfulx.models.RxModel;
   import org.restfulx.utils.RxUtils;
-  import org.restfulx.utils.TypedArray;
   
   /**
    * Custom AIR controller that allows performing arbitrary operations (as 
@@ -123,7 +121,8 @@ package org.restfulx.controllers {
           statement.parameters[param] = params[param];
         }
       }
-      execute(fqn, statement, unmarshall, cacheBy);
+      
+      execute(fqn, statement, includeRelationships, unmarshall, cacheBy);
     }
     
     /**
@@ -139,9 +138,10 @@ package org.restfulx.controllers {
      *  @param cacheBy RESTful cache method to simulate
      *  
      */
-    public function findAllBySQL(clazz:Class, sql:String, unmarshall:Boolean = true, cacheBy:String = "index"):void {
+    public function findAllBySQL(clazz:Class, sql:String, includeRelationships:Array = null, unmarshall:Boolean = true, 
+      cacheBy:String = "index"):void {
       var fqn:String = Rx.models.state.types[clazz];
-      execute(fqn, getSQLStatement(sql), unmarshall, cacheBy);
+      execute(fqn, getSQLStatement(sql), includeRelationships, unmarshall, cacheBy);
     }
 
     protected function initializeConnection(databaseFile:File):void {
@@ -199,8 +199,8 @@ package org.restfulx.controllers {
       }
     }
 
-    private function execute(fqn:String, statement:SQLStatement, unmarshall:Boolean = false, 
-      cacheBy:String = null):void {
+    private function execute(fqn:String, statement:SQLStatement, includeRelationships:Array = null, 
+      unmarshall:Boolean = false, cacheBy:String = null):void {
         
       var responder:ItemResponder = null;
       if (!RxUtils.isEmpty(cacheBy)) {
@@ -229,7 +229,11 @@ package org.restfulx.controllers {
         var data:Array = statement.getResult().data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
+          if (includeRelationships) {
+            processIncludedRelationships(includeRelationships, fqn, data); 
+          }
           result = data;
+
         } else {
           // nothing in the DB
           result = new Array;
@@ -237,6 +241,31 @@ package org.restfulx.controllers {
         invokeResponderResult(responder, result);
       } catch (e:Error) {
         responder.fault(e);
+      }
+    }
+    
+    private function processIncludedRelationships(relationships:Array, fqn:String, data:Array):void {
+      for each (var relationship:String in relationships) {
+        var target:String = Rx.models.state.refs[fqn][relationship]["type"];
+        if (target) {
+          for each (var item:Object in data) {
+            var tableName:String = Rx.models.state.controllers[target];
+            var statement:SQLStatement = getSQLStatement("SELECT * FROM " + tableName + 
+              " WHERE sync != 'D' AND " + Rx.models.state.names[fqn]["single"] + "_id = '" + item["id"] + "'");
+            try {
+              statement.execute();
+              
+              var result:Array = statement.getResult().data;
+              if (result && result.length > 0) {
+                result[0]["clazz"] = target.split("::")[1];
+              }
+              
+              item[relationship] = result;
+            } catch (e:Error) {
+              throw e;
+            }
+          }
+        }
       }
     }
   }

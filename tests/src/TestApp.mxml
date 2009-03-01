@@ -132,6 +132,7 @@
         }
         
         ts.addTest(new AuxAIRControllerTest("testFindAll"));
+        ts.addTest(new AuxAIRControllerTest("testFindAllWithIncludes"));
 
         ts.addTest(new RxUtilTest("testResourceNesting"));
         ts.addTest(new RxUtilTest("testCamelCasing"));

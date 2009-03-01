@@ -214,7 +214,8 @@ package org.restfulx.utils {
      */
     public static function cleanupModelReferences(model:Object, fqn:String, singleReference:String = ""):void {
       for (var reference:String in Rx.models.state.refs[fqn]) {
-        if (ObjectUtil.hasMetadata(model, reference, "BelongsTo") && model[reference] != null && (RxUtils.isEmpty(singleReference) || singleReference == reference)) {
+        if (ObjectUtil.hasMetadata(model, reference, "BelongsTo") && model[reference] != null && 
+          (RxUtils.isEmpty(singleReference) || singleReference == reference)) {
           var referAs:String = Rx.models.state.refs[fqn][reference]["referAs"];
           var referAsPlural:String = referAs;
           var referAsSingle:String = referAs;
