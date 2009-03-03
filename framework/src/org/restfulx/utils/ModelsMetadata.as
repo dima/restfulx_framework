@@ -203,6 +203,7 @@ package org.restfulx.utils {
           var refType:String = node.@type;
           var refName:String = node.@name;
           var referAs:String;
+          var relType:String;
           
           var conditions:Object;
           var sorts:Object;
@@ -219,15 +220,18 @@ package org.restfulx.utils {
               descriptor = RxUtils.getAttributeAnnotation(node, "BelongsTo")[0];
               if (descriptor) {
                 referAs = descriptor.arg.(@key == "referAs").@value.toString();
+                relType = "BelongsTo";
               }
             } else if (RxUtils.isHasOne(node)) {
               descriptor = RxUtils.getAttributeAnnotation(node, "HasOne")[0];
               conditions = extractConditions(node, descriptor, fqn);
+              relType = "HasOne";
             } else if (RxUtils.isHasMany(node)) {
               descriptor = RxUtils.getAttributeAnnotation(node, "HasMany")[0];
               if (refName == "children") {
                 refType = fqn;
               }
+              relType = "HasMany";
               // hook up N-N = has_many(:through) relationships
               extractHasManyThroughRelationships(node, descriptor, fqn);
               conditions = extractConditions(node, descriptor, fqn);
@@ -255,7 +259,7 @@ package org.restfulx.utils {
 
           if (RxUtils.isBelongsTo(node)) extractDependencies(dependencies, node, descriptor, refType);
 
-          refs[fqn][refName] = {type: refType, referAs: referAs, conditions: conditions, sorts: sorts};
+          refs[fqn][refName] = {type: refType, referAs: referAs, conditions: conditions, sorts: sorts, relType: relType};
           
           for each (var dependency:String in dependencies) {
             if (controllers[dependency] && dependency != fqn && (eager[fqn] as Array).indexOf(dependency) == -1) {

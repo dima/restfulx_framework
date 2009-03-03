@@ -99,14 +99,25 @@ package org.restfulx.controllers {
      *  controller.findAll(SimpleProperty, ["name LIKE :name AND available = true", {":name": "%2%"}]);
      *  </listing>
      *  
-     *  @param clazz RxModel clazz to do the find on
+     *  @param clazz RxModel clazz to do the find on or the options object
      *  @param conditions list of conditions
      *  @param includeRelationships additional relationships to bring into scope
      *  @param unmarshall boolean indiciating if the result should be unmarshalled into RxModel instances
      *  @param cacheBy RESTful cache method to simulate
      */
-    public function findAll(clazz:Class, conditions:Array = null, includeRelationships:Array = null, 
+    public function findAll(optsOrClazz:Object, conditions:Array = null, includeRelationships:Array = null, 
       unmarshall:Boolean = true, cacheBy:String = "index"):void {
+      var clazz:Class = null;
+      if (optsOrClazz is Class) {
+        clazz = Class(optsOrClazz);
+      } else {
+        if (optsOrClazz.hasOwnProperty("clazz")) clazz = optsOrClazz["clazz"];
+        if (optsOrClazz.hasOwnProperty("conditions")) conditions = optsOrClazz["conditions"];
+        if (optsOrClazz.hasOwnProperty("includeRelationships")) includeRelationships = optsOrClazz["includeRelationships"];
+        if (optsOrClazz.hasOwnProperty("unmarshall")) unmarshall = optsOrClazz["unmarshall"];
+        if (optsOrClazz.hasOwnProperty("cacheBy")) cacheBy = optsOrClazz["cacheBy"];
+      }
+
       var fqn:String = Rx.models.state.types[clazz];
       
       var text:String = "SELECT * FROM " + Rx.models.state.controllers[fqn] + " WHERE sync != 'D'";
@@ -132,15 +143,25 @@ package org.restfulx.controllers {
      *  
      *  @see #findAll
      *  
-     *  @param clazz RxModel clazz to do the find on
+     *  @param clazz RxModel clazz to do the find on or the options object
      *  @param sql the SQL query to run
      *  @param conditions list of conditions
      *  @param unmarshall boolean indiciating if the result should be unmarshalled into RxModel instances
      *  @param cacheBy RESTful cache method to simulate
      *  
      */
-    public function findAllBySQL(clazz:Class, sql:String, includeRelationships:Array = null, unmarshall:Boolean = true, 
+    public function findAllBySQL(optsOrClazz:Class, sql:String, includeRelationships:Array = null, unmarshall:Boolean = true, 
       cacheBy:String = "index"):void {
+      var clazz:Class = null;
+      if (optsOrClazz is Class) {
+        clazz = Class(optsOrClazz);
+      } else {
+        if (optsOrClazz.hasOwnProperty("clazz")) clazz = optsOrClazz["clazz"];
+        if (optsOrClazz.hasOwnProperty("sql")) sql = optsOrClazz["sql"];
+        if (optsOrClazz.hasOwnProperty("includeRelationships")) includeRelationships = optsOrClazz["includeRelationships"];
+        if (optsOrClazz.hasOwnProperty("unmarshall")) unmarshall = optsOrClazz["unmarshall"];
+        if (optsOrClazz.hasOwnProperty("cacheBy")) cacheBy = optsOrClazz["cacheBy"];
+      }
       var fqn:String = Rx.models.state.types[clazz];
       execute(fqn, getSQLStatement(sql), includeRelationships, unmarshall, cacheBy);
     }
@@ -248,6 +269,7 @@ package org.restfulx.controllers {
     private function processIncludedRelationships(relationships:Array, fqn:String, data:Array):void {
       for each (var relationship:String in relationships) {
         var target:String = Rx.models.state.refs[fqn][relationship]["type"];
+        var relType:String = Rx.models.state.refs[fqn][relationship]["relType"];
         if (target) {
           for each (var item:Object in data) {
             var tableName:String = Rx.models.state.controllers[target];
@@ -261,7 +283,11 @@ package org.restfulx.controllers {
                 result[0]["clazz"] = target.split("::")[1];
               }
               
-              item[relationship] = result;
+              if (relType == "HasMany") {
+                item[relationship] = result;
+              } else if (result && result.length > 0) {
+                item[relationship] = result[0];
+              }
             } catch (e:Error) {
               throw e;
             }
