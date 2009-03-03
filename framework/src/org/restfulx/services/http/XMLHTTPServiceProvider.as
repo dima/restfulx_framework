@@ -239,7 +239,7 @@ package org.restfulx.services.http {
         metadata = {};
       }
       
-      var tokens:Object = {'_swfupload_session_id': Rx.sessionToken, 'authenticity_token': Rx.authenticityToken}
+      var tokens:Object = {'_session_id': Rx.sessionToken, 'authenticity_token': Rx.authenticityToken}
       
       for (var prop:String in tokens) {
         if (!metadata.hasOwnProperty(prop) && tokens[prop] != null) {
