@@ -9,6 +9,7 @@
   </compiler>
   <include-classes>
     <class>org.restfulx.Rx</class>
+    <class>org.restfulx.XRx</class>
     <class>org.restfulx.collections.ModelsCollection</class>
     <class>org.restfulx.collections.RxCollection</class>
     <class>org.restfulx.commands.CommandsEventDispatcher</class>

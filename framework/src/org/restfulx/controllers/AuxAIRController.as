@@ -51,6 +51,7 @@ package org.restfulx.controllers {
      * @param optsOrOnResult can be either an anonymous object of options or a result handler 
      *  function.
      * @param onFault function to call if there was an error or if unmarshalling fails
+     * @param dbFile to use (defaults to Rx.airDatabaseName)
      */
     public function AuxAIRController(optsOrOnResult:Object = null, onFault:Function = null, dbFile:File = null) {
       if (optsOrOnResult == null) optsOrOnResult = {};

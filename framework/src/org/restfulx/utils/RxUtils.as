@@ -49,7 +49,7 @@ package org.restfulx.utils {
       "flash.net::FileReferenceList",
       "org.restfulx.collections::ModelsCollection",
       "org.restfulx.collections::RxCollection",
-      "org.restfulx.models::RxFileReference"
+      "org.restfulx.utils::RxFileReference"
     ];
     
     private static const RESERVED_NAMES:Array = [
