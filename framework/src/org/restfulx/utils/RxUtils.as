@@ -525,6 +525,25 @@ package org.restfulx.utils {
     }
     
     /**
+     * Checks to see if any of the specified properties contain given text
+     *  
+     * @param text the text string to match
+     * @param item object to check
+     * @param properties an array of item properties to check against
+     *
+     * @return true if any of the properties match text, false otherwise
+     */
+    public static function itemMatches(text:String, item:Object, properties:Array):Boolean {
+      var regexp:RegExp = new RegExp(text, "i");
+      for each (var elm:String in properties) {
+        if (item.hasOwnProperty(elm) && item[elm] != null && (item[elm]).toString().search(regexp) != -1) {
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    /**
      * Checks to see if any of the arguments is empty or null
      */
     public static function isAnyEmpty(... args):Boolean {
