@@ -241,6 +241,11 @@ package org.restfulx {
      */
     public static var sessionToken:String;
     
+    /**
+     * Stores any extra HTTP headers that needs to be sent to the backend
+     */
+    public static var customHttpHeaders:Object;
+    
     /** 
      * Stores current authenticity token.
      */
