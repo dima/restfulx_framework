@@ -238,6 +238,7 @@ package org.restfulx.controllers {
       service.resultFormat = resultFormat;
       service.useProxy = false;
       service.contentType = contentType;
+      service.headers = Rx.customHttpHeaders;
       service.url = rootUrl + url;
       
       service.request = data;
@@ -296,10 +297,12 @@ package org.restfulx.controllers {
     }
     
     protected function defaultResultHandler(data:Object, token:Object = null):void {
+      CursorManager.removeBusyCursor();
       if (resultHandler != null) resultHandler(data.result);
     }
     
     protected function defaultFaultHandler(info:Object, token:Object = null):void {
+      CursorManager.removeBusyCursor();
       if (faultHandler != null) { 
         faultHandler(info);
       } else {
