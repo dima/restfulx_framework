@@ -84,11 +84,8 @@ package org.restfulx.services.http {
     }
 
     protected override function getHTTPService(object:Object, nestedBy:Array = null):HTTPService {
-      var service:HTTPService = new HTTPService();
+      var service:HTTPService = super.getHTTPService(object, nestedBy);
       service.resultFormat = "text";
-      service.useProxy = false;
-      service.contentType = "application/x-www-form-urlencoded";
-      service.url = Rx.httpRootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
       return service;
     }
   }
