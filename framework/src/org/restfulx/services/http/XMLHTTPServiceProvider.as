@@ -182,7 +182,6 @@ package org.restfulx.services.http {
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
-      //httpService.headers = {'X-HTTP-Method-Override': 'PUT'};
       addHeaders(httpService, {'X-HTTP-Method-Override': 'PUT'});
       httpService.request = marshallToVO(object, recursive);
       httpService.request["_method"] = "PUT";
@@ -197,7 +196,6 @@ package org.restfulx.services.http {
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
-      //httpService.headers = {'X-HTTP-Method-Override': 'DELETE'};
       addHeaders(httpService, {'X-HTTP-Method-Override': 'DELETE'});
       httpService.request["_method"] = "DELETE";
       httpService.url = RxUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
@@ -476,6 +474,7 @@ package org.restfulx.services.http {
     }
     
     protected function addHeaders(service:HTTPService, headers:Object):void {
+      if (service.headers == null) service.headers = {};
     	for (var key:String in headers) {
     		service.headers[key] = headers[key];
     	}

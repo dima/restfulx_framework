@@ -301,11 +301,10 @@ package org.restfulx.services.air {
         sqlStatement.parameters[":rev"] = object["rev"];
         if (object["sync"] == 'N') {
           sqlStatement.parameters[":sync"] = 'N';
-        } else if (undoRedoFlag == Rx.undoredo.UNDO) {
-          sqlStatement.parameters[":sync"] = 'U';
         } else {
-          sqlStatement.parameters[":sync"] = object["sync"];
+          sqlStatement.parameters[":sync"] = 'U';
         }
+        
         if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
           var clone:Object = RxUtils.clone(object);
           Rx.undoredo.addChangeAction({service: this, action: "update", copy: clone,
