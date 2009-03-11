@@ -84,13 +84,12 @@ package restfulx.test.cases.models {
 
     public function testSortWithFilter():void {
       establishService();
-      //Rx.models.index(Category, onCategoryIndexForSortFilter);
+      Rx.models.index(Category, onCategoryIndexForSortFilter);
     }
     
-    // this currently fails
     private function onCategoryIndexForSortFilter(result:TypedArray):void {
       var sortedAndFiltered:RxCollection = Rx.sort(
-        Rx.filter$(Rx.models.cached(Category), filterById), 
+        Rx.filter(Rx.models.cached(Category), filterById), 
         [{name: "id", descending: true, numeric: true}]);
       assertEquals(2, sortedAndFiltered.length);
       assertEquals("134524064", sortedAndFiltered.getItemAt(0)["id"]);
