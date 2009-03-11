@@ -400,8 +400,8 @@ package org.restfulx {
         if (field is SortField) {
           sortField = SortField(field);
         } else {
-          for (var property:String in fields[field]) {
-            sortField[property] = fields[field][property];
+          for (var property:String in field) {
+            sortField[property] = field[property];
           }
         }
         sort.fields.push(sortField);

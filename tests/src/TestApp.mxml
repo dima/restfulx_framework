@@ -7,16 +7,16 @@
       import flexunit.framework.TestSuite;
 
       import org.restfulx.Rx;
+      import org.restfulx.serializers.JSONSerializer;
+      import org.restfulx.services.air.AIRServiceProvider;
+      import org.restfulx.services.as3http.AS3JSONHTTPServiceProvider;
+      import org.restfulx.services.as3http.DirectCouchDBHTTPServiceProvider;
+      import org.restfulx.services.as3http.AS3XMLHTTPServiceProvider;
+      import org.restfulx.services.http.XMLHTTPServiceProvider;
+      import org.restfulx.services.http.JSONHTTPServiceProvider;
+      import org.restfulx.services.mock.MockDirectCouchDBHTTPServiceProvider;
       import org.restfulx.services.mock.MockXMLHTTPServiceProvider;
       import org.restfulx.services.mock.MockAIRServiceProvider;
-      import org.restfulx.serializers.JSONSerializer;
-      import org.restfulx.services.http.XMLHTTPServiceProvider;
-      import org.restfulx.services.as3http.AS3JSONHTTPServiceProvider;
-      import org.restfulx.services.air.AIRServiceProvider;
-      import org.restfulx.services.mock.MockDirectCouchDBHTTPServiceProvider;
-      import org.restfulx.services.as3http.DirectCouchDBHTTPServiceProvider;
-      import org.restfulx.services.http.JSONHTTPServiceProvider;
-      import org.restfulx.services.as3http.AS3XMLHTTPServiceProvider;
             
       import restfulx.test.cases.serializers.CouchDBJSONSerializerTest;
       import restfulx.test.cases.serializers.GAEXMLSerializerTest;
@@ -38,14 +38,17 @@
       import restfulx.test.cases.models.TreeModelsTest;
       import restfulx.test.cases.models.PolymorphicRelationshipsTest;
       import restfulx.test.cases.models.BasicRelationshipsTest;
+      import restfulx.test.cases.models.SortFilterTest;
       
       import restfulx.test.models.Nothing;
+      
       import restfulx.test.cases.ModelsControllerTest;
       import restfulx.test.cases.InflectorTest;
       import restfulx.test.cases.ReferenceCleanupTest;
       import restfulx.test.cases.CommandsControllerTest;
       import restfulx.test.cases.RxUtilTest;
       import restfulx.test.cases.bugs.Bug26Test;
+      
       import restfulx.test.controllers.RxTestController;
       
       private function onCreationComplete():void {
@@ -121,6 +124,11 @@
         ts.addTest(new SingleTableInheritanceTest("testSTIIndex", serviceProviderId));
         
         ts.addTest(new NothingIndexingTest("testNothingIndex", serviceProviderId));
+
+        ts.addTest(new SortFilterTest("testFilter", serviceProviderId));
+        ts.addTest(new SortFilterTest("testSort", serviceProviderId));
+        ts.addTest(new SortFilterTest("testFilterWithSort", serviceProviderId));
+        ts.addTest(new SortFilterTest("testSortWithFilter", serviceProviderId));
        }
        
        private function addNonServiceDependentTests(ts:TestSuite):void {
@@ -130,7 +138,7 @@
           ts.addTest(new SimplePropertiesTest("testCreateWithTrueBoolean", serviceProviderId));
           ts.addTest(new SimplePropertiesTest("testCreateWithFalseBoolean", serviceProviderId));
         }
-        
+                
         ts.addTest(new AuxAIRControllerTest("testFindAll"));
         ts.addTest(new AuxAIRControllerTest("testFindAllWithIncludes"));
 
