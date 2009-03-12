@@ -170,10 +170,6 @@ package org.restfulx.serializers {
               var items:ModelsCollection = ModelsCollection(ref[rel]);
               if (items == null) {
                 items = new ModelsCollection;
-                var sorts:Object = state.refs[targetType][rel]["sorts"];
-                if (sorts && sorts is Array) {
-                  Rx.sort$(items, sorts as Array);
-                }
               }
               
               var conditions:Object = state.refs[targetType][rel]["conditions"];
@@ -188,7 +184,12 @@ package org.restfulx.serializers {
                 }
                 
                 ref[rel] = items;
-              }              
+              }
+              
+              var sorts:Object = state.refs[targetType][rel]["sorts"];
+              if (sorts && sorts is Array) {
+                Rx.sort$(items, sorts as Array);
+              }
             }
           }
 
