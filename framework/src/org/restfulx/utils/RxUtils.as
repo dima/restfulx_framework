@@ -421,6 +421,18 @@ package org.restfulx.utils {
     public static function upperCaseFirst(string:String):String {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
+
+    /**
+     * Convert from ISO date representation to an actual AS3 Date object
+     */
+    private static function isoToDate(value:String):Date {
+      var dateStr:String = value;
+      dateStr = dateStr.replace(/-/g, "/");
+      dateStr = dateStr.replace("T", " ");
+      dateStr = dateStr.replace("Z", " GMT-0000");
+      dateStr = dateStr.replace("UTC", " GMT-0000");
+      return new Date(Date.parse(dateStr));
+    }
     
     /**
      * Casts a variable to specific type from a string, while trying to do the right thing
@@ -434,8 +446,8 @@ package org.restfulx.utils {
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date" || targetType == "datetime") {
         if (value is String) {
-          var date:String = String(value).replace("T", " ").replace(new RegExp("-", "g"), "/").replace(/\.\d+$/, "");
-          return new Date(Date.parse(date));
+          //var date:String = String(value).replace("T", " ").replace(new RegExp("-", "g"), "/").replace(/\.\d+$/, "");
+          return isoToDate(String(value));
         } else {
           return new Date(Date.parse(value));
         }
