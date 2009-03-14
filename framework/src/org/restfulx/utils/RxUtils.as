@@ -446,21 +446,13 @@ package org.restfulx.utils {
       if (targetType == "boolean") {
         value = String(value).toLowerCase();
         return (value == "true" || value == 1) ? true : false;
-      } else if (targetType == "date" || targetType == "datetime") {
-        if (value is String) {
-//          var date:String = String(value).replace("T", " ")
-//            .replace(new RegExp("-", "g"), "/").replace(/\.\d+$/, "").replace("UTC", "");
-          if (targetType == "datetime") {
-            try {
-              return DateUtil.parseW3CDTF(String(value).replace("UTC", "-00:00"));
-            } catch (e:Error) {
-              return new Date(Date.parse(String(value)));
-            }
-          } else {
-            return new Date(Date.parse(String(value)));
-          }
-        } else {
-          return new Date(Date.parse(value));
+      } else if (targetType == "date") {
+        return new Date(Date.parse(value as String));
+      } else if (targetType == "datetime") {
+        try {
+          return DateUtil.parseW3CDTF(String(value));
+        } catch (e:Error) {
+          return new Date(Date.parse(String(value)));
         }
       } else {
         return String(value).replace("\\x3A", ":").split("\\n").join("\n");
@@ -479,8 +471,6 @@ package org.restfulx.utils {
         if (ObjectUtil.hasMetadata(object, property, "DateTime")) {
           return DateUtil.toW3CDTF(date);
         } else {
-//          trace(date.fullYearUTC + "-" + date.monthUTC + "-" + date.dateUTC);
-//          return date.fullYearUTC + "-" + date.monthUTC + "-" + date.dateUTC;
           formatter.formatString = "YYYY-MM-DD";
           return formatter.format(date);
         }
