@@ -447,7 +447,7 @@ package org.restfulx.utils {
         value = String(value).toLowerCase();
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date") {
-        return new Date(Date.parse(value as String));
+        return new Date(Date.parse((value as String).replace(/-/g, "/")));
       } else if (targetType == "datetime") {
         try {
           return DateUtil.parseW3CDTF(String(value));
