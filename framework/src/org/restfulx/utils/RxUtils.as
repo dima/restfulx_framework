@@ -451,7 +451,11 @@ package org.restfulx.utils {
 //          var date:String = String(value).replace("T", " ")
 //            .replace(new RegExp("-", "g"), "/").replace(/\.\d+$/, "").replace("UTC", "");
           if (targetType == "datetime") {
-            return DateUtil.parseW3CDTF(String(value).replace("UTC", "-00:00"));
+            try {
+              return DateUtil.parseW3CDTF(String(value).replace("UTC", "-00:00"));
+            } catch (e:Error) {
+              return new Date(Date.parse(String(value)));
+            }
           } else {
             return new Date(Date.parse(String(value)));
           }

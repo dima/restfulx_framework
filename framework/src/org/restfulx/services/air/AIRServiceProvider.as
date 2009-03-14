@@ -61,7 +61,7 @@ package org.restfulx.services.air {
       "String" : "TEXT",
       "Number" : "DOUBLE",
       "Date" : "DATE",
-      "DateTime" : "DATETIME"
+      "DateTime" : "TEXT"
     }
     
     protected var state:ModelsMetadata;

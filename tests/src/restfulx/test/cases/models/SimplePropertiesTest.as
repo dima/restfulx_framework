@@ -88,12 +88,12 @@ package restfulx.test.cases.models {
       // decimal
       assertEquals(9.99, firstModel.quantity);
       // datetime
-      assertEquals(2000, firstModel.soldOn.getFullYear());
-      assertEquals(0, firstModel.soldOn.getMonth());
-      assertEquals(1, firstModel.soldOn.getDate());
-      assertEquals(13, firstModel.soldOn.getHours());
-      assertEquals(59, firstModel.soldOn.getMinutes());
-      assertEquals(19, firstModel.soldOn.getSeconds());
+      assertEquals(2000, firstModel.soldOn.getUTCFullYear());
+      assertEquals(0, firstModel.soldOn.getUTCMonth());
+      assertEquals(1, firstModel.soldOn.getUTCDate());
+      assertEquals(13, firstModel.soldOn.getUTCHours());
+      assertEquals(59, firstModel.soldOn.getUTCMinutes());
+      assertEquals(19, firstModel.soldOn.getUTCSeconds());
       
       // date
       assertEquals(2008, firstModel.deliveredOn.getFullYear());
