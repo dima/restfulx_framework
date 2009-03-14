@@ -22,6 +22,8 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.utils {
+  import com.adobe.utils.DateUtil;
+  
   import flash.events.Event;
   import flash.net.URLRequest;
   import flash.net.navigateToURL;
@@ -446,10 +448,13 @@ package org.restfulx.utils {
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date" || targetType == "datetime") {
         if (value is String) {
-          var date:String = String(value).replace("T", " ")
-            .replace(new RegExp("-", "g"), "/").replace(/\.\d+$/, "").replace("UTC", "");
-//          return isoToDate(String(value));
-          return new Date(Date.parse(date));
+//          var date:String = String(value).replace("T", " ")
+//            .replace(new RegExp("-", "g"), "/").replace(/\.\d+$/, "").replace("UTC", "");
+          if (targetType == "datetime") {
+            return DateUtil.parseW3CDTF(String(value).replace("UTC", "-00:00"));
+          } else {
+            return new Date(Date.parse(String(value)));
+          }
         } else {
           return new Date(Date.parse(value));
         }
@@ -468,11 +473,13 @@ package org.restfulx.utils {
         var formatter:DateFormatter = new DateFormatter;
         var date:Date = object[property] as Date;
         if (ObjectUtil.hasMetadata(object, property, "DateTime")) {
-          formatter.formatString = "YYYY-MM-DDTHH:NN:SS";
+          return DateUtil.toW3CDTF(date);
         } else {
+//          trace(date.fullYearUTC + "-" + date.monthUTC + "-" + date.dateUTC);
+//          return date.fullYearUTC + "-" + date.monthUTC + "-" + date.dateUTC;
           formatter.formatString = "YYYY-MM-DD";
+          return formatter.format(date);
         }
-        return formatter.format(object[property] as Date);
       } else if (object[property] is Number) {
         var num:Number = Number(object[property]);
         if (isNaN(num)) {
