@@ -70,6 +70,7 @@ package org.restfulx.services.as3http {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#id
      */
     public override function get id():int {
@@ -77,6 +78,7 @@ package org.restfulx.services.as3http {
     }
         
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#index
      */
     public override function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
@@ -93,6 +95,7 @@ package org.restfulx.services.as3http {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#show
      */
     public override function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {      
@@ -110,6 +113,7 @@ package org.restfulx.services.as3http {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#create
      */    
     public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
@@ -138,6 +142,7 @@ package org.restfulx.services.as3http {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#update
      */
     public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
@@ -163,6 +168,7 @@ package org.restfulx.services.as3http {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#destroy
      */
     public override function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,

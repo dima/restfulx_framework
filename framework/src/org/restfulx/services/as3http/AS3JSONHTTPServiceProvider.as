@@ -47,6 +47,7 @@ package org.restfulx.services.as3http {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#id
      */
     public override function get id():int {
@@ -54,6 +55,7 @@ package org.restfulx.services.as3http {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#hasErrors
      */
     public override function hasErrors(object:Object):Boolean {

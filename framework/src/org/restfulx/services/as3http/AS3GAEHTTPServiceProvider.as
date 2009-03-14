@@ -52,6 +52,7 @@ package org.restfulx.services.as3http {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#id
      */
     public override function get id():int {
@@ -59,6 +60,7 @@ package org.restfulx.services.as3http {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#create
      */    
     public override function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
@@ -71,7 +73,7 @@ package org.restfulx.services.as3http {
           url += "?" + urlParams;  
         }
         
-        trace("sending create request to: " + url);
+        Rx.log.debug("sending create request to: " + url);
 
         var uri:URI = new URI(url);
       
@@ -83,6 +85,7 @@ package org.restfulx.services.as3http {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#update
      */
     public override function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
@@ -95,7 +98,7 @@ package org.restfulx.services.as3http {
         url += "?" + urlParams;  
       }
         
-      trace("sending update request to: " + url);
+      Rx.log.debug("sending update request to: " + url);
 
       var uri:URI = new URI(url);
       getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 

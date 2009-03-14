@@ -48,6 +48,7 @@ package org.restfulx.services.http {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#id
      */
     public override function get id():int {
@@ -55,6 +56,7 @@ package org.restfulx.services.http {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#hasErrors
      */
     public override function hasErrors(object:Object):Boolean {
@@ -63,6 +65,7 @@ package org.restfulx.services.http {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#canLazyLoad
      */
     public override function canLazyLoad():Boolean {
@@ -70,6 +73,7 @@ package org.restfulx.services.http {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#marshall
      */
     public override function marshall(object:Object, recursive:Boolean = false):Object {
@@ -77,6 +81,7 @@ package org.restfulx.services.http {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#unmarshall
      */
     public override function unmarshall(object:Object, disconnected:Boolean = false):Object {      

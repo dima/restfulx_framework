@@ -110,6 +110,7 @@ package org.restfulx.services.air {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#id
      */
     public function get id():int {
@@ -117,6 +118,7 @@ package org.restfulx.services.air {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#hasErrors
      */
     public function hasErrors(object:Object):Boolean {
@@ -124,6 +126,7 @@ package org.restfulx.services.air {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#canLazyLoad
      */
     public function canLazyLoad():Boolean {
@@ -131,6 +134,7 @@ package org.restfulx.services.air {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#marshall
      */
     public function marshall(object:Object, recursive:Boolean = false):Object {
@@ -138,6 +142,7 @@ package org.restfulx.services.air {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#unmarshall
      */
     public function unmarshall(object:Object, disconnected:Boolean = false):Object {
@@ -145,6 +150,7 @@ package org.restfulx.services.air {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#index
      */
     public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
@@ -173,6 +179,7 @@ package org.restfulx.services.air {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#show
      */
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
@@ -193,6 +200,7 @@ package org.restfulx.services.air {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#create
      */
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
@@ -267,6 +275,7 @@ package org.restfulx.services.air {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#update
      */    
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
@@ -325,6 +334,7 @@ package org.restfulx.services.air {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#destroy
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
@@ -346,6 +356,7 @@ package org.restfulx.services.air {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.ISyncingServiceProvider#dirty
      */
     public function dirty(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
@@ -374,6 +385,7 @@ package org.restfulx.services.air {
     }
     
     /**
+     * @inheritDoc
      * @see org.restfulx.services.ISyncingServiceProvider#purge
      */
     public function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
@@ -391,6 +403,7 @@ package org.restfulx.services.air {
     }  
 	  
     /**
+     * @inheritDoc
      * @see org.restfulx.services.ISyncingServiceProvider#sync
      */
 	  public function sync(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {

@@ -47,6 +47,7 @@ package org.restfulx.services.http {
     }
 
     /**
+     * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#id
      */
     public override function get id():int {
