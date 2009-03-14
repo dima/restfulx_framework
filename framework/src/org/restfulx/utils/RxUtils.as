@@ -446,8 +446,10 @@ package org.restfulx.utils {
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date" || targetType == "datetime") {
         if (value is String) {
-          //var date:String = String(value).replace("T", " ").replace(new RegExp("-", "g"), "/").replace(/\.\d+$/, "");
-          return isoToDate(String(value));
+          var date:String = String(value).replace("T", " ")
+            .replace(new RegExp("-", "g"), "/").replace(/\.\d+$/, "").replace("UTC", "");
+//          return isoToDate(String(value));
+          return new Date(Date.parse(date));
         } else {
           return new Date(Date.parse(value));
         }
@@ -464,6 +466,7 @@ package org.restfulx.utils {
       
       if (object[property] is Date) {
         var formatter:DateFormatter = new DateFormatter;
+        var date:Date = object[property] as Date;
         if (ObjectUtil.hasMetadata(object, property, "DateTime")) {
           formatter.formatString = "YYYY-MM-DDTHH:NN:SS";
         } else {
