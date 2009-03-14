@@ -185,7 +185,6 @@ package org.restfulx.controllers {
 	    // no undo-redo for synchronization, and the stack is lost after undo-redo
 	    if (pushCount) {
 	      dispatchEvent(new PushStartEvent);
-	      CursorManager.setBusyCursor();
 	      notifiedPushStart = true;
 	      if (!canUndoRedo) {
   	      canUndoRedo = Rx.enableUndoRedo;

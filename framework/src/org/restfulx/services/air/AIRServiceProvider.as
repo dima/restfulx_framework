@@ -372,7 +372,7 @@ package org.restfulx.services.air {
         var data:Array = statement.getResult().data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
-          result = unmarshall(data, true);
+          result = unmarshall(data);
         } else {
           // nothing in the DB
           result = new Array;
