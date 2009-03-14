@@ -99,13 +99,19 @@ package org.restfulx.controllers {
      *  controller.findAll(SimpleProperty, ["name LIKE :name AND available = true", {":name": "%2%"}]);
      *  </listing>
      *  
+     *  @example Find projects (Alternative Syntax)
+     *  
+     *  <listing version="3.0">
+     *  XRx.air(onresult).findAll(SimpleProperty, ["name LIKE :name AND available = true", {":name": "%2%"}]);
+     *  </listing>
+     *  
      *  @param clazz RxModel clazz to do the find on or the options object
      *  @param conditions list of conditions
-     *  @param includeRelationships additional relationships to bring into scope
+     *  @param includes additional relationships to bring into scope
      *  @param unmarshall boolean indiciating if the result should be unmarshalled into RxModel instances
      *  @param cacheBy RESTful cache method to simulate
      */
-    public function findAll(optsOrClazz:Object, conditions:Array = null, includeRelationships:Array = null, 
+    public function findAll(optsOrClazz:Object, conditions:Array = null, includes:Array = null, 
       unmarshall:Boolean = true, cacheBy:String = "index"):void {
       var clazz:Class = null;
       if (optsOrClazz is Class) {
@@ -113,7 +119,7 @@ package org.restfulx.controllers {
       } else {
         if (optsOrClazz.hasOwnProperty("clazz")) clazz = optsOrClazz["clazz"];
         if (optsOrClazz.hasOwnProperty("conditions")) conditions = optsOrClazz["conditions"];
-        if (optsOrClazz.hasOwnProperty("includeRelationships")) includeRelationships = optsOrClazz["includeRelationships"];
+        if (optsOrClazz.hasOwnProperty("includes")) includes = optsOrClazz["includes"];
         if (optsOrClazz.hasOwnProperty("unmarshall")) unmarshall = optsOrClazz["unmarshall"];
         if (optsOrClazz.hasOwnProperty("cacheBy")) cacheBy = optsOrClazz["cacheBy"];
       }
@@ -134,7 +140,7 @@ package org.restfulx.controllers {
         }
       }
       
-      execute(fqn, statement, includeRelationships, unmarshall, cacheBy);
+      execute(fqn, statement, includes, unmarshall, cacheBy);
     }
     
     /**
@@ -150,7 +156,7 @@ package org.restfulx.controllers {
      *  @param cacheBy RESTful cache method to simulate
      *  
      */
-    public function findAllBySQL(optsOrClazz:Class, sql:String, includeRelationships:Array = null, unmarshall:Boolean = true, 
+    public function findAllBySQL(optsOrClazz:Class, sql:String, includes:Array = null, unmarshall:Boolean = true, 
       cacheBy:String = "index"):void {
       var clazz:Class = null;
       if (optsOrClazz is Class) {
@@ -158,12 +164,12 @@ package org.restfulx.controllers {
       } else {
         if (optsOrClazz.hasOwnProperty("clazz")) clazz = optsOrClazz["clazz"];
         if (optsOrClazz.hasOwnProperty("sql")) sql = optsOrClazz["sql"];
-        if (optsOrClazz.hasOwnProperty("includeRelationships")) includeRelationships = optsOrClazz["includeRelationships"];
+        if (optsOrClazz.hasOwnProperty("includes")) includes = optsOrClazz["includes"];
         if (optsOrClazz.hasOwnProperty("unmarshall")) unmarshall = optsOrClazz["unmarshall"];
         if (optsOrClazz.hasOwnProperty("cacheBy")) cacheBy = optsOrClazz["cacheBy"];
       }
       var fqn:String = Rx.models.state.types[clazz];
-      execute(fqn, getSQLStatement(sql), includeRelationships, unmarshall, cacheBy);
+      execute(fqn, getSQLStatement(sql), includes, unmarshall, cacheBy);
     }
 
     protected function initializeConnection(databaseFile:File):void {
@@ -221,7 +227,7 @@ package org.restfulx.controllers {
       }
     }
 
-    private function execute(fqn:String, statement:SQLStatement, includeRelationships:Array = null, 
+    protected function execute(fqn:String, statement:SQLStatement, includes:Array = null, 
       unmarshall:Boolean = false, cacheBy:String = null):void {
         
       var responder:ItemResponder = null;
@@ -251,8 +257,8 @@ package org.restfulx.controllers {
         var data:Array = statement.getResult().data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
-          if (includeRelationships) {
-            processIncludedRelationships(includeRelationships, fqn, data); 
+          if (includes) {
+            processIncludedRelationships(includes, fqn, data); 
           }
           result = data;
 
@@ -266,7 +272,7 @@ package org.restfulx.controllers {
       }
     }
     
-    private function processIncludedRelationships(relationships:Array, fqn:String, data:Array):void {
+    protected function processIncludedRelationships(relationships:Array, fqn:String, data:Array):void {
       for each (var relationship:String in relationships) {
         var target:String = Rx.models.state.refs[fqn][relationship]["type"];
         var relType:String = Rx.models.state.refs[fqn][relationship]["relType"];

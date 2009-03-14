@@ -56,7 +56,7 @@ package org.restfulx.controllers.mock {
      * @inheritDoc
      */
     public override function send(url:String, data:Object = null, method:int = AuxHTTPController.GET,
-      responder:IResponder = null):void {
+      responder:IResponder = null, httpHeaders:Object = null):void {
       
       var response:Object = null;
       if (Rx.httpControllerHandler != null) {

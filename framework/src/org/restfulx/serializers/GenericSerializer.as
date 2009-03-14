@@ -33,7 +33,7 @@ package org.restfulx.serializers {
   import org.restfulx.utils.RxUtils;
   
   /**
-   *  GenericSerializer groups together a few handy functions that are common,
+   * GenericSerializer groups together a few handy functions that are common,
    *  useful to all serializers. As such it is not meant to be initialized by
    *  itself but rather should be subclasses/extended.
    */

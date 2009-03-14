@@ -23,7 +23,7 @@
  ******************************************************************************/
 package org.restfulx.controllers {
 
-  import mx.collections.ItemResponder;  
+  import mx.collections.ItemResponder;
   import mx.managers.CursorManager;
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
@@ -145,9 +145,10 @@ package org.restfulx.controllers {
      *   <li><strong>update</strong></li>
      *   <li><strong>create</strong></li>
      * </ul>
+     * @param httpHeaders an object (key, value pairs) of HTTP headers to send along with this request
      */
     public function invoke(optsOrURL:Object, data:Object = null, method:* = AuxHTTPController.GET, 
-      unmarshall:Boolean = false, cacheBy:String = null):void {
+      unmarshall:Boolean = false, cacheBy:String = null, httpHeaders:Object = null):void {
       var url:String = null;
       if (optsOrURL is String) {
         url = String(optsOrURL);
@@ -157,6 +158,7 @@ package org.restfulx.controllers {
         if (optsOrURL.hasOwnProperty("method")) method = optsOrURL["method"];
         if (optsOrURL.hasOwnProperty("unmarshall")) unmarshall = optsOrURL["unmarshall"];
         if (optsOrURL.hasOwnProperty("cacheBy")) cacheBy = optsOrURL["cacheBy"];
+        if (optsOrURL.hasOwnProperty("httpHeaders")) httpHeaders = optsOrURL["httpHeaders"];
       }
       
       if (!data) {
@@ -198,7 +200,7 @@ package org.restfulx.controllers {
         responder = new ItemResponder(defaultResultHandler, defaultFaultHandler);
       }
       
-      send(url, data, httpVerb, responder);
+      send(url, data, httpVerb, responder, httpHeaders);
     }
     
     /**
@@ -221,10 +223,11 @@ package org.restfulx.controllers {
      * @param data data to pass along
      * @param HTTP method to use
      * @param responder IResponder implementation to callback.
-     *  
+     * @param httpHeaders an object (key, value pairs) of HTTP headers to send along with this request
+     *   
      */
     public function send(url:String, data:Object = null, method:int = AuxHTTPController.GET,
-      responder:IResponder = null):void {
+      responder:IResponder = null, httpHeaders:Object = null):void {
       var service:HTTPService = new HTTPService();
             
       if (!rootUrl) {
@@ -239,6 +242,7 @@ package org.restfulx.controllers {
       service.useProxy = false;
       service.contentType = contentType;
       service.headers = Rx.customHttpHeaders;
+      addHeaders(service, httpHeaders);
       service.url = rootUrl + url;
       
       service.request = data;
@@ -273,6 +277,13 @@ package org.restfulx.controllers {
       if (responder) {
         call.addResponder(responder);
       }  
+    }
+    
+    protected function addHeaders(service:HTTPService, headers:Object):void {
+      if (service.headers == null) service.headers = {};
+      for (var key:String in headers) {
+        service.headers[key] = headers[key];
+      }
     }
         
     protected function unmarshall(data:Object):Object {

@@ -92,7 +92,7 @@ package org.restfulx.services {
         controller.dispatchEvent(new PushItemEvent(target));
         
         if (controller.count == 0) {
-          controller.notifySyncEnd();
+          controller.notifyPushEnd();
         }
       } else {
         fault(Rx.models.errors);
@@ -108,7 +108,7 @@ package org.restfulx.services {
       controller.errors.addItem(error);
       controller.dispatchEvent(error);
       if (controller.count == 0) {
-        controller.notifySyncEnd();
+        controller.notifyPushEnd();
       }
     }
   }

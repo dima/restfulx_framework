@@ -25,6 +25,7 @@ package org.restfulx.controllers {
   import flash.events.EventDispatcher;
   
   import mx.collections.ItemResponder;
+  import mx.managers.CursorManager;
   
   import org.restfulx.Rx;
   import org.restfulx.collections.RxCollection;
@@ -56,10 +57,16 @@ package org.restfulx.controllers {
    *  }
    *  </listing>
    *  
-   *  @example Synchronizing data
+   *  @example Pushing data
    *  
    *  <listing version="3.0">
-   *  &lt;mx:Button label=&quot;Synchronize&quot; click=&quot;{Rx.changes.push()}&quot; enabled=&quot;{online}&quot;/&gt;
+   *  &lt;mx:Button label=&quot;Push&quot; click=&quot;{Rx.changes.push()}&quot; enabled=&quot;{online}&quot;/&gt;
+   *  </listing>
+   * 
+   *  @example Pulling data
+   *  
+   *  <listing version="3.0">
+   *  &lt;mx:Button label=&quot;Pull&quot; click=&quot;{Rx.changes.pull()}&quot; enabled=&quot;{online}&quot;/&gt;
    *  </listing>
    */
   public class ChangeController extends EventDispatcher {
@@ -100,7 +107,7 @@ package org.restfulx.controllers {
     
     private var canUndoRedo:Boolean;
     
-    private var notifiedSyncStart:Boolean;
+    private var notifiedPushStart:Boolean;
 	
     /**
      * @param source ISyncingServiceProvider implementation that changes come from
@@ -132,7 +139,7 @@ package org.restfulx.controllers {
 	   */
 	  public function push(... models):void {
 	    if (!Rx.enableSync || source == null || destination == null) {
-	      throw new Error("Sync can be performed only if Rx.enableSync is true and source and destination providers are set");
+	      throw new Error("Push can be performed only if Rx.enableSync is true and source and destination providers are set");
 	    }
 	    errors = new RxCollection;
 	    if (!models.length) models = Rx.models.state.models;
@@ -145,14 +152,15 @@ package org.restfulx.controllers {
 	   * Pulls changes from destination service provider and passes them to the source service
 	   * provider
 	   * 
-	   * @params list of models to pull, if non provided allmodels will be pulled
+	   * @params list of models to pull, if non provided all models will be pulled
 	   */
 	  public function pull(... models):void {
       if (!Rx.enableSync || source == null || destination == null) {
-        throw new Error("Sync can be performed only if Rx.enableSync is true and source and destination providers are set");
+        throw new Error("Pull can be performed only if Rx.enableSync is true and source and destination providers are set");
       }
 	    if (!models.length) models = Rx.models.state.models;
 	    dispatchEvent(new PullStartEvent);
+	    CursorManager.setBusyCursor();
 	    for each (var model:Class in models) {
 	      pullModels.push(Rx.models.state.types[model]);
 	      Rx.models.reload(model, {targetServiceId: destination.id});
@@ -160,14 +168,15 @@ package org.restfulx.controllers {
 	  }
 	  
 	  /**
-	   * Used internally to finish sync session.
+	   * Used internally to finish push session.
 	   */
-	  public function notifySyncEnd():void {
-     Rx.enableUndoRedo = canUndoRedo;
-     canUndoRedo = false;
-	   Rx.undoredo.clear();
-	   notifiedSyncStart = false;
-     dispatchEvent(new PushEndEvent);
+	  public function notifyPushEnd():void {
+      CursorManager.removeBusyCursor();
+      Rx.enableUndoRedo = canUndoRedo;
+      canUndoRedo = false;
+      Rx.undoredo.clear();
+      notifiedPushStart = false;
+      dispatchEvent(new PushEndEvent);
 	  }
 	  
 	  protected function onDirtyChanges(result:Object, token:Object = null):void {
@@ -176,7 +185,8 @@ package org.restfulx.controllers {
 	    // no undo-redo for synchronization, and the stack is lost after undo-redo
 	    if (count) {
 	      dispatchEvent(new PushStartEvent);
-	      notifiedSyncStart = true;
+	      CursorManager.setBusyCursor();
+	      notifiedPushStart = true;
 	      if (!canUndoRedo) {
   	      canUndoRedo = Rx.enableUndoRedo;
 	        Rx.enableUndoRedo = false;
@@ -222,6 +232,7 @@ package org.restfulx.controllers {
   	      }
   	    }
   	    if (!pullModels.length) {
+  	      CursorManager.removeBusyCursor();
           dispatchEvent(new PullEndEvent);
        }
 	    }
