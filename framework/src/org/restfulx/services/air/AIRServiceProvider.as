@@ -60,7 +60,7 @@ package org.restfulx.services.air {
       "Boolean" : "BOOLEAN",
       "String" : "TEXT",
       "Number" : "DOUBLE",
-      "Date" : "DATE",
+      "Date" : "TEXT",
       "DateTime" : "TEXT"
     }
     
