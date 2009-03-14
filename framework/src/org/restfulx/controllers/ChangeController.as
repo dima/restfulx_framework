@@ -230,11 +230,11 @@ package org.restfulx.controllers {
   	      for each (var instance:Object in event.data) {
   	        Rx.services.getServiceProvider(source.id).create(instance, null);
   	      }
+          if (!pullModels.length) {
+            CursorManager.removeBusyCursor();
+            dispatchEvent(new PullEndEvent);
+          }
   	    }
-  	    if (!pullModels.length) {
-  	      CursorManager.removeBusyCursor();
-          dispatchEvent(new PullEndEvent);
-       }
 	    }
 	  }
   }
