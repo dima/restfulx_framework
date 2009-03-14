@@ -29,6 +29,10 @@
     <class>org.restfulx.controllers.ServicesController</class>
     <class>org.restfulx.controllers.UndoRedoController</class>
     <class>org.restfulx.controllers.mock.MockAuxHTTPController</class>
+    <class>org.restfulx.events.AfterCreateEvent</class>
+    <class>org.restfulx.events.AfterDestroyEvent</class>
+    <class>org.restfulx.events.AfterSaveEvent</class>
+    <class>org.restfulx.events.AfterUpdateEvent</class>
     <class>org.restfulx.events.CacheUpdateEvent</class>
     <class>org.restfulx.events.CommandExecutionEvent</class>
     <class>org.restfulx.events.PullEndEvent</class>

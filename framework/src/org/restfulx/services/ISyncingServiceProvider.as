@@ -24,6 +24,10 @@
 package org.restfulx.services {
   import mx.rpc.IResponder;
 
+  /**
+   * This interface identifies Service Providers that are capable of tracking
+   * synchronization related metadata.
+   */
   public interface ISyncingServiceProvider extends IServiceProvider {
     /**
      * Idenfies all the instances for a particular class of models that need to be

@@ -250,7 +250,8 @@ package org.restfulx.controllers {
         responder = new ItemResponder(defaultResultHandler, defaultFaultHandler);
       }
       
-      try {   
+      try {
+        Rx.log.debug("executing SQL:" + statement.text);
         statement.execute();
         
         var result:Object;
@@ -282,6 +283,7 @@ package org.restfulx.controllers {
             var statement:SQLStatement = getSQLStatement("SELECT * FROM " + tableName + 
               " WHERE sync != 'D' AND " + Rx.models.state.names[fqn]["single"] + "_id = '" + item["id"] + "'");
             try {
+              Rx.log.debug("executing SQL:" + statement.text);
               statement.execute();
               
               var result:Array = statement.getResult().data;

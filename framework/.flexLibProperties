@@ -22,6 +22,10 @@
 <classEntry path="org.restfulx.controllers.ServicesController"/>
 <classEntry path="org.restfulx.controllers.UndoRedoController"/>
 <classEntry path="org.restfulx.controllers.mock.MockAuxHTTPController"/>
+<classEntry path="org.restfulx.events.AfterCreateEvent"/>
+<classEntry path="org.restfulx.events.AfterDestroyEvent"/>
+<classEntry path="org.restfulx.events.AfterSaveEvent"/>
+<classEntry path="org.restfulx.events.AfterUpdateEvent"/>
 <classEntry path="org.restfulx.events.CacheUpdateEvent"/>
 <classEntry path="org.restfulx.events.CommandExecutionEvent"/>
 <classEntry path="org.restfulx.events.PullEndEvent"/>

@@ -28,7 +28,7 @@ package org.restfulx {
   
   [Bindable]
   /**
-   * Provides central access to useful *extras* that cannot be linked into Rx,
+   * Provides central access to useful extras that cannot be linked into Rx,
    *  such as AIR-only RestfulX features.
    */
   public class XRx {
@@ -47,8 +47,8 @@ package org.restfulx {
      * @param onFault function to call if there was an error or if unmarshalling fails
      * @param dbFile to use (defaults to Rx.airDatabaseName)
      *  
-     * @see org.restfulx.controllers.AuxHTTPController
-     * @return AuxHTTPController instance
+     * @see org.restfulx.controllers.AuxAIRController
+     * @return AuxAIRController instance
      */
     public static function air(optsOrOnResult:Object = null, onFault:Function = null, 
       dbFile:File = null):AuxAIRController {

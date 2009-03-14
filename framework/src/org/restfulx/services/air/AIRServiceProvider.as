@@ -179,6 +179,7 @@ package org.restfulx.services.air {
       var fqn:String = getQualifiedClassName(object);
       var statement:SQLStatement = getSQLStatement(sql[fqn]["select"] + " and id = '" + object["id"] + "'");
       try {
+        Rx.log.debug("show:executing SQL:" + statement.text);
         statement.execute();
       
         var vo:Object = statement.getResult().data[0];
@@ -257,6 +258,7 @@ package org.restfulx.services.air {
         
         RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
 
+        Rx.log.debug("create:executing SQL:" + statement.text);
         statement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -314,6 +316,7 @@ package org.restfulx.services.air {
 
         RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
         
+        Rx.log.debug("update:executing SQL:" + sqlStatement.text);
         sqlStatement.execute();
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -350,7 +353,8 @@ package org.restfulx.services.air {
       
       var statement:SQLStatement = getSQLStatement(sql[fqn]["dirty"]);  
       
-      try {   
+      try {
+        Rx.log.debug("dirty:executing SQL:" + statement.text);
         statement.execute();
         
         var result:Object;
@@ -378,6 +382,7 @@ package org.restfulx.services.air {
       statement = statement.replace("{id}", object["id"]);
       statement = statement.replace("{rev}", object["rev"]);
       try {
+        Rx.log.debug("purge:executing SQL:" + statement);
         getSQLStatement(statement).execute();
         invokeResponderResult(responder, object);
       } catch (e:Error) {
@@ -417,6 +422,7 @@ package org.restfulx.services.air {
       sqlStatement.parameters[":rev"] = object["rev"];
       
       try {
+        Rx.log.debug("updateSyncStatus:executing SQL:" + sqlStatement.text);
         sqlStatement.execute();
         object["sync"] = syncStatus;
         object["xrev"] = null;
@@ -537,7 +543,8 @@ package org.restfulx.services.air {
       var fqn:String = query['fqn'];
       var clazz:Class = getDefinitionByName(fqn) as Class;
               
-      try {   
+      try {
+        Rx.log.debug("index:executing SQL:" + statement.text);
         statement.execute();
         
         var result:Object;

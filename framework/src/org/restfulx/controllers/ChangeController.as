@@ -95,7 +95,7 @@ package org.restfulx.controllers {
     /**
      * Number of objects still left to push
      */
-    public var count:int;
+    public var pushCount:int;
     
     private var pushModels:Array;
     
@@ -180,10 +180,10 @@ package org.restfulx.controllers {
 	  }
 	  
 	  protected function onDirtyChanges(result:Object, token:Object = null):void {
-	    count += (result as Array).length;
+	    pushCount += (result as Array).length;
 	    
 	    // no undo-redo for synchronization, and the stack is lost after undo-redo
-	    if (count) {
+	    if (pushCount) {
 	      dispatchEvent(new PushStartEvent);
 	      CursorManager.setBusyCursor();
 	      notifiedPushStart = true;
@@ -209,8 +209,8 @@ package org.restfulx.controllers {
 	          destination.update(instance, new ChangeResponder(instance, this, source, destination, UPDATE));
 	          break;
 	        default:
-	          Rx.log.error("don't know what to do with: " + instance["sync"]);
-	          count--;
+	          Rx.log.error("don't know what to do with: " + instance + ",sync status: " + instance["sync"]);
+	          pushCount--;
 	      }
 	    }
 	  }

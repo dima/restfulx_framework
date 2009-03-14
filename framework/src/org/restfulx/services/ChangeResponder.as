@@ -72,7 +72,7 @@ package org.restfulx.services {
      */
     public function result(event:Object):void {
       if (!destination.hasErrors(event.result)) {
-        controller.count--;
+        controller.pushCount--;
         var target:Object = destination.unmarshall(event.result, true);
         if (RxUtils.isEmpty(target["rev"])) {
           target["rev"] = 0;
@@ -87,11 +87,11 @@ package org.restfulx.services {
             source.purge(target, null);
             break;
           default :
-            Rx.log.error("don't know what to do with: " + item["sync"]);
+            Rx.log.error("don't know what to do with: " + item + ", sync status: " + item["sync"]);
         }
         controller.dispatchEvent(new PushItemEvent(target));
         
-        if (controller.count == 0) {
+        if (controller.pushCount == 0) {
           controller.notifyPushEnd();
         }
       } else {
@@ -103,11 +103,11 @@ package org.restfulx.services {
      *  @see mx.rpc.IResponder#fault
      */
     public function fault(info:Object):void {
-      controller.count--;
+      controller.pushCount--;
       var error:PushErrorEvent = new PushErrorEvent(item, info);
       controller.errors.addItem(error);
       controller.dispatchEvent(error);
-      if (controller.count == 0) {
+      if (controller.pushCount == 0) {
         controller.notifyPushEnd();
       }
     }
