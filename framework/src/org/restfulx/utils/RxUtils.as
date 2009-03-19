@@ -427,7 +427,7 @@ package org.restfulx.utils {
     /**
      * Convert from ISO date representation to an actual AS3 Date object
      */
-    private static function isoToDate(value:String):Date {
+    public static function isoToDate(value:String):Date {
       var dateStr:String = value;
       dateStr = dateStr.replace(/-/g, "/");
       dateStr = dateStr.replace("T", " ");
@@ -447,12 +447,14 @@ package org.restfulx.utils {
         value = String(value).toLowerCase();
         return (value == "true" || value == 1) ? true : false;
       } else if (targetType == "date") {
-        return new Date(Date.parse((value as String).replace(/-/g, "/")));
+        var date:String = (value as String).replace(/-/g, "/");
+        return new Date(Date.parse(date));
       } else if (targetType == "datetime") {
+        var datetime:String = (value as String).replace(" ", "T");
         try {
-          return DateUtil.parseW3CDTF(String(value));
+          return DateUtil.parseW3CDTF(datetime);
         } catch (e:Error) {
-          return new Date(Date.parse(String(value)));
+          return new Date(Date.parse(datetime.replace(/-/g, "/").replace("T", " ")));
         }
       } else {
         return String(value).replace("\\x3A", ":").split("\\n").join("\n");

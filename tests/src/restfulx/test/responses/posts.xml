@@ -4,7 +4,7 @@
 	  <key>tag:pomodo.gmail.com,2009-01-01:Post[agZwb21vZG9yCgsSBFBvc3QYBww]</key>
 	  <property name="author" type="key">tag:pomodo.gmail.com,2009-01-01:PostAuthor[agZwb21vZG9yEAsSClBvc3RBdXRob3IYBgw]</property>
 	  <property name="content" type="string">What the hell?</property>
-	  <property name="last_modified" type="gd:when">2009-01-01 09:05:09.494590</property>
+	  <property name="last_modified" type="gd:when">2009-03-23 14:15:56+00:00</property>
 	  <property name="mother" type="float">1.24</property>
 	  <property name="published" type="bool">True</property>
 	  <property name="state" type="int">2</property>

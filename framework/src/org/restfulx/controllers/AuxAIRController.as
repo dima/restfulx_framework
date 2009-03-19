@@ -31,6 +31,7 @@ package org.restfulx.controllers {
   import mx.collections.ItemResponder;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
+  import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
   import org.restfulx.utils.RxUtils;
@@ -282,22 +283,19 @@ package org.restfulx.controllers {
             var tableName:String = Rx.models.state.controllers[target];
             var statement:SQLStatement = getSQLStatement("SELECT * FROM " + tableName + 
               " WHERE sync != 'D' AND " + Rx.models.state.names[fqn]["single"] + "_id = '" + item["id"] + "'");
-            try {
-              Rx.log.debug("executing SQL:" + statement.text);
-              statement.execute();
-              
-              var result:Array = statement.getResult().data;
-              if (result && result.length > 0) {
-                result[0]["clazz"] = target.split("::")[1];
-              }
-              
-              if (relType == "HasMany") {
-                item[relationship] = result;
-              } else if (result && result.length > 0) {
-                item[relationship] = result[0];
-              }
-            } catch (e:Error) {
-              throw e;
+
+            Rx.log.debug("executing SQL:" + statement.text);
+            statement.execute();
+            
+            var result:Array = statement.getResult().data;
+            if (result && result.length > 0) {
+              result[0]["clazz"] = target.split("::")[1];
+            }
+            
+            if (relType == "HasMany") {
+              item[relationship] = result;
+            } else if (result && result.length > 0) {
+              item[relationship] = result[0];
             }
           }
         }

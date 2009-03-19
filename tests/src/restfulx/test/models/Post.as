@@ -32,6 +32,11 @@ package restfulx.test.models {
     public var title:String;
     
     public var content:String;
+    
+    [DateTime]
+    public var lastModified:Date;
+    
+    public var what:Date;
 
     public function Post() {
       super(LABEL);

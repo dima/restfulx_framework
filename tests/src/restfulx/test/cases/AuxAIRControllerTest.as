@@ -23,8 +23,9 @@
  ******************************************************************************/
 package restfulx.test.cases {
   import flexunit.framework.TestCase;
-
-  import org.restfulx.XRx;  
+  
+  import org.restfulx.Rx;
+  import org.restfulx.XRx;
   import org.restfulx.utils.TypedArray;
   
   import restfulx.test.models.Project;
@@ -38,11 +39,13 @@ package restfulx.test.cases {
     }
     
     public function testFindAll():void {
+      Rx.models.reset(null, true);
       XRx.air(onFindAll).findAll(SimpleProperty, ["name LIKE :name AND available = true", {":name": "%2%"}]);
     }
     
     public function testFindAllWithIncludes():void {
-      XRx.air(onFindAllWithIncludes).findAll(Project, ["name LIKE :name", {":name" : "%4%"}], ["tasks", "contractor"]);
+      Rx.models.reset(null, true);
+      XRx.air(onFindAllWithIncludes).findAll(Project, ["name LIKE :name", {":name" : "%4%"}], ["tasks"]);
     }
     
     private function onFindAll(result:Object):void {
@@ -59,9 +62,7 @@ package restfulx.test.cases {
       var project:Project = (result as TypedArray)[0];
       assertEquals("Project4NameString", project.name);
       assertEquals(1, project.tasks.length);
-      assertEquals("Task4NameString", Task(project.tasks.getItemAt(0)).name);
-      
-      assertEquals("Contractor4NameString", project.contractor.name);
+      assertEquals("Task4NameString", Task(project.tasks.getItemAt(0)).name);      
     }
   }
 }
