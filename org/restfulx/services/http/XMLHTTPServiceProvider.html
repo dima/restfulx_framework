@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
-<meta content="XMLHTTPServiceProvider,org.restfulx.services.http.XMLHTTPServiceProvider,ID,rootUrl,serializer,state,urlSuffix,id,canLazyLoad,create,destroy,getHTTPService,hasErrors,index,invokeCreateOrUpdateHTTPService,invokeHTTPService,invokeMultiPartRequest,marshall,marshallToVO,onHttpResult,sendOrUpload,show,unmarshall,update,uploadFile,urlEncodeMetadata" name="keywords">
+<meta content="XMLHTTPServiceProvider,org.restfulx.services.http.XMLHTTPServiceProvider,ID,rootUrl,serializer,state,urlSuffix,id,addHeaders,canLazyLoad,create,destroy,getHTTPService,hasErrors,index,invokeCreateOrUpdateHTTPService,invokeHTTPService,invokeMultiPartRequest,marshall,marshallToVO,onHttpResult,sendOrUpload,show,unmarshall,update,uploadFile,urlEncodeMetadata" name="keywords">
 <title>org.restfulx.services.http.XMLHTTPServiceProvider</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/http/XMLHTTPServiceProvider.html&amp;org/restfulx/services/http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/http/XMLHTTPServiceProvider.html&amp;org/restfulx/services/http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;XMLHTTPServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -59,7 +59,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#id">id</a> : int<div class="summaryTableDescription">[read-only]
-     </div>
+     
+     ID uniquely identifies this service provider.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
@@ -112,7 +113,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#canLazyLoad()">canLazyLoad</a>():Boolean</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     Indicates if this service provider can perform lazy loading.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
@@ -120,7 +122,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: create method.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
@@ -128,7 +131,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: destroy method.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
@@ -136,7 +140,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#hasErrors()">hasErrors</a>(object:Object):Boolean</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     Indicates to the ServiceResponder that this particular run (typically create/update or destroy)
+     has produced errors.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
@@ -144,15 +150,17 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#index()">index</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: index method.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#marshall()">marshall</a>(object:Object, recursive:Boolean = false, metadata:Object = null):Object</div>
+<a class="signatureLink" href="#marshall()">marshall</a>(object:Object, recursive:Boolean = false):Object</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     Produces service provider specific model representation suitable for being serialized.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
@@ -160,7 +168,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#show()">show</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: show method.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
@@ -168,7 +177,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#unmarshall()">unmarshall</a>(object:Object, disconnected:Boolean = false):Object</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     The reverse of marshall.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
@@ -176,7 +186,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: update method.</div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 </table>
@@ -187,6 +198,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProtectedMethod" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#addHeaders()">addHeaders</a>(service:HTTPService, headers:Object):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
@@ -219,7 +237,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#marshallToVO()">marshallToVO</a>(object:Object, recursive:Boolean = false, metadata:Object = null):Object</div>
+<a class="signatureLink" href="#marshallToVO()">marshallToVO</a>(object:Object, recursive:Boolean = false):Object</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">XMLHTTPServiceProvider</td>
 </tr>
@@ -281,6 +299,18 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>id:int</code>&nbsp;&nbsp;[read-only]<p>
+     
+     ID uniquely identifies this service provider. This is typically obtained
+     from ServiceManager like so: 
+      
+      public static const ID:int = ServiceManager.generateId();
+      
+     You can then wrap around this with a getter:
+      
+      public function get id():int {
+        return ID;
+      }
+      
      </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get id():int</code>
@@ -351,19 +381,45 @@ showHideInherited();
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
+<a name="addHeaders()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">addHeaders</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function addHeaders(service:HTTPService, headers:Object):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">service</span>:HTTPService</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">headers</span>:Object</code></td>
+</tr>
+</table>
+</div>
 <a name="canLazyLoad()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">canLazyLoad</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+<td class="detailHeaderName">canLazyLoad</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
 <code>public function canLazyLoad():Boolean</code><p>
+     
+     Indicates if this service provider can perform lazy loading. RxModelsController will then
+     skip pre-fetching of the lazy dependencies and it's the responsibility of the provider to make
+     sure that the data that was requested is loaded (perhaps via nesting, etc). 
+     
      </p><p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Boolean</code></td>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if the service provider can lazy load, false otherwise
+     </td>
 </tr>
 </table>
 <p>
@@ -381,40 +437,51 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
-     </p><span class="label">Parameters</span>
+     
+     RESTful CRUD contract: create method. Same semantics as Rails RESTful controller create.
+          </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to create (typically a new model instance)
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code> &mdash; the responder that must be called on index
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; any metadata that must be appended with the index request
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that will be used to nest this request, e.g.:
+      [project, user] where project is some Project model instance and user is some User model
+      instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
+      If you are using Rails see config/routes.rb for more details.
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; indicates if recursive create (object + all children) should be performed
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code> &mdash; indicates if it's a normal invocation, undo invocation or redo invocation
+     </td>
 </tr>
 </table>
 <p>
@@ -432,40 +499,51 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
-     </p><span class="label">Parameters</span>
+     
+     RESTful CRUD contract: destroy method. Same semantics as Rails RESTful controller destroy.
+          </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to destroy (typically an existing model instance)
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code> &mdash; the responder that must be called on index
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; any metadata that must be appended with the index request
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that will be used to nest this request, e.g.:
+      [project, user] where project is some Project model instance and user is some User model
+      instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
+      If you are using Rails see config/routes.rb for more details.
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; indicates if recursive create (object + all children) should be performed
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code> &mdash; indicates if it's a normal invocation, undo invocation or redo invocation
+     </td>
 </tr>
 </table>
 <p>
@@ -510,17 +588,24 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function hasErrors(object:Object):Boolean</code><p>
+     
+     Indicates to the ServiceResponder that this particular run (typically create/update or destroy)
+     has produced errors. This typically means that response processing must be terminated and instead
+     errors should be displayed.
+      
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; the response object being processed
+     </td>
 </tr>
 </table>
 <p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Boolean</code></td>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if there are errors false otherwise
+     </td>
 </tr>
 </table>
 <p>
@@ -538,28 +623,37 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</code><p>
-     </p><span class="label">Parameters</span>
+     
+     RESTful CRUD contract: index method. Same semantics as Rails RESTful controller index.
+          </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to index (typically a class like Project, etc)
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code> &mdash; the responder that must be called on index
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; any metadata that must be appended with the index request
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that will be used to nest this request, e.g.:
+      [project, user] where project is some Project model instance and user is some User model
+      instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
+      If you are using Rails see config/routes.rb for more details.
+     </td>
 </tr>
 </table>
 <p>
@@ -708,23 +802,23 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function marshall(object:Object, recursive:Boolean = false, metadata:Object = null):Object</code><p>
+<code>public function marshall(object:Object, recursive:Boolean = false):Object</code><p>
+     
+     Produces service provider specific model representation suitable for being serialized. For example,
+     HTTPServiceProvider would return XML.
+      
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to marshall into serialized form
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; flag indicating if entire object graph should be serialized inline
+     </td>
 </tr>
 </table>
 <p></p>
@@ -748,7 +842,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object</code><span class="label">Parameters</span>
+<code>protected function marshallToVO(object:Object, recursive:Boolean = false):Object</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
@@ -758,12 +852,6 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 <p></p>
@@ -852,28 +940,37 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</code><p>
-     </p><span class="label">Parameters</span>
+     
+     RESTful CRUD contract: show method. Same semantics as Rails RESTful controller show.
+          </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to show (typically a model instance as opposed to class)
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code> &mdash; the responder that must be called on index
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; any metadata that must be appended with the index request
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that will be used to nest this request, e.g.:
+      [project, user] where project is some Project model instance and user is some User model
+      instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
+      If you are using Rails see config/routes.rb for more details.
+     </td>
 </tr>
 </table>
 <p>
@@ -891,23 +988,30 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function unmarshall(object:Object, disconnected:Boolean = false):Object</code><p>
+     
+     The reverse of marshall. Takes a response from the underlying service provider and turns it into
+     an object graph of models.
+      
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; source object from the service provider/responder
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">disconnected</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">disconnected</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; a flag indicating that the object should not be reconnected with the cache
+     </td>
 </tr>
 </table>
 <p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Object</code></td>
+<td width="20"></td><td><code>Object</code> &mdash; (dis)connected object graph of the model corresponding to the response
+     </td>
 </tr>
 </table>
 <p>
@@ -925,40 +1029,51 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</code><p>
-     </p><span class="label">Parameters</span>
+     
+     RESTful CRUD contract: update method. Same semantics as Rails RESTful controller update.
+          </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to update (typically an existing model instance)
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
+<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code> &mdash; the responder that must be called on index
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; any metadata that must be appended with the index request
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">nestedBy</span>:Array</code> (default = <code>null</code>)<code></code> &mdash; an array of model instances that will be used to nest this request, e.g.:
+      [project, user] where project is some Project model instance and user is some User model
+      instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
+      If you are using Rails see config/routes.rb for more details.
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; indicates if recursive create (object + all children) should be performed
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">undoRedoFlag</span>:int</code> (default = <code>0</code>)<code></code> &mdash; indicates if it's a normal invocation, undo invocation or redo invocation
+     </td>
 </tr>
 </table>
 <p>

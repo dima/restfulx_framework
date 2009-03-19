@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="RxUtils,org.restfulx.utils.RxUtils,addModelToCache,addObjectIdToResourceURL,cast,cleanupModelReferences,clone,daysFromNow,describeResource,fireUndoRedoActionEvent,getAttributeAnnotation,getResourceName,getResourcePathPrefix,getWithDefault,isAnyEmpty,isBelongsTo,isDateTime,isEmpty,isHasMany,isHasOne,isIgnored,isInSamePackage,isInTheFuture,isInvalidPropertyName,isInvalidPropertyType,isLazy,isPolymorphicBelongsTo,lowerCaseFirst,mergeArrays,navToURL,nestResource,removeFirstMatch,shallowCopy,toCamelCase,toSnakeCase,uncast,updateExistingParentReferenceIfExists,upperCaseFirst" name="keywords">
+<meta content="RxUtils,org.restfulx.utils.RxUtils,addModelToCache,addObjectIdToResourceURL,canDeleteModel,cast,cleanupModelReferences,clone,daysFromNow,describeResource,fireUndoRedoActionEvent,getAttributeAnnotation,getResourceName,getResourcePathPrefix,getWithDefault,isAnyEmpty,isBelongsTo,isDateTime,isEmpty,isHasMany,isHasOne,isIgnored,isInSamePackage,isInTheFuture,isInvalidPropertyName,isInvalidPropertyType,isLazy,isPolymorphicBelongsTo,isoToDate,itemMatches,lowerCaseFirst,mergeArrays,navToURL,nestResource,removeFirstMatch,shallowCopy,toCamelCase,toSnakeCase,uncast,updateExistingParentReferenceIfExists,upperCaseFirst" name="keywords">
 <title>org.restfulx.utils.RxUtils</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/RxUtils.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/RxUtils.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;RxUtils</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a></td>
@@ -71,6 +71,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#canDeleteModel()">canDeleteModel</a>(model:<a href="../models/RxModel.html">RxModel</a>):Boolean</div>
+<div class="summaryTableDescription">[static]
+     Check to see if the model can be deleted
+     </div>
+</td><td class="summaryTableOwnerCol">RxUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#cast()">cast</a>(targetType:String, value:Object):*</div>
 <div class="summaryTableDescription">[static]
      Casts a variable to specific type from a string, while trying to do the right thing
@@ -80,7 +89,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#cleanupModelReferences()">cleanupModelReferences</a>(model:Object, fqn:String):void</div>
+<a class="signatureLink" href="#cleanupModelReferences()">cleanupModelReferences</a>(model:Object, fqn:String, singleReference:String = ""):void</div>
 <div class="summaryTableDescription">[static]
       Cleanup references to specified model.</div>
 </td><td class="summaryTableOwnerCol">RxUtils</td>
@@ -88,7 +97,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#clone()">clone</a>(object:Object):Object</div>
+<a class="signatureLink" href="#clone()">clone</a>(object:Object, recursive:Boolean = false):Object</div>
 <div class="summaryTableDescription">[static]
      If the object cloned is a RxModel do clone based on reflection, else
      default to binary ObjectUtil clone.</div>
@@ -266,9 +275,28 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#isoToDate()">isoToDate</a>(value:String):Date</div>
+<div class="summaryTableDescription">[static]
+     Convert from ISO date representation to an actual AS3 Date object
+     </div>
+</td><td class="summaryTableOwnerCol">RxUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#isPolymorphicBelongsTo()">isPolymorphicBelongsTo</a>(attribute:XML):Boolean</div>
 <div class="summaryTableDescription">[static]
      Checks if the node is annotated with [BelongsTo(polymorphic="true")]
+     </div>
+</td><td class="summaryTableOwnerCol">RxUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#itemMatches()">itemMatches</a>(text:String, item:Object, properties:Array):Boolean</div>
+<div class="summaryTableDescription">[static]
+     Checks to see if any of the specified properties contain given text
+      
      </div>
 </td><td class="summaryTableOwnerCol">RxUtils</td>
 </tr>
@@ -444,6 +472,30 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="canDeleteModel()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">canDeleteModel</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function canDeleteModel(model:<a href="../models/RxModel.html">RxModel</a>):Boolean</code><p>
+     Check to see if the model can be deleted
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RxModel.html">RxModel</a></code> &mdash; RxModel instance to check
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code></td>
+</tr>
+</table>
+</div>
 <a name="cast()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -481,7 +533,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function cleanupModelReferences(model:Object, fqn:String):void</code><p>
+<code>public static function cleanupModelReferences(model:Object, fqn:String, singleReference:String = ""):void</code><p>
       Cleanup references to specified model.
       
      </p><span class="label">Parameters</span>
@@ -497,6 +549,12 @@ showHideInherited();
 <td width="20px"></td><td><code><span class="label">fqn</span>:String</code> &mdash; FullyQualifiedName of the model
      </td>
 </tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">singleReference</span>:String</code> (default = "<code></code>")<code></code></td>
+</tr>
 </table>
 </div>
 <a name="clone()"></a>
@@ -506,9 +564,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function clone(object:Object):Object</code><p>
+<code>public static function clone(object:Object, recursive:Boolean = false):Object</code><p>
      If the object cloned is a RxModel do clone based on reflection, else
-     default to binary ObjectUtil clone.
+     default to binary ObjectUtil clone. Recursive cloning can be very slow
+     and should be avoided for large trees.
       
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
@@ -516,12 +575,21 @@ showHideInherited();
 <td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to clone
      </td>
 </tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; indicates if references RxModels should be cloned too
+     
+     </td>
+</tr>
 </table>
 <p></p>
 <span class="label">Returns</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20"></td><td><code>Object</code></td>
+<td width="20"></td><td><code>Object</code> &mdash; cloned RxModel instance
+     </td>
 </tr>
 </table>
 </div>
@@ -780,7 +848,8 @@ showHideInherited();
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">str</span>:String</code></td>
+<td width="20px"></td><td><code><span class="label">str</span>:String</code> &mdash; String to check
+     </td>
 </tr>
 </table>
 <p></p>
@@ -988,6 +1057,29 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="isoToDate()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isoToDate</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function isoToDate(value:String):Date</code><p>
+     Convert from ISO date representation to an actual AS3 Date object
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">value</span>:String</code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Date</code></td>
+</tr>
+</table>
+</div>
 <a name="isPolymorphicBelongsTo()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -1008,6 +1100,46 @@ showHideInherited();
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20"></td><td><code>Boolean</code></td>
+</tr>
+</table>
+</div>
+<a name="itemMatches()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">itemMatches</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function itemMatches(text:String, item:Object, properties:Array):Boolean</code><p>
+     Checks to see if any of the specified properties contain given text
+      
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">text</span>:String</code> &mdash; the text string to match
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">item</span>:Object</code> &mdash; object to check
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">properties</span>:Array</code> &mdash; an array of item properties to check against
+          </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if any of the properties match text, false otherwise
+     </td>
 </tr>
 </table>
 </div>

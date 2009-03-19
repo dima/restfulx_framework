@@ -15,7 +15,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/events/package-detail.html&amp;org/restfulx/events/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/events/package-detail.html&amp;org/restfulx/events/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Package&nbsp;org.restfulx.events</td><td align="right" id="subNav" class="titleTableSubNav"><a href="package-detail.html#classSummary">Classes</a></td>
@@ -40,6 +40,22 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Pa
 <th>&nbsp;</th><th width="30%">Class</th><th width="70%">Description</th>
 </tr>
 <tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="AfterCreateEvent.html">AfterCreateEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when an instance of RxModel has been created successfully.</td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="AfterDestroyEvent.html">AfterDestroyEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when an instance of RxModel has been destroyed successfully.</td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="AfterSaveEvent.html">AfterSaveEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when an instance of RxModel has been created successfully.</td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="AfterUpdateEvent.html">AfterUpdateEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when an instance of RxModel has been updated successfully.</td>
+</tr>
+<tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="CacheUpdateEvent.html">CacheUpdateEvent</a></td><td class="summaryTableLastCol">
    This event is dispatched Rx Models cache gets updated and can be
    used to selectively refresh data providers, etc.</td>
@@ -47,6 +63,36 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Pa
 <tr class="prow0">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="CommandExecutionEvent.html">CommandExecutionEvent</a></td><td class="summaryTableLastCol">
    Generic execution event (used by commands).</td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="PullEndEvent.html">PullEndEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when pull synchronization has been finished
+   </td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="PullStartEvent.html">PullStartEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when pull synchronization has been finished
+   </td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="PushEndEvent.html">PushEndEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when push synchronization has been finished
+   </td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="PushErrorEvent.html">PushErrorEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when there's an error during push synchronization process
+   </td>
+</tr>
+<tr class="prow1">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="PushItemEvent.html">PushItemEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when an RxModel instance is about to be synchronized
+   </td>
+</tr>
+<tr class="prow0">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="PushStartEvent.html">PushStartEvent</a></td><td class="summaryTableLastCol">
+   This event is dispatched when push synchronization is about to begin
+   </td>
 </tr>
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="ServiceCallStartEvent.html">ServiceCallStartEvent</a></td><td class="summaryTableLastCol">
@@ -60,26 +106,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Pa
 <tr class="prow1">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="ServiceErrorEvent.html">ServiceErrorEvent</a></td><td class="summaryTableLastCol">
    This event is dispatched when the service provider received an error.</td>
-</tr>
-<tr class="prow0">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="SyncEndEvent.html">SyncEndEvent</a></td><td class="summaryTableLastCol">
-   This event is dispatched when synchronization has been finished
-   </td>
-</tr>
-<tr class="prow1">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="SyncErrorEvent.html">SyncErrorEvent</a></td><td class="summaryTableLastCol">
-   This event is dispatched when there's an error during synchronization process
-   </td>
-</tr>
-<tr class="prow0">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="SyncItemEvent.html">SyncItemEvent</a></td><td class="summaryTableLastCol">
-   This event is dispatched when an RxModel instance is about to be synchronized
-   </td>
-</tr>
-<tr class="prow1">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableSecondCol"><a href="SyncStartEvent.html">SyncStartEvent</a></td><td class="summaryTableLastCol">
-   This event is dispatched when synchronization is about to begin
-   </td>
 </tr>
 </table>
 <p></p>

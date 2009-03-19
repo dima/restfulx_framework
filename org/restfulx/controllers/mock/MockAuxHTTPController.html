@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/controllers/mock/MockAuxHTTPController.html&amp;org/restfulx/controllers/mock/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/controllers/mock/MockAuxHTTPController.html&amp;org/restfulx/controllers/mock/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MockAuxHTTPController</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -76,7 +76,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../AuxHTTPController.html#invoke()">invoke</a>(optsOrURL:Object, data:Object = null, method:Boolean, unmarshall:String = "false", cacheBy:* = null):void</div>
+<a class="signatureLink" href="../AuxHTTPController.html#invoke()">invoke</a>(optsOrURL:Object, data:Object = null, method:Boolean, unmarshall:String = "false", cacheBy:Object = null, httpHeaders:* = null):void</div>
 <div class="summaryTableDescription">
      Invokes a specified URL using indicated method and passing provided data.</div>
 </td><td class="summaryTableOwnerCol"><a href="../AuxHTTPController.html">AuxHTTPController</a></td>
@@ -84,7 +84,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#send()">send</a>(url:String, data:Object = null, method:int, responder:IResponder = null):void</div>
+<a class="signatureLink" href="#send()">send</a>(url:String, data:Object = null, method:int, responder:IResponder = null, httpHeaders:Object = null):void</div>
 <div class="summaryTableDescription">
      
      A different take on invoke.</div>
@@ -106,6 +106,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProtectedMethod" class="summaryTable hideInheritedProtectedMethod" cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProtectedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="../AuxHTTPController.html#addHeaders()">addHeaders</a>(service:HTTPService, headers:Object):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="../AuxHTTPController.html">AuxHTTPController</a></td>
 </tr>
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -245,7 +252,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public override function send(url:String, data:Object = null, method:int, responder:IResponder = null):void</code><p>
+<code>public override function send(url:String, data:Object = null, method:int, responder:IResponder = null, httpHeaders:Object = null):void</code><p>
      
      A different take on invoke. Can be used with standalone org.restfulx.controllers.ICommand
      implementations if they also implement IResponder interface.
@@ -274,7 +281,14 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code> (default = <code>null</code>)<code></code> &mdash; IResponder implementation to callback.
-      
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">httpHeaders</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; an object (key, value pairs) of HTTP headers to send along with this request
+       
      </td>
 </tr>
 </table>

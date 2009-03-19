@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="AuxHTTPController,org.restfulx.controllers.AuxHTTPController,DELETE,GET,POST,PUT,defaultFaultHandler,defaultResultHandler,invoke,send,unmarshall,unmarshallAndCacheResultHandler,unmarshallResultHandler" name="keywords">
+<meta content="AuxHTTPController,org.restfulx.controllers.AuxHTTPController,DELETE,GET,POST,PUT,addHeaders,defaultFaultHandler,defaultResultHandler,invoke,send,unmarshall,unmarshallAndCacheResultHandler,unmarshallResultHandler" name="keywords">
 <title>org.restfulx.controllers.AuxHTTPController</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/AuxHTTPController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/AuxHTTPController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;AuxHTTPController</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -115,7 +115,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#invoke()">invoke</a>(optsOrURL:Object, data:Object = null, method:Boolean, unmarshall:String = "false", cacheBy:* = null):void</div>
+<a class="signatureLink" href="#invoke()">invoke</a>(optsOrURL:Object, data:Object = null, method:Boolean, unmarshall:String = "false", cacheBy:Object = null, httpHeaders:* = null):void</div>
 <div class="summaryTableDescription">
      Invokes a specified URL using indicated method and passing provided data.</div>
 </td><td class="summaryTableOwnerCol">AuxHTTPController</td>
@@ -123,7 +123,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#send()">send</a>(url:String, data:Object = null, method:int, responder:IResponder = null):void</div>
+<a class="signatureLink" href="#send()">send</a>(url:String, data:Object = null, method:int, responder:IResponder = null, httpHeaders:Object = null):void</div>
 <div class="summaryTableDescription">
      A different take on invoke.</div>
 </td><td class="summaryTableOwnerCol">AuxHTTPController</td>
@@ -136,6 +136,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProtectedMethod" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#addHeaders()">addHeaders</a>(service:HTTPService, headers:Object):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">AuxHTTPController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
@@ -260,10 +267,30 @@ showHideInherited();
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
+<a name="addHeaders()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">addHeaders</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function addHeaders(service:HTTPService, headers:Object):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">service</span>:HTTPService</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">headers</span>:Object</code></td>
+</tr>
+</table>
+</div>
 <a name="defaultFaultHandler()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">defaultFaultHandler</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+<td class="detailHeaderName">defaultFaultHandler</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -307,7 +334,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function invoke(optsOrURL:Object, data:Object = null, method:Boolean, unmarshall:String = "false", cacheBy:* = null):void</code><p>
+<code>public function invoke(optsOrURL:Object, data:Object = null, method:Boolean, unmarshall:String = "false", cacheBy:Object = null, httpHeaders:* = null):void</code><p>
      Invokes a specified URL using indicated method and passing provided data. Optionally
      unmarshalling and/or caching the response.
       
@@ -344,7 +371,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">cacheBy</span>:*</code> (default = <code>null</code>)<code></code> &mdash; a String describing recommended caching method for this response. If you 
+<td width="20px"></td><td><code><span class="label">cacheBy</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; a String describing recommended caching method for this response. If you 
       specify <code>cacheBy</code> unmarshalling is performed automatically, using specified
       serializer. Possible options are:
      <ul>
@@ -353,6 +380,13 @@ showHideInherited();
        <li><strong>update</strong></li>
        <li><strong>create</strong></li>
      </ul>
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">httpHeaders</span>:*</code> (default = <code>null</code>)<code></code> &mdash; an object (key, value pairs) of HTTP headers to send along with this request
      </td>
 </tr>
 </table>
@@ -364,7 +398,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function send(url:String, data:Object = null, method:int, responder:IResponder = null):void</code><p>
+<code>public function send(url:String, data:Object = null, method:int, responder:IResponder = null, httpHeaders:Object = null):void</code><p>
      A different take on invoke. Can be used with standalone org.restfulx.controllers.ICommand
      implementations if they also implement IResponder interface.
           </p><span class="label">Parameters</span>
@@ -392,7 +426,14 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code> (default = <code>null</code>)<code></code> &mdash; IResponder implementation to callback.
-      
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">httpHeaders</span>:Object</code> (default = <code>null</code>)<code></code> &mdash; an object (key, value pairs) of HTTP headers to send along with this request
+       
      </td>
 </tr>
 </table>

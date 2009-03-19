@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../print.css" type="text/css" media="print">
-<meta content="Rx,org.restfulx.Rx,DEFAULT_ERROR_FIELD,airDatabaseName,airEncryptionKey,changes,commands,couchDBRootUrl,couchDbDatabaseName,defaultMetadata,defaultServiceId,enableUndoRedo,httpController,httpControllerHandler,httpRootUrl,log,models,serializers,services,sessionToken,undoRedoStackSize,undoredo,enableLogging,filter,filter$,filters,filters$,http,merge,reset,sort,sort$" name="keywords">
+<meta content="Rx,org.restfulx.Rx,DEFAULT_ERROR_FIELD,airDatabaseName,airEncryptionKey,authenticityToken,changes,commands,couchDBRootUrl,couchDbDatabaseName,customHttpHeaders,defaultMetadata,defaultServiceId,enableSync,enableUndoRedo,httpController,httpControllerHandler,httpRootUrl,log,models,serializers,services,sessionToken,undoRedoStackSize,undoredo,enableLogging,filter,filter$,filters,filters$,http,merge,reset,sort,sort$" name="keywords">
 <title>org.restfulx.Rx</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?org/restfulx/Rx.html&amp;org/restfulx/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?org/restfulx/Rx.html&amp;org/restfulx/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Rx</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -124,6 +124,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Rx</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#authenticityToken">authenticityToken</a> : String<div class="summaryTableDescription">[static] 
+     Stores current authenticity token.</div>
+</td><td class="summaryTableOwnerCol">Rx</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#changes">changes</a> : <a href="controllers/ChangeController.html">ChangeController</a>
 <div class="summaryTableDescription">[static] exposes the Synchronization capable controller </div>
 </td><td class="summaryTableOwnerCol">Rx</td>
@@ -144,6 +149,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">Rx</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#customHttpHeaders">customHttpHeaders</a> : Object<div class="summaryTableDescription">[static]
+     Stores any extra HTTP headers that needs to be sent to the backend
+     </div>
+</td><td class="summaryTableOwnerCol">Rx</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#defaultMetadata">defaultMetadata</a> : Object<div class="summaryTableDescription">[static] 
      Metadata allows us to tag arbitrary data along with any provider requests
      this is typically useful with HTTP provider (but may be useful with other providers too).</div>
@@ -151,6 +162,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#defaultServiceId">defaultServiceId</a> : int<div class="summaryTableDescription">[static] default service provider to use.</div>
+</td><td class="summaryTableOwnerCol">Rx</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#enableSync">enableSync</a> : Boolean = false<div class="summaryTableDescription">[static]
+     If set to true, synchronization controller will be initialized
+     </div>
 </td><td class="summaryTableOwnerCol">Rx</td>
 </tr>
 <tr class="">
@@ -374,6 +391,16 @@ showHideInherited();
      Encryption key to use for connection to AIR SQLite database (if this field is empty connection
      will be unencrypted = default).
      </p></div>
+<a name="authenticityToken"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">authenticityToken</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var authenticityToken:String</code><p> 
+     Stores current authenticity token.
+     </p></div>
 <a name="changes"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -425,6 +452,16 @@ showHideInherited();
 <br>http://127.0.0.1:5984/
      <p></p>
 </div>
+<a name="customHttpHeaders"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">customHttpHeaders</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var customHttpHeaders:Object</code><p>
+     Stores any extra HTTP headers that needs to be sent to the backend
+     </p></div>
 <a name="defaultMetadata"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -456,6 +493,16 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static var defaultServiceId:int</code><p> default service provider to use. <code>XMLHTTPServiceProvider.ID</code> is default. </p></div>
+<a name="enableSync"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableSync</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static var enableSync:Boolean = false</code><p>
+     If set to true, synchronization controller will be initialized
+     </p></div>
 <a name="enableUndoRedo"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>

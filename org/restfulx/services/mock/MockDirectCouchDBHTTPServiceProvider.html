@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/mock/MockDirectCouchDBHTTPServiceProvider.html&amp;org/restfulx/services/mock/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/mock/MockDirectCouchDBHTTPServiceProvider.html&amp;org/restfulx/services/mock/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MockDirectCouchDBHTTPServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -126,7 +126,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#canLazyLoad()">canLazyLoad</a>():Boolean</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     Indicates if this service provider can perform lazy loading.</div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -134,7 +135,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: create method.</div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -156,7 +158,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: destroy method.</div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -171,7 +174,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#hasErrors()">hasErrors</a>(object:Object):Boolean</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     Indicates to the ServiceResponder that this particular run (typically create/update or destroy)
+     has produced errors.</div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -179,7 +184,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#index()">index</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: index method.</div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -199,9 +205,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#marshall()">marshall</a>(object:Object, recursive:Boolean = false, metadata:Object = null):Object</div>
+<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#marshall()">marshall</a>(object:Object, recursive:Boolean = false):Object</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     Produces service provider specific model representation suitable for being serialized.</div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr class="">
@@ -216,7 +223,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#show()">show</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: show method.</div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -224,7 +232,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#unmarshall()">unmarshall</a>(object:Object, disconnected:Boolean = false):Object</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     The reverse of marshall.</div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -232,7 +241,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: update method.</div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>
 </table>
@@ -290,7 +300,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#marshallToJSON()">marshallToJSON</a>(object:Object, recursive:Boolean = false, metadata:Object = null):String</div>
+<a class="signatureLink" href="../as3http/DirectCouchDBHTTPServiceProvider.html#marshallToJSON()">marshallToJSON</a>(object:Object, recursive:Boolean = false):String</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol"><a href="../as3http/DirectCouchDBHTTPServiceProvider.html">DirectCouchDBHTTPServiceProvider</a></td>
 </tr>

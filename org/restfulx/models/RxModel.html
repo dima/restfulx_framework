@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="RxModel,org.restfulx.models.RxModel,attachment,dirty,id,rev,sync,xrev,create,destroy,reload,show,shown,toString,update" name="keywords">
+<meta content="RxModel,org.restfulx.models.RxModel,attachment,cloned,dirty,id,rev,sync,xrev,create,destroy,reload,show,shown,toString,update" name="keywords">
 <title>org.restfulx.models.RxModel</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/models/RxModel.html&amp;org/restfulx/models/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/models/RxModel.html&amp;org/restfulx/models/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;RxModel</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
@@ -38,6 +38,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="classHeaderTableLabel">Class</td><td class="classSignature">public class RxModel</td>
 </tr>
 <tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">RxModel <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> flash.events.EventDispatcher</td>
+</tr>
+<tr>
 <td class="classHeaderTableLabel">Subclasses</td><td><a href="../models/RxTreeModel.html">RxTreeModel</a></td>
 </tr>
 </table>
@@ -57,6 +60,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#attachment">attachment</a> : Object<div class="summaryTableDescription"> any model can have one attachment, this can be either RxFileRefrence or BinaryAttachment </div>
+</td><td class="summaryTableOwnerCol">RxModel</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#cloned">cloned</a> : Boolean<div class="summaryTableDescription"> indicates if this is a clone </div>
 </td><td class="summaryTableOwnerCol">RxModel</td>
 </tr>
 <tr class="">
@@ -179,6 +186,14 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public var attachment:Object</code><p> any model can have one attachment, this can be either RxFileRefrence or BinaryAttachment </p></div>
+<a name="cloned"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">cloned</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var cloned:Boolean</code><p> indicates if this is a clone </p></div>
 <a name="dirty"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -497,7 +512,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function toString():String</code><p>
+<code>public override function toString():String</code><p>
      Default toString implementation for models
      </p><p></p>
 <span class="label">Returns</span>

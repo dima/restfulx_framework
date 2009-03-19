@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/http/GAEHTTPServiceProvider.html&amp;org/restfulx/services/http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/http/GAEHTTPServiceProvider.html&amp;org/restfulx/services/http/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;GAEHTTPServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -66,7 +66,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#id">id</a> : int<div class="summaryTableDescription">[read-only]
-     </div>
+     
+     
+     ID uniquely identifies this service provider.</div>
 </td><td class="summaryTableOwnerCol">GAEHTTPServiceProvider</td>
 </tr>
 <tr class="hideInheritedProperty">
@@ -135,7 +137,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="XMLHTTPServiceProvider.html#canLazyLoad()">canLazyLoad</a>():Boolean</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     Indicates if this service provider can perform lazy loading.</div>
 </td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -143,7 +146,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="XMLHTTPServiceProvider.html#create()">create</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: create method.</div>
 </td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -151,7 +155,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="XMLHTTPServiceProvider.html#destroy()">destroy</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: destroy method.</div>
 </td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -159,7 +164,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="XMLHTTPServiceProvider.html#hasErrors()">hasErrors</a>(object:Object):Boolean</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     Indicates to the ServiceResponder that this particular run (typically create/update or destroy)
+     has produced errors.</div>
 </td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -167,15 +174,17 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="XMLHTTPServiceProvider.html#index()">index</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: index method.</div>
 </td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="XMLHTTPServiceProvider.html#marshall()">marshall</a>(object:Object, recursive:Boolean = false, metadata:Object = null):Object</div>
+<a class="signatureLink" href="XMLHTTPServiceProvider.html#marshall()">marshall</a>(object:Object, recursive:Boolean = false):Object</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     Produces service provider specific model representation suitable for being serialized.</div>
 </td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -183,7 +192,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="XMLHTTPServiceProvider.html#show()">show</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: show method.</div>
 </td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -191,7 +201,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="XMLHTTPServiceProvider.html#unmarshall()">unmarshall</a>(object:Object, disconnected:Boolean = false):Object</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     The reverse of marshall.</div>
 </td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedMethod">
@@ -199,7 +210,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="XMLHTTPServiceProvider.html#update()">update</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0):void</div>
 <div class="summaryTableDescription">
-     </div>
+     
+     RESTful CRUD contract: update method.</div>
 </td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 </table>
@@ -218,6 +230,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProtectedMethod" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProtectedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="XMLHTTPServiceProvider.html#addHeaders()">addHeaders</a>(service:HTTPService, headers:Object):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol"><a href="XMLHTTPServiceProvider.html">XMLHTTPServiceProvider</a></td>
 </tr>
 <tr class="hideInheritedProtectedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
@@ -250,7 +269,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#marshallToVO()">marshallToVO</a>(object:Object, recursive:Boolean = false, metadata:Object = null):Object</div>
+<a class="signatureLink" href="#marshallToVO()">marshallToVO</a>(object:Object, recursive:Boolean = false):Object</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">GAEHTTPServiceProvider</td>
 </tr>
@@ -312,6 +331,19 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>id:int</code>&nbsp;&nbsp;[read-only]<p>
+     
+     
+     ID uniquely identifies this service provider. This is typically obtained
+     from ServiceManager like so: 
+      
+      public static const ID:int = ServiceManager.generateId();
+      
+     You can then wrap around this with a getter:
+      
+      public function get id():int {
+        return ID;
+      }
+      
      </p><span class="label">Implementation</span>
 <br>
 <code>&nbsp;&nbsp;&nbsp;&nbsp;public function get id():int</code>
@@ -351,7 +383,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected override function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null):Object</code><span class="label">Parameters</span>
+<code>protected override function marshallToVO(object:Object, recursive:Boolean = false):Object</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">object</span>:Object</code></td>
@@ -361,12 +393,6 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
-</tr>
-<tr>
-<td class="paramSpacer">&nbsp;</td>
-</tr>
-<tr>
-<td width="20px"></td><td><code><span class="label">metadata</span>:Object</code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 <p></p>

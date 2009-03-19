@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="ChangeController,org.restfulx.controllers.ChangeController,CREATE,DELETE,UPDATE,count,errors,notifySyncEnd,onDirtyChanges,onDirtyFault,push" name="keywords">
+<meta content="ChangeController,org.restfulx.controllers.ChangeController,CREATE,DELETE,UPDATE,errors,pushCount,notifyPushEnd,onCacheUpdate,onDirtyChanges,onDirtyFault,pull,push,setSyncProviders" name="keywords">
 <title>org.restfulx.controllers.ChangeController</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.1 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/ChangeController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/ChangeController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;ChangeController</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -57,15 +57,21 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
     private funtion init():void {
       ApplicationController.initialize([AIRServiceProvider, AS3JSONHTTPServiceProvider, DirectCouchDBHTTPServiceProvider], 
         AIRServiceProvider.ID, "yourairdbname");
-      Rx.changes = new ChangeController(ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
+      Rx.changes.setSyncProviders(ISyncingServiceProvider(Rx.services.getServiceProvider(AIRServiceProvider.ID)),
         Rx.services.getServiceProvider(AS3JSONHTTPServiceProvider.ID));
     }
     </pre></div>
     
-    <p></p>Synchronizing data
+    <p></p>Pushing data
     
     <div class='listing'><pre>
-    &lt;mx:Button label=&quot;Synchronize&quot; click=&quot;{Rx.changes.push()}&quot; enabled=&quot;{online}&quot;/&gt;
+    &lt;mx:Button label=&quot;Push&quot; click=&quot;{Rx.changes.push()}&quot; enabled=&quot;{online}&quot;/&gt;
+    </pre></div>
+   
+    <p></p>Pulling data
+    
+    <div class='listing'><pre>
+    &lt;mx:Button label=&quot;Pull&quot; click=&quot;{Rx.changes.pull()}&quot; enabled=&quot;{online}&quot;/&gt;
     </pre></div>
    <p></p>
 <br>
@@ -79,15 +85,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#count">count</a> : int<div class="summaryTableDescription">
-     Number of objects still left to synchronize
-     </div>
-</td><td class="summaryTableOwnerCol">ChangeController</td>
-</tr>
-<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#errors">errors</a> : <a href="../collections/RxCollection.html">RxCollection</a>
 <div class="summaryTableDescription">
      If there were synchronization errors (e.g.</div>
+</td><td class="summaryTableOwnerCol">ChangeController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#pushCount">pushCount</a> : int<div class="summaryTableDescription">
+     Number of objects still left to push
+     </div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 </table>
@@ -102,7 +108,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#ChangeController()">ChangeController</a>(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a>, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a>)</div>
+<a class="signatureLink" href="#ChangeController()">ChangeController</a>(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a> = null, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a> = null)</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
@@ -110,18 +116,38 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#notifySyncEnd()">notifySyncEnd</a>():void</div>
+<a class="signatureLink" href="#notifyPushEnd()">notifyPushEnd</a>():void</div>
 <div class="summaryTableDescription">
-    Used internally to finish sync session.</div>
+    Used internally to finish push session.</div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#push()">push</a>():void</div>
+<a class="signatureLink" href="#pull()">pull</a>(... models):void</div>
+<div class="summaryTableDescription">
+    Pulls changes from destination service provider and passes them to the source service
+    provider
+    
+    </div>
+</td><td class="summaryTableOwnerCol">ChangeController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#push()">push</a>(... models):void</div>
 <div class="summaryTableDescription">
     Pushes changes from source service provider to target/destination service provider
+    
     </div>
+</td><td class="summaryTableOwnerCol">ChangeController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setSyncProviders()">setSyncProviders</a>(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a>, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</div>
+<div class="summaryTableDescription">
+     Set sync providers on existing reference.</div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 </table>
@@ -132,6 +158,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProtectedMethod" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#onCacheUpdate()">onCacheUpdate</a>(event:<a href="../events/CacheUpdateEvent.html">CacheUpdateEvent</a>):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">ChangeController</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
@@ -183,26 +216,26 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
-<a name="count"></a>
-<table cellspacing="0" cellpadding="0" class="detailHeader">
-<tr>
-<td class="detailHeaderName">count</td><td class="detailHeaderType">property</td>
-</tr>
-</table>
-<div class="detailBody">
-<code>public var count:int</code><p>
-     Number of objects still left to synchronize
-     </p></div>
 <a name="errors"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">errors</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+<td class="detailHeaderName">errors</td><td class="detailHeaderType">property</td>
 </tr>
 </table>
 <div class="detailBody">
 <code>public var errors:<a href="../collections/RxCollection.html">RxCollection</a></code><p>
      If there were synchronization errors (e.g. destiation service provider couldn't sync
       a specific object), they are available in this collection.
+     </p></div>
+<a name="pushCount"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">pushCount</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var pushCount:int</code><p>
+     Number of objects still left to push
      </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
@@ -213,34 +246,48 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function ChangeController(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a>, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a>)</code><p>
+<code>public function ChangeController(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a> = null, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a> = null)</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">source</span>:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a></code> &mdash; ISyncingServiceProvider implementation that changes come from
+<td width="20px"></td><td><code><span class="label">source</span>:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a></code> (default = <code>null</code>)<code></code> &mdash; ISyncingServiceProvider implementation that changes come from
      </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">destination</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> &mdash; IServiceProvider implemnetation that the changes should go to
+<td width="20px"></td><td><code><span class="label">destination</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> (default = <code>null</code>)<code></code> &mdash; IServiceProvider implemnetation that the changes should go to
      </td>
 </tr>
 </table>
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
-<a name="notifySyncEnd()"></a>
+<a name="notifyPushEnd()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">notifySyncEnd</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+<td class="detailHeaderName">notifyPushEnd</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
 </tr>
 </table>
 <div class="detailBody">
-<code>public function notifySyncEnd():void</code><p>
-    Used internally to finish sync session.
+<code>public function notifyPushEnd():void</code><p>
+    Used internally to finish push session.
     </p></div>
+<a name="onCacheUpdate()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">onCacheUpdate</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function onCacheUpdate(event:<a href="../events/CacheUpdateEvent.html">CacheUpdateEvent</a>):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">event</span>:<a href="../events/CacheUpdateEvent.html">CacheUpdateEvent</a></code></td>
+</tr>
+</table>
+</div>
 <a name="onDirtyChanges()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -281,6 +328,24 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="pull()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">pull</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function pull(... models):void</code><p>
+    Pulls changes from destination service provider and passes them to the source service
+    provider
+    
+    </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code>... <span class="label">models</span></code></td>
+</tr>
+</table>
+</div>
 <a name="push()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -288,9 +353,41 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function push():void</code><p>
+<code>public function push(... models):void</code><p>
     Pushes changes from source service provider to target/destination service provider
-    </p></div>
+    
+    </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code>... <span class="label">models</span></code></td>
+</tr>
+</table>
+</div>
+<a name="setSyncProviders()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setSyncProviders</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setSyncProviders(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a>, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</code><p>
+     Set sync providers on existing reference.
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">source</span>:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a></code> &mdash; ISyncingServiceProvider implementation that changes come from
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">destination</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> &mdash; IServiceProvider implemnetation that the changes should go to
+     </td>
+</tr>
+</table>
+</div>
 <a name="constantDetail"></a>
 <div class="detailSectionHeader">Constant detail</div>
 <a name="CREATE"></a>
