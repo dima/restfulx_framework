@@ -26,6 +26,9 @@ package org.restfulx.services.as3http {
   
   import mx.rpc.IResponder;
   
+  import org.httpclient.HttpRequest;
+  import org.httpclient.http.Post;
+  import org.httpclient.http.Put;
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
   import org.restfulx.serializers.GAEXMLSerializer;
@@ -78,7 +81,7 @@ package org.restfulx.services.as3http {
         var uri:URI = new URI(url);
       
         getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
-          undoRedoFlag, true).postFormData(uri, [marshallToVO(object, recursive)]);
+          undoRedoFlag, true).request(uri, addHeadersToHttpRequest(new Post([marshallToVO(object, recursive)])));
       } else {
         update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
       }
@@ -101,8 +104,12 @@ package org.restfulx.services.as3http {
       Rx.log.debug("sending update request to: " + url);
 
       var uri:URI = new URI(url);
+      
+      var request:HttpRequest = new Put();
+      request.setFormData([marshallToVO(object, recursive)]);
+      
       getCreateOrUpdateHttpClient(object, responder, metadata, nestedBy, recursive, 
-          undoRedoFlag).putFormData(uri, [marshallToVO(object, recursive)]);
+          undoRedoFlag).request(uri, addHeadersToHttpRequest(request));
     }
   }
 }
