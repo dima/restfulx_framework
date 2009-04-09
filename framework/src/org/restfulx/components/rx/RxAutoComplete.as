@@ -101,6 +101,9 @@ package org.restfulx.components.rx {
     /** Indicates if the search area should be cleared after a specific item has been found/shown */
     public var clearTextAfterFind:Boolean;
     
+    /** Text to show if no results are found */
+    public var noResultText:String = "No Results";
+    
     /** Indicates if a Rx.models.show operation should be performed on enter */
     public var showOnEnter:Boolean = true;
 
@@ -266,7 +269,6 @@ package org.restfulx.components.rx {
       itemShown = false;
       noResults = false;
       dataProvider = null;
-      trace("on search:" + resource);
       if ((results as Array).length) {
         dataProvider = Rx.filter(Rx.models.cached(resource), filterFunction);
         dataProvider.refresh();
@@ -274,20 +276,18 @@ package org.restfulx.components.rx {
         var provider:ArrayCollection = ArrayCollection(dataProvider);
         
         if (provider.length > 1) {
-          trace("need to show drop down:" + resource);
           typedTextChanged = true;
           invalidateProperties();
           invalidateDisplayList();
           dispatchEvent(new Event("typedTextChange"));
         } else if (provider.length == 1) {
-          trace("don't need to show drop down:" + resource);
           itemPreselected = false;  
           preselectedObject = null;
           selectedObject = provider.getItemAt(0);
           dispatchEvent(new Event("selectedItemChange"));
         }
       } else {
-        dataProvider = new ArrayCollection([{label: "No results"}]);
+        dataProvider = new ArrayCollection([{label: noResultText}]);
         noResults = true;
         invalidateProperties();
         invalidateDisplayList();
@@ -299,7 +299,6 @@ package org.restfulx.components.rx {
       itemPreselected = false;
       preselectedObject = null;
       itemShown = true;
-      trace("on show:" + resource);
       dispatchEvent(new Event("chosenItemChange"));
 
       if (clearTextAfterFind) { 
@@ -312,7 +311,6 @@ package org.restfulx.components.rx {
       
       if (noResults) {
         showDropdown = true;
-        trace("going to show drop down for no results: " + resource);
       } else if (dropdown) {
         if (typedTextChanged) {
           cursorPosition = textInput.selectionBeginIndex;
@@ -320,9 +318,7 @@ package org.restfulx.components.rx {
           if (ArrayCollection(dataProvider).length) {
             if (!itemPreselected && !itemShown) { 
               showDropdown = true;
-              trace("going to show drop down: " + resource);
             } else {
-              trace("not going to show drop down: " + resource);
               showDropdown = false;
               dropdownClosed = true;
             }
@@ -341,7 +337,6 @@ package org.restfulx.components.rx {
       super.updateDisplayList(unscaledWidth, unscaledHeight);
       
       if (!clearingText && selectedIndex == -1) {
-        trace("setting text input: " + resource);
         textInput.text = typedText;
       }
       
