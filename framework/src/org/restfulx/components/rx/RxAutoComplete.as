@@ -99,7 +99,7 @@ package org.restfulx.components.rx {
     public var lookupMinChars:int = 1;
     
     /** Indicates if the search area should be cleared after a specific item has been found/shown */
-    public var clearTextAfterFind:Boolean = false;
+    public var clearTextAfterFind:Boolean;
     
     /** Indicates if a Rx.models.show operation should be performed on enter */
     public var showOnEnter:Boolean = true;
@@ -116,19 +116,25 @@ package org.restfulx.components.rx {
 
     private var prevIndex:Number = -1;
     
-    private var showDropdown:Boolean = false;
+    private var showDropdown:Boolean;
 
-    private var showingDropdown:Boolean = false;
+    private var showingDropdown:Boolean;
 
-    private var clearingText:Boolean = false;
+    private var clearingText:Boolean;
     
-    private var preselectedItem:Boolean = false;
+    private var itemPreselected:Boolean;
+    
+    private var itemShown:Boolean;
+    
+    private var noResults:Boolean;
+
+    private var preselectedObject:Object;
+    
+    private var selectedObject:Object;
 
     private var dropdownClosed:Boolean = true;
 
     private var delayTimer:Timer;
-    
-    private var preselectedObject:Object;
   
     public function RxAutoComplete() {
       super();
@@ -136,8 +142,6 @@ package org.restfulx.components.rx {
       if (Rx.models.cached(resource) && Rx.models.cached(resource).length) {
         dataProvider = Rx.filter(Rx.models.cached(resource), filterFunction);
         dataProvider.refresh();
-      } else {
-        dataProvider = new ArrayCollection;
       }
       
       //cruft to make ComboBox look-n-feel appropriate in the context
@@ -158,7 +162,7 @@ package org.restfulx.components.rx {
      * @return current typed text
      */
     public function get typedText():String {
-        return _typedText;
+      return _typedText;
     }
   
     /**
@@ -187,7 +191,7 @@ package org.restfulx.components.rx {
       
       typedTextChanged = true;
       
-      preselectedItem = true;
+      itemPreselected = true;
       preselectedObject = input;
       
       invalidateProperties();
@@ -204,8 +208,8 @@ package org.restfulx.components.rx {
     public function get chosenItem():Object {
       if (preselectedObject is RxModel) {
         return preselectedObject;
-      } else if (selectedItem is RxModel) {
-        return selectedItem;
+      } else if (selectedObject is RxModel) {
+        return selectedObject;
       }
       return null;
     }
@@ -215,6 +219,7 @@ package org.restfulx.components.rx {
      */
     public function clearTypedText():void {
       _typedText = "";
+      selectedItem = null;
       typedTextChanged = true;
       
       clearingText = true;
@@ -225,11 +230,15 @@ package org.restfulx.components.rx {
     }
   
     private function onTypedTextChange(event:Event):void {
-      ArrayCollection(dataProvider).refresh();
-      
-      if (ArrayCollection(dataProvider).length == 0) resourceSearched = false;
+      if (noResults) dataProvider = new ArrayCollection;
+      noResults = false;
 
-      if (!preselectedItem && !resourceSearched && !searchInProgress) {
+      var data:ArrayCollection = ArrayCollection(dataProvider);
+      data.refresh();
+            
+      if (data.length == 0) resourceSearched = false;
+
+      if (!itemPreselected && !resourceSearched && !searchInProgress) {
         searchInProgress = true;
         if (delayTimer != null && delayTimer.running) {
           delayTimer.stop();
@@ -254,41 +263,69 @@ package org.restfulx.components.rx {
     private function onResourceSearch(results:Object):void {
       resourceSearched = true;
       searchInProgress = false;
+      itemShown = false;
+      noResults = false;
+      dataProvider = null;
+      trace("on search:" + resource);
       if ((results as Array).length) {
         dataProvider = Rx.filter(Rx.models.cached(resource), filterFunction);
         dataProvider.refresh();
         
-        if (ArrayCollection(dataProvider).length > 1) {
+        var provider:ArrayCollection = ArrayCollection(dataProvider);
+        
+        if (provider.length > 1) {
+          trace("need to show drop down:" + resource);
           typedTextChanged = true;
           invalidateProperties();
           invalidateDisplayList();
           dispatchEvent(new Event("typedTextChange"));
-        } else if (ArrayCollection(dataProvider).length == 1) {
-          selectedItem = ArrayCollection(dataProvider).getItemAt(0);
-          preselectedItem = false;
+        } else if (provider.length == 1) {
+          trace("don't need to show drop down:" + resource);
+          itemPreselected = false;  
           preselectedObject = null;
+          selectedObject = provider.getItemAt(0);
           dispatchEvent(new Event("selectedItemChange"));
         }
+      } else {
+        dataProvider = new ArrayCollection([{label: "No results"}]);
+        noResults = true;
+        invalidateProperties();
+        invalidateDisplayList();
       }
     }
 
     private function onResourceShow(result:Object):void {
-      selectedItem = result;
-      preselectedItem = false;
+      selectedObject = result;
+      itemPreselected = false;
       preselectedObject = null;
-      if (clearTextAfterFind) clearTypedText();
+      itemShown = true;
+      trace("on show:" + resource);
       dispatchEvent(new Event("chosenItemChange"));
+
+      if (clearTextAfterFind) { 
+        clearTypedText();
+      }
     }
       
     override protected function commitProperties():void {
       super.commitProperties();
-    
-      if (dropdown) {
+      
+      if (noResults) {
+        showDropdown = true;
+        trace("going to show drop down for no results: " + resource);
+      } else if (dropdown) {
         if (typedTextChanged) {
           cursorPosition = textInput.selectionBeginIndex;
     
           if (ArrayCollection(dataProvider).length) {
-            if (!clearingText && !preselectedItem) showDropdown = true;
+            if (!itemPreselected && !itemShown) { 
+              showDropdown = true;
+              trace("going to show drop down: " + resource);
+            } else {
+              trace("not going to show drop down: " + resource);
+              showDropdown = false;
+              dropdownClosed = true;
+            }
           } else {
             dropdownClosed = true;
             showDropdown = false;
@@ -303,13 +340,22 @@ package org.restfulx.components.rx {
       unscaledHeight:Number):void {
       super.updateDisplayList(unscaledWidth, unscaledHeight);
       
-      if (selectedIndex == -1) {
+      if (!clearingText && selectedIndex == -1) {
+        trace("setting text input: " + resource);
         textInput.text = typedText;
       }
-  
-      if (dropdown) {
+      
+      if (noResults) {
+        // This is needed to control the open duration of the dropdown
+        textInput.text = typedText;
+        typedTextChanged = false;
+        super.open();
+        showDropdown = false;
+        showingDropdown = true;
+        if (dropdownClosed) dropdownClosed = false;
+      } else if (dropdown) {
         if (typedTextChanged) {
-          //This is needed because a call to super.updateDisplayList() set the text
+          //This is needed because a call to super.updateDisplayList() iset the text
           // in the textInput to "" and the value typed by the user gets losts
           textInput.text = _typedText;
           textInput.setSelection(cursorPosition, cursorPosition);
@@ -320,10 +366,9 @@ package org.restfulx.components.rx {
           textInput.setSelection(_typedText.length, textInput.text.length);
         }
         
-        clearingText = false;
-        if (preselectedItem) {
-          preselectedItem = false;
-        }
+        if (clearingText) clearingText = false;
+        if (itemPreselected) itemPreselected = false;
+        if (itemShown) itemShown = false;
         
         if (showDropdown && !dropdown.visible) {
           // This is needed to control the open duration of the dropdown
@@ -333,7 +378,7 @@ package org.restfulx.components.rx {
   
           if (dropdownClosed) dropdownClosed = false;
         }
-      }
+      }      
     }
 
     override protected function keyDownHandler(event:KeyboardEvent):void {
@@ -396,7 +441,7 @@ package org.restfulx.components.rx {
       super.close(event);
       if (selectedIndex == 0) {
         textInput.text = selectedLabel;
-        textInput.setSelection(cursorPosition, textInput.text.length);      
+        textInput.setSelection(cursorPosition, textInput.text.length);
       }      
     } 
   }

@@ -86,7 +86,7 @@ package org.restfulx.controllers {
       } else if (models is RxModel) {
         fqn = getQualifiedClassName(models);
       }
-      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.INDEX, data[fqn]));            
+      if (fqn != null) Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.INDEX, data[fqn]));            
     }
 
     /**
@@ -96,7 +96,7 @@ package org.restfulx.controllers {
      */
     public function show(model:RxModel):void {
       var fqn:String = getQualifiedClassName(model);
-      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW, model));            
+      if (fqn != null) Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW, model));            
     }
 
     /**
