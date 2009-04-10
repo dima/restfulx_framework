@@ -397,6 +397,8 @@ package org.restfulx.components.rx {
             if (showOnEnter && !Rx.models.shown(selectedItem)) {
               RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
             } else {
+              selectedObject = selectedItem;
+              itemShown = true;
               if (clearTextAfterFind) clearTypedText();
               dispatchEvent(new Event("chosenItemChange"));
             }
