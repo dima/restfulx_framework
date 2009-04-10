@@ -75,8 +75,10 @@
     <class>org.restfulx.services.mock.MockDirectCouchDBHTTPServiceProvider</class>
     <class>org.restfulx.services.mock.MockJSONHTTPServiceProvider</class>
     <class>org.restfulx.services.mock.MockXMLHTTPServiceProvider</class>
+    <class>org.restfulx.services.webkit.WebkitDBServiceProvider</class>
     <class>org.restfulx.utils.BinaryAttachment</class>
     <class>org.restfulx.utils.Inflector</class>
+    <class>org.restfulx.utils.JavaScript</class>
     <class>org.restfulx.utils.ModelsMetadata</class>
     <class>org.restfulx.utils.MultiPartRequestBuilder</class>
     <class>org.restfulx.utils.RxFileReference</class>

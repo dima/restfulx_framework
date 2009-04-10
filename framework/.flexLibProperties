@@ -68,8 +68,10 @@
 <classEntry path="org.restfulx.services.mock.MockDirectCouchDBHTTPServiceProvider"/>
 <classEntry path="org.restfulx.services.mock.MockJSONHTTPServiceProvider"/>
 <classEntry path="org.restfulx.services.mock.MockXMLHTTPServiceProvider"/>
+<classEntry path="org.restfulx.services.webkit.WebkitDBServiceProvider"/>
 <classEntry path="org.restfulx.utils.BinaryAttachment"/>
 <classEntry path="org.restfulx.utils.Inflector"/>
+<classEntry path="org.restfulx.utils.JavaScript"/>
 <classEntry path="org.restfulx.utils.ModelsMetadata"/>
 <classEntry path="org.restfulx.utils.MultiPartRequestBuilder"/>
 <classEntry path="org.restfulx.utils.RxFileReference"/>

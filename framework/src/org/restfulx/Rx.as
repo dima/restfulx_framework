@@ -42,6 +42,7 @@ package org.restfulx {
   import org.restfulx.controllers.UndoRedoController;
   import org.restfulx.serializers.ISerializer;
   import org.restfulx.services.http.XMLHTTPServiceProvider;
+  import org.restfulx.utils.JavaScript;
   import org.restfulx.utils.RxUtils;
   
   [Bindable]
@@ -184,6 +185,8 @@ package org.restfulx {
      * </listing>
      */
     public static var airDatabaseName:String = "rxdb";
+    
+    public static var webkitDatabaseName:String = "rxdb";
     
     /** 
      * Encryption key to use for connection to AIR SQLite database (if this field is empty connection
