@@ -3,11 +3,12 @@ package org.restfulx.services.webkit {
   import flash.external.ExternalInterface;
   import flash.utils.Dictionary;
   import flash.utils.Timer;
+  import flash.utils.clearInterval;
   import flash.utils.describeType;
   import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
+  import flash.utils.setInterval;
   
-  import mx.collections.ArrayCollection;
   import mx.controls.Alert;
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
@@ -19,7 +20,6 @@ package org.restfulx.services.webkit {
   import org.restfulx.utils.JavaScript;
   import org.restfulx.utils.ModelsMetadata;
   import org.restfulx.utils.RxUtils;
-  import org.restfulx.utils.UUID;
 
   /**
    * Webkit DB Service Provider implementation.
@@ -43,7 +43,8 @@ package org.restfulx.services.webkit {
 		private var js:JavaScript = new JavaScript;
 		private var justLoaded:Boolean = true;
 		private var databaseName:String = Rx.webkitDatabaseName;
-		private var returnedResults:ArrayCollection;
+		private var returnedResults:Object;
+		private var sleepInt:uint;
     private var pending:Array;
     private var indexing:Dictionary;
     private var timer:Timer;
@@ -113,7 +114,7 @@ package org.restfulx.services.webkit {
 
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
-     	getSQLStatement(sql[fqn]["select"] + " WHERE id = '" + object["id"] + "'");
+     	createSql(sql[fqn]["select"] + " WHERE id = '" + object["id"] + "'",null,'show');
       try {
         var vo:Object = returnedResults;
         vo["clazz"] = fqn.split("::")[1];
@@ -129,10 +130,7 @@ package org.restfulx.services.webkit {
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var params:String = '';
       var fqn:String = getQualifiedClassName(object);
-      var sqlText:String = sql[fqn]["select"];
-      if (RxUtils.isEmpty(object["id"])) {
-        object["id"] = UUID.createRandom().toString().replace(new RegExp("-", "g"), "");
-      }
+      var sqlText:String = sql[fqn]["insert"];
       
       for each (var node:XML in describeType(object)..accessor) {
         var localName:String = node.@name;
@@ -159,8 +157,7 @@ package org.restfulx.services.webkit {
       }
       
       try {
-      	params += '"' + object["id"] + '"';
-        getSQLStatement(sqlText);
+        createSql(sqlText, params, 'create');
         //show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
         if (responder) responder.fault(e);
@@ -172,7 +169,7 @@ package org.restfulx.services.webkit {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["update"];
       statement = statement.replace("{id}", object["id"]);
-      getSQLStatement(statement);
+      createSql(statement);
       for each (var node:XML in describeType(object)..accessor) {
         var localName:String = node.@name;
         var type:String = node.@type;
@@ -210,7 +207,7 @@ package org.restfulx.services.webkit {
     public function dirty(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = Rx.models.state.types[object];
       
-      getSQLStatement(sql[fqn]["dirty"]);  
+      createSql(sql[fqn]["dirty"]);  
       
       try {
         var result:Object;
@@ -235,7 +232,7 @@ package org.restfulx.services.webkit {
       var statement:String = sql[fqn]["delete"];
       statement = statement.replace("{id}", object["id"]);
       try {
-        getSQLStatement(statement);
+        createSql(statement);
         invokeResponderResult(responder, object);
       } catch (e:Error) {
         if (responder) responder.fault(e);
@@ -305,7 +302,7 @@ package org.restfulx.services.webkit {
       insertStatement += "id, ";
       insertParams += "?, ";
       
-      createStatement += "id TEXT UNIQUE)";      
+      createStatement += "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)";      
       sql[modelName]["create"] = createStatement;
             
       insertParams = insertParams.substr(0, insertParams.length - 2);
@@ -328,33 +325,39 @@ package org.restfulx.services.webkit {
     
     protected function initializeConnection():void {
       for (var modelName:String in sql) {
-        getSQLStatement(sql[modelName]["create"],null,false);
+        createSql(sql[modelName]["create"],null,'init',true);
       }
     }
     
-    protected function getSQLStatement(statement:String, params:String = '', debug:Boolean = true):void {
-    	
-    	/* if (justLoaded == true) {
-    		js.source = 'var db = openDatabase("' + databaseName + '" , "1.0", "Rx Database", 200000);';
-    	} */
+    protected function createSql(statement:String, params:String = '', action:String = 'index',
+    	debug:Boolean = false):void {
     	
 			js.source = 'db.transaction(function(tx) {';
-			js.source += '  tx.executeSql("' + statement + '", [' + params + '], function(tx, result){';
-			js.source += '		var resultingObject; ';
-			js.source += '		resultingObject = result.rows.item(0); ';
-			js.source += '		storeResult(resultingObject); ';
+			js.source += '  tx.executeSql("' + statement + '", [' + params + '], function(tx, result) {';
+			
+			if (action != 'init') {
+				js.source += '		var resultingObject; ';
+				js.source += '		resultingObject = result; ';
+				js.source += '		storeResult(resultingObject); ';	
+			}
+			
 			js.source += '  });';
 			js.source += '});';
 			js.source += 'var r; ';
 			js.source += 'function storeResult(result){ r = result; };';
-			js.source += 'function getResult(){ return r; };';
+			
+			if(action != 'init')
+				sleepInt = setInterval(goToSleep,200);
 			
 			if (debug == true) {
-				var result:Object = ExternalInterface.call("getResult");
-				Alert.show(result['name'].toString());
-				//Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
+				Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
 			}
     }
+    
+    protected function goToSleep():void {
+			clearInterval(sleepInt);
+			returnedResults = ExternalInterface.call("eval", "r");
+		}
     
     protected function invokeResponderResult(responder:IResponder, result:Object):void {
       var event:ResultEvent = new ResultEvent(ResultEvent.RESULT, false, 
@@ -373,7 +376,7 @@ package org.restfulx.services.webkit {
       var query:Object = pending.shift();
       if (!query) return;
         
-      getSQLStatement(query['statement'],null,true);
+      createSql(query['statement'],null,'index');
       var token:AsyncToken = AsyncToken(query['token']);
       var fqn:String = query['fqn'];
       var clazz:Class = getDefinitionByName(fqn) as Class;
