@@ -41,7 +41,6 @@ package org.restfulx.services.webkit {
     protected var state:ModelsMetadata;
     protected var sql:Dictionary;
 		private var js:JavaScript = new JavaScript;
-		private var justLoaded:Boolean = true;
 		private var databaseName:String = Rx.webkitDatabaseName;
 		private var returnedResults:Object;
 		private var sleepInt:uint;
@@ -54,6 +53,8 @@ package org.restfulx.services.webkit {
       pending = new Array;
       indexing = new Dictionary;
       sql = new Dictionary;
+      
+      //js.source = 'var db = openDatabase("' + databaseName +  '" , "1.0", "Rx", 200000);';
       
       for each (var model:Class in state.models) {
         var fqn:String = getQualifiedClassName(model);
@@ -157,6 +158,7 @@ package org.restfulx.services.webkit {
       }
       
       try {
+      	params = params.substr(0, params.length - 2);
         createSql(sqlText, params, 'create');
         //show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -256,7 +258,7 @@ package org.restfulx.services.webkit {
     }
     
     private function updateSyncStatus(object:Object, responder:IResponder, syncStatus:String = ""):void {
-     
+    	// not needed
     }
     
     private function extractMetadata(model:Object):void {
@@ -299,15 +301,11 @@ package org.restfulx.services.webkit {
         updateStatement += snakeName + "=:" + snakeName + ",";
       }
       
-      insertStatement += "id, ";
-      insertParams += "?, ";
-      
       createStatement += "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)";      
       sql[modelName]["create"] = createStatement;
             
       insertParams = insertParams.substr(0, insertParams.length - 2);
-      insertStatement = insertStatement.substr(0, 
-        insertStatement.length - 2) + ") VALUES(" + insertParams + ")";
+      insertStatement = insertStatement.substr(0, insertStatement.length - 2) + ") VALUES(" + insertParams + ")";
       sql[modelName]["insert"] = insertStatement;
       
       updateStatement = updateStatement.substring(0, updateStatement.length - 1);
@@ -325,19 +323,31 @@ package org.restfulx.services.webkit {
     
     protected function initializeConnection():void {
       for (var modelName:String in sql) {
-        createSql(sql[modelName]["create"],null,'init',true);
+        createSql(sql[modelName]["create"]);
       }
     }
     
-    protected function createSql(statement:String, params:String = '', action:String = 'index',
+    protected function createSql(statement:String, params:String = '', action:String = 'init',
     	debug:Boolean = false):void {
     	
 			js.source = 'db.transaction(function(tx) {';
 			js.source += '  tx.executeSql("' + statement + '", [' + params + '], function(tx, result) {';
 			
-			if (action != 'init') {
+			if (action == 'index') {
+				js.source += '		var resultingObject; ';
+				js.source += '		resultingObject = result.rows.item(0); ';
+				js.source += '		storeResult(resultingObject); ';	
+			}
+			
+			if (action == 'show') {
 				js.source += '		var resultingObject; ';
 				js.source += '		resultingObject = result; ';
+				js.source += '		storeResult(resultingObject); ';	
+			}
+			
+			if (action == 'create') {
+				js.source += '		var resultingObject; ';
+				js.source += '		resultingObject = result.insertId; ';
 				js.source += '		storeResult(resultingObject); ';	
 			}
 			
@@ -346,17 +356,19 @@ package org.restfulx.services.webkit {
 			js.source += 'var r; ';
 			js.source += 'function storeResult(result){ r = result; };';
 			
-			if(action != 'init')
+			if (action != 'init')
 				sleepInt = setInterval(goToSleep,200);
 			
 			if (debug == true) {
 				Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
 			}
+			
     }
     
     protected function goToSleep():void {
 			clearInterval(sleepInt);
 			returnedResults = ExternalInterface.call("eval", "r");
+			//Alert.show(returnedResults.toString());
 		}
     
     protected function invokeResponderResult(responder:IResponder, result:Object):void {
@@ -376,14 +388,19 @@ package org.restfulx.services.webkit {
       var query:Object = pending.shift();
       if (!query) return;
         
-      createSql(query['statement'],null,'index');
+      createSql(query['statement'],null,'index',true);
       var token:AsyncToken = AsyncToken(query['token']);
       var fqn:String = query['fqn'];
       var clazz:Class = getDefinitionByName(fqn) as Class;
               
       try {
         var result:Object;
-        var data:Array = returnedResults as Array;
+        
+        var data:Object = returnedResults;
+        data["clazz"] = fqn.split("::")[1];
+        result = unmarshall(data);
+        
+        /* var data:Array = returnedResults as Array;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           result = unmarshall(data);
@@ -391,10 +408,9 @@ package org.restfulx.services.webkit {
           result = new Array;
         }
         
-        result = new Array;
-        
         delete indexing[fqn];
-        invokeResponderResult(token.responders[0], result);
+        invokeResponderResult(token.responders[0], result);*/
+        
       } catch (e:Error) {
         delete indexing[fqn];
         IResponder(token.responders[0]).fault(e);
