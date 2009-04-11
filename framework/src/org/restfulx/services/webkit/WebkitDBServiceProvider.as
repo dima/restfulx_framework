@@ -7,6 +7,7 @@ package org.restfulx.services.webkit {
   import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
   
+  import mx.controls.Alert;
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
@@ -96,7 +97,7 @@ package org.restfulx.services.webkit {
       }
       
       queryText = queryText.substr(0, queryText.length - 5);
-     	getSQLStatement(queryText);
+     	//getSQLStatement(queryText);
       
       var token:AsyncToken = new AsyncToken(null);
       token.addResponder(responder);
@@ -345,7 +346,7 @@ package org.restfulx.services.webkit {
 			
 			if (debug == true) {
 				returnedResults = ExternalInterface.call("getResult");
-				//Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
+				Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
 			}
     }
     
