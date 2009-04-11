@@ -7,7 +7,6 @@ package org.restfulx.services.webkit {
   import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
   
-  import mx.controls.Alert;
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
@@ -39,22 +38,19 @@ package org.restfulx.services.webkit {
     
     protected var state:ModelsMetadata;
     protected var sql:Dictionary;
-		private var db:JavaScript = new JavaScript;
+		private var js:JavaScript = new JavaScript;
+		private var justLoaded:Boolean = true;
+		private var databaseName:String = Rx.webkitDatabaseName;
 		private var returnedResults:Object;
     private var pending:Array;
     private var indexing:Dictionary;
     private var timer:Timer;
 
     public function WebkitDBServiceProvider() {
-      var databaseName:String = Rx.webkitDatabaseName;
-      
       state = Rx.models.state;
-      
       pending = new Array;
       indexing = new Dictionary;
       sql = new Dictionary;
-      
-      db.source = 'var db = openDatabase("' + databaseName + '" , "1.0", "Rx Database", 200000);';
       
       for each (var model:Class in state.models) {
         var fqn:String = getQualifiedClassName(model);
@@ -156,14 +152,13 @@ package org.restfulx.services.webkit {
           if (object[localName] is Boolean) {
 
           } else {
-
+						params += '"' + RxUtils.uncast(object, localName) + '", '; 
           }
         }
       }
       
       try {
-      	params += "'hi', 'hi', ";
-      	params += object["id"];
+      	params += '"' + object["id"] + '"';
         getSQLStatement(sqlText,params);
         show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
@@ -309,7 +304,7 @@ package org.restfulx.services.webkit {
       insertStatement += "id, ";
       insertParams += "?, ";
       
-      createStatement += "id REAL UNIQUE)";      
+      createStatement += "id TEXT UNIQUE)";      
       sql[modelName]["create"] = createStatement;
             
       insertParams = insertParams.substr(0, insertParams.length - 2);
@@ -332,20 +327,26 @@ package org.restfulx.services.webkit {
     
     protected function initializeConnection():void {
       for (var modelName:String in sql) {
-        getSQLStatement(sql[modelName]["create"]);
+        getSQLStatement(sql[modelName]["create"],null,false);
       }
     }
     
-    protected function getSQLStatement(statement:String, params:String = ''):void {
-    	db.source += 'var resultingObject;';
-			db.source += 'db.transaction(function(tx) {';
-			db.source += '  tx.executeSql("' + statement + '", [' + params + '], function(result){ storeResult(result); });';
-			db.source += '});';
-			db.source += 'function storeResult(result) { resultingObject = result; };';
-			db.source += 'function getResult(){ return resultingObject; };';
-			returnedResults = ExternalInterface.call("getResult");
+    protected function getSQLStatement(statement:String, params:String = '', debug:Boolean = true):void {
+    	/* if (justLoaded == true) {
+    		js.source = 'var db = openDatabase("' + databaseName + '" , "1.0", "Rx Database", 200000);';
+    	} */
+    	
+    	js.source = 'var resultingObject;';
+			js.source += 'db.transaction(function(tx) {';
+			js.source += '  tx.executeSql("' + statement + '", [' + params + '], function(result){ storeResult(result); });';
+			js.source += '});';
+			js.source += 'function storeResult(result) { resultingObject = result; };';
+			js.source += 'function getResult(){ return resultingObject; };';
 			
-			Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
+			if (debug == true) {
+				returnedResults = ExternalInterface.call("getResult");
+				//Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
+			}
     }
     
     protected function invokeResponderResult(responder:IResponder, result:Object):void {
