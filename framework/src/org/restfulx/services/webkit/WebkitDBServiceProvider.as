@@ -42,7 +42,9 @@ package org.restfulx.services.webkit {
     protected var sql:Dictionary;
 		private var js:JavaScript = new JavaScript;
 		private var databaseName:String = Rx.webkitDatabaseName;
-		private var returnedResults:Object;
+		private var returnedResult:Object;
+		private var returnedResults:Array = new Array;
+		private var currentAction:String;
 		private var sleepInt:uint;
     private var pending:Array;
     private var indexing:Dictionary;
@@ -100,24 +102,25 @@ package org.restfulx.services.webkit {
       }
       
       queryText = queryText.substr(0, queryText.length - 5);
+      createSql(queryText,'','index');
       
       var token:AsyncToken = new AsyncToken(null);
       token.addResponder(responder);
       var query:Object = {token:token, fqn:fqn, statement:queryText};
       pending.push(query);
       
-      if (!timer) {
+      /* if (!timer) {
         timer = new Timer(1);
         timer.addEventListener(TimerEvent.TIMER, executePendindIndex);
         timer.start();
-      }
+      } */
     }
 
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
-     	createSql(sql[fqn]["select"] + " WHERE id = '" + object["id"] + "'",null,'show');
+     	createSql(sql[fqn]["select"] + " WHERE id = '" + object["id"] + "'",'','show');
       try {
-        var vo:Object = returnedResults;
+        var vo:Object = returnedResult;
         vo["clazz"] = fqn.split("::")[1];
         object = unmarshall(vo);
       
@@ -213,7 +216,7 @@ package org.restfulx.services.webkit {
       
       try {
         var result:Object;
-        var data:Array = returnedResults as Array;
+        var data:Array = returnedResults;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           result = unmarshall(data);
@@ -329,26 +332,29 @@ package org.restfulx.services.webkit {
     
     protected function createSql(statement:String, params:String = '', action:String = 'init',
     	debug:Boolean = false):void {
+    	currentAction = action;
     	
 			js.source = 'db.transaction(function(tx) {';
 			js.source += '  tx.executeSql("' + statement + '", [' + params + '], function(tx, result) {';
 			
 			if (action == 'index') {
-				js.source += '		var resultingObject; ';
-				js.source += '		resultingObject = result.rows.item(0); ';
-				js.source += '		storeResult(resultingObject); ';	
+				js.source += '	var resultingObject = [];';
+				js.source += '	for (var i=0; i<result.rows.length; i++) {';
+				js.source += '		resultingObject[i] = result.rows.item(i);';
+				js.source += '	};';
+				js.source += '	storeResult(resultingObject);';
 			}
 			
 			if (action == 'show') {
-				js.source += '		var resultingObject; ';
-				js.source += '		resultingObject = result; ';
-				js.source += '		storeResult(resultingObject); ';	
+				js.source += '	var resultingObject; ';
+				js.source += '	resultingObject = result; ';
+				js.source += '	storeResult(resultingObject); ';	
 			}
 			
 			if (action == 'create') {
-				js.source += '		var resultingObject; ';
-				js.source += '		resultingObject = result.insertId; ';
-				js.source += '		storeResult(resultingObject); ';	
+				js.source += '	var resultingObject; ';
+				js.source += '	resultingObject = result.insertId; ';
+				js.source += '	storeResult(resultingObject); ';	
 			}
 			
 			js.source += '  });';
@@ -356,9 +362,10 @@ package org.restfulx.services.webkit {
 			js.source += 'var r; ';
 			js.source += 'function storeResult(result){ r = result; };';
 			
-			if (action != 'init')
+			if (action != 'init') {
 				sleepInt = setInterval(goToSleep,200);
-			
+			}
+				
 			if (debug == true) {
 				Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
 			}
@@ -367,8 +374,23 @@ package org.restfulx.services.webkit {
     
     protected function goToSleep():void {
 			clearInterval(sleepInt);
-			returnedResults = ExternalInterface.call("eval", "r");
-			//Alert.show(returnedResults.toString());
+			
+			if (currentAction == 'index') {
+				returnedResults = ExternalInterface.call("eval", "r");
+				executePendindIndex();
+				//Alert.show(returnedResults.toString());
+			}
+				
+			if (currentAction == 'show') {
+				returnedResult = ExternalInterface.call("eval", "r");
+				Alert.show(returnedResult.toString());
+			}
+				
+			if (currentAction == 'create') {
+				returnedResult = ExternalInterface.call("eval", "r");
+				Alert.show(returnedResult.toString());
+			}
+				
 		}
     
     protected function invokeResponderResult(responder:IResponder, result:Object):void {
@@ -379,7 +401,7 @@ package org.restfulx.services.webkit {
       }
     }
         
-    private function executePendindIndex(event:TimerEvent):void {
+    private function executePendindIndex():void {
       if (pending.length == 0) {
         timer.stop();
         timer = null;
@@ -388,19 +410,14 @@ package org.restfulx.services.webkit {
       var query:Object = pending.shift();
       if (!query) return;
         
-      createSql(query['statement'],null,'index',true);
       var token:AsyncToken = AsyncToken(query['token']);
       var fqn:String = query['fqn'];
       var clazz:Class = getDefinitionByName(fqn) as Class;
               
       try {
-        var result:Object;
+  			var result:Object;
+        var data:Array = returnedResults;
         
-        var data:Object = returnedResults;
-        data["clazz"] = fqn.split("::")[1];
-        result = unmarshall(data);
-        
-        /* var data:Array = returnedResults as Array;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           result = unmarshall(data);
@@ -409,8 +426,7 @@ package org.restfulx.services.webkit {
         }
         
         delete indexing[fqn];
-        invokeResponderResult(token.responders[0], result);*/
-        
+        invokeResponderResult(token.responders[0], result);
       } catch (e:Error) {
         delete indexing[fqn];
         IResponder(token.responders[0]).fault(e);
