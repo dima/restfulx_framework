@@ -3,11 +3,9 @@ package org.restfulx.services.webkit {
   import flash.external.ExternalInterface;
   import flash.utils.Dictionary;
   import flash.utils.Timer;
-  import flash.utils.clearInterval;
   import flash.utils.describeType;
   import flash.utils.getDefinitionByName;
   import flash.utils.getQualifiedClassName;
-  import flash.utils.setInterval;
   
   import mx.controls.Alert;
   import mx.rpc.AsyncToken;
@@ -40,21 +38,38 @@ package org.restfulx.services.webkit {
     
     protected var state:ModelsMetadata;
     protected var sql:Dictionary;
-		private var js:JavaScript = new JavaScript;
+    private var indexing:Dictionary;
 		private var databaseName:String = Rx.webkitDatabaseName;
+    
+    // Javascript vars
+		private var js:JavaScript = new JavaScript;
 		private var returnedResult:Object = new Object;
 		private var returnedResults:Array = new Array;
-		private var currentClass:String;
-		private var tablesLoaded:Boolean = false;
+		
+    // For show/create
     private var directShow:Boolean = true;
-    private var modelsCount:int = 0;
     private var iResponder:IResponder;
-		private var sleepInt:uint;
+    
+    // Pending items for Init and Index queues
     private var pending:Array;
     private var pendingInit:Array;
-    private var indexing:Dictionary;
-    private var timer:Timer;
-    private var timerInit:Timer;
+		private var currentClass:String;
+		private var tablesLoaded:Boolean = false;
+    private var modelsCount:int = 0;
+    
+    // Timers to check js code and queues
+    private var timerInitPre:Timer;
+    private var timerIndexPre:Timer;
+    private var timerShowPre:Timer;
+    private var timerCreatePre:Timer;
+    private var timerUpdatePre:Timer;
+    private var timerDestroyPre:Timer;
+    private var timerInitPost:Timer;
+    private var timerIndexPost:Timer;
+    private var timerShowPost:Timer;
+    private var timerCreatePost:Timer;
+    private var timerUpdatePost:Timer;
+    private var timerDestroyPost:Timer;
 
     public function WebkitDBServiceProvider() {
       state = Rx.models.state;
@@ -330,6 +345,14 @@ package org.restfulx.services.webkit {
       sql[modelName]["dirty"] = "SELECT * FROM " + tableName;
     }
     
+    protected function invokeResponderResult(responder:IResponder, result:Object):void {
+      var event:ResultEvent = new ResultEvent(ResultEvent.RESULT, false, 
+        false, result);
+      if (responder != null) {
+        responder.result(event);
+      }
+    }
+    
     protected function initializeConnection():void {
 
       for (var modelName:String in sql) {
@@ -337,10 +360,10 @@ package org.restfulx.services.webkit {
       	pendingInit.push(query);
       }
       
-      if (!timerInit) {
-        timerInit = new Timer(50);
-        timerInit.addEventListener(TimerEvent.TIMER, executePendingInit);
-        timerInit.start();
+      if (!timerInitPre) {
+        timerInitPre = new Timer(1);
+        timerInitPre.addEventListener(TimerEvent.TIMER, executeInitPre);
+        timerInitPre.start();
       }
       
     }
@@ -352,34 +375,90 @@ package org.restfulx.services.webkit {
 			js.source = 'db.transaction(function(tx) {';
 			js.source += '  tx.executeSql("' + statement + '", [' + params + '], function(tx, result) {';
 			
+			if (action == 'init') {
+				js.source += '	var initObject;';
+				js.source += '	initObject = "true";';
+				js.source += '	storeResultInit(initObject);';	
+			}
+			
 			if (action == 'index') {
-				js.source += '	var resultingObjects = [];';
+				js.source += '	var indexObjects = [];';
 				js.source += '	for (var i=0; i<result.rows.length; i++) {';
-				js.source += '		resultingObjects[i] = result.rows.item(i);';
+				js.source += '		indexObjects[i] = result.rows.item(i);';
 				js.source += '	};';
-				js.source += '	storeResult(resultingObjects);';
+				js.source += '	storeResultIndex(indexObjects);';
 			}
 			
 			if (action == 'show') {
 				js.source += '	var showObject;';
 				js.source += '	showObject = result.rows.item(0);';
-				js.source += '	storeResult(showObject);';	
+				js.source += '	storeResultShow(showObject);';	
 			}
 			
 			if (action == 'create') {
 				js.source += '	var createObject;';
 				js.source += '	tx.executeSql("' + sql[fqn]["select"] + ' WHERE id=?;", [result.insertId], function(tx, result) {';
 				js.source += '		createObject = result.rows.item(0);';				
-				js.source += '		storeResult(createObject);';
+				js.source += '		storeResultCreate(createObject);';
 				js.source += '	});';
 			}
 			js.source += '	});';
 			js.source += '});';
-			js.source += 'var r; ';
-			js.source += 'function storeResult(result){ r = result; };';
+			js.source += 'var init; var index; var show; var create; var update; var destroy;';
+			js.source += 'function storeResultInit(result){ init = result; };';
+			js.source += 'function storeResultIndex(result){ index = result; };';
+			js.source += 'function storeResultShow(result){ show = result; };';
+			js.source += 'function storeResultCreate(result){ create = result; };';
+			js.source += 'function storeResultUpdate(result){ update = result; };';
+			js.source += 'function storeResultDestroy(result){ destroy = result; };';
 			
-			if (action != 'init')
-				sleepInt = setInterval(goToSleep,100,action);
+			if (action == 'init') {
+				if (!timerInitPost) {
+	        timerInitPost = new Timer(1);
+	        timerInitPost.addEventListener(TimerEvent.TIMER, executeInitPost);
+	        timerInitPost.start();
+	      }
+    	}
+    	
+    	if (action == 'index') {
+				if (!timerIndexPost) {
+	        timerIndexPost = new Timer(1);
+	        timerIndexPost.addEventListener(TimerEvent.TIMER, executeIndexPost);
+	        timerIndexPost.start();
+	      }
+    	}
+    	
+    	if (action == 'show') {
+				if (!timerShowPost) {
+	        timerShowPost = new Timer(1);
+	        timerShowPost.addEventListener(TimerEvent.TIMER, executeShowPost);
+	        timerShowPost.start();
+	      }
+    	}
+    	
+    	if (action == 'create') {
+				if (!timerCreatePost) {
+	        timerCreatePost = new Timer(1);
+	        timerCreatePost.addEventListener(TimerEvent.TIMER, executeCreatePost);
+	        timerCreatePost.start();
+	      }
+    	}
+    	
+    	if (action == 'update') {
+				if (!timerUpdatePost) {
+	        timerUpdatePost = new Timer(1);
+	        timerUpdatePost.addEventListener(TimerEvent.TIMER, executeUpdatePost);
+	        timerUpdatePost.start();
+	      }
+    	}
+    	
+    	if (action == 'destroy') {
+				if (!timerDestroyPost) {
+	        timerDestroyPost = new Timer(1);
+	        timerDestroyPost.addEventListener(TimerEvent.TIMER, executeDestroyPost);
+	        timerDestroyPost.start();
+	      }
+    	}
 				
 			if (debug == true) {
 				Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
@@ -387,92 +466,83 @@ package org.restfulx.services.webkit {
 			
     }
     
-    protected function goToSleep(action:String=''):void {
-			clearInterval(sleepInt);
-			
-			if (action == 'index') {
-				returnedResults = ExternalInterface.call("eval", "r");
-				if (!timer) {
-	        timer = new Timer(25);
-	        timer.addEventListener(TimerEvent.TIMER, executePendingIndex);
-	        timer.start();
-	      }
-			}
-				
-			if (action == 'show') {
-				returnedResult = ExternalInterface.call("eval", "r");
-			}
-				
-			if (action == 'create') {
-				returnedResult = ExternalInterface.call("eval", "r");
-				var object:Object = returnedResult;
-				directShow = false;
-				show(object, iResponder);
-			}
-				
-		}
-    
-    protected function invokeResponderResult(responder:IResponder, result:Object):void {
-      var event:ResultEvent = new ResultEvent(ResultEvent.RESULT, false, 
-        false, result);
-      if (responder != null) {
-        responder.result(event);
-      }
-    }
-    
-    private function executePendingInit(event:TimerEvent):void {
+    private function executeInitPre(event:TimerEvent):void {
 
     	if (pendingInit.length == 0) {
 	  		tablesLoaded = true;
-	    	timerInit.stop();
-	    	timerInit = null;
+	    	timerInitPre.stop();
+	    	timerInitPre = null;
 	  	}
 	  	
-	  	var query:Object = pendingInit.shift();
-      if (!query) return;
-      createSql(query['statement']);
-	  	
-    }
-    
-    private function executePendingIndex(event:TimerEvent):void {
-    	
-			if (tablesLoaded == true) {
-	      
-	      if (pending.length == 0) {
-	        timer.stop();
-	        timer = null;
-	      }
-	      
-	      var query:Object = pending.shift();
+	  	if (modelsCount == pendingInit.length) {
+		  	var query:Object = pendingInit.shift();
 	      if (!query) return;
-	        
-	      var token:AsyncToken = AsyncToken(query['token']);
-	      var fqn:String = query['fqn'];
-	      var clazz:Class = getDefinitionByName(fqn) as Class;
-	              
-	      try {
-	  			var result:Object;
-	        var data:Array = returnedResults;
-	        
-	        if (data && data.length > 0) {
-	          data[0]["clazz"] = fqn.split("::")[1];
-	          result = unmarshall(data);
-	        } else {
-	          result = new Array;
-	        }
-	        
-	        delete indexing[fqn];
-	        invokeResponderResult(token.responders[0], result);
-	      } catch (e:Error) {
-	        delete indexing[fqn];
-	        IResponder(token.responders[0]).fault(e);
-	      }
-	      
-			}
-			
+	      createSql(query['statement']);
+	   	}
+
     }
     
-    private function executePendingShow(event:TimerEvent):void {
+    private function executeInitPost(event:TimerEvent):void {
+    	var ob:String = ExternalInterface.call("eval", "init")
+    	if (ob == "true") {
+    		modelsCount -= 1
+    	}
+    }
+    
+    private function executeIndexPost(event:TimerEvent):void {
+    	//returnedResults = ExternalInterface.call("eval", "index");
+    	Alert.show("debug: " + ExternalInterface.call("eval", "index") );
+    	if (returnedResults != null) {
+				if (tablesLoaded == true) {
+		      if (pending.length == 0) {
+		        timerIndexPost.stop();
+		        timerIndexPost = null;
+		      }
+		      
+		      var query:Object = pending.shift();
+		      if (!query) return;
+		        
+		      var token:AsyncToken = AsyncToken(query['token']);
+		      var fqn:String = query['fqn'];
+		      var clazz:Class = getDefinitionByName(fqn) as Class;
+		              
+		      try {
+		  			var result:Object;
+		        var data:Array = returnedResults;
+		        
+		        if (data && data.length > 0) {
+		          data[0]["clazz"] = fqn.split("::")[1];
+		          result = unmarshall(data);
+		        } else {
+		          result = new Array;
+		        }
+		        
+		        delete indexing[fqn];
+		        invokeResponderResult(token.responders[0], result);
+		      } catch (e:Error) {
+		        delete indexing[fqn];
+		        IResponder(token.responders[0]).fault(e);
+		      }
+				}
+    	}
+    }
+    
+    private function executeShowPost(event:TimerEvent):void {
+    	returnedResult = ExternalInterface.call("eval", "show");
+    }
+    
+    private function executeCreatePost(event:TimerEvent):void {
+    	returnedResult = ExternalInterface.call("eval", "create");
+			var object:Object = returnedResult;
+			directShow = false;
+			show(object, iResponder);
+    }
+    
+    private function executeUpdatePost(event:TimerEvent):void {
+    	
+    }
+    
+    private function executeDestroyPost(event:TimerEvent):void {
     	
     }
     
