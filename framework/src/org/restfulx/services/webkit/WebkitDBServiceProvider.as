@@ -1,5 +1,4 @@
 package org.restfulx.services.webkit {
-  import flash.events.TimerEvent;
   import flash.external.ExternalInterface;
   import flash.utils.Dictionary;
   import flash.utils.Timer;
@@ -42,9 +41,12 @@ package org.restfulx.services.webkit {
     protected var sql:Dictionary;
 		private var js:JavaScript = new JavaScript;
 		private var databaseName:String = Rx.webkitDatabaseName;
-		private var returnedResult:Object;
+		private var returnedResult:Object = new Object;
 		private var returnedResults:Array = new Array;
 		private var currentAction:String;
+		private var currentClass:String;
+    private var directShow:Boolean = true;
+    private var iResponder:IResponder;
 		private var sleepInt:uint;
     private var pending:Array;
     private var indexing:Dictionary;
@@ -55,8 +57,6 @@ package org.restfulx.services.webkit {
       pending = new Array;
       indexing = new Dictionary;
       sql = new Dictionary;
-      
-      //js.source = 'var db = openDatabase("' + databaseName +  '" , "1.0", "Rx", 200000);';
       
       for each (var model:Class in state.models) {
         var fqn:String = getQualifiedClassName(model);
@@ -108,22 +108,19 @@ package org.restfulx.services.webkit {
       token.addResponder(responder);
       var query:Object = {token:token, fqn:fqn, statement:queryText};
       pending.push(query);
-      
-      /* if (!timer) {
-        timer = new Timer(1);
-        timer.addEventListener(TimerEvent.TIMER, executePendindIndex);
-        timer.start();
-      } */
     }
 
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
-     	createSql(sql[fqn]["select"] + " WHERE id = '" + object["id"] + "'",'','show');
+      if (directShow == true)
+     		createSql(sql[fqn]["select"] + " WHERE id = '" + object["id"] + "'",'','show');
       try {
-        var vo:Object = returnedResult;
-        vo["clazz"] = fqn.split("::")[1];
+        var vo:Object = object;
+        if (directShow == true)
+        	vo["clazz"] = fqn.split("::")[1];
+        if (directShow == false)
+        	vo["clazz"] = currentClass;
         object = unmarshall(vo);
-      
         invokeResponderResult(responder, object);
       } catch (e:Error) {
         if (responder) responder.fault(e);
@@ -135,6 +132,7 @@ package org.restfulx.services.webkit {
       var params:String = '';
       var fqn:String = getQualifiedClassName(object);
       var sqlText:String = sql[fqn]["insert"];
+      iResponder = responder;
       
       for each (var node:XML in describeType(object)..accessor) {
         var localName:String = node.@name;
@@ -146,24 +144,25 @@ package org.restfulx.services.webkit {
                     
         if (RxUtils.isBelongsTo(node)) {
           if (RxUtils.isPolymorphicBelongsTo(node)) {
-
+						(object[localName] == null) ? null : 
+              params += '"' + getQualifiedClassName(object[localName]).split("::")[1] + '", ';
           }
           snakeName = snakeName + "_id";
           var ref:Object = object[localName];
-  
+  				(ref == null) ? null : params += '"' + ref["id"] + '", ';
         } else {
           if (object[localName] is Boolean) {
-
+						params += '"' + object[localName] + '", ';
           } else {
-						params += '"' + RxUtils.uncast(object, localName) + '", '; 
+						params += '"' + RxUtils.uncast(object, localName) + '", ';
           }
         }
       }
       
       try {
       	params = params.substr(0, params.length - 2);
-        createSql(sqlText, params, 'create');
-        //show(object, responder, metadata, nestedBy);
+        createSql(sqlText, params, 'create', false, 
+        	getQualifiedClassName(object));
       } catch (e:Error) {
         if (responder) responder.fault(e);
       }
@@ -198,7 +197,7 @@ package org.restfulx.services.webkit {
         }
       }
       try {
-      show(object, responder, metadata, nestedBy);
+      show(object, responder);
       } catch (e:Error) {
         if (responder) responder.fault(e);
       }
@@ -326,38 +325,40 @@ package org.restfulx.services.webkit {
     
     protected function initializeConnection():void {
       for (var modelName:String in sql) {
-        createSql(sql[modelName]["create"]);
+        createSql(sql[modelName]["create"],'','init',true);
       }
     }
     
     protected function createSql(statement:String, params:String = '', action:String = 'init',
-    	debug:Boolean = false):void {
+    	debug:Boolean = false, fqn:String = ''):void {
     	currentAction = action;
+    	currentClass  = fqn.split("::")[1];
     	
 			js.source = 'db.transaction(function(tx) {';
 			js.source += '  tx.executeSql("' + statement + '", [' + params + '], function(tx, result) {';
 			
 			if (action == 'index') {
-				js.source += '	var resultingObject = [];';
+				js.source += '	var resultingObjects = [];';
 				js.source += '	for (var i=0; i<result.rows.length; i++) {';
-				js.source += '		resultingObject[i] = result.rows.item(i);';
+				js.source += '		resultingObjects[i] = result.rows.item(i);';
 				js.source += '	};';
-				js.source += '	storeResult(resultingObject);';
+				js.source += '	storeResult(resultingObjects);';
 			}
 			
 			if (action == 'show') {
-				js.source += '	var resultingObject; ';
-				js.source += '	resultingObject = result; ';
-				js.source += '	storeResult(resultingObject); ';	
+				js.source += '	var showObject;';
+				js.source += '	showObject = result.rows.item(0);';
+				js.source += '	storeResult(showObject);';	
 			}
 			
 			if (action == 'create') {
-				js.source += '	var resultingObject; ';
-				js.source += '	resultingObject = result.insertId; ';
-				js.source += '	storeResult(resultingObject); ';	
+				js.source += '	var createObject;';
+				js.source += '	tx.executeSql("' + sql[fqn]["select"] + ' WHERE id=?;", [result.insertId], function(tx, result) {';
+				js.source += '		createObject = result.rows.item(0);';				
+				js.source += '		storeResult(createObject);';
+				js.source += '	});';
 			}
-			
-			js.source += '  });';
+			js.source += '	});';
 			js.source += '});';
 			js.source += 'var r; ';
 			js.source += 'function storeResult(result){ r = result; };';
@@ -367,7 +368,7 @@ package org.restfulx.services.webkit {
 			}
 				
 			if (debug == true) {
-				Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
+				Alert.show("Statement: " + action + "\n\n" + "Params: " + params);
 			}
 			
     }
@@ -377,18 +378,19 @@ package org.restfulx.services.webkit {
 			
 			if (currentAction == 'index') {
 				returnedResults = ExternalInterface.call("eval", "r");
-				executePendindIndex();
-				//Alert.show(returnedResults.toString());
+				executePendingIndex();
 			}
 				
 			if (currentAction == 'show') {
 				returnedResult = ExternalInterface.call("eval", "r");
-				Alert.show(returnedResult.toString());
+				executePendingShow();
 			}
 				
 			if (currentAction == 'create') {
 				returnedResult = ExternalInterface.call("eval", "r");
-				Alert.show(returnedResult.toString());
+				var object:Object = returnedResult;
+				directShow = false;
+				show(object, iResponder);
 			}
 				
 		}
@@ -401,7 +403,7 @@ package org.restfulx.services.webkit {
       }
     }
         
-    private function executePendindIndex():void {
+    private function executePendingIndex():void {
       if (pending.length == 0) {
         timer.stop();
         timer = null;
@@ -432,5 +434,10 @@ package org.restfulx.services.webkit {
         IResponder(token.responders[0]).fault(e);
       }
     }
+    
+    private function executePendingShow():void {
+    	
+    }
+    
   }
 }
