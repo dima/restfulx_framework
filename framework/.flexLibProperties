@@ -19,6 +19,7 @@
 <classEntry path="org.restfulx.controllers.ModelsController"/>
 <classEntry path="org.restfulx.controllers.RxApplicationController"/>
 <classEntry path="org.restfulx.controllers.SerializersController"/>
+<classEntry path="org.restfulx.controllers.ServerPushController"/>
 <classEntry path="org.restfulx.controllers.ServicesController"/>
 <classEntry path="org.restfulx.controllers.UndoRedoController"/>
 <classEntry path="org.restfulx.controllers.mock.MockAuxHTTPController"/>
@@ -34,6 +35,7 @@
 <classEntry path="org.restfulx.events.PushErrorEvent"/>
 <classEntry path="org.restfulx.events.PushItemEvent"/>
 <classEntry path="org.restfulx.events.PushStartEvent"/>
+<classEntry path="org.restfulx.events.ServerPushEvent"/>
 <classEntry path="org.restfulx.events.ServiceCallStartEvent"/>
 <classEntry path="org.restfulx.events.ServiceCallStopEvent"/>
 <classEntry path="org.restfulx.events.ServiceErrorEvent"/>
