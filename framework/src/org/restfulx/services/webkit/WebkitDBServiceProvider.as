@@ -15,6 +15,7 @@ package org.restfulx.services.webkit {
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
   import org.restfulx.services.ISyncingServiceProvider;
+  import org.restfulx.utils.DataTimer;
   import org.restfulx.utils.JavaScript;
   import org.restfulx.utils.ModelsMetadata;
   import org.restfulx.utils.RxUtils;
@@ -51,15 +52,15 @@ package org.restfulx.services.webkit {
     private var iResponder:IResponder;
     
     // Pending items for Init and Index queues
-    private var pending:Array;
     private var pendingInit:Array;
+    private var pendingIndex:Array;
 		private var currentClass:String;
 		private var tablesLoaded:Boolean = false;
     private var modelsCount:int = 0;
     
     // Timers to check js code and queues
     private var timerInitPre:Timer;
-    private var timerIndexPre:Timer;
+    private var timerIndexPre:DataTimer;
     private var timerShowPre:Timer;
     private var timerCreatePre:Timer;
     private var timerUpdatePre:Timer;
@@ -73,8 +74,8 @@ package org.restfulx.services.webkit {
 
     public function WebkitDBServiceProvider() {
       state = Rx.models.state;
-      pending = new Array;
       pendingInit = new Array;
+      pendingIndex = new Array;
       indexing = new Dictionary;
       sql = new Dictionary;
       
@@ -127,9 +128,15 @@ package org.restfulx.services.webkit {
       var token:AsyncToken = new AsyncToken(null);
       token.addResponder(responder);
       var query:Object = {token:token, fqn:fqn, statement:queryText};
-      pending.push(query);
+      pendingIndex.push(query);
       
-      createSql(queryText,'','index');
+      if (!timerIndexPre) {
+        timerIndexPre = new DataTimer(1);
+        timerIndexPre.data.query = queryText;
+        timerIndexPre.addEventListener(TimerEvent.TIMER, executeIndexPre);
+        timerIndexPre.start();
+      }
+      
     }
 
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
@@ -404,7 +411,7 @@ package org.restfulx.services.webkit {
 			}
 			js.source += '	});';
 			js.source += '});';
-			js.source += 'var init; var index; var show; var create; var update; var destroy;';
+			js.source += 'var init, index, show, create, update, destroy;';
 			js.source += 'function storeResultInit(result){ init = result; };';
 			js.source += 'function storeResultIndex(result){ index = result; };';
 			js.source += 'function storeResultShow(result){ show = result; };';
@@ -466,12 +473,16 @@ package org.restfulx.services.webkit {
 			
     }
     
+    // Pre Hooks
+    
     private function executeInitPre(event:TimerEvent):void {
 
     	if (pendingInit.length == 0) {
 	  		tablesLoaded = true;
 	    	timerInitPre.stop();
 	    	timerInitPre = null;
+	    	timerInitPost.stop();
+	    	timerInitPost = null;
 	  	}
 	  	
 	  	if (modelsCount == pendingInit.length) {
@@ -482,6 +493,22 @@ package org.restfulx.services.webkit {
 
     }
     
+    private function executeIndexPre(event:TimerEvent):void {
+    	var tmr:DataTimer = event.currentTarget as DataTimer;
+    	
+    	if (pendingIndex.length == 0) {
+	    	timerIndexPre.stop();
+	    	timerIndexPre = null;
+	    	timerIndexPost.stop();
+	    	timerIndexPost = null;
+	    	
+	  	}
+	  	
+	  	if (tablesLoaded == true)
+    		createSql(tmr.data.query,'','index');
+    }
+    
+    // Post Hooks
     private function executeInitPost(event:TimerEvent):void {
     	var ob:String = ExternalInterface.call("eval", "init")
     	if (ob == "true") {
@@ -490,16 +517,11 @@ package org.restfulx.services.webkit {
     }
     
     private function executeIndexPost(event:TimerEvent):void {
-    	//returnedResults = ExternalInterface.call("eval", "index");
-    	Alert.show("debug: " + ExternalInterface.call("eval", "index") );
+    	returnedResults = ExternalInterface.call("eval", "index");
     	if (returnedResults != null) {
 				if (tablesLoaded == true) {
-		      if (pending.length == 0) {
-		        timerIndexPost.stop();
-		        timerIndexPost = null;
-		      }
 		      
-		      var query:Object = pending.shift();
+		      var query:Object = pendingIndex.shift();
 		      if (!query) return;
 		        
 		      var token:AsyncToken = AsyncToken(query['token']);
