@@ -1,4 +1,5 @@
 package org.restfulx.services.webkit {
+  import flash.events.TimerEvent;
   import flash.external.ExternalInterface;
   import flash.utils.Dictionary;
   import flash.utils.Timer;
@@ -30,9 +31,9 @@ package org.restfulx.services.webkit {
     private static var types:Object = {
       "int" : "INTEGER",
       "uint" : "INTEGER",
-      "Boolean" : "BOOLEAN",
+      "Boolean" : "BOOL",
       "String" : "TEXT",
-      "Number" : "DOUBLE",
+      "Number" : "REAL",
       "Date" : "TEXT",
       "DateTime" : "TEXT"
     }
@@ -43,22 +44,27 @@ package org.restfulx.services.webkit {
 		private var databaseName:String = Rx.webkitDatabaseName;
 		private var returnedResult:Object = new Object;
 		private var returnedResults:Array = new Array;
-		private var currentAction:String;
 		private var currentClass:String;
+		private var tablesLoaded:Boolean = false;
     private var directShow:Boolean = true;
+    private var modelsCount:int = 0;
     private var iResponder:IResponder;
 		private var sleepInt:uint;
     private var pending:Array;
+    private var pendingInit:Array;
     private var indexing:Dictionary;
     private var timer:Timer;
+    private var timerInit:Timer;
 
     public function WebkitDBServiceProvider() {
       state = Rx.models.state;
       pending = new Array;
+      pendingInit = new Array;
       indexing = new Dictionary;
       sql = new Dictionary;
       
       for each (var model:Class in state.models) {
+      	modelsCount += 1;
         var fqn:String = getQualifiedClassName(model);
         if (RxUtils.isEmpty(RxUtils.getResourceName(model))) continue;
         
@@ -102,12 +108,13 @@ package org.restfulx.services.webkit {
       }
       
       queryText = queryText.substr(0, queryText.length - 5);
-      createSql(queryText,'','index');
       
       var token:AsyncToken = new AsyncToken(null);
       token.addResponder(responder);
       var query:Object = {token:token, fqn:fqn, statement:queryText};
       pending.push(query);
+      
+      createSql(queryText,'','index');
     }
 
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
@@ -324,14 +331,22 @@ package org.restfulx.services.webkit {
     }
     
     protected function initializeConnection():void {
+
       for (var modelName:String in sql) {
-        createSql(sql[modelName]["create"],'','init',true);
+      	var query:Object = {statement:sql[modelName]["create"]};
+      	pendingInit.push(query);
       }
+      
+      if (!timerInit) {
+        timerInit = new Timer(50);
+        timerInit.addEventListener(TimerEvent.TIMER, executePendingInit);
+        timerInit.start();
+      }
+      
     }
     
     protected function createSql(statement:String, params:String = '', action:String = 'init',
     	debug:Boolean = false, fqn:String = ''):void {
-    	currentAction = action;
     	currentClass  = fqn.split("::")[1];
     	
 			js.source = 'db.transaction(function(tx) {';
@@ -363,30 +378,32 @@ package org.restfulx.services.webkit {
 			js.source += 'var r; ';
 			js.source += 'function storeResult(result){ r = result; };';
 			
-			if (action != 'init') {
-				sleepInt = setInterval(goToSleep,200);
-			}
+			if (action != 'init')
+				sleepInt = setInterval(goToSleep,100,action);
 				
 			if (debug == true) {
-				Alert.show("Statement: " + action + "\n\n" + "Params: " + params);
+				Alert.show("Statement: " + statement + "\n\n" + "Params: " + params);
 			}
 			
     }
     
-    protected function goToSleep():void {
+    protected function goToSleep(action:String=''):void {
 			clearInterval(sleepInt);
 			
-			if (currentAction == 'index') {
+			if (action == 'index') {
 				returnedResults = ExternalInterface.call("eval", "r");
-				executePendingIndex();
+				if (!timer) {
+	        timer = new Timer(25);
+	        timer.addEventListener(TimerEvent.TIMER, executePendingIndex);
+	        timer.start();
+	      }
 			}
 				
-			if (currentAction == 'show') {
+			if (action == 'show') {
 				returnedResult = ExternalInterface.call("eval", "r");
-				executePendingShow();
 			}
 				
-			if (currentAction == 'create') {
+			if (action == 'create') {
 				returnedResult = ExternalInterface.call("eval", "r");
 				var object:Object = returnedResult;
 				directShow = false;
@@ -402,40 +419,60 @@ package org.restfulx.services.webkit {
         responder.result(event);
       }
     }
-        
-    private function executePendingIndex():void {
-      if (pending.length == 0) {
-        timer.stop();
-        timer = null;
-      }
-      
-      var query:Object = pending.shift();
+    
+    private function executePendingInit(event:TimerEvent):void {
+
+    	if (pendingInit.length == 0) {
+	  		tablesLoaded = true;
+	    	timerInit.stop();
+	    	timerInit = null;
+	  	}
+	  	
+	  	var query:Object = pendingInit.shift();
       if (!query) return;
-        
-      var token:AsyncToken = AsyncToken(query['token']);
-      var fqn:String = query['fqn'];
-      var clazz:Class = getDefinitionByName(fqn) as Class;
-              
-      try {
-  			var result:Object;
-        var data:Array = returnedResults;
-        
-        if (data && data.length > 0) {
-          data[0]["clazz"] = fqn.split("::")[1];
-          result = unmarshall(data);
-        } else {
-          result = new Array;
-        }
-        
-        delete indexing[fqn];
-        invokeResponderResult(token.responders[0], result);
-      } catch (e:Error) {
-        delete indexing[fqn];
-        IResponder(token.responders[0]).fault(e);
-      }
+      createSql(query['statement']);
+	  	
     }
     
-    private function executePendingShow():void {
+    private function executePendingIndex(event:TimerEvent):void {
+    	
+			if (tablesLoaded == true) {
+	      
+	      if (pending.length == 0) {
+	        timer.stop();
+	        timer = null;
+	      }
+	      
+	      var query:Object = pending.shift();
+	      if (!query) return;
+	        
+	      var token:AsyncToken = AsyncToken(query['token']);
+	      var fqn:String = query['fqn'];
+	      var clazz:Class = getDefinitionByName(fqn) as Class;
+	              
+	      try {
+	  			var result:Object;
+	        var data:Array = returnedResults;
+	        
+	        if (data && data.length > 0) {
+	          data[0]["clazz"] = fqn.split("::")[1];
+	          result = unmarshall(data);
+	        } else {
+	          result = new Array;
+	        }
+	        
+	        delete indexing[fqn];
+	        invokeResponderResult(token.responders[0], result);
+	      } catch (e:Error) {
+	        delete indexing[fqn];
+	        IResponder(token.responders[0]).fault(e);
+	      }
+	      
+			}
+			
+    }
+    
+    private function executePendingShow(event:TimerEvent):void {
     	
     }
     
