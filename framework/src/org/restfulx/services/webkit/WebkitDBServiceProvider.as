@@ -155,6 +155,7 @@ package org.restfulx.services.webkit {
       if (directShow == true)
      		createSql(sql[fqn]["select"] + " WHERE id = '" + selectedId + "'",'','show');
       try {
+      	Alert.show("Show: " + selectedId.toString());
         var vo:Object = object;
         if (directShow == true)
         	vo["clazz"] = fqn.split("::")[1];
@@ -544,11 +545,12 @@ package org.restfulx.services.webkit {
 	    	timerIndexPre = null;
 	    	timerIndexPost.stop();
 	    	timerIndexPost = null;
-	    	
 	  	}
 	  	
 	  	if (tablesLoaded == true)
     		createSql(tmr.data.query,'','index');
+    	//createSql(pendingIndex[pendingIndex.length-1]['statement'],'','index',false);
+	  	
     }
     
     // Post Hooks
@@ -597,9 +599,11 @@ package org.restfulx.services.webkit {
     }
     
     private function executeCreatePost(event:TimerEvent):void {
-    	returnedResult = ExternalInterface.call("eval", "create");
-    	if (returnedResult != null) {
-				var object:Object = returnedResult;
+    	var result:Object = new Object;
+    	result = ExternalInterface.call("eval", "create");
+    	Alert.show("Create: " + result['id']);
+    	if (result != null) {
+				var object:Object = result;
 				directShow = false;
 				show(object, iResponder);
 				directShow = true;

@@ -35,15 +35,53 @@ package org.restfulx.controllers {
     private var js:JavaScript = new JavaScript();
     
     // Timers
+		private var createNotificationTimer:DataTimer;    
+    private var launchTimer:DataTimer;
     private var openApplicationTimer:DataTimer;
     private var openURLTimer:DataTimer;
-    private var launchTimer:DataTimer;
     
     public function TitaniumController() {
-      js.source =  '';
+
     }
     
+    public function createNotification(message:String,title:String = 'Notification'):void {
+    	js.source =  '';
+			js.source += 'function createNotification(message, title) {';
+			js.source += '	var notification = Titanium.Notification.createNotification(window);';
+			js.source += '	notification.setTitle(title);';
+			js.source += '  notification.setMessage(message);';
+			js.source += '  notification.setIcon("app://images/notification.png");';
+			js.source += '  notification.show();';
+			js.source += '}';
+			js.source += 'var createNotificationLoaded = "true";';
+			
+			if (!createNotificationTimer) {
+        createNotificationTimer = new DataTimer(1);
+        createNotificationTimer.data.message = message;
+        createNotificationTimer.data.title = title;
+        createNotificationTimer.addEventListener(TimerEvent.TIMER, createNotificationJS);
+        createNotificationTimer.start();
+      }
+		}
+    
+    public function launch(process:String,params:String = ''):void {
+    	js.source =  '';
+			js.source += 'function launch(process, args) {';
+			js.source += '	Titanium.Process.launch(process, args);';
+			js.source += '}';
+			js.source += 'var launchLoaded = "true";';
+			
+			if (!launchTimer) {
+        launchTimer = new DataTimer(1);
+        launchTimer.data.process = process;
+        launchTimer.data.params = params;
+        launchTimer.addEventListener(TimerEvent.TIMER, launchJS);
+        launchTimer.start();
+      }
+		}
+    
     public function openApplication(app:String):void {
+    	js.source =  '';
     	js.source += 'function openApplication(app) {';
 			js.source += '	Titanium.Desktop.openApplication(app);';
 			js.source += '}';
@@ -58,6 +96,7 @@ package org.restfulx.controllers {
     }
     
     public function openURL(url:String):void {
+    	js.source =  '';
     	js.source += 'function openURL(url) {';
 			js.source += '	Titanium.Desktop.openURL(url);';
 			js.source += '}';
@@ -71,22 +110,27 @@ package org.restfulx.controllers {
       }
     }
     
-		public function launch(process:String,params:String = ''):void {
-			js.source += 'function launch(process, args) {';
-			js.source += '	Titanium.Process.launch(process, args);';
-			js.source += '}';
-			js.source += 'var launchLoaded = "true";';
-			
-			if (!launchTimer) {
-        launchTimer = new DataTimer(1);
-        launchTimer.data.process = process;
-        launchTimer.data.params = params;
-        launchTimer.addEventListener(TimerEvent.TIMER, launchJS);
-        launchTimer.start();
-      }
-		}
-		
 		// Timers
+		
+		private function createNotificationJS(event:TimerEvent):void {
+			var tmr:DataTimer = event.currentTarget as DataTimer;
+			var loaded:String = ExternalInterface.call("eval", "createNotificationLoaded")
+			if (loaded == 'true') {
+				ExternalInterface.call("createNotification", tmr.data.message, tmr.data.title);
+				createNotificationTimer.stop();
+				createNotificationTimer = null;
+			}
+    }
+    
+		private function launchJS(event:TimerEvent):void {
+			var tmr:DataTimer = event.currentTarget as DataTimer;
+			var loaded:String = ExternalInterface.call("eval", "launchLoaded")
+			if (loaded == 'true') {
+				ExternalInterface.call("launch", tmr.data.process, tmr.data.params);
+				launchTimer.stop();
+				launchTimer = null;
+			}
+    }
 		
 		private function openApplicationJS(event:TimerEvent):void {
 			var tmr:DataTimer = event.currentTarget as DataTimer;
@@ -105,16 +149,6 @@ package org.restfulx.controllers {
 				ExternalInterface.call("openURL", tmr.data.url);
 				openURLTimer.stop();
 				openURLTimer = null;
-			}
-    }
-    
-		private function launchJS(event:TimerEvent):void {
-			var tmr:DataTimer = event.currentTarget as DataTimer;
-			var loaded:String = ExternalInterface.call("eval", "launchLoaded")
-			if (loaded == 'true') {
-				ExternalInterface.call("launch", tmr.data.process, tmr.data.params);
-				launchTimer.stop();
-				launchTimer = null;
 			}
     }
     
