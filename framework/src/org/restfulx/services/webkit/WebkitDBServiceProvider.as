@@ -555,9 +555,12 @@ package org.restfulx.services.webkit {
     
     private function executeCreatePost(event:TimerEvent):void {
     	returnedResult = ExternalInterface.call("eval", "create");
-			var object:Object = returnedResult;
-			directShow = false;
-			show(object, iResponder);
+    	if (returnedResult != null) {
+				var object:Object = returnedResult;
+				directShow = false;
+				show(object, iResponder);
+				directShow = true;
+    	}
     }
     
     private function executeUpdatePost(event:TimerEvent):void {
