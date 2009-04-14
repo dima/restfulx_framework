@@ -22,30 +22,101 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.controllers {
+  import flash.events.TimerEvent;
   import flash.external.ExternalInterface;
-  import flash.utils.Dictionary;
   
+  import org.restfulx.utils.DataTimer;
   import org.restfulx.utils.JavaScript;
   
   /**
    * Provides centralized access to currently available services.
    */
   public class TitaniumController {
+    private var js:JavaScript = new JavaScript();
     
-    private var services:Dictionary;
-    private var jsAPI:JavaScript = new JavaScript();
+    // Timers
+    private var openApplicationTimer:DataTimer;
+    private var openURLTimer:DataTimer;
+    private var launchTimer:DataTimer;
     
     public function TitaniumController() {
-      services = new Dictionary;
-      jsAPI.source = '';
+      js.source =  '';
     }
     
-		public function launchProcess(process:String,params:String=''):void {
-			jsAPI.source += 'function launchProcess(process, args) {';
-			jsAPI.source += '	Titanium.Process.launch(process, args);';
-			jsAPI.source += '}';
-			ExternalInterface.call("launchProcess", process, params);
+    public function openApplication(app:String):void {
+    	js.source += 'function openApplication(app) {';
+			js.source += '	Titanium.Desktop.openApplication(app);';
+			js.source += '}';
+			js.source += 'var openApplicationLoaded = "true";';
+			
+			if (!openApplicationTimer) {
+        openApplicationTimer = new DataTimer(1);
+        openApplicationTimer.data.app = app;
+        openApplicationTimer.addEventListener(TimerEvent.TIMER, openApplicationJS);
+        openApplicationTimer.start();
+      }
+    }
+    
+    public function openURL(url:String):void {
+    	js.source += 'function openURL(url) {';
+			js.source += '	Titanium.Desktop.openURL(url);';
+			js.source += '}';
+			js.source += 'var openURLLoaded = "true";';
+			
+			if (!openURLTimer) {
+        openURLTimer = new DataTimer(1);
+        openURLTimer.data.url = url;
+        openURLTimer.addEventListener(TimerEvent.TIMER, openURLJS);
+        openURLTimer.start();
+      }
+    }
+    
+		public function launch(process:String,params:String = ''):void {
+			js.source += 'function launch(process, args) {';
+			js.source += '	Titanium.Process.launch(process, args);';
+			js.source += '}';
+			js.source += 'var launchLoaded = "true";';
+			
+			if (!launchTimer) {
+        launchTimer = new DataTimer(1);
+        launchTimer.data.process = process;
+        launchTimer.data.params = params;
+        launchTimer.addEventListener(TimerEvent.TIMER, launchJS);
+        launchTimer.start();
+      }
 		}
+		
+		// Timers
+		
+		private function openApplicationJS(event:TimerEvent):void {
+			var tmr:DataTimer = event.currentTarget as DataTimer;
+			var loaded:String = ExternalInterface.call("eval", "openApplicationLoaded")
+			if (loaded == 'true') {
+				ExternalInterface.call("openApplication", tmr.data.app);
+				openApplicationTimer.stop();
+				openApplicationTimer = null;
+			}
+    }
+    
+    private function openURLJS(event:TimerEvent):void {
+			var tmr:DataTimer = event.currentTarget as DataTimer;
+			var loaded:String = ExternalInterface.call("eval", "openURLLoaded")
+			if (loaded == 'true') {
+				ExternalInterface.call("openURL", tmr.data.url);
+				openURLTimer.stop();
+				openURLTimer = null;
+			}
+    }
+    
+		private function launchJS(event:TimerEvent):void {
+			var tmr:DataTimer = event.currentTarget as DataTimer;
+			var loaded:String = ExternalInterface.call("eval", "launchLoaded")
+			if (loaded == 'true') {
+				ExternalInterface.call("launch", tmr.data.process, tmr.data.params);
+				launchTimer.stop();
+				launchTimer = null;
+			}
+    }
     
   }
 }
