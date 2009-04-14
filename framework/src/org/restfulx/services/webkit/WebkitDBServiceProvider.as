@@ -57,6 +57,7 @@ package org.restfulx.services.webkit {
 		private var currentClass:String;
 		private var tablesLoaded:Boolean = false;
     private var modelsCount:int = 0;
+    private var selectedId:int;
     
     // Timers to check js code and queues
     private var timerInitPre:Timer;
@@ -141,8 +142,9 @@ package org.restfulx.services.webkit {
 
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
+      selectedId = object["id"];
       if (directShow == true)
-     		createSql(sql[fqn]["select"] + " WHERE id = '" + object["id"] + "'",'','show');
+     		createSql(sql[fqn]["select"] + " WHERE id = '" + selectedId + "'",'','show');
       try {
         var vo:Object = object;
         if (directShow == true)
@@ -199,10 +201,12 @@ package org.restfulx.services.webkit {
 
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
+      selectedId = object["id"];
+      var params:String = '';
       var fqn:String = getQualifiedClassName(object);
-      var statement:String = sql[fqn]["update"];
-      statement = statement.replace("{id}", object["id"]);
-      createSql(statement);
+      var sqlText:String = sql[fqn]["update"];
+      iResponder = responder;
+
       for each (var node:XML in describeType(object)..accessor) {
         var localName:String = node.@name;
         var type:String = node.@type;
@@ -213,20 +217,25 @@ package org.restfulx.services.webkit {
   
         if (RxUtils.isBelongsTo(node)) {
           if (RxUtils.isPolymorphicBelongsTo(node)) {
-
+						(object[localName] == null) ? null : 
+              params += '"' + getQualifiedClassName(object[localName]).split("::")[1] + '", ';
           }
           snakeName = snakeName + "_id";
           var ref:Object = object[localName];
+          (ref == null) ? null : params += '"' + ref["id"] + '", ';
         } else {
           if (object[localName] is Boolean) {
-
+						params += '"' + object[localName] + '", ';
           } else {
-
+						params += '"' + RxUtils.uncast(object, localName) + '", ';
           }
         }
       }
+      
       try {
-      show(object, responder);
+      	params += '"' + object["id"] + '"';
+        createSql(sqlText, params, 'update', false, 
+        	getQualifiedClassName(object));
       } catch (e:Error) {
         if (responder) responder.fault(e);
       }
@@ -235,6 +244,21 @@ package org.restfulx.services.webkit {
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
       purge(object, responder, metadata, nestedBy);
+    }
+    
+    public function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    	selectedId = object["id"];
+    	var params:String = '"' + selectedId + '"';
+      var fqn:String = getQualifiedClassName(object);
+      var sqlText:String = sql[fqn]["delete"];
+      iResponder = responder;
+
+      try {
+        createSql(sqlText, params, 'destroy');
+        invokeResponderResult(responder, object);
+      } catch (e:Error) {
+        if (responder) responder.fault(e);
+      }
     }
     
     public function dirty(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
@@ -260,18 +284,6 @@ package org.restfulx.services.webkit {
       }    
     }
     
-    public function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var fqn:String = getQualifiedClassName(object);
-      var statement:String = sql[fqn]["delete"];
-      statement = statement.replace("{id}", object["id"]);
-      try {
-        createSql(statement);
-        invokeResponderResult(responder, object);
-      } catch (e:Error) {
-        if (responder) responder.fault(e);
-      }
-    }  
-	  
 	  public function sync(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
 	    updateSyncStatus(object, responder);
 	  }
@@ -317,7 +329,7 @@ package org.restfulx.services.webkit {
             createStatement += snakeNameType + " " + types["String"] + ", ";
             insertStatement += snakeNameType + ", ";
             insertParams += ":" + snakeNameType + ", ";
-            updateStatement += snakeNameType + "=:" + snakeNameType + ",";
+            updateStatement += snakeNameType + "=?,";
           }
          
           snakeName = snakeName + "_id";
@@ -329,7 +341,7 @@ package org.restfulx.services.webkit {
         
         insertStatement += snakeName + ", ";
         insertParams += "?, ";
-        updateStatement += snakeName + "=:" + snakeName + ",";
+        updateStatement += snakeName + "=?,";
       }
       
       createStatement += "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)";      
@@ -340,10 +352,10 @@ package org.restfulx.services.webkit {
       sql[modelName]["insert"] = insertStatement;
       
       updateStatement = updateStatement.substring(0, updateStatement.length - 1);
-      updateStatement += " WHERE id='{id}'";
+      updateStatement += " WHERE id=?";
       sql[modelName]["update"] = updateStatement;
       
-      var deleteStatement:String = "DELETE FROM " + tableName + " WHERE id='{id}'";
+      var deleteStatement:String = "DELETE FROM " + tableName + " WHERE id=?";
       sql[modelName]["delete"] = deleteStatement;
       
       var selectStatement:String = "SELECT * FROM " + tableName;
@@ -409,6 +421,19 @@ package org.restfulx.services.webkit {
 				js.source += '		storeResultCreate(createObject);';
 				js.source += '	});';
 			}
+			
+			if (action == 'update') {
+				js.source += '	var updateObject;';
+				js.source += '	tx.executeSql("' + sql[fqn]["select"] + ' WHERE id=?;", ['+selectedId+'], function(tx, result) {';
+				js.source += '		updateObject = result.rows.item(0);';				
+				js.source += '		storeResultUpdate(updateObject);';
+				js.source += '	});';
+			}
+			
+			if (action == 'destroy') {
+
+			}
+			
 			js.source += '	});';
 			js.source += '});';
 			js.source += 'var init, index, show, create, update, destroy;';
@@ -550,7 +575,7 @@ package org.restfulx.services.webkit {
     }
     
     private function executeShowPost(event:TimerEvent):void {
-    	returnedResult = ExternalInterface.call("eval", "show");
+    	
     }
     
     private function executeCreatePost(event:TimerEvent):void {
@@ -560,15 +585,30 @@ package org.restfulx.services.webkit {
 				directShow = false;
 				show(object, iResponder);
 				directShow = true;
+				timerCreatePost.stop();
+				timerCreatePost = null;
     	}
     }
     
     private function executeUpdatePost(event:TimerEvent):void {
-    	
+    	returnedResult = ExternalInterface.call("eval", "update");
+    	if (returnedResult != null) {
+    		var object:Object = returnedResult;
+				directShow = false;
+				show(object, iResponder);
+				directShow = true;
+				timerUpdatePost.stop();
+				timerUpdatePost = null;
+    	}
     }
     
     private function executeDestroyPost(event:TimerEvent):void {
-    	
+    	returnedResult = ExternalInterface.call("eval", "destroy");
+    	if (returnedResult != null) {
+				//
+				timerDestroyPost.stop();
+				timerDestroyPost = null;
+    	}
     }
     
   }
