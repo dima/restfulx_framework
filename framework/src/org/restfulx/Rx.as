@@ -39,10 +39,10 @@ package org.restfulx {
   import org.restfulx.controllers.ModelsController;
   import org.restfulx.controllers.SerializersController;
   import org.restfulx.controllers.ServicesController;
+  import org.restfulx.controllers.TitaniumController;
   import org.restfulx.controllers.UndoRedoController;
   import org.restfulx.serializers.ISerializer;
   import org.restfulx.services.http.XMLHTTPServiceProvider;
-  import org.restfulx.utils.JavaScript;
   import org.restfulx.utils.RxUtils;
   
   [Bindable]
@@ -131,6 +131,9 @@ package org.restfulx {
 
     /** exposes the Synchronization capable controller */
     public static var changes:ChangeController;
+    
+    /** exposes the Titanium controller */
+    public static var titanium:TitaniumController;
     
     /** 
      * Control the size of the undo-redo stack. the default is 10

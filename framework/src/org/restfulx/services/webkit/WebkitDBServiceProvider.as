@@ -60,6 +60,7 @@ package org.restfulx.services.webkit {
     private var selectedId:int;
     
     // Timers to check js code and queues
+    private var timerInitDB:Timer;
     private var timerInitPre:Timer;
     private var timerIndexPre:DataTimer;
     private var timerShowPre:Timer;
@@ -80,6 +81,9 @@ package org.restfulx.services.webkit {
       indexing = new Dictionary;
       sql = new Dictionary;
       
+      var db:JavaScript = new JavaScript();
+      db.source = 'var db = openDatabase("' + databaseName + '", "1.0", "Rx", 200000);';
+      
       for each (var model:Class in state.models) {
       	modelsCount += 1;
         var fqn:String = getQualifiedClassName(model);
@@ -92,7 +96,12 @@ package org.restfulx.services.webkit {
         extractMetadata(elm);
       });
       
-      initializeConnection();
+      if (!timerInitDB) {
+        timerInitDB = new Timer(1);
+        timerInitDB.addEventListener(TimerEvent.TIMER, executeInitDB);
+        timerInitDB.start();
+      }
+      
     }
 
     public function get id():int {
@@ -499,6 +508,15 @@ package org.restfulx.services.webkit {
     }
     
     // Pre Hooks
+    
+    private function executeInitDB(event:TimerEvent):void {
+    	var db:Object = ExternalInterface.call("eval", "db")
+    	if (db != null) {
+    		timerInitDB.stop();
+    		timerInitDB = null;
+    		initializeConnection();
+    	}
+    }
     
     private function executeInitPre(event:TimerEvent):void {
 

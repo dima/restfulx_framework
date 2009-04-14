@@ -20,6 +20,7 @@
 <classEntry path="org.restfulx.controllers.RxApplicationController"/>
 <classEntry path="org.restfulx.controllers.SerializersController"/>
 <classEntry path="org.restfulx.controllers.ServicesController"/>
+<classEntry path="org.restfulx.controllers.TitaniumController"/>
 <classEntry path="org.restfulx.controllers.UndoRedoController"/>
 <classEntry path="org.restfulx.controllers.mock.MockAuxHTTPController"/>
 <classEntry path="org.restfulx.events.AfterCreateEvent"/>

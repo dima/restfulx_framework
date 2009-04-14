@@ -27,6 +27,7 @@
     <class>org.restfulx.controllers.RxApplicationController</class>
     <class>org.restfulx.controllers.SerializersController</class>
     <class>org.restfulx.controllers.ServicesController</class>
+    <class>org.restfulx.controllers.TitaniumController</class>
     <class>org.restfulx.controllers.UndoRedoController</class>
     <class>org.restfulx.controllers.mock.MockAuxHTTPController</class>
     <class>org.restfulx.events.AfterCreateEvent</class>
