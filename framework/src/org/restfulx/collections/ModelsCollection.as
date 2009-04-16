@@ -22,6 +22,8 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.collections {
+  import flash.utils.Dictionary;
+  
 
   /**
    * Adds a few handy methods to ArrayCollection class to simplify working 
@@ -33,11 +35,14 @@ package org.restfulx.collections {
    */
   public class ModelsCollection extends RxCollection {
     
+    public var indexes:Dictionary;
+    
     /** 
      * @see mx.collections.ArrayCollection
      */
     public function ModelsCollection(source:Array = null) {
       super(source);
+      this.indexes = new Dictionary;
     }
     
     /**
@@ -54,42 +59,61 @@ package org.restfulx.collections {
     }
     
     /**
+     * @inheritDoc 
+     */
+    public override function addItem(item:Object):void {
+      indexes[item["id"]] = length;
+      super.addItem(item);
+    }
+    
+    /**
+     * @inheritDoc 
+     */
+    public override function addItemAt(item:Object, index:int):void {
+      indexes[item["id"]] = index;
+      super.addItemAt(item, index);
+    }
+    
+    /**
      * Checks to see if a given model object is in the collection. Comparison done by id.
      *  
-     * @param object model object
+     * @param item model object
      * @return boolean result
      */
-    public function hasItem(object:Object):Boolean {
-      return withId(object["id"]) != null;
+    public function hasItem(item:Object):Boolean {
+      //return withId(object["id"]) != null;
+      return indexes[item["id"]] != null;
     }
     
     /**
      * Gets a model item reference. Search is performed by model id.
      *  
-     * @param object object to find
+     * @param item object to find
      * @return object with the same id
      */
     [Bindable("collectionChange")]
-    public function getItem(object:Object):Object {
-      return withId(object["id"]);
+    public function getItem(item:Object):Object {
+      //return withId(object["id"]);
+      return getItemAt(indexes[item["id"]]);
     }
         
     /**
      * Sets a model item/ updates current reference if any
      *  
-     * @param object object to add
+     * @param item object to add
      */
-    public function setItem(object:Object):void {
-      setItemAt(object, indexOfId(object["id"]));
+    public function setItem(item:Object):void {
+      setItemAt(item, indexOfId(item["id"]));
     }
     
     /**
      * Removes given model instance (search done by id).
      *  
-     * @param object object to remove
+     * @param item object to remove
      */ 
-    public function removeItem(object:Object):void {
-      removeItemAt(indexOfId(object["id"]));
+    public function removeItem(item:Object):void {
+      removeItemAt(indexOfId(item["id"]));
+      delete indexes[item["id"]];
     }
     
     /**
@@ -99,7 +123,12 @@ package org.restfulx.collections {
      * @return index offset
      */
     public function indexOfId(id:String):int {
-      return indexOfPropertyValue("id", id);
+      //return indexOfPropertyValue("id", id);
+      if (indexes.hasOwnProperty(id)) {
+        return indexes[id];
+      } else {
+        return -1;
+      }
     }
   }
 }
