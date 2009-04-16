@@ -35,6 +35,7 @@
 <classEntry path="org.restfulx.events.PushErrorEvent"/>
 <classEntry path="org.restfulx.events.PushItemEvent"/>
 <classEntry path="org.restfulx.events.PushStartEvent"/>
+<classEntry path="org.restfulx.events.RxAutoCompleteItemEvent"/>
 <classEntry path="org.restfulx.events.ServerPushEvent"/>
 <classEntry path="org.restfulx.events.ServiceCallStartEvent"/>
 <classEntry path="org.restfulx.events.ServiceCallStopEvent"/>

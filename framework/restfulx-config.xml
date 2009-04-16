@@ -42,6 +42,7 @@
     <class>org.restfulx.events.PushErrorEvent</class>
     <class>org.restfulx.events.PushItemEvent</class>
     <class>org.restfulx.events.PushStartEvent</class>
+    <class>org.restfulx.events.RxAutoCompleteItemEvent</class>
     <class>org.restfulx.events.ServerPushEvent</class>
     <class>org.restfulx.events.ServiceCallStartEvent</class>
     <class>org.restfulx.events.ServiceCallStopEvent</class>

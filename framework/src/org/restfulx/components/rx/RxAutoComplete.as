@@ -32,12 +32,14 @@ package org.restfulx.components.rx {
   import mx.controls.ComboBox;
   
   import org.restfulx.Rx;
+  import org.restfulx.events.RxAutoCompleteItemEvent;
   import org.restfulx.models.RxModel;
   import org.restfulx.utils.RxUtils;
   
   [Event(name="typedTextChange", type="flash.events.Event")]
-  [Event(name="selectedItemChange", type="flash.events.Event")]
   [Event(name="chosenItemChange", type="flash.events.Event")]
+  [Event(name="selectedItemChange", type="flash.events.Event")]
+  [Event(name="unknownSelectedItem", type="org.restfulx.events.RxAutoCompleteItemEvent")]
   
   [Bindable]
   /**
@@ -402,6 +404,9 @@ package org.restfulx.components.rx {
               if (clearTextAfterFind) clearTypedText();
               dispatchEvent(new Event("chosenItemChange"));
             }
+          } else {
+            textInput.text = _typedText;
+            dispatchEvent(new RxAutoCompleteItemEvent(_typedText));
           }
         }
       } else if (event.ctrlKey && event.keyCode == Keyboard.UP) {
