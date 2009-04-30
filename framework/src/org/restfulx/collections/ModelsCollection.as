@@ -81,7 +81,6 @@ package org.restfulx.collections {
      * @return boolean result
      */
     public function hasItem(item:Object):Boolean {
-      //return withId(object["id"]) != null;
       return indexes[item["id"]] != null;
     }
     
@@ -93,7 +92,6 @@ package org.restfulx.collections {
      */
     [Bindable("collectionChange")]
     public function getItem(item:Object):Object {
-      //return withId(object["id"]);
       return getItemAt(indexes[item["id"]]);
     }
         
@@ -113,7 +111,20 @@ package org.restfulx.collections {
      */ 
     public function removeItem(item:Object):void {
       removeItemAt(indexOfId(item["id"]));
+    }
+    
+    /**
+     * @inheritDoc
+     */
+    public override function removeItemAt(index:int):Object {
+      var item:Object = super.removeItemAt(index);
       delete indexes[item["id"]];
+      return item;
+    }
+    
+    public override function removeAll():void {
+      this.indexes = new Dictionary;
+      super.removeAll();
     }
     
     /**
@@ -123,7 +134,6 @@ package org.restfulx.collections {
      * @return index offset
      */
     public function indexOfId(id:String):int {
-      //return indexOfPropertyValue("id", id);
       if (indexes.hasOwnProperty(id)) {
         return indexes[id];
       } else {
