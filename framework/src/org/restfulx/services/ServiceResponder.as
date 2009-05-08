@@ -95,6 +95,10 @@ package org.restfulx.services {
           Rx.log.debug("handled response for: " + resultType);
           delete Rx.models.state.waiting[resultType];
           
+          for each (var parent:String in Rx.models.state.parents[resultType]) {
+            delete Rx.models.state.waiting[parent];
+          }
+          
           handler(result);
           
           // and fire user's callback responder here
