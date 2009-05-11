@@ -197,7 +197,6 @@ package org.restfulx.controllers {
               index(getDefinitionByName(dependency) as Class, {
                 fetchDependencies: fetchDependencies,
                 useLazyMode: useLazyMode,
-                metadata: metadata,
                 append: append,
                 targetServiceId: targetServiceId
               });
