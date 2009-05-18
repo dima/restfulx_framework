@@ -33,6 +33,8 @@ package org.restfulx.collections {
    */
   public class ModelsCollection extends RxCollection {
     
+    public var metadata:Object;
+    
     /** 
      * @see mx.collections.ArrayCollection
      */

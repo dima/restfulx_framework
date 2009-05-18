@@ -34,6 +34,12 @@ package org.restfulx.utils {
      */
     public var itemType:String;
     
+    [Bindable]
+    /**
+     * Any metadata that may have been passed on from the server
+     */
+    public var metadata:Object;
+    
     public function TypedArray(numElements:int = 0) {
       super(numElements);
     }

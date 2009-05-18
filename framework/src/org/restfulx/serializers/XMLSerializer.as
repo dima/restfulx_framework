@@ -69,6 +69,13 @@ package org.restfulx.serializers {
           // we are only going to specifically unmarshall known relationships
           if (state.fqns[objectName]) {
             results.itemType = state.fqns[objectName];
+            var metadata:Object = {};
+            for each (var attribute:XML in xmlFragment.attributes()) {
+              if (attribute.name().toString() != "type") {
+                metadata[attribute.name().toString()] = attribute.toString();
+              }
+            }
+            results.metadata = metadata;
             for each (var node:XML in xmlFragment.children()) {
               results.push(unmarshallObject(node, disconnected, state.fqns[objectName]));
             }

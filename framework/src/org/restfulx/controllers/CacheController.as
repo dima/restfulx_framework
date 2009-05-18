@@ -82,7 +82,9 @@ package org.restfulx.controllers {
     public function index(models:Object):void {
       var fqn:String;
       if (models is TypedArray) {
-        fqn = TypedArray(models).itemType;
+        var modelsArray:TypedArray = models as TypedArray;
+        fqn = modelsArray.itemType;
+        (data[fqn] as ModelsCollection).metadata = modelsArray.metadata;
       } else if (models is RxModel) {
         fqn = getQualifiedClassName(models);
       }
