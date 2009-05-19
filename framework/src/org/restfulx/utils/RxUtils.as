@@ -305,6 +305,10 @@ package org.restfulx.utils {
     public static function nestResource(object:Object, nestedBy:Array = null, suffix:String = "fxml"):String {
       var result:String = "";
       var fqn:String = getQualifiedClassName(object);
+      
+      if (Rx.models.state.controllers[fqn] == null) {
+        throw new Error("Cannot verify that " + fqn + " is a valid RestfulX model. Make sure that you have referenced it in your ApplicationController.");
+      }
       if (nestedBy == null || nestedBy.length == 0) 
         return RxUtils.getResourcePathPrefix(object) + 
           Rx.models.state.controllers[fqn] + "." + suffix;

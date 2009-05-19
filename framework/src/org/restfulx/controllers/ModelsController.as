@@ -183,9 +183,15 @@ package org.restfulx.controllers {
         }
       }
       var fqn:String = state.types[clazz];
+      var cached:ModelsCollection = ModelsCollection(cache.data[fqn]);
+     
+      if (cached == null) {
+        throw new Error("Cannot index " + clazz + ". Make sure that you have referenced this model class in your ApplicationController.");
+      }
+      
       if (!state.indexed[fqn]) {
         if (!append) {
-          ModelsCollection(cache.data[fqn]).removeAll();
+          cached.removeAll();
         }
         if (fetchDependencies) {
           // request dependencies if necessary
@@ -211,7 +217,7 @@ package org.restfulx.controllers {
         var serviceResponder:ServiceResponder = new ServiceResponder(cache.index, service, fqn, onSuccess, onFailure);
         invokeService(service.index, service, clazz, serviceResponder, metadata, nestedBy);  
       }
-      return ModelsCollection(cache.data[fqn]);
+      return cached;
     }
     
     /**
@@ -283,8 +289,13 @@ package org.restfulx.controllers {
       }
       
       var shown:ArrayCollection = ArrayCollection(state.shown[fqn]);
+      var cached:ModelsCollection = ModelsCollection(cache.data[fqn]);
+     
+      if (cached == null) {
+        throw new Error("Cannot show " + fqn + ". Make sure that you have referenced this model class in your ApplicationController.");
+      }
       
-      var currentInstance:Object = ModelsCollection(cache.data[fqn]).withId(objectId);
+      var currentInstance:Object = cached.withId(objectId);
       
       if (!shown.contains(objectId)) {
         if (fetchDependencies) {
@@ -317,7 +328,7 @@ package org.restfulx.controllers {
         if (!currentInstance) {
           currentInstance = new (getDefinitionByName(fqn) as Class);
           currentInstance["id"] = objectId;
-          ModelsCollection(cache.data[fqn]).addItem(currentInstance);
+          cached.addItem(currentInstance);
         }
         
         var service:IServiceProvider = getServiceProvider(targetServiceId);
