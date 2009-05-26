@@ -39,7 +39,7 @@ For details on how to get started with the RestfulX framework refer to:
 
 Report bugs or track framework development progress:
 
-    http://restfulx.lighthouseapp.com/dashboard
+    http://github.com/dima/restfulx_framework/issues
   
 Get involved with the community:
       
