@@ -307,7 +307,8 @@ package org.restfulx {
      */
     public static function merge(items:ArrayCollection, toAdd:Array, 
       after:Boolean = false):RxCollection {
-      return RxUtils.mergeArrays(items.source, toAdd, after);
+      var source:Array = (items == null) ? [] : items.toArray();
+      return RxUtils.mergeArrays(source, toAdd, after);
     }
     
     /**
@@ -320,7 +321,8 @@ package org.restfulx {
      * @return new filtered RxCollection instance
      */
     public static function filter(items:ArrayCollection, filter:Function = null):RxCollection {
-      var results:RxCollection = new RxCollection(items.toArray().slice(0));
+      var source:Array = (items == null) ? [] : items.toArray();
+      var results:RxCollection = new RxCollection(source.slice(0));
       return RxCollection(filter$(results, filter));
     }
     
@@ -349,7 +351,8 @@ package org.restfulx {
      * @return new filtered RxCollection instance
      */
     public static function filters(items:RxCollection, filters:Array = null):RxCollection {
-      var results:RxCollection = new RxCollection(items.toArray().slice(0));
+      var source:Array = (items == null) ? [] : items.toArray();
+      var results:RxCollection = new RxCollection(source.slice(0));
       return filters$(results, filters);
     }
     
@@ -378,7 +381,8 @@ package org.restfulx {
      * @return new array collection with the sorts applied 
      */
     public static function sort(items:RxCollection, fields:Array = null):RxCollection {
-      var results:RxCollection = new RxCollection(items.toArray().slice(0));
+      var source:Array = (items == null) ? [] : items.toArray();
+      var results:RxCollection = new RxCollection(source.slice(0));
       return sort$(results, fields);
     }
     
