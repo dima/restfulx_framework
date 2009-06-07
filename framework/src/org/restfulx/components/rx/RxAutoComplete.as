@@ -41,6 +41,7 @@ package org.restfulx.components.rx {
   [Event(name="selectedItemChange", type="flash.events.Event")]
   [Event(name="unknownSelectedItem", type="org.restfulx.events.RxAutoCompleteItemEvent")]
   
+  [IconFile("/assets/AutoComplete.png")] 
   [Bindable]
   /**
    * This class adds integrated search capability to your Flex/AIR applications.
@@ -82,9 +83,6 @@ package org.restfulx.components.rx {
    */
   public class RxAutoComplete extends ComboBox {
     
-    /** Rx model class this auto complete component is bound to */
-    public var resource:Class;
-    
     /** If provided this indicates which property should be used for filtering/search */
     public var filterCategory:String;
     
@@ -108,6 +106,8 @@ package org.restfulx.components.rx {
     
     /** Indicates if a Rx.models.show operation should be performed on enter */
     public var showOnEnter:Boolean = true;
+
+    private var _resource:Class;
 
     private var _typedText:String = "";
 
@@ -144,8 +144,8 @@ package org.restfulx.components.rx {
     public function RxAutoComplete() {
       super();
             
-      if (Rx.models.cached(resource) && Rx.models.cached(resource).length) {
-        dataProvider = Rx.filter(Rx.models.cached(resource), filterFunction);
+      if (Rx.models.cached(_resource) && Rx.models.cached(_resource).length) {
+        dataProvider = Rx.filter(Rx.models.cached(_resource), filterFunction);
         dataProvider.refresh();
       }
       
@@ -159,6 +159,27 @@ package org.restfulx.components.rx {
       rowCount = 7;
       
       addEventListener("typedTextChange", onTypedTextChange);
+    }
+    
+    /** 
+     * Get Rx model class this auto complete component is bound to
+     * @return Class reference to the relevant model
+     */
+    public function get resource():Object {
+      return _resource;
+    }
+    
+    /**
+     * Set Rx model class this auto complete component is bound to
+     * @param class to use can be a valid string describing the model or a class reference
+     */
+    public function set resource(value:Object):void {
+      if (value is String) {
+        var fqn:String = Rx.models.state.fqns[(value as String)];
+        _resource = Rx.models.state.types[fqn] as Class;
+      } else if (value is Class) {
+        _resource = value as Class;
+      }
     }
 
     [Bindable("typedTextChange")]
@@ -182,6 +203,20 @@ package org.restfulx.components.rx {
       invalidateDisplayList();
       dispatchEvent(new Event("typedTextChange"));
     }
+
+    [Bindable("chosenItemChange")]
+    /**
+     * Gets currently chosen item
+     * @return currently chosen model instance
+     */
+    public function get chosenItem():Object {
+      if (preselectedObject is RxModel) {
+        return preselectedObject;
+      } else if (selectedObject is RxModel) {
+        return selectedObject;
+      }
+      return null;
+    }      
     
     /**
      * Sets currently chosen item
@@ -204,21 +239,7 @@ package org.restfulx.components.rx {
       dispatchEvent(new Event("typedTextChange"));      
       dispatchEvent(new Event("chosenItemChange"));
     }
-    
-    [Bindable("chosenItemChange")]
-    /**
-     * Gets currently chosen item
-     * @return currently chosen model instance
-     */
-    public function get chosenItem():Object {
-      if (preselectedObject is RxModel) {
-        return preselectedObject;
-      } else if (selectedObject is RxModel) {
-        return selectedObject;
-      }
-      return null;
-    }
-      
+
     /**
      * Clear typed text without triggering dropdown show
      */
@@ -272,7 +293,7 @@ package org.restfulx.components.rx {
       noResults = false;
       dataProvider = null;
       if ((results as Array).length) {
-        dataProvider = Rx.filter(Rx.models.cached(resource), filterFunction);
+        dataProvider = Rx.filter(Rx.models.cached(_resource), filterFunction);
         dataProvider.refresh();
         
         var provider:ArrayCollection = ArrayCollection(dataProvider);
@@ -297,7 +318,7 @@ package org.restfulx.components.rx {
     }
 
     private function onResourceShow(result:Object):void {
-      dataProvider = Rx.filter(Rx.models.cached(resource), filterFunction);
+      dataProvider = Rx.filter(Rx.models.cached(_resource), filterFunction);
       dataProvider.refresh();
         
       selectedItem = result;
