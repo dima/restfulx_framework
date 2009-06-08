@@ -158,6 +158,7 @@
         ts.addTest(new XMLSerializerTest("testObjectMarshallingWithSetRelationships"));
         ts.addTest(new XMLSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshalling"));
+        ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshallingWithMixedRelationships"));
         ts.addTest(new XMLSerializerTest("testNothingUnmarshalling"));
 
         ts.addTest(new JSONSerializerTest("testObjectUnmarshalling"));
@@ -177,7 +178,8 @@
         ts.addTest(new VOSerializerTest("testObjectMarshallingWithSetRelationships"));
         ts.addTest(new VOSerializerTest("testObjectMarshallingWithNullRelationship"));
         ts.addTest(new VOSerializerTest("testRecursiveObjectMarshalling"));
-        
+        ts.addTest(new VOSerializerTest("testRecursiveObjectMarshallingWithMixedRelationships"));
+                
         ts.addTest(new ReferenceCleanupTest("testHasManyRelationshipCleanup"));
         ts.addTest(new ReferenceCleanupTest("testHasOneRelationshipCleanup"));
         ts.addTest(new ReferenceCleanupTest("testSelfReferentialModelCleanup"));

@@ -27,6 +27,7 @@ package restfulx.test.cases.serializers {
   import mx.core.Application;
   
   import org.restfulx.serializers.XMLSerializer;
+  import org.restfulx.utils.TypedArray;
   
   import restfulx.test.models.Actor;
   import restfulx.test.models.BillableWeek;
@@ -146,6 +147,20 @@ package restfulx.test.cases.serializers {
       var marshalled:XML = xml.marshall(project, true) as XML;
       assertTrue(marshalled.toXMLString().indexOf("tasks"));
       assertTrue(marshalled.toXMLString().indexOf("contractor"));
+    }
+    
+    public function testRecursiveObjectMarshallingWithMixedRelationships():void {
+      var authorsXML:XML = TestApp(Application.application).authors;
+      var authors:TypedArray = xml.unmarshall(authorsXML) as TypedArray;
+      
+      var booksXML:XML = TestApp(Application.application).books;
+      var books:TypedArray = xml.unmarshall(booksXML) as TypedArray;
+      
+      var storesXML:XML = TestApp(Application.application).stores;
+      var stores:TypedArray = xml.unmarshall(storesXML) as TypedArray;
+      
+      var marshalled:XML = xml.marshall(books[0], true) as XML;
+      trace(marshalled.toXMLString());
     }
 
     private function getNewSimpleProperty():SimpleProperty {

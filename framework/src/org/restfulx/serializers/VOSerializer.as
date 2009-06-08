@@ -41,7 +41,7 @@ package org.restfulx.serializers {
      *  @inheritDoc
      */
     public override function marshall(object:Object, recursive:Boolean = false):Object {
-      return marshallToVO(object);  
+      return marshallToVO(object, recursive);  
     }
 
     /**
@@ -114,12 +114,13 @@ package org.restfulx.serializers {
       return object;         
     }
 
-    protected function marshallToVO(object:Object):Object {        
+    protected function marshallToVO(object:Object, recursive:Boolean = false, metadata:Object = null, 
+      parent:Object = null):Object {        
       var fqn:String = getQualifiedClassName(object);
       
       var result:Object = new Object;
       for each (var node:XML in describeType(object)..accessor) {
-        if (RxUtils.isIgnored(node) || RxUtils.isHasOne(node) || RxUtils.isHasMany(node)) continue;
+        if (RxUtils.isIgnored(node)) continue;
           
         var nodeName:String = node.@name;
         var type:String = node.@type;
@@ -127,9 +128,21 @@ package org.restfulx.serializers {
         
         if (RxUtils.isInvalidPropertyName(nodeName)) continue;
         
+        if (RxUtils.isHasMany(node)) {
+          if (!recursive || object[nodeName] == null) continue;
+          var embedded:Array = new Array;
+          for each (var item:Object in object[nodeName]) {
+            if (item != parent) {
+              embedded.push(marshallToVO(item, recursive, metadata, object));
+            }
+          }
+          result[snakeName] = embedded;        
+        } else if (RxUtils.isHasOne(node)) {
+          if (!recursive || object[nodeName] == null) continue;
+          result[snakeName] = marshallToVO(object[nodeName], recursive, metadata, object);  
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
-        if (RxUtils.isBelongsTo(node)) {
+        } else if (RxUtils.isBelongsTo(node)) {
           var descriptor:XML = RxUtils.getAttributeAnnotation(node, "BelongsTo")[0];
           var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
 
@@ -144,6 +157,10 @@ package org.restfulx.serializers {
         } else if (!RxUtils.isInvalidPropertyType(type))  {
           result[snakeName] = uncastAttribute(object, nodeName)
         }
+      }
+      
+      if (recursive && parent != null && !RxUtils.isEmpty(object["id"])) {
+        result["id"] = object["id"];
       }
 
       result["clazz"] = fqn.split("::")[1];

@@ -207,6 +207,7 @@ package org.restfulx.services.http {
       var httpService:HTTPService = getHTTPService(object, nestedBy);
       httpService.method = URLRequestMethod.POST;
       addHeaders(httpService, {'X-HTTP-Method-Override': 'DELETE'});
+      httpService.request = marshallToVO(object, recursive, true);
       httpService.request["_method"] = "DELETE";
       httpService.url = RxUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
       var instance:Object = this;
@@ -467,14 +468,38 @@ package org.restfulx.services.http {
       }
     }
     
-    protected function marshallToVO(object:Object, recursive:Boolean = false):Object {
+    protected function marshallToVO(object:Object, recursive:Boolean = false, toDelete:Boolean = false):Object {
       var vo:Object = Rx.serializers.vo.marshall(object, recursive);
       var result:Object = new Object;
       var localName:String = RxUtils.toSnakeCase(vo["clazz"]);
       delete vo["clazz"];
       for (var property:String in vo) {
         if (vo[property] != null) {
-          result[localName + "[" + property + "]"] = vo[property];
+          if (vo[property] is Array) {
+            var embedded:Array = new Array;
+            for each (var item:Object in vo[property] as Array) {
+              if (item.hasOwnProperty("clazz")) {
+                delete item["clazz"];
+              }
+              if (!toDelete) {
+                embedded.push(item);
+              } else {
+                embedded.push({"id": item["id"], "delete": "1"});
+              }
+            }
+            result[localName + "[" + property + "_attributes]"] = embedded;
+          } else if (vo[property] is String) {
+            if (!toDelete) result[localName + "[" + property + "]"] = vo[property];
+          } else {
+            if (vo[property].hasOwnProperty("clazz")) {
+              delete vo[property]["clazz"];
+            }
+            if (!toDelete) {
+              result[localName + "[" + property + "_attributes]"] = vo[property];
+            } else {
+              result[localName + "[" + property + "_attributes]"] = {"id": vo[property]["id"], "delete": "1"};
+            }
+          }
         } else {
           /* we serialize nulls using empty strings for form-based submits */
           result[localName + "[" + property + "]"] = "";

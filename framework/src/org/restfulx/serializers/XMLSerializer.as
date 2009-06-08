@@ -143,6 +143,10 @@ package org.restfulx.serializers {
           }
         }
       }
+      
+      if (recursive && parent != null && !RxUtils.isEmpty(object["id"])) {
+        vars.push("<id>" + object["id"] + "</id>");
+      }
 
       result = "<" + localName + ">" + vars.join("") + "</" + localName + ">";
       
