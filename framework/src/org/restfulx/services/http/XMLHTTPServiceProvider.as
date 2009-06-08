@@ -22,6 +22,8 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.services.http {
+  import com.adobe.serialization.json.JSON;
+  
   import flash.events.DataEvent;
   import flash.events.Event;
   import flash.events.IOErrorEvent;
@@ -487,7 +489,7 @@ package org.restfulx.services.http {
                 embedded.push({"id": item["id"], "delete": "1"});
               }
             }
-            result[localName + "[" + property + "_attributes]"] = embedded;
+            result[localName + "[" + property + "_attributes]"] = JSON.encode(embedded);
           } else if (vo[property] is String) {
             if (!toDelete) result[localName + "[" + property + "]"] = vo[property];
           } else {
@@ -495,9 +497,9 @@ package org.restfulx.services.http {
               delete vo[property]["clazz"];
             }
             if (!toDelete) {
-              result[localName + "[" + property + "_attributes]"] = vo[property];
+              result[localName + "[" + property + "_attributes]"] = JSON.encode(vo[property]);
             } else {
-              result[localName + "[" + property + "_attributes]"] = {"id": vo[property]["id"], "delete": "1"};
+              result[localName + "[" + property + "_attributes]"] = JSON.encode({"id": vo[property]["id"], "delete": "1"});
             }
           }
         } else {
