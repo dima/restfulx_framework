@@ -45,17 +45,22 @@ package org.restfulx.utils {
    *  
    * <p>If you pick a different name adjust the argument to constructor accordintly.
    */
-  public class RxFileReference extends FileReference {
+  public class RxFileReference {
     
     /** key name to use (default is "uploaded_data", which is what attachment_fu expects) */
     public var keyName:String;
     
+    public var reference:FileReference;
+    
     /**
      * @param keyName keyname to use default "uploaded_data" 
      */
-    public function RxFileReference(keyName:String = "uploaded_data") {
-      super();
+    public function RxFileReference(keyName:String = "uploaded_data", file:FileReference = null) {
       this.keyName = keyName;
+      if (file == null) {
+        file = new FileReference;
+      }
+      this.reference = file;
     }
   }
 }

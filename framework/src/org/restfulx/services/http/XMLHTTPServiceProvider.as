@@ -287,7 +287,7 @@ package org.restfulx.services.http {
         request.url += "?" + urlParams;  
       }
       
-      file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(event:DataEvent):void {
+      file.reference.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(event:DataEvent):void {
         var result:Object = event.data;
         if (hasErrors(result)) {
           if (responder) responder.result(event);
@@ -324,9 +324,9 @@ package org.restfulx.services.http {
           responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));
         }
       }, false, 0, true);
-      file.addEventListener(IOErrorEvent.IO_ERROR, responder.fault, false, 0, true);
+      file.reference.addEventListener(IOErrorEvent.IO_ERROR, responder.fault, false, 0, true);
       
-      file.upload(request, localName + "[" + file.keyName + "]");
+      file.reference.upload(request, localName + "[" + file.keyName + "]");
     }
     
     protected function sendOrUpload(httpService:HTTPService, object:Object, responder:IResponder,
