@@ -22,7 +22,7 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.serializers {
-  import json.JParser;
+  import com.adobe.serialization.json.JSON;
   
   import org.restfulx.Rx;
   
@@ -45,7 +45,7 @@ package org.restfulx.serializers {
           marshalled[prop] = "";
         }
       }
-      return JParser.encode(marshalled);  
+      return JSON.encode(marshalled);  
     }    
   }
 }
