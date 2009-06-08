@@ -23,10 +23,11 @@
  ******************************************************************************/
 package org.restfulx.services.as3http {
   import com.adobe.net.URI;
-  import com.adobe.serialization.json.JSON;
   
   import flash.utils.ByteArray;
   import flash.utils.getQualifiedClassName;
+  
+  import json.JParser;
   
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
@@ -132,7 +133,7 @@ package org.restfulx.services.as3http {
           if (responder) responder.fault(event);
         } else {
           data.position = 0;
-          var response:Object = JSON.decode(data.readUTFBytes(data.length));
+          var response:Object = JParser.decode(data.readUTFBytes(data.length));
           var result:Array = 
             (response["rows"] as Array).map(function(item:Object, i:int, a:Array):Object { return item["value"]; });
           if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, result));
@@ -277,7 +278,7 @@ package org.restfulx.services.as3http {
           if (responder) responder.fault(event);
         } else {
           data.position = 0;
-          var response:Object = JSON.decode(data.readUTFBytes(data.length));
+          var response:Object = JParser.decode(data.readUTFBytes(data.length));
           for each (var prop:String in ['id', 'rev']) {
             object[prop] = response[prop];
           }
@@ -339,7 +340,7 @@ package org.restfulx.services.as3http {
           vo[prop] = "";
         }
       }
-      return JSON.encode(vo); 
+      return JParser.encode(vo); 
     }
     
     protected function marshallToJSONAndConvertToByteArray(object:Object):ByteArray {
@@ -367,7 +368,7 @@ package org.restfulx.services.as3http {
           data.position = 0;
           var response:String = data.readUTFBytes(data.length);
           
-          callback(JSON.decode(response));
+          callback(JParser.decode(response));
         }
       }).get(getCouchDBURI("_all_dbs"));
     }
@@ -389,7 +390,7 @@ package org.restfulx.services.as3http {
         } else {
           data.position = 0;
           var response:String = data.readUTFBytes(data.length);
-          callback(JSON.decode(response));
+          callback(JParser.decode(response));
         }
       }).get(getCouchDBURI(dbName));        
     }

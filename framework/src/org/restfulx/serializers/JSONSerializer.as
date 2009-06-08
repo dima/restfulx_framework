@@ -22,9 +22,9 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.serializers {
-  import com.adobe.serialization.json.JSON;
-  
   import flash.utils.getQualifiedClassName;
+  
+  import json.JParser;
   
   import org.restfulx.models.RxModel;
   import org.restfulx.utils.RxUtils;
@@ -49,7 +49,7 @@ package org.restfulx.serializers {
       }
       var result:Object = new Object;
       result[localName] = vo;
-      return JSON.encode(result);  
+      return JParser.encode(result);  
     }
 
     /**
@@ -63,7 +63,7 @@ package org.restfulx.serializers {
         if (object is Array) {
           return unmarshallJSONArray(object as Array, disconnected);
         } else if (object is String) {
-          var source:Object = JSON.decode(object as String);
+          var source:Object = JParser.decode(object as String);
           if (source is Array) {
             return unmarshallJSONArray(source as Array, disconnected);
           } else {

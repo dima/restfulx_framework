@@ -22,15 +22,15 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.controllers {
-  import com.adobe.serialization.json.JSON;
-  
   import flash.events.DataEvent;
   import flash.events.Event;
   import flash.events.EventDispatcher;
   import flash.events.IOErrorEvent;
   import flash.events.SecurityErrorEvent;
   import flash.net.XMLSocket;
-    
+  
+  import json.JParser;
+  
   import org.restfulx.Rx;
   import org.restfulx.events.ServerPushEvent;
   
@@ -59,7 +59,7 @@ package org.restfulx.controllers {
     }
     
     private function onData(event:DataEvent):void {
-      var message:Object = JSON.decode(event.data);
+      var message:Object = JParser.decode(event.data);
       currentSignature = message["signature"];
       lastMessageId = message["id"];
       var body:Object = message["body"];
@@ -78,7 +78,7 @@ package org.restfulx.controllers {
         handshake["signature"] = currentSignature;
       }
       
-      socket.send(JSON.encode(handshake));
+      socket.send(JParser.encode(handshake));
     }
     
     private function onDisconnect(event:Event):void {
