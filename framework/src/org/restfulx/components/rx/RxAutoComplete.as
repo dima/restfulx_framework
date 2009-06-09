@@ -92,6 +92,14 @@ package org.restfulx.components.rx {
      */
     public var filterFunction:Function;
     
+    /**
+     * By default RxAutoComplete will use Rx.models.reload function with metadata in append mode, 
+     * which will use the current service provider. If you are unhappy with any part of standard
+     * Rx index/reload processing, you can provide your own custom function here to do all
+     * the processing
+     */
+    public var customSearchFunction:Function;
+    
     /** Indicates how long we should wait for before firing server request */
     public var lookupDelay:int = 500;
     
@@ -281,9 +289,8 @@ package org.restfulx.components.rx {
         searchInProgress = false;
         return;
       }
-      Rx.http(onResourceSearch).invoke(
-        {URL: RxUtils.nestResource(resource), data: {search: typedText, category: filterCategory}, 
-        cacheBy: "index"});
+      Rx.models.reload(resource, {onSuccess: onResourceSearch, append: true, 
+        metadata: {search: typedText, category: filterCategory}, customProcessor: customSearchFunction});
     }
         
     private function onResourceSearch(results:Object):void {
