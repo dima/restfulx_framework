@@ -133,33 +133,37 @@ package org.restfulx.serializers {
           var embedded:Array = new Array;
           for each (var item:Object in object[nodeName]) {
             if (item != parent) {
-              embedded.push(marshallToVO(item, recursive, metadata, object));
+              embedded.push(marshallToVO(item, false, metadata, object));
             }
           }
           result[snakeName] = embedded;        
         } else if (RxUtils.isHasOne(node)) {
           if (!recursive || object[nodeName] == null) continue;
-          result[snakeName] = marshallToVO(object[nodeName], recursive, metadata, object);  
+          result[snakeName] = marshallToVO(object[nodeName], false, metadata, object);  
         // treat model objects specially (we are only interested in serializing
         // the [BelongsTo] end of the relationship
         } else if (RxUtils.isBelongsTo(node)) {
-          var descriptor:XML = RxUtils.getAttributeAnnotation(node, "BelongsTo")[0];
-          var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
-
-          if (object[nodeName]) {
-            result[snakeName + "_id"] = object[nodeName]["id"]; 
-            if (polymorphic) {
-              result[snakeName + "_type"] = getQualifiedClassName(object[nodeName]).split("::")[1];
-            }
+          if (recursive && RxUtils.isNested(node) && object[nodeName] != parent) {
+            result[snakeName] = marshallToVO(object[nodeName], false, metadata, object);
           } else {
-            result[snakeName + "_id"] = null;
+            var descriptor:XML = RxUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+            var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
+
+            if (object[nodeName]) {
+              result[snakeName + "_id"] = object[nodeName]["id"]; 
+              if (polymorphic) {
+                result[snakeName + "_type"] = getQualifiedClassName(object[nodeName]).split("::")[1];
+              }
+            } else {
+              result[snakeName + "_id"] = null;
+            }
           }
         } else if (!RxUtils.isInvalidPropertyType(type))  {
           result[snakeName] = uncastAttribute(object, nodeName)
         }
       }
       
-      if (recursive && parent != null && !RxUtils.isEmpty(object["id"])) {
+      if (parent != null && !RxUtils.isEmpty(object["id"])) {
         result["id"] = object["id"];
       }
 

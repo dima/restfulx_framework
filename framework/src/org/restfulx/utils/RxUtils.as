@@ -360,6 +360,10 @@ package org.restfulx.utils {
     public static function isLazy(attribute:XML):Boolean {
       return getAttributeAnnotation(attribute, "Lazy").length() > 0;
     }
+    
+    public static function isNested(attribute:XML):Boolean {
+      return getAttributeAnnotation(attribute, "Nested").length() > 0;
+    }
 
     /**
      * Checks if the node is annotated with [BelongsTo]

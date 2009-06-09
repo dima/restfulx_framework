@@ -113,26 +113,29 @@ package org.restfulx.serializers {
           var embedded:Array = new Array;
           for each (var item:Object in object[nodeName]) {
             if (item != parent) {
-              embedded.push(marshallToXML(item, recursive, metadata, object));
+              embedded.push(marshallToXML(item, false, metadata, object));
             }
           }
           vars.push("<" + snakeName + " type=\"array\">" + embedded.join("") + "</" + snakeName + ">");          
         } else if (RxUtils.isHasOne(node)) {
           if (!recursive || object[nodeName] == null) continue;
-          vars.push(marshallToXML(object[nodeName], recursive, metadata, object).toXMLString());          
+          vars.push(marshallToXML(object[nodeName], false, metadata, object).toXMLString());          
         } else if (RxUtils.isBelongsTo(node)) {
-          if (recursive && object[nodeName] == parent) continue;
-          var descriptor:XML = RxUtils.getAttributeAnnotation(node, "BelongsTo")[0];
-          var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
-
-          if (object[nodeName]) {
-            vars.push(("<" + snakeName + "_id>" + object[nodeName]["id"] + "</" + snakeName + "_id>"));
-            if (polymorphic) {
-              vars.push(("<" + snakeName + "_type>" + getQualifiedClassName(object[nodeName]).split("::")[1] + 
-                "</" + snakeName + "_type>"));
-            } 
+          if (recursive && RxUtils.isNested(node) && object[nodeName] != parent) {
+            vars.push(marshallToXML(object[nodeName], false, metadata, object).toXMLString());
           } else {
-            vars.push("<" + snakeName + "_id/>");
+            var descriptor:XML = RxUtils.getAttributeAnnotation(node, "BelongsTo")[0];
+            var polymorphic:Boolean = (descriptor.arg.(@key == "polymorphic").@value.toString() == "true") ? true : false;
+
+            if (object[nodeName]) {
+              vars.push(("<" + snakeName + "_id>" + object[nodeName]["id"] + "</" + snakeName + "_id>"));
+              if (polymorphic) {
+                vars.push(("<" + snakeName + "_type>" + getQualifiedClassName(object[nodeName]).split("::")[1] + 
+                  "</" + snakeName + "_type>"));
+              } 
+            } else {
+              vars.push("<" + snakeName + "_id/>");
+            }
           }
         } else if (!RxUtils.isInvalidPropertyType(type)) {
           if (object[nodeName] != null) {
@@ -144,7 +147,7 @@ package org.restfulx.serializers {
         }
       }
       
-      if (recursive && parent != null && !RxUtils.isEmpty(object["id"])) {
+      if (parent != null && !RxUtils.isEmpty(object["id"])) {
         vars.push("<id>" + object["id"] + "</id>");
       }
 
