@@ -162,11 +162,14 @@ package org.restfulx.controllers {
      * @param useLazyModel if true dependencies marked with [Lazy] will be skipped (not fetched)
      * @param append if true then target ModelsCollection will not be reset but just appended to (default is to reset)
      * @param targetServiceId service provider to use
+     * @param customProcessor if provided then it will be used instead of the standard service provider workflow,
+     *  this allows you to fully customize index processing. This function should have the same signature as
+     *  IServiceProvider#index
      */
     [Bindable(event="cacheUpdate")]
     public function index(clazz:Class, optsOrOnSuccess:Object = null, onFailure:Function = null, 
       nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, 
-      append:Boolean = false, targetServiceId:int = -1):ModelsCollection {
+      append:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):ModelsCollection {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -180,6 +183,7 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("useLazyMode")) useLazyMode = optsOrOnSuccess["useLazyMode"];
           if (optsOrOnSuccess.hasOwnProperty("append")) append = optsOrOnSuccess["append"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
+          if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
         }
       }
       var fqn:String = state.types[clazz];
@@ -204,7 +208,8 @@ package org.restfulx.controllers {
                 fetchDependencies: fetchDependencies,
                 useLazyMode: useLazyMode,
                 append: append,
-                targetServiceId: targetServiceId
+                targetServiceId: targetServiceId,
+                customProcessor: customProcessor
               });
             }
           }
@@ -215,7 +220,11 @@ package org.restfulx.controllers {
   
         var service:IServiceProvider = getServiceProvider(targetServiceId);
         var serviceResponder:ServiceResponder = new ServiceResponder(cache.index, service, fqn, onSuccess, onFailure);
-        invokeService(service.index, service, clazz, serviceResponder, metadata, nestedBy);  
+        if (customProcessor != null) {
+          customProcessor(clazz, serviceResponder, metadata, nestedBy);
+        } else {
+          invokeService(service.index, service, clazz, serviceResponder, metadata, nestedBy);
+        }
       }
       return cached;
     }
@@ -253,11 +262,14 @@ package org.restfulx.controllers {
      * @param fetchDependencies if true model dependencies will be recursively fetched as well
      * @param useLazyModel if true dependencies marked with [Lazy] will be skipped (not fetched)
      * @param targetServiceId service provider to use
+     * @param customProcessor if provided then it will be used instead of the standard service provider workflow,
+     *  this allows you to fully customize show processing. This function should have the same signature as
+     *  IServiceProvider#show
      */
     [Bindable(event="cacheUpdate")]
     public function show(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false,
-      targetServiceId:int = -1):RxModel {
+      targetServiceId:int = -1, customProcessor:Function = null):RxModel {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -270,6 +282,7 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("fetchDependencies")) fetchDependencies = optsOrOnSuccess["fetchDependencies"];
           if (optsOrOnSuccess.hasOwnProperty("useLazyMode")) useLazyMode = optsOrOnSuccess["useLazyMode"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
+          if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
         }
       }
       
@@ -314,7 +327,8 @@ package org.restfulx.controllers {
                       fetchDependencies: fetchDependencies, 
                       useLazyMode: useLazyMode, 
                       metadata: metadata, 
-                      targetServiceId: targetServiceId});
+                      targetServiceId: targetServiceId,
+                      customProcessor: customProcessor});
                   }
                 }
               }
@@ -334,7 +348,11 @@ package org.restfulx.controllers {
         var service:IServiceProvider = getServiceProvider(targetServiceId);
         var serviceResponder:ServiceResponder = new ServiceResponder(cache.show, service, fqn, onSuccess, onFailure);
 
-        invokeService(service.show, service, object, serviceResponder, metadata, nestedBy);
+        if (customProcessor != null) {
+          customProcessor(object, serviceResponder, metadata, nestedBy);
+        } else {
+          invokeService(service.show, service, object, serviceResponder, metadata, nestedBy);
+        }
       }
       
       return RxModel(currentInstance);
@@ -354,9 +372,9 @@ package org.restfulx.controllers {
      */
     public function showById(clazz:Class, id:*, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false,
-      targetServiceId:int = -1):RxModel {
+      targetServiceId:int = -1, customProcessor:Function = null):RxModel {
       return show({clazz: clazz, id: id}, optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, 
-        targetServiceId);
+        targetServiceId, customProcessor);
     }
 
     /**
@@ -373,9 +391,12 @@ package org.restfulx.controllers {
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
+     * @param customProcessor if provided then it will be used instead of the standard service provider workflow,
+     *  this allows you to fully customize update processing. This function should have the same signature as
+     *  IServiceProvider#update
      */
     public function update(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void {
+      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -387,12 +408,18 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("metadata")) metadata = optsOrOnSuccess["metadata"];
           if (optsOrOnSuccess.hasOwnProperty("recursive")) recursive = optsOrOnSuccess["recursive"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
+          if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
         }
       }
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(cache.update, service, fqn, onSuccess, onFailure);
-      invokeCUDService(service.update, service, object, serviceResponder, metadata, nestedBy, recursive);
+      
+      if (customProcessor != null) {
+        customProcessor(object, serviceResponder, metadata, nestedBy, recursive);
+      } else {
+        invokeCUDService(service.update, service, object, serviceResponder, metadata, nestedBy, recursive);
+      }
     }
     
     /**
@@ -414,9 +441,12 @@ package org.restfulx.controllers {
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
+     * @param customProcessor if provided then it will be used instead of the standard service provider workflow,
+     *  this allows you to fully customize create processing. This function should have the same signature as
+     *  IServiceProvider#create
      */
     public function create(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void {
+      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -428,12 +458,18 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("metadata")) metadata = optsOrOnSuccess["metadata"];
           if (optsOrOnSuccess.hasOwnProperty("recursive")) recursive = optsOrOnSuccess["recursive"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
+          if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
         }
       }
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(cache.create, service, fqn, onSuccess, onFailure);
-      invokeCUDService(service.create, service, object, serviceResponder, metadata, nestedBy, recursive);
+      
+      if (customProcessor != null) {
+        customProcessor(object, serviceResponder, metadata, nestedBy, recursive);
+      } else {     
+        invokeCUDService(service.create, service, object, serviceResponder, metadata, nestedBy, recursive);
+      }
     }
 
     /**
@@ -455,9 +491,12 @@ package org.restfulx.controllers {
      * @param nestedBy an array of model instances that should used to nest this request under
      * @param metadata an object (a hash of key value pairs that should be tagged on to the request)
      * @param targetServiceId service provider to use
+     * @param customProcessor if provided then it will be used instead of the standard service provider workflow,
+     *  this allows you to fully customize destroy processing. This function should have the same signature as
+     *  IServiceProvider#destroy
      */
     public function destroy(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void {
+      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -469,12 +508,18 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("metadata")) metadata = optsOrOnSuccess["metadata"];
           if (optsOrOnSuccess.hasOwnProperty("recursive")) recursive = optsOrOnSuccess["recursive"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
+          if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
         }
       }
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(cache.destroy, service, fqn, onSuccess, onFailure);
-      invokeCUDService(service.destroy, service, object, serviceResponder, metadata, nestedBy, recursive);
+      
+      if (customProcessor != null) {
+        customProcessor(object, serviceResponder, metadata, nestedBy, recursive);
+      } else {
+        invokeCUDService(service.destroy, service, object, serviceResponder, metadata, nestedBy, recursive);
+      }
     }
     
     /**
@@ -535,17 +580,20 @@ package org.restfulx.controllers {
      * @param useLazyModel if true dependencies marked with [Lazy] will be skipped (not fetched)
      * @param append set this to true if you don't want to nuke target ModelsCollection
      * @param targetServiceId service provider to use
+     * @param customProcessor if provided then it will be used instead of the standard service provider workflow,
+     *  this allows you to fully customize index/show processing. This function should have the same signature as
+     *  IServiceProvider#index/show
      */
     public function reload(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, 
-      targetServiceId:int = -1):void {
+      targetServiceId:int = -1, customProcessor:Function = null):void {
       reset(object);      
       if (object is Class) {
         index(Class(object), optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, append,
-          targetServiceId);
+          targetServiceId, customProcessor);
       } else {
         show(object, optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, 
-          targetServiceId);
+          targetServiceId, customProcessor);
       }
     }
 

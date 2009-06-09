@@ -69,11 +69,10 @@ package org.restfulx.models {
      * 
      * @copy org.restfulx.controller.ModelsController#show
      */
-    [Bindable(event="propertyChange")]
     public function show(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
-      fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1):Object {
+      fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):Object {
       return Rx.models.show(this, optsOrOnSuccess, onFailure, nestedBy, metadata, 
-        fetchDependencies, useLazyMode, targetServiceId);
+        fetchDependencies, useLazyMode, targetServiceId, customProcessor);
     }
 
     /**
@@ -84,8 +83,8 @@ package org.restfulx.models {
      * @copy org.restfulx.controller.ModelsController#create
      */
     public function create(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
-      recursive:Boolean = false, targetServiceId:int = -1):void {
-      Rx.models.create(this, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId);
+      recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void {
+      Rx.models.create(this, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId, customProcessor);
     }
 
     /**
@@ -96,8 +95,8 @@ package org.restfulx.models {
      * @copy org.restfulx.controller.ModelsController#update
      */
     public function update(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
-      recursive:Boolean = false, targetServiceId:int = -1):void {
-      Rx.models.update(this, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId);
+      recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void {
+      Rx.models.update(this, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId, customProcessor);
     }
 
     /**
@@ -108,8 +107,8 @@ package org.restfulx.models {
      * @copy org.restfulx.controllers.ModelsController#show
      */
     public function destroy(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null,
-      recursive:Boolean = false, targetServiceId:int = -1):void {
-      Rx.models.destroy(this, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId);
+      recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void {
+      Rx.models.destroy(this, optsOrOnSuccess, onFailure, nestedBy, metadata, recursive, targetServiceId, customProcessor);
     }
 
     /**
@@ -120,9 +119,10 @@ package org.restfulx.models {
      * @copy org.restfulx.controllers.ModelsController#reload    
      */
     public function reload(optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, targetServiceId:int = -1):void {
+      metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, targetServiceId:int = -1,
+      customProcessor:Function = null):void {
       Rx.models.reload(this, optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, false,
-        targetServiceId);
+        targetServiceId, customProcessor);
     }
 
     /**
