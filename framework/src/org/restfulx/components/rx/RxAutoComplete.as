@@ -39,6 +39,7 @@ package org.restfulx.components.rx {
   [Event(name="typedTextChange", type="flash.events.Event")]
   [Event(name="chosenItemChange", type="flash.events.Event")]
   [Event(name="selectedItemChange", type="flash.events.Event")]
+  [Event(name="itemHighlighted", type="flash.events.Event")]
   [Event(name="unknownSelectedItem", type="org.restfulx.events.RxAutoCompleteItemEvent")]
   
   [IconFile("/assets/AutoComplete.png")] 
@@ -440,6 +441,8 @@ package org.restfulx.components.rx {
             textInput.text = _typedText;
             dispatchEvent(new RxAutoCompleteItemEvent(_typedText));
           }
+        } else if ((event.keyCode == Keyboard.UP || event.keyCode == Keyboard.DOWN) && showingDropdown) {
+          dispatchEvent(new Event("itemHighlighted"));
         }
       } else if (event.ctrlKey && event.keyCode == Keyboard.UP) {
         dropdownClosed = true;
