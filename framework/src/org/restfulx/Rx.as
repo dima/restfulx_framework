@@ -189,6 +189,17 @@ package org.restfulx {
      */
     public static var airDatabaseName:String = "rxdb";
     
+    /** 
+     * Default database name to use for Titanium/WebKit applications. Simply set
+     * <code>Rx.webkitDatabaseName</code> anywhere in your code to override. This is
+     * usually done at application initialization.
+     *  
+     * @example
+     *  
+     * <listing version="3.0">
+     * Rx.webkitDatabaseName = "myairdb";
+     * </listing>
+     */
     public static var webkitDatabaseName:String = "rxdb";
     
     /** 

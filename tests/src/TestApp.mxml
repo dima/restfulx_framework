@@ -54,7 +54,7 @@
       private function onCreationComplete():void {
         Rx.enableLogging();
         
-        Rx.couchDBRootUrl = "http://127.0.0.1:5984/";
+        Rx.couchDbRootUrl = "http://127.0.0.1:5984/";
         Rx.couchDbDatabaseName = "restfulx_tests/";
         
         RxTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider, AS3XMLHTTPServiceProvider,
