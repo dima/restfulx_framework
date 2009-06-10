@@ -24,56 +24,38 @@
  *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  *  DEALINGS IN THE SOFTWARE.  
  */
+package org.restfulx.utils {
+  import flash.events.Event;
+  import flash.events.EventDispatcher;
+  import flash.net.*;
+  import mx.core.IMXMLObject;
 
-package org.restfulx.utils
-{
+  [DefaultProperty("source")]
+  public class JavaScript extends EventDispatcher implements IMXMLObject {
 
-
-import flash.events.Event;
-import flash.events.EventDispatcher;
-import flash.net.*;
-import mx.core.IMXMLObject;
-
-[DefaultProperty("source")]
-
-public class JavaScript extends EventDispatcher implements IMXMLObject 
-{
-
-	private var _source:String = '';
-	private var _initialized:Boolean;
-
-	public function JavaScript()
-	{
-		
-	}
+	  private var _source:String = '';
+	  private var _initialized:Boolean;
 	
-	public function get source():String
-  {
-   return _source;
+	  public function get source():String {
+      return _source;
+    }
+
+	  public function set source(value:String):void {
+		  if (value != null) {
+			  _source = value;
+			  var commentPattern:RegExp = /(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|((^|[^:\/])(\/\/.*))/g;
+			  value = value.replace (commentPattern, "");
+			  var u:URLRequest = new URLRequest ("javascript:eval('" + value + "');");
+			  navigateToURL(u,"_self");
+		  }
+	  }
+
+	  public function initialized(document:Object, id:String):void {
+		  _initialized = true;
+	  }
+
+	  override public function toString():String {
+		  return _source;
+	  }
   }
-
-	public function set source(value:String):void 
-	{
-		if (value!=null)
-		{
-			_source = value;
-			var commentPattern:RegExp = /(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|((^|[^:\/])(\/\/.*))/g;
-			value = value.replace (commentPattern, "");
-			var u:URLRequest = new URLRequest ("javascript:eval('" + value + "');");
-			navigateToURL(u,"_self");
-		}
-	}
-
-	public function initialized(document:Object, id:String):void
-	{
-		_initialized = true;
-	}
-
-	override public function toString ():String
-	{
-		return _source;
-	}
-	
-}
-
 }

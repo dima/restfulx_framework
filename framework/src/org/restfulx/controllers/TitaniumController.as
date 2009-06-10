@@ -40,10 +40,6 @@ package org.restfulx.controllers {
     private var openApplicationTimer:DataTimer;
     private var openURLTimer:DataTimer;
     
-    public function TitaniumController() {
-
-    }
-    
     public function createNotification(message:String,title:String = 'Notification'):void {
     	js.source =  '';
 			js.source += 'function createNotification(message, title) {';
@@ -151,6 +147,5 @@ package org.restfulx.controllers {
 				openURLTimer = null;
 			}
     }
-    
   }
 }
