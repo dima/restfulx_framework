@@ -21,6 +21,7 @@
 <classEntry path="org.restfulx.controllers.SerializersController"/>
 <classEntry path="org.restfulx.controllers.ServerPushController"/>
 <classEntry path="org.restfulx.controllers.ServicesController"/>
+<classEntry path="org.restfulx.controllers.TitaniumController"/>
 <classEntry path="org.restfulx.controllers.UndoRedoController"/>
 <classEntry path="org.restfulx.controllers.mock.MockAuxHTTPController"/>
 <classEntry path="org.restfulx.events.AfterCreateEvent"/>
@@ -71,8 +72,11 @@
 <classEntry path="org.restfulx.services.mock.MockDirectCouchDBHTTPServiceProvider"/>
 <classEntry path="org.restfulx.services.mock.MockJSONHTTPServiceProvider"/>
 <classEntry path="org.restfulx.services.mock.MockXMLHTTPServiceProvider"/>
+<classEntry path="org.restfulx.services.webkit.WebkitDBServiceProvider"/>
 <classEntry path="org.restfulx.utils.BinaryAttachment"/>
+<classEntry path="org.restfulx.utils.DataTimer"/>
 <classEntry path="org.restfulx.utils.Inflector"/>
+<classEntry path="org.restfulx.utils.JavaScript"/>
 <classEntry path="org.restfulx.utils.ModelsMetadata"/>
 <classEntry path="org.restfulx.utils.MultiPartRequestBuilder"/>
 <classEntry path="org.restfulx.utils.RxFileReference"/>

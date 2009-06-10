@@ -95,7 +95,9 @@ package org.restfulx.controllers {
 
       Rx.undoredo = new UndoRedoController;
       
-      Rx.serializers = new SerializersController;      
+      Rx.serializers = new SerializersController;
+      
+      Rx.titanium = new TitaniumController;
 
       // set up services
       if (extraServices == null) extraServices = new Array;
