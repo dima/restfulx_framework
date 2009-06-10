@@ -33,7 +33,11 @@ package org.restfulx.collections {
    */
   public class ModelsCollection extends RxCollection {
     
-    public var metadata:Object;
+    /** 
+     * A service provider implementation can tag some metadata along with the
+     * serialized response that will be shared in metadata variable
+     */
+     public var metadata:Object;
     
     /** 
      * @see mx.collections.ArrayCollection
