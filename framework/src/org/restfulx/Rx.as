@@ -157,7 +157,7 @@ package org.restfulx {
      *  
      * @example http://127.0.0.1:5984/
      */
-    public static var couchDBRootUrl:String = "http://127.0.0.1:5984/";
+    public static var couchDbRootUrl:String = "http://127.0.0.1:5984/";
     
     /** 
      * Default database name to use for apps talking to CouchDB directly. Simply set

@@ -67,7 +67,7 @@ package org.restfulx.services.as3http {
       state = Rx.models.state;
       
       if (couchDbRootUrl == null) {
-        rootUrl = Rx.couchDBRootUrl;
+        rootUrl = Rx.couchDbRootUrl;
       } else {
         rootUrl = couchDbRootUrl;
       }
@@ -281,43 +281,37 @@ package org.restfulx.services.as3http {
           for each (var prop:String in ['id', 'rev']) {
             object[prop] = response[prop];
           }
+          
           var fqn:String = getQualifiedClassName(object);
-          var cached:Object;
-          var items:ModelsCollection = Rx.models.cache.data[fqn] as ModelsCollection;
-          if (!items.hasItem(object)) {
-            RxUtils.addModelToCache(object, fqn);
-            cached = object;
-          } else {
-            cached = ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]);
+
+          if (!creating) {
+            var cached:Object = RxUtils.clone(ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]));
           }
+          
+          var result:Object = unmarshall(marshallToJSON(object, recursive));
           
           if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
             var target:Object;
-            var clone:Object = RxUtils.clone(object);
+            var clone:Object = RxUtils.clone(result);
             var action:String = "destroy";
             var fn:Function = Rx.models.cache.destroy;
             
             if (!creating) {
-              target = RxUtils.clone(cached);
+              target = cached;
               target["rev"] = object["rev"];
               action = "update";
               fn = Rx.models.cache.update;
             } else {
-              target = RxUtils.clone(object);
+              target = RxUtils.clone(result);
             }
             
             Rx.undoredo.addChangeAction({service: instance, action: action, copy: clone,
               elms: [target, new UndoRedoResponder(responder, fn), metadata, 
                 nestedBy, recursive]});
           }
-          if (!creating) {
-            RxUtils.shallowCopy(object, cached, fqn);
-            object = cached;
-          }
 
           RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
-
-          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, object));
+          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, result));
         }
       }, function(event:HttpErrorEvent):void {
         if (responder) responder.fault(event);
