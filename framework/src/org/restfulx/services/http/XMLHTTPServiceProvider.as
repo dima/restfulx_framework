@@ -326,8 +326,8 @@ package org.restfulx.services.http {
           RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
           responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));
         }
-      }, false, 0, true);
-      file.reference.addEventListener(IOErrorEvent.IO_ERROR, responder.fault, false, 0, true);
+      });
+      file.reference.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
       
       file.reference.upload(request, localName + "[" + file.keyName + "]");
     }
@@ -375,7 +375,7 @@ package org.restfulx.services.http {
       loader.addEventListener(Event.COMPLETE, function(event:Event):void {
         responder.result(new ResultEvent(ResultEvent.RESULT, false, false, event.target.data));
       });
-      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault, false, 0, true);
+      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
       Rx.log.debug("issuing multi-part request to: " + request.url);
 
       loader.load(request);
