@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/ModelsController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.3 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/ModelsController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;ModelsController</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
@@ -106,7 +106,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#create()">create</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</div>
+<a class="signatureLink" href="#create()">create</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void</div>
 <div class="summaryTableDescription">
      Perform REST create operation.</div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
@@ -114,7 +114,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</div>
+<a class="signatureLink" href="#destroy()">destroy</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void</div>
 <div class="summaryTableDescription">
      Perform REST destroy operation.</div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
@@ -122,7 +122,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#index()">index</a>(clazz:Class, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1):<a href="../collections/ModelsCollection.html">ModelsCollection</a>
+<a class="signatureLink" href="#index()">index</a>(clazz:Class, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):<a href="../collections/ModelsCollection.html">ModelsCollection</a>
 </div>
 <div class="summaryTableDescription">
      Perform REST index operation.</div>
@@ -149,7 +149,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#reload()">reload</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1):void</div>
+<a class="signatureLink" href="#reload()">reload</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void</div>
 <div class="summaryTableDescription">
      Force reload of a particular model instance or the entire model cache.</div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
@@ -173,7 +173,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#show()">show</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1):<a href="../models/RxModel.html">RxModel</a>
+<a class="signatureLink" href="#show()">show</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):<a href="../models/RxModel.html">RxModel</a>
 </div>
 <div class="summaryTableDescription">
      Perform REST show operation.</div>
@@ -182,7 +182,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#showById()">showById</a>(clazz:Class, id:Object, optsOrOnSuccess:Function = null, onFailure:Array = null, nestedBy:Object = null, metadata:Boolean = null, fetchDependencies:Boolean = true, useLazyMode:int = false, targetServiceId:* = -1):<a href="../models/RxModel.html">RxModel</a>
+<a class="signatureLink" href="#showById()">showById</a>(clazz:Class, id:Object, optsOrOnSuccess:Function = null, onFailure:Array = null, nestedBy:Object = null, metadata:Boolean = null, fetchDependencies:Boolean = true, useLazyMode:int = false, targetServiceId:Function = -1, customProcessor:* = null):<a href="../models/RxModel.html">RxModel</a>
 </div>
 <div class="summaryTableDescription">
      A different take on <code>show</code> method.</div>
@@ -201,7 +201,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#update()">update</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</div>
+<a class="signatureLink" href="#update()">update</a>(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void</div>
 <div class="summaryTableDescription">
      Perform REST update operation.</div>
 </td><td class="summaryTableOwnerCol">ModelsController</td>
@@ -343,7 +343,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function create(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</code><p>
+<code>public function create(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void</code><p>
      Perform REST create operation.
       
      </p><span class="label">Parameters</span>
@@ -393,7 +393,16 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; if provided then it will be used instead of the standard service provider workflow,
+      this allows you to fully customize create processing. This function should have the same signature as
+      IServiceProvider#create
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">customProcessor</span>:Function</code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -418,7 +427,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function destroy(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</code><p>
+<code>public function destroy(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void</code><p>
      Perform REST destroy operation. For example:
       
      </p><span class="label">Parameters</span>
@@ -468,7 +477,16 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; if provided then it will be used instead of the standard service provider workflow,
+      this allows you to fully customize destroy processing. This function should have the same signature as
+      IServiceProvider#destroy
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">customProcessor</span>:Function</code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 <p>
@@ -493,7 +511,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function index(clazz:Class, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1):<a href="../collections/ModelsCollection.html">ModelsCollection</a></code><p>
+<code>public function index(clazz:Class, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):<a href="../collections/ModelsCollection.html">ModelsCollection</a></code><p>
      Perform REST index operation. 
       
      </p><span class="label">Parameters</span>
@@ -558,6 +576,15 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">customProcessor</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; if provided then it will be used instead of the standard service provider workflow,
+      this allows you to fully customize index processing. This function should have the same signature as
+      IServiceProvider#index
      </td>
 </tr>
 </table>
@@ -651,7 +678,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function reload(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1):void</code><p>
+<code>public function reload(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void</code><p>
      Force reload of a particular model instance or the entire model cache.
       
      </p><span class="label">Parameters</span>
@@ -718,6 +745,15 @@ showHideInherited();
 <td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
      </td>
 </tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">customProcessor</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; if provided then it will be used instead of the standard service provider workflow,
+      this allows you to fully customize index/show processing. This function should have the same signature as
+      IServiceProvider#index/show
+     </td>
+</tr>
 </table>
 </div>
 <a name="reloadAll()"></a>
@@ -774,7 +810,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function show(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1):<a href="../models/RxModel.html">RxModel</a></code><p>
+<code>public function show(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):<a href="../models/RxModel.html">RxModel</a></code><p>
      Perform REST show operation.
       
      </p><span class="label">Parameters</span>
@@ -834,6 +870,15 @@ showHideInherited();
 <td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code> &mdash; service provider to use
      </td>
 </tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">customProcessor</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; if provided then it will be used instead of the standard service provider workflow,
+      this allows you to fully customize show processing. This function should have the same signature as
+      IServiceProvider#show
+     </td>
+</tr>
 </table>
 <p></p>
 <span class="label">Returns</span>
@@ -864,7 +909,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function showById(clazz:Class, id:Object, optsOrOnSuccess:Function = null, onFailure:Array = null, nestedBy:Object = null, metadata:Boolean = null, fetchDependencies:Boolean = true, useLazyMode:int = false, targetServiceId:* = -1):<a href="../models/RxModel.html">RxModel</a></code><p>
+<code>public function showById(clazz:Class, id:Object, optsOrOnSuccess:Function = null, onFailure:Array = null, nestedBy:Object = null, metadata:Boolean = null, fetchDependencies:Boolean = true, useLazyMode:int = false, targetServiceId:Function = -1, customProcessor:* = null):<a href="../models/RxModel.html">RxModel</a></code><p>
      A different take on <code>show</code> method.
       
      </p><span class="label">Parameters</span>
@@ -918,7 +963,13 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">targetServiceId</span>:*</code> (default = <code>-1</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">targetServiceId</span>:Function</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">customProcessor</span>:*</code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 <p></p>
@@ -990,7 +1041,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function update(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1):void</code><p>
+<code>public function update(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null, metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void</code><p>
      Perform REST update operation. For example:
       
        Rx.models.update(project);
@@ -1035,13 +1086,22 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; if provided then it will be used instead of the standard service provider workflow,
+      this allows you to fully customize update processing. This function should have the same signature as
+      IServiceProvider#update
+     </td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">targetServiceId</span>:int</code> (default = <code>-1</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">customProcessor</span>:Function</code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 <p>
