@@ -24,11 +24,15 @@
 package org.restfulx.events {
   import flash.events.Event;
   
+  /**
+   * This event is dispatched when a new message has been pushed from the server
+   */
   public class ServerPushEvent extends Event {
 
     /** Event identifier */
     public static var ID:String = "serverPush";
     
+    /** the message pushed from the server */
     public var message:Object;
     
     public function ServerPushEvent(message:Object) {

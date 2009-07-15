@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
-<meta content="RxAutoComplete,org.restfulx.components.rx.RxAutoComplete,clearTextAfterFind,filterCategory,filterFunction,lookupDelay,lookupMinChars,resource,showOnEnter,chosenItem,typedText,clearTypedText,close,commitProperties,getStyle,keyDownHandler,textInput_changeHandler,updateDisplayList" name="keywords">
+<meta content="RxAutoComplete,org.restfulx.components.rx.RxAutoComplete,clearTextAfterFind,customSearchFunction,filterCategory,filterFunction,lookupDelay,lookupMinChars,noResultText,showOnEnter,chosenItem,resource,typedText,clearTypedText,close,commitProperties,getStyle,keyDownHandler,textInput_changeHandler,updateDisplayList" name="keywords">
 <title>org.restfulx.components.rx.RxAutoComplete</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/components/rx/RxAutoComplete.html&amp;org/restfulx/components/rx/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.3 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/components/rx/RxAutoComplete.html&amp;org/restfulx/components/rx/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;RxAutoComplete</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#eventSummary">Events</a></td>
@@ -99,7 +99,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">RxAutoComplete</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#clearTextAfterFind">clearTextAfterFind</a> : Boolean = false<div class="summaryTableDescription"> Indicates if the search area should be cleared after a specific item has been found/shown </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#clearTextAfterFind">clearTextAfterFind</a> : Boolean<div class="summaryTableDescription"> Indicates if the search area should be cleared after a specific item has been found/shown </div>
+</td><td class="summaryTableOwnerCol">RxAutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#customSearchFunction">customSearchFunction</a> : Function<div class="summaryTableDescription">
+     By default RxAutoComplete will use Rx.models.reload function with metadata in append mode, 
+     which will use the current service provider.</div>
 </td><td class="summaryTableOwnerCol">RxAutoComplete</td>
 </tr>
 <tr class="">
@@ -120,7 +126,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">RxAutoComplete</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#resource">resource</a> : Class<div class="summaryTableDescription"> Rx model class this auto complete component is bound to </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#noResultText">noResultText</a> : String = "No Results"<div class="summaryTableDescription"> Text to show if no results are found </div>
+</td><td class="summaryTableOwnerCol">RxAutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#resource">resource</a> : Object<div class="summaryTableDescription"> 
+     Get Rx model class this auto complete component is bound to
+     </div>
 </td><td class="summaryTableOwnerCol">RxAutoComplete</td>
 </tr>
 <tr class="">
@@ -230,6 +242,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#event:itemHighlighted">itemHighlighted</a>
+</div>
+</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol">RxAutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#event:selectedItemChange">selectedItemChange</a>
 </div>
 </td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol">RxAutoComplete</td>
@@ -238,6 +257,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#event:typedTextChange">typedTextChange</a>
+</div>
+</td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol">RxAutoComplete</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#event:unknownSelectedItem">unknownSelectedItem</a>
 </div>
 </td><td class="summaryTableDescription summaryTableCol">&nbsp;</td><td class="summaryTableOwnerCol">RxAutoComplete</td>
 </tr>
@@ -274,7 +300,20 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var clearTextAfterFind:Boolean = false</code><p> Indicates if the search area should be cleared after a specific item has been found/shown </p></div>
+<code>public var clearTextAfterFind:Boolean</code><p> Indicates if the search area should be cleared after a specific item has been found/shown </p></div>
+<a name="customSearchFunction"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">customSearchFunction</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var customSearchFunction:Function</code><p>
+     By default RxAutoComplete will use Rx.models.reload function with metadata in append mode, 
+     which will use the current service provider. If you are unhappy with any part of standard
+     Rx index/reload processing, you can provide your own custom function here to do all
+     the processing
+     </p></div>
 <a name="filterCategory"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -310,6 +349,14 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public var lookupMinChars:int = 1</code><p> Minimum number of characters that must be provided before server request will be made </p></div>
+<a name="noResultText"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">noResultText</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var noResultText:String = "No Results"</code><p> Text to show if no results are found </p></div>
 <a name="resource"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -317,7 +364,16 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var resource:Class</code><p> Rx model class this auto complete component is bound to </p></div>
+<code>resource:Object</code>&nbsp;&nbsp;[read-write]<p> 
+     Get Rx model class this auto complete component is bound to
+     </p><p>This property can be used as the source for data binding.</p>
+<span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get resource():Object</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set resource(value:Object):void</code>
+<br>
+</div>
 <a name="showOnEnter"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -472,6 +528,17 @@ showHideInherited();
 <br>
 <p></p>
 </div>
+<a name="event:itemHighlighted"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">itemHighlighted</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<span class="label">Event object type: </span><a href=""><code>flash.events.Event</code></a>
+<br>
+<p></p>
+</div>
 <a name="event:selectedItemChange"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -491,6 +558,17 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <span class="label">Event object type: </span><a href=""><code>flash.events.Event</code></a>
+<br>
+<p></p>
+</div>
+<a name="event:unknownSelectedItem"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">unknownSelectedItem</td><td class="detailHeaderType">event&nbsp;</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<span class="label">Event object type: </span><a href="../../events/RxAutoCompleteItemEvent.html"><code>org.restfulx.events.RxAutoCompleteItemEvent</code></a>
 <br>
 <p></p>
 </div>

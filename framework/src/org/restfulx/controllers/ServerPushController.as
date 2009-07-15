@@ -34,15 +34,80 @@ package org.restfulx.controllers {
   import org.restfulx.Rx;
   import org.restfulx.events.ServerPushEvent;
   
+  /**
+   * This controller adds support for receiving messages from servers capable of
+   *  pushing messages, e.g. Juggernaut.
+   *  
+   * <p>First, install Juggernaut as described here: http://juggernaut.rubyforge.org/</p>
+   *  
+   * <p>Second, you need to set up ServerPushController</p>
+   *
+   * @example You can initialize ServerPushController in your application like so
+   * <listing version="3.0">
+   * private var c:ServerPushController;
+   *
+   * private function init():void {
+   *   Rx.enableLogging();
+   *   ApplicationController.initialize();
+   *   c = new ServerPushController("localhost", 5001);
+   *   c.addEventListener(ServerPushEvent.ID, onServerPush);
+   * }
+   *
+   * private function onServerPush(event:ServerPushEvent):void {
+   *   trace("message:" + event.message);
+   * }
+   * </listing>
+   *  
+   * You can push plain-text messages, XML/JSON formatted messages or anything
+   *  else that can be pushed with Juggernaut. If you are pushing XML/JSON
+   *  you can then optionally unmarshall and cache your server pushed objects.
+   *  
+   * @example Unmarshalling messages from the server
+   * <listing version="3.0">
+   * private function onServerPush(event:ServerPushEvent):void {
+   *   var unmarshalled:RxModel = Rx.serializers.xml.unmarshall(event.message)
+   *    as RxModel;
+   *   Rx.models.cache.create(unmarshalled); 
+   * }
+   * </listing>
+   *  
+   * Lastly, you need to start the juggernaut server and push some messages to
+   *  try this out.
+   *  
+   * @example Starting juggernaut server
+   * <listing version="3.0">
+   *    juggernaut -c config/juggernaut.yml
+   * </listing>
+   *
+   * You can then navigate the app at http://localhost:3000 and push 
+   * messages from the server or console.
+   *  
+   * @example Pushing messages
+   * <listing version="3.0">
+   *  Juggernaut.send_to_all("hello from the server")
+   * </listing>
+   */
   public class ServerPushController extends EventDispatcher {
+    
     private static var socket:XMLSocket;
     
+    /** options for configuring ServerPushController such as channels */
     public var opts:Object;
     
+    /** last message received from the server */
     public var lastMessageId:String;
     
+    /** current message signature */
     public var currentSignature:String;
     
+    /**
+     * Creates a new ServerPushController instance
+     *  
+     * @param host the host to connect to (e.g. localhost)
+     * @param port the port to connec to (e.g. 5001)
+     * @param opts options to use during configuration/handshake, such as 
+     *  channels to connect to
+     */
     public function ServerPushController(host:String, port:int, opts:Object = null) {
       super();
       if (opts == null) opts = {};
@@ -50,11 +115,7 @@ package org.restfulx.controllers {
       
       socket = new XMLSocket;
       socket.addEventListener(DataEvent.DATA, onData);
-      socket.addEventListener(IOErrorEvent.IO_ERROR, onIoError);
-      socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onSecurityError);
-      socket.addEventListener(Event.DEACTIVATE, onDeactivate);
       socket.addEventListener(Event.CONNECT, onConnect);
-      socket.addEventListener(Event.CLOSE, onDisconnect);
       socket.connect(host, port);
     }
     
@@ -79,22 +140,6 @@ package org.restfulx.controllers {
       }
       
       socket.send(JSON.encode(handshake));
-    }
-    
-    private function onDisconnect(event:Event):void {
-      Rx.log.debug("disconnected");
-    }
-    
-    private function onIoError(event:Event):void {
-      Rx.log.debug("io error");
-    }
-    
-    private function onSecurityError(event:Event):void {
-      Rx.log.debug("security error");
-    }
-    
-    private function onDeactivate(event:Event):void {
-      Rx.log.debug("deactivated");
     }
   }
 }

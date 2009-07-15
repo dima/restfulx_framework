@@ -24,12 +24,15 @@
 package org.restfulx.events {
   import flash.events.Event;
 
+  /**
+   * Dispatched by RxAutoComplete component */
   public class RxAutoCompleteItemEvent extends Event {
     
     /** Event identifier in case the selected item is not found by the service
         provider */
     public static var ITEM_UNKNOWN:String = "unknownSelectedItem";
     
+    /** Current text state of the component */
     public var text:String;
     
     public function RxAutoCompleteItemEvent(text:String, status:String = "unknownSelectedItem") {

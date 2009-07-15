@@ -90,7 +90,7 @@ package org.restfulx.controllers {
       // The order is important. ModelsController must be initialized before ServicesController
       // and UndoRedo controller
       
-      // set up models controller
+      // set up models controller and other services
       Rx.models = new ModelsController(models);
 
       Rx.undoredo = new UndoRedoController;

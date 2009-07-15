@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="RxFileReference,org.restfulx.utils.RxFileReference,keyName" name="keywords">
+<meta content="RxFileReference,org.restfulx.utils.RxFileReference,keyName,reference" name="keywords">
 <title>org.restfulx.utils.RxFileReference</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.2 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/RxFileReference.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">RestfulX Framework 1.2.3 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/RxFileReference.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;RxFileReference</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
@@ -36,9 +36,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </tr>
 <tr>
 <td class="classHeaderTableLabel">Class</td><td class="classSignature">public class RxFileReference</td>
-</tr>
-<tr>
-<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">RxFileReference <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> flash.net.FileReference</td>
 </tr>
 </table>
 <p></p>
@@ -79,6 +76,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#keyName">keyName</a> : String<div class="summaryTableDescription"> key name to use (default is "uploaded_data", which is what attachment_fu expects) </div>
 </td><td class="summaryTableOwnerCol">RxFileReference</td>
 </tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#reference">reference</a> : FileReference<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">RxFileReference</td>
+</tr>
 </table>
 </div>
 <a name="methodSummary"></a>
@@ -91,7 +92,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#RxFileReference()">RxFileReference</a>(keyName:String = "uploaded_data")</div>
+<a class="signatureLink" href="#RxFileReference()">RxFileReference</a>(keyName:String = "uploaded_data", file:FileReference = null)</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">RxFileReference</td>
@@ -113,6 +114,15 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public var keyName:String</code><p> key name to use (default is "uploaded_data", which is what attachment_fu expects) </p></div>
+<a name="reference"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">reference</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var reference:FileReference</code>
+</div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="RxFileReference()"></a>
@@ -122,12 +132,18 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function RxFileReference(keyName:String = "uploaded_data")</code><p>
+<code>public function RxFileReference(keyName:String = "uploaded_data", file:FileReference = null)</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">keyName</span>:String</code> (default = "<code>uploaded_data</code>")<code></code> &mdash; keyname to use default "uploaded_data" 
      </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">file</span>:FileReference</code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 </div>
