@@ -39,7 +39,6 @@ package org.restfulx {
   import org.restfulx.controllers.ModelsController;
   import org.restfulx.controllers.SerializersController;
   import org.restfulx.controllers.ServicesController;
-  import org.restfulx.controllers.TitaniumController;
   import org.restfulx.controllers.UndoRedoController;
   import org.restfulx.serializers.ISerializer;
   import org.restfulx.services.http.XMLHTTPServiceProvider;
@@ -132,9 +131,6 @@ package org.restfulx {
     /** exposes the Synchronization capable controller */
     public static var changes:ChangeController;
     
-    /** exposes the Titanium controller */
-    public static var titanium:TitaniumController;
-    
     /** 
      * Control the size of the undo-redo stack. the default is 10
      * (undo redo must be enabled with Rx.enableUndoRedo = true) before this
@@ -188,19 +184,6 @@ package org.restfulx {
      * </listing>
      */
     public static var airDatabaseName:String = "rxdb";
-    
-    /** 
-     * Default database name to use for Titanium/WebKit applications. Simply set
-     * <code>Rx.webkitDatabaseName</code> anywhere in your code to override. This is
-     * usually done at application initialization.
-     *  
-     * @example
-     *  
-     * <listing version="3.0">
-     * Rx.webkitDatabaseName = "myairdb";
-     * </listing>
-     */
-    public static var webkitDatabaseName:String = "rxdb";
     
     /** 
      * Encryption key to use for connection to AIR SQLite database (if this field is empty connection

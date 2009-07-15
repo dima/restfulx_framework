@@ -97,8 +97,6 @@ package org.restfulx.controllers {
       
       Rx.serializers = new SerializersController;
       
-      Rx.titanium = new TitaniumController;
-
       // set up services
       if (extraServices == null) extraServices = new Array;
       Rx.services = new ServicesController(extraServices, targetServiceId);
