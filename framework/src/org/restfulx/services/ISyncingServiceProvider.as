@@ -38,7 +38,7 @@ package org.restfulx.services {
      * @param metadata any metadata that must be appended with the index request
      * @param nestedBy an array of model instances that will be used to nest this request, e.g.:
      *  [project, user] where project is some Project model instance and user is some User model
-     *  instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
+     *  instance. In case of XMLHTTPServiceProvider nesting may require additional configuration on the server.
      *  If you are using Rails see config/routes.rb for more details.
      * @return an ArrayCollection of versions that are currently known for this object
      */
@@ -52,7 +52,7 @@ package org.restfulx.services {
      * @param metadata any metadata that must be appended with the index request
      * @param nestedBy an array of model instances that will be used to nest this request, e.g.:
      *  [project, user] where project is some Project model instance and user is some User model
-     *  instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
+     *  instance. In case of XMLHTTPServiceProvider nesting may require additional configuration on the server.
      *  If you are using Rails see config/routes.rb for more details.
      * @return an ArrayCollection of versions that are currently known for this object
      */
@@ -66,7 +66,7 @@ package org.restfulx.services {
      * @param metadata any metadata that must be appended with the index request
      * @param nestedBy an array of model instances that will be used to nest this request, e.g.:
      *  [project, user] where project is some Project model instance and user is some User model
-     *  instance. In case of HTTPServiceProvider nesting may require additional configuration on the server.
+     *  instance. In case of XMLHTTPServiceProvider nesting may require additional configuration on the server.
      *  If you are using Rails see config/routes.rb for more details.
      * @return an ArrayCollection of versions that are currently known for this object
      */

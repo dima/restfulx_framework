@@ -39,9 +39,9 @@ package org.restfulx.controllers {
     private var services:Dictionary;
     
     /**
-     * @param avalable the array of services to use (HTTPServiceProvider is registered
+     * @param avalable the array of services to use (XMLHTTPServiceProvider is registered
      *  by default. All other providers (e.g. AIR) must be registered here)
-     * @param targetServiceId default service to use for operations (by default HTTPServiceProvider.ID)
+     * @param targetServiceId default service to use for operations (by default XMLHTTPServiceProvider.ID)
      */
     public function ServicesController(availableServices:Array, targetServiceId:int = -1) {
       services = new Dictionary;

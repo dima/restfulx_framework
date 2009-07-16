@@ -27,7 +27,7 @@ package org.restfulx.services {
   import org.restfulx.utils.RxUtils;
   
   /**
-   * HTTPServiceProvider specific IServiceErrors implementation.
+   * XMLHTTPServiceProvider specific IServiceErrors implementation.
    */
   public class XMLServiceErrors extends GenericServiceErrors {
     /**
