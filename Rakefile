@@ -47,7 +47,7 @@ task :doc do
   packages << '-package org.restfulx.services.mock "Adds a few testing specific service providers."'
   packages << '-package org.restfulx.utils "Framework utilties."'
   packages << '-package org.restfulx.validators "Validation classes for proxying server-side/service provider errors to the UI."'
-  system("#{get_executable('asdoc')} +configname=air -main-title 'RestfulX Framework 1.2.3 API Documenation' -keep-as3-metadata+=Resource,HasOne,HasMany,BelongsTo,DateTime,Lazy,Ignored,Nested -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{packages.join(" ")} -output doc/api")
+  system("#{get_executable('asdoc')} +configname=air -main-title 'RestfulX Framework 1.2.4 API Documenation' -keep-as3-metadata+=Resource,HasOne,HasMany,BelongsTo,DateTime,Lazy,Ignored,Nested -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{packages.join(" ")} -output doc/api")
 end
 
 namespace :test do  
