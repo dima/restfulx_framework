@@ -240,7 +240,12 @@ package org.restfulx.serializers {
     protected function getPolymorphicRef(source:Object, name:String):String {
       var polyName:String = name + "_type";
       if (source.hasOwnProperty(polyName)) {
-        return source[polyName];
+        var result:String = source[polyName];
+        if (result == "NilClass") {
+          return "";
+        } else {
+          return result;
+        }
       } else {
         return "";
       }
