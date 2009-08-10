@@ -512,9 +512,9 @@ package org.restfulx.services.http {
     
     protected function addHeaders(service:HTTPService, headers:Object):void {
       if (service.headers == null) service.headers = {};
-    	for (var key:String in headers) {
-    		service.headers[key] = headers[key];
-    	}
+      for (var key:String in headers) {
+        service.headers[key] = headers[key];
+      }
     }
   }
 }
