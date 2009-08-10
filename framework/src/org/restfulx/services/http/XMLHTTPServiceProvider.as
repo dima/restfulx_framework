@@ -486,7 +486,7 @@ package org.restfulx.services.http {
               if (!toDelete) {
                 embedded.push(item);
               } else {
-                embedded.push({"id": item["id"], "delete": "1"});
+                embedded.push({"id": item["id"], "_delete": "1"});
               }
             }
             result[localName + "[" + property + "_attributes]"] = JSON.encode(embedded);
@@ -499,7 +499,7 @@ package org.restfulx.services.http {
             if (!toDelete) {
               result[localName + "[" + property + "_attributes]"] = JSON.encode(vo[property]);
             } else {
-              result[localName + "[" + property + "_attributes]"] = JSON.encode({"id": vo[property]["id"], "delete": "1"});
+              result[localName + "[" + property + "_attributes]"] = JSON.encode({"id": vo[property]["id"], "_delete": "1"});
             }
           }
         } else {

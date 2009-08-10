@@ -115,6 +115,9 @@ package org.restfulx.components.rx {
     
     /** Indicates if a Rx.models.show operation should be performed on enter */
     public var showOnEnter:Boolean = true;
+    
+    /** Always invoke show on the model independency of the currently shown status */
+    public var alwaysShow:Boolean = false;
 
     private var _resource:Class;
 
@@ -429,7 +432,10 @@ package org.restfulx.components.rx {
           dropdownClosed = true;
         } else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB) {
           if (selectedItem != null && selectedItem is RxModel) {
-            if (showOnEnter && !Rx.models.shown(selectedItem)) {
+            if (showOnEnter && !alwaysShow && !Rx.models.shown(selectedItem)) {
+              RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
+            } else if (showOnEnter && alwaysShow) {
+              Rx.models.reset(selectedItem);
               RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
             } else {
               selectedObject = selectedItem;
