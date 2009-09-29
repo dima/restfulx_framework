@@ -528,7 +528,7 @@ package org.restfulx.controllers {
      * @example
      *  
      * <listing version="3.0">
-     *  Rx.models.index(Project, Task, RandomStuff) // true of false
+     *  Rx.models.indexed(Project, Task, RandomStuff) // true of false
      * </listing>
      *  
      *  @param list of models
