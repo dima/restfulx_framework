@@ -94,7 +94,7 @@ package org.restfulx.serializers {
         // ActiveRecord-like JSON array with element names as object keys
         for (var prop:String in source) {
           var target:Object = source[prop];
-          target["clazz"] = prop;
+          target["clazz"] = RxUtils.toCamelCase(prop);
           source = target;
           break;
         }
