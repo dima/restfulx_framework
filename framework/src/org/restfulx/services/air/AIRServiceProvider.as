@@ -158,7 +158,7 @@ package org.restfulx.services.air {
       if (indexing[fqn]) return;
       
       var queryText:String = sql[fqn]["select"] + " AND ";
-      if (metadata.hasOwnProperty("search") && metadata.hasOwnProperty("category")) {
+      if (metadata != null && metadata.hasOwnProperty("search") && metadata.hasOwnProperty("category")) {
         if (!RxUtils.isEmpty(metadata['search']) && !RxUtils.isEmpty(metadata['category'])) {
           var category:String = metadata['category'];
           metadata[category] = metadata["search"];
