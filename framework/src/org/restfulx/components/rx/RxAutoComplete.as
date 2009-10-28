@@ -30,7 +30,7 @@ package org.restfulx.components.rx {
   
   import mx.collections.ArrayCollection;
   import mx.controls.ComboBox;
-  
+    
   import org.restfulx.Rx;
   import org.restfulx.events.RxAutoCompleteItemEvent;
   import org.restfulx.models.RxModel;
@@ -123,7 +123,7 @@ package org.restfulx.components.rx {
     public var lookupDelay:int = 1500;
     
     /** Minimum number of characters that must be provided before server request will be made */
-    public var lookupMinChars:int = 2;
+    public var lookupMinChars:int = 1;
     
     /** Indicates if the search area should be cleared after a specific item has been found/shown */
     public var clearTextAfterFind:Boolean;
@@ -226,12 +226,14 @@ package org.restfulx.components.rx {
      * @param input text string to use
      */
     public function set typedText(input:String):void {
-      _typedText = input;
-      typedTextChanged = true;
+      if (_typedText != input) {
+        _typedText = input;
+        typedTextChanged = true;
       
-      invalidateProperties();
-      invalidateDisplayList();
-      dispatchEvent(new Event("typedTextChange"));
+        invalidateProperties();
+        invalidateDisplayList();
+        dispatchEvent(new Event("typedTextChange"));
+      }
     }
 
     [Bindable("chosenItemChange")]
@@ -395,17 +397,18 @@ package org.restfulx.components.rx {
       super.updateDisplayList(unscaledWidth, unscaledHeight);
       
       if (!clearingText && selectedIndex == -1) {
-        textInput.text = typedText;
+        textInput.text = _typedText;
       }
       
       if (noResults) {
         // This is needed to control the open duration of the dropdown
-        textInput.text = typedText;
+        textInput.text = _typedText;
         typedTextChanged = false;
         super.open();
         showDropdown = false;
         showingDropdown = true;
         if (dropdownClosed) dropdownClosed = false;
+        textInput.setSelection(0, textInput.text.length);
       } else if (dropdown) {
         if (typedTextChanged) {
           //This is needed because a call to super.updateDisplayList() iset the text
@@ -416,7 +419,7 @@ package org.restfulx.components.rx {
         } else if (typedText) {
           //Sets the selection when user navigates the suggestion list through
           //arrows keys.
-          textInput.setSelection(_typedText.length, textInput.text.length);
+          textInput.setSelection(0, textInput.text.length);
         }
         
         if (clearingText) clearingText = false;
@@ -462,13 +465,26 @@ package org.restfulx.components.rx {
               itemShown = true;
               if (clearTextAfterFind) clearTypedText();
               dispatchEvent(new Event("chosenItemChange"));
+              event.stopPropagation();
             }
+          } else if (preselectedObject != null && preselectedObject is RxModel) {
+            selectedItem = preselectedObject;
+            selectedObject = selectedItem;
+            itemShown = true;
+            preselectedObject = null;
           } else {
             textInput.text = _typedText;
-            dispatchEvent(new RxAutoCompleteItemEvent(_typedText));
+            selectedObject = null;
+            preselectedObject = null;
+            itemShown = false;
+            if (textInput.text != "") {
+              dispatchEvent(new RxAutoCompleteItemEvent(_typedText));
+              event.stopPropagation();
+            }
           }
         } else if ((event.keyCode == Keyboard.UP || event.keyCode == Keyboard.DOWN) && showingDropdown) {
           dispatchEvent(new Event("itemHighlighted"));
+          event.stopPropagation();
         }
       } else if (event.ctrlKey && event.keyCode == Keyboard.UP) {
         dropdownClosed = true;
