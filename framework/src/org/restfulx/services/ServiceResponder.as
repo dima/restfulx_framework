@@ -37,9 +37,14 @@ package org.restfulx.services {
    * Central response manager for RESTful CRUD operations.
    */
   public class ServiceResponder implements IFunctionalResponder {
+    
+    /**
+     * The service provider that this responder has been created for
+     */
+    public var service:IServiceProvider;
 
-    private var fn:Function;
-    private var service:IServiceProvider;
+    private var _handler:Function;
+    
     private var modelType:String;
     private var onSuccess:Object;
     private var onFailure:Function;
@@ -62,11 +67,15 @@ package org.restfulx.services {
     }
     
     public function get handler():Function {
-      return fn;
+      return _handler;
     }
     
-    public function set handler(fn:Function):void {
-      this.fn = fn;
+    /** 
+     * Set the handler function that will be typically responsible for caching the result,
+     * e.g. Rx.models.cache.index(results)
+     **/
+    public function set handler(value:Function):void {
+      _handler = value;
     }
 
     /**

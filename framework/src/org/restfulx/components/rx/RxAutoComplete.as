@@ -98,14 +98,32 @@ package org.restfulx.components.rx {
      * which will use the current service provider. If you are unhappy with any part of standard
      * Rx index/reload processing, you can provide your own custom function here to do all
      * the processing
+     *  
+     * @example Example Custom Search Function that deals with online/offline custom queries
+     *  
+     * <listing version="3.0">
+     *    private function customSearchFunction(clazz:Class = null, serviceResponder:ServiceResponder = null,
+     *                 metadata:Object = null, nestedBy:Array = null):void {
+     *       if (online) {
+     *           trace("online search, pass through to the service provider");
+     *         Rx.services.getServiceProvider(XMLHTTPServiceProvider.ID).index(
+     *             clazz, serviceResponder, metadata, nestedBy);
+     *       } else {
+     *         trace("do custom offline search too");
+     *          XRx.air(function(results:Object):void { 
+     *             serviceResponder.result(new ResultEvent(ResultEvent.RESULT, false, false, results)); 
+     *           }).findAll(clazz, ["name like :name", {':name': "%foo%"}]);
+     *     }
+     *  }
+     * </listing>
      */
     public var customSearchFunction:Function;
     
     /** Indicates how long we should wait for before firing server request */
-    public var lookupDelay:int = 500;
+    public var lookupDelay:int = 1500;
     
     /** Minimum number of characters that must be provided before server request will be made */
-    public var lookupMinChars:int = 1;
+    public var lookupMinChars:int = 2;
     
     /** Indicates if the search area should be cleared after a specific item has been found/shown */
     public var clearTextAfterFind:Boolean;
@@ -273,6 +291,8 @@ package org.restfulx.components.rx {
 
       var data:ArrayCollection = ArrayCollection(dataProvider);
       data.refresh();
+      
+      if (typedText.length < lookupMinChars) return;
             
       if (data.length == 0) resourceSearched = false;
 

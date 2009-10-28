@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
-<meta content="RxAutoComplete,org.restfulx.components.rx.RxAutoComplete,clearTextAfterFind,customSearchFunction,filterCategory,filterFunction,lookupDelay,lookupMinChars,noResultText,showOnEnter,chosenItem,resource,typedText,clearTypedText,close,commitProperties,getStyle,keyDownHandler,textInput_changeHandler,updateDisplayList" name="keywords">
+<meta content="RxAutoComplete,org.restfulx.components.rx.RxAutoComplete,alwaysShow,clearTextAfterFind,customSearchFunction,filterCategory,filterFunction,lookupDelay,lookupMinChars,noResultText,showOnEnter,chosenItem,resource,typedText,clearTypedText,close,commitProperties,getStyle,keyDownHandler,textInput_changeHandler,updateDisplayList" name="keywords">
 <title>org.restfulx.components.rx.RxAutoComplete</title>
 </head>
 <body>
@@ -93,6 +93,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#alwaysShow">alwaysShow</a> : Boolean = false<div class="summaryTableDescription"> Always invoke show on the model independency of the currently shown status </div>
+</td><td class="summaryTableOwnerCol">RxAutoComplete</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#chosenItem">chosenItem</a> : Object<div class="summaryTableDescription">
      Gets currently chosen item
      </div>
@@ -118,11 +122,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">RxAutoComplete</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lookupDelay">lookupDelay</a> : int = 500<div class="summaryTableDescription"> Indicates how long we should wait for before firing server request </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lookupDelay">lookupDelay</a> : int = 1500<div class="summaryTableDescription"> Indicates how long we should wait for before firing server request </div>
 </td><td class="summaryTableOwnerCol">RxAutoComplete</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lookupMinChars">lookupMinChars</a> : int = 1<div class="summaryTableDescription"> Minimum number of characters that must be provided before server request will be made </div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lookupMinChars">lookupMinChars</a> : int = 2<div class="summaryTableDescription"> Minimum number of characters that must be provided before server request will be made </div>
 </td><td class="summaryTableOwnerCol">RxAutoComplete</td>
 </tr>
 <tr class="">
@@ -276,10 +280,18 @@ showHideInherited();
 <div class="MainContent">
 <a name="propertyDetail"></a>
 <div class="detailSectionHeader">Property detail</div>
+<a name="alwaysShow"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">alwaysShow</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var alwaysShow:Boolean = false</code><p> Always invoke show on the model independency of the currently shown status </p></div>
 <a name="chosenItem"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">chosenItem</td><td class="detailHeaderType">property</td>
+<td class="detailHeaderName">chosenItem</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -313,7 +325,28 @@ showHideInherited();
      which will use the current service provider. If you are unhappy with any part of standard
      Rx index/reload processing, you can provide your own custom function here to do all
      the processing
-     </p></div>
+      
+     </p><br>
+<span class="label">Example</span>
+<br>Example Custom Search Function that deals with online/offline custom queries
+      
+     <div class='listing'><pre>
+        private function customSearchFunction(clazz:Class = null, serviceResponder:ServiceResponder = null,
+                     metadata:Object = null, nestedBy:Array = null):void {
+           if (online) {
+               trace("online search, pass through to the service provider");
+             Rx.services.getServiceProvider(XMLHTTPServiceProvider.ID).index(
+                 clazz, serviceResponder, metadata, nestedBy);
+           } else {
+             trace("do custom offline search too");
+              XRx.air(function(results:Object):void { 
+                 serviceResponder.result(new ResultEvent(ResultEvent.RESULT, false, false, results)); 
+               }).findAll(clazz, ["name like :name", {':name': "%foo%"}]);
+         }
+      }
+     </pre></div>
+     <p></p>
+</div>
 <a name="filterCategory"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -340,7 +373,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var lookupDelay:int = 500</code><p> Indicates how long we should wait for before firing server request </p></div>
+<code>public var lookupDelay:int = 1500</code><p> Indicates how long we should wait for before firing server request </p></div>
 <a name="lookupMinChars"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -348,7 +381,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var lookupMinChars:int = 1</code><p> Minimum number of characters that must be provided before server request will be made </p></div>
+<code>public var lookupMinChars:int = 2</code><p> Minimum number of characters that must be provided before server request will be made </p></div>
 <a name="noResultText"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
