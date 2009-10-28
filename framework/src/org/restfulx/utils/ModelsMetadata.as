@@ -204,6 +204,7 @@ package org.restfulx.utils {
           var refName:String = node.@name;
           var referAs:String;
           var relType:String;
+          var polymorphic:Boolean;
           
           var conditions:Object;
           var sorts:Object;
@@ -219,7 +220,6 @@ package org.restfulx.utils {
             if (RxUtils.isBelongsTo(node)) {
               descriptor = RxUtils.getAttributeAnnotation(node, "BelongsTo")[0];
               if (descriptor) {
-                referAs = descriptor.arg.(@key == "referAs").@value.toString();
                 relType = "BelongsTo";
               }
             } else if (RxUtils.isHasOne(node)) {
@@ -248,18 +248,25 @@ package org.restfulx.utils {
             // it's a [BelongsTo] or [HasOne] annotation that explicitly specifies the type
             if (RxUtils.isBelongsTo(node)) {
               descriptor = RxUtils.getAttributeAnnotation(node, "BelongsTo")[0];
-              if (descriptor) {
-                referAs = descriptor.arg.(@key == "referAs").@value.toString();
-              }
+              relType = "BelongsTo";
             } else if (RxUtils.isHasOne(node)) {
               descriptor = RxUtils.getAttributeAnnotation(node, "HasOne")[0];
-              conditions = extractConditions(node, descriptor, fqn);              
+              conditions = extractConditions(node, descriptor, fqn);
+              relType = "HasOne";
             }     
           }
+          
+          if (descriptor) {
+            referAs = descriptor.arg.(@key == "referAs").@value.toString();
+          }
 
-          if (RxUtils.isBelongsTo(node)) extractDependencies(dependencies, node, descriptor, refType);
+          if (RxUtils.isBelongsTo(node)) {
+            extractDependencies(dependencies, node, descriptor, refType);
+            if (RxUtils.isPolymorphicBelongsTo(node)) polymorphic = true;
+          }
 
-          refs[fqn][refName] = {type: refType, referAs: referAs, conditions: conditions, sorts: sorts, relType: relType};
+          refs[fqn][refName] = {type: refType, referAs: referAs, conditions: conditions, sorts: sorts, relType: relType, 
+            polymorphic: polymorphic};
           
           for each (var dependency:String in dependencies) {
             if (controllers[dependency] && dependency != fqn && (eager[fqn] as Array).indexOf(dependency) == -1) {

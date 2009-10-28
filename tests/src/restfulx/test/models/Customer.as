@@ -31,7 +31,7 @@ package restfulx.test.models {
 
     public var name:String;
 
-    [HasOne]
+    [HasOne(referAs="owner")]
     public var location:Location;
 
     public function Customer() {

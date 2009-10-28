@@ -31,7 +31,6 @@ package org.restfulx.controllers {
   import mx.collections.ItemResponder;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
-  import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
   import org.restfulx.utils.RxUtils;
@@ -278,11 +277,30 @@ package org.restfulx.controllers {
       for each (var relationship:String in relationships) {
         var target:String = Rx.models.state.refs[fqn][relationship]["type"];
         var relType:String = Rx.models.state.refs[fqn][relationship]["relType"];
+        var referAs:String = Rx.models.state.refs[fqn][relationship]["referAs"];
+                
         if (target) {
           for each (var item:Object in data) {
             var tableName:String = Rx.models.state.controllers[target];
+            
             var statement:SQLStatement = getSQLStatement("SELECT * FROM " + tableName + 
               " WHERE sync != 'D' AND " + Rx.models.state.names[fqn]["single"] + "_id = '" + item["id"] + "'");
+              
+            if (!RxUtils.isEmpty(referAs)) {
+              var mirrorObject:Object = Rx.models.state.refs[target][referAs];
+              if (mirrorObject) {
+                var polymorphic:Boolean = mirrorObject["polymorphic"];
+
+                var query:String = "SELECT * FROM " + tableName + " WHERE sync != 'D' AND " + 
+                  referAs + "_id = '" + item["id"] + "'";
+                  
+                if (polymorphic) {
+                  query += " AND " + referAs + "_type = '" + fqn.split("::")[1] + "'";
+                }
+
+                statement = getSQLStatement(query);
+              }
+            }
 
             Rx.log.debug("executing SQL:" + statement.text);
             statement.execute();
