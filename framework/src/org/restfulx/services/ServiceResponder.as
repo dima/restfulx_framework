@@ -94,9 +94,13 @@ package org.restfulx.services {
           } else if (result is RxModel) {
             resultType = getQualifiedClassName(result);
           } else if (result is Array) {
+            var typedResult:TypedArray = new TypedArray;
             resultType = modelType;
-            result = new TypedArray;
-            TypedArray(result).itemType = resultType;
+            typedResult.itemType = resultType;
+            result.forEach(function(elm:Object, index:int, a:Array):void {
+              typedResult.push(elm);
+            });
+            result = typedResult;            
           } else {
             invokeOnFailure(result);
           }

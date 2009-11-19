@@ -35,14 +35,13 @@ package org.restfulx.services.amf {
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
-  import mx.rpc.http.HTTPService;
   import mx.rpc.remoting.RemoteObject;
   
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
-  import org.restfulx.serializers.ISerializer; 
+  import org.restfulx.serializers.ISerializer;
+  import org.restfulx.serializers.VOSerializer;
   import org.restfulx.services.IServiceProvider;
-  import org.restfulx.services.XMLServiceErrors;
   import org.restfulx.utils.ModelsMetadata;
   import org.restfulx.utils.RxFileReference;
   import org.restfulx.utils.RxUtils;
@@ -64,6 +63,7 @@ package org.restfulx.services.amf {
     public function AMFServiceProvider() {
       state = Rx.models.state;
       urlSuffix = "amf";
+      serializer = new VOSerializer();
     }
     
     /**
@@ -96,7 +96,7 @@ package org.restfulx.services.amf {
      * @see org.restfulx.services.IServiceProvider#marshall
      */
     public function marshall(object:Object, recursive:Boolean = false):Object {
-      return object;
+      return serializer.marshall(object, recursive);
     }
  
     /**
@@ -104,6 +104,7 @@ package org.restfulx.services.amf {
      * @see org.restfulx.services.IServiceProvider#unmarshall
      */
     public function unmarshall(object:Object, disconnected:Boolean = false):Object {
+      //return serializer.unmarshall(object, disconnected);
       return object;
     }
     
@@ -160,7 +161,7 @@ package org.restfulx.services.amf {
 
       var ro:RemoteObject = new RemoteObject("amfora");
       ro.endpoint = Rx.httpRootUrl;
-      ro.source = RxUtils.nestResource(object, nestedBy, urlSuffix);
+      ro.source = "/" + RxUtils.nestResource(object, nestedBy, urlSuffix);
 
       return ro;
     }
