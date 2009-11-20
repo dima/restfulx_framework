@@ -80,9 +80,10 @@ package org.restfulx.services {
      *  
      * @param object source object from the service provider/responder
      * @param disconnected a flag indicating that the object should not be reconnected with the cache
+     * @param defaultType default type to use if the type cannot be determined by the serializer
      * @return (dis)connected object graph of the model corresponding to the response
      */
-    function unmarshall(object:Object, disconnected:Boolean = false):Object;
+    function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object;
 
     /**
      * RESTful CRUD contract: index method. Same semantics as Rails RESTful controller index.

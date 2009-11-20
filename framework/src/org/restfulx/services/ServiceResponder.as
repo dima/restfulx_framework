@@ -86,7 +86,7 @@ package org.restfulx.services {
       Rx.models.dispatchEvent(new ServiceCallStopEvent);
       if (handler != null) {
         if (!service.hasErrors(event.result)) {
-          var result:Object = service.unmarshall(event.result);
+          var result:Object = service.unmarshall(event.result, false, modelType);
           
           var resultType:String;
           if (result is TypedArray) {
@@ -97,9 +97,9 @@ package org.restfulx.services {
             var typedResult:TypedArray = new TypedArray;
             resultType = modelType;
             typedResult.itemType = resultType;
-            result.forEach(function(elm:Object, index:int, a:Array):void {
+            /*result.forEach(function(elm:Object, index:int, a:Array):void {
               typedResult.push(elm);
-            });
+            });*/
             result = typedResult;            
           } else {
             invokeOnFailure(result);

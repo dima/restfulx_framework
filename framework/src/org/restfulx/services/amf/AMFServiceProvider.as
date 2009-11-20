@@ -103,9 +103,9 @@ package org.restfulx.services.amf {
      * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#unmarshall
      */
-    public function unmarshall(object:Object, disconnected:Boolean = false):Object {
-      //return serializer.unmarshall(object, disconnected);
-      return object;
+    public function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {
+      return serializer.unmarshall(object, disconnected, defaultType);
+      //return object;
     }
     
     /**

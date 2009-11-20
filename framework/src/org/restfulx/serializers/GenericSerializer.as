@@ -70,7 +70,7 @@ package org.restfulx.serializers {
      *   
      * @see org.restfulx.serializers.ISerializer#unmarshall
      */
-    public function unmarshall(object:Object, disconnected:Boolean = false):Object {
+    public function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {
       return object;
     }
 

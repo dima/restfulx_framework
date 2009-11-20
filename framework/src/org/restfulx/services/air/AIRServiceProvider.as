@@ -145,8 +145,8 @@ package org.restfulx.services.air {
      * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#unmarshall
      */
-    public function unmarshall(object:Object, disconnected:Boolean = false):Object {
-      return Rx.serializers.vo.unmarshall(object, disconnected);
+    public function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {
+      return Rx.serializers.vo.unmarshall(object, disconnected, defaultType);
     }
     
     /**

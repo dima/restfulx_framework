@@ -48,8 +48,10 @@ package org.restfulx.serializers {
      * an object graph of models.
      *  
      * @param object source object from the service provider/responder
+     * @param disconnected if true the object will not be reconnected with anything in the cache
+     * @param defaultType if no known type can be inferred, use the type given as a fallback
      * @return connected object graph of the model corresponding to the response
      */
-     function unmarshall(object:Object, disconnected:Boolean = false):Object;    
+     function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object;    
   }
 }
