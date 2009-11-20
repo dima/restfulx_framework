@@ -105,7 +105,6 @@ package org.restfulx.services.amf {
      */
     public function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {
       return serializer.unmarshall(object, disconnected, defaultType);
-      //return object;
     }
     
     /**
@@ -123,6 +122,7 @@ package org.restfulx.services.amf {
      */
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var ro:RemoteObject = getRemoteObject(object, nestedBy);
+      ro.source = RxUtils.addObjectIdToResourceURL(ro.source, object, urlSuffix);
       invokeRemoteObject(ro, "GET", object, metadata, responder);
     }
  
@@ -143,6 +143,7 @@ package org.restfulx.services.amf {
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
         recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var ro:RemoteObject = getRemoteObject(object, nestedBy);
+      ro.source = RxUtils.addObjectIdToResourceURL(ro.source, object, urlSuffix);
       invokeRemoteObject(ro, "PUT", object, metadata, responder); 
     }
     
@@ -153,10 +154,11 @@ package org.restfulx.services.amf {
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
        recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var ro:RemoteObject = getRemoteObject(object, nestedBy);
+      ro.source = RxUtils.addObjectIdToResourceURL(ro.source, object, urlSuffix);
       invokeRemoteObject(ro, "DELETE", object, metadata, responder);
     }
     
-    protected function getRemoteObject(object:Object, nestedBy:Array = null ):RemoteObject{
+    protected function getRemoteObject(object:Object, nestedBy:Array = null):RemoteObject {
       var ro:RemoteObject = new RemoteObject("amfora");
       ro.endpoint = Rx.httpRootUrl;
       ro.source = "/" + RxUtils.nestResource(object, nestedBy, urlSuffix);
