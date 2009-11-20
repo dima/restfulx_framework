@@ -157,12 +157,9 @@ package org.restfulx.services.amf {
     }
     
     protected function getRemoteObject(object:Object, nestedBy:Array = null ):RemoteObject{
-      var fqn:String = getQualifiedClassName(object);
-
       var ro:RemoteObject = new RemoteObject("amfora");
       ro.endpoint = Rx.httpRootUrl;
       ro.source = "/" + RxUtils.nestResource(object, nestedBy, urlSuffix);
-
       return ro;
     }
     
