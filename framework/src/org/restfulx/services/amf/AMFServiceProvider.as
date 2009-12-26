@@ -40,7 +40,7 @@ package org.restfulx.services.amf {
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
   import org.restfulx.serializers.ISerializer;
-  import org.restfulx.serializers.VOSerializer;
+  import org.restfulx.serializers.AMFSerializer;
   import org.restfulx.services.IServiceProvider;
   import org.restfulx.utils.ModelsMetadata;
   import org.restfulx.utils.RxFileReference;
@@ -63,7 +63,7 @@ package org.restfulx.services.amf {
     public function AMFServiceProvider() {
       state = Rx.models.state;
       urlSuffix = "amf";
-      serializer = new VOSerializer();
+      serializer = new AMFSerializer();
     }
     
     /**
@@ -113,7 +113,7 @@ package org.restfulx.services.amf {
      */
     public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var ro:RemoteObject = getRemoteObject(object, nestedBy);
-      invokeRemoteObject(ro, "GET", object, metadata, responder);
+      invokeRemoteObject(ro, "GET", object, false, metadata, responder);
     }
     
     /**
@@ -123,7 +123,7 @@ package org.restfulx.services.amf {
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var ro:RemoteObject = getRemoteObject(object, nestedBy);
       ro.source = RxUtils.addObjectIdToResourceURL(ro.source, object, urlSuffix);
-      invokeRemoteObject(ro, "GET", object, metadata, responder);
+      invokeRemoteObject(ro, "GET", object, false, metadata, responder);
     }
  
     /**
@@ -133,7 +133,7 @@ package org.restfulx.services.amf {
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
        recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var ro:RemoteObject = getRemoteObject(object, nestedBy);
-      invokeRemoteObject(ro, "POST", object, metadata, responder);   
+      invokeRemoteObject(ro, "POST", object, recursive, metadata, responder);   
     }
     
     /**
@@ -144,7 +144,7 @@ package org.restfulx.services.amf {
         recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var ro:RemoteObject = getRemoteObject(object, nestedBy);
       ro.source = RxUtils.addObjectIdToResourceURL(ro.source, object, urlSuffix);
-      invokeRemoteObject(ro, "PUT", object, metadata, responder); 
+      invokeRemoteObject(ro, "PUT", object, recursive, metadata, responder); 
     }
     
     /**
@@ -155,7 +155,7 @@ package org.restfulx.services.amf {
        recursive:Boolean = false, undoRedoFlag:int = 0):void {
       var ro:RemoteObject = getRemoteObject(object, nestedBy);
       ro.source = RxUtils.addObjectIdToResourceURL(ro.source, object, urlSuffix);
-      invokeRemoteObject(ro, "DELETE", object, metadata, responder);
+      invokeRemoteObject(ro, "DELETE", object, recursive, metadata, responder);
     }
     
     protected function getRemoteObject(object:Object, nestedBy:Array = null):RemoteObject {
@@ -165,15 +165,15 @@ package org.restfulx.services.amf {
       return ro;
     }
     
-    protected function invokeRemoteObject(remoteObject:RemoteObject, actionName:String, object:Object, metadata:Object, 
-      responder:IResponder):void {
+    protected function invokeRemoteObject(remoteObject:RemoteObject, actionName:String, object:Object, recursive:Boolean, 
+      metadata:Object, responder:IResponder):void {
       Rx.log.debug("sending AMF request to gateway: " + remoteObject.endpoint + 
       				   "\rurl: " + remoteObject.source +
       				   "\raction: " + actionName + 
       				   "\rcontent: " + ((object == null) ? "null" : "\r" + object.toString()));
       
       var action:AbstractOperation = remoteObject.getOperation(actionName);
-	    var call:AsyncToken = action.send(marshall(object));
+	    var call:AsyncToken = action.send(marshall(object, recursive));
       if (responder != null) {
         call.addResponder(responder);
       }

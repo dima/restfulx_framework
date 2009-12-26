@@ -49,6 +49,7 @@
     <class>org.restfulx.events.ServiceErrorEvent</class>
     <class>org.restfulx.models.RxModel</class>
     <class>org.restfulx.models.RxTreeModel</class>
+    <class>org.restfulx.serializers.AMFSerializer</class>
     <class>org.restfulx.serializers.CouchDBJSONSerializer</class>
     <class>org.restfulx.serializers.GAEXMLSerializer</class>
     <class>org.restfulx.serializers.GenericSerializer</class>

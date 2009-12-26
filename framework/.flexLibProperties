@@ -42,6 +42,7 @@
 <classEntry path="org.restfulx.events.ServiceErrorEvent"/>
 <classEntry path="org.restfulx.models.RxModel"/>
 <classEntry path="org.restfulx.models.RxTreeModel"/>
+<classEntry path="org.restfulx.serializers.AMFSerializer"/>
 <classEntry path="org.restfulx.serializers.CouchDBJSONSerializer"/>
 <classEntry path="org.restfulx.serializers.GAEXMLSerializer"/>
 <classEntry path="org.restfulx.serializers.GenericSerializer"/>
