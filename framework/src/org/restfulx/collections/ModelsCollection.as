@@ -23,7 +23,6 @@
  ******************************************************************************/
 package org.restfulx.collections {
   import flash.utils.IExternalizable;
-  import flash.utils.IDataInput;
  
   /**
    * Adds a few handy methods to ArrayCollection class to simplify working 
