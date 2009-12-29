@@ -244,7 +244,7 @@ package org.restfulx {
     /**
      * Stores any extra HTTP headers that needs to be sent to the backend
      */
-    public static var customHttpHeaders:Object;
+    public static var customHttpHeaders:Array;
     
     /** 
      * Stores current authenticity token.

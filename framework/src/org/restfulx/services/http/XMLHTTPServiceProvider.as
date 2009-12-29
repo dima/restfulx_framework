@@ -37,7 +37,7 @@ package org.restfulx.services.http {
   import mx.rpc.IResponder;
   import mx.rpc.events.FaultEvent;
   import mx.rpc.events.ResultEvent;
-  import mx.rpc.http.HTTPService;
+  import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
   import org.restfulx.collections.ModelsCollection;
@@ -141,15 +141,15 @@ package org.restfulx.services.http {
      * @see org.restfulx.services.IServiceProvider#index
      */
     public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.GET;
+      var request:URLRequest = getURLRequest(object, nestedBy);
+      request.method = URLRequestMethod.GET;
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
-        httpService.url += "?" + urlParams;  
+        request.url += "?" + urlParams;  
       }
       
-      invokeHTTPService(httpService, responder);
+      invokeURLRequest(request, responder);
     }
     
     /**
@@ -157,16 +157,16 @@ package org.restfulx.services.http {
      * @see org.restfulx.services.IServiceProvider#show
      */
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.GET;
-      httpService.url = RxUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
+      var request:URLRequest = getURLRequest(object, nestedBy);
+      request.method = URLRequestMethod.GET;
+      request.url = RxUtils.addObjectIdToResourceURL(request.url, object, urlSuffix);
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
-        httpService.url += "?" + urlParams;  
+        request.url += "?" + urlParams;  
       }
       
-      invokeHTTPService(httpService, responder);
+      invokeURLRequest(request, responder);
     }
 
     /**
@@ -176,10 +176,10 @@ package org.restfulx.services.http {
     public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
       if (RxUtils.isEmpty(object["id"])) {
-        var httpService:HTTPService = getHTTPService(object, nestedBy);
-        httpService.method = URLRequestMethod.POST;
-        httpService.request = marshallToVO(object, recursive);
-        sendOrUpload(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag, true);
+        var request:URLRequest = getURLRequest(object, nestedBy);
+        request.method = URLRequestMethod.POST;
+        request.data = marshallToURLVariables(marshallToVO(object, recursive));
+        sendOrUpload(request, object, responder, metadata, nestedBy, recursive, undoRedoFlag, true);
       } else {
         update(object, responder, metadata, nestedBy, recursive, undoRedoFlag);
       }
@@ -191,13 +191,13 @@ package org.restfulx.services.http {
      */
     public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.POST;
-      addHeaders(httpService, {'X-HTTP-Method-Override': 'PUT'});
-      httpService.request = marshallToVO(object, recursive);
-      httpService.request["_method"] = "PUT";
-      httpService.url = RxUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
-      sendOrUpload(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag); 
+      var request:URLRequest = getURLRequest(object, nestedBy);
+      request.method = URLRequestMethod.POST;
+      addHeaders(request, {'X-HTTP-Method-Override': 'PUT'});
+      request.data = marshallToURLVariables(marshallToVO(object, recursive));
+      request.data["_method"] = "PUT";
+      request.url = RxUtils.addObjectIdToResourceURL(request.url, object, urlSuffix);
+      sendOrUpload(request, object, responder, metadata, nestedBy, recursive, undoRedoFlag); 
     }
     
     /**
@@ -206,29 +206,27 @@ package org.restfulx.services.http {
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
-      var httpService:HTTPService = getHTTPService(object, nestedBy);
-      httpService.method = URLRequestMethod.POST;
-      addHeaders(httpService, {'X-HTTP-Method-Override': 'DELETE'});
-      httpService.request = marshallToVO(object, recursive, true);
-      httpService.request["_method"] = "DELETE";
-      httpService.url = RxUtils.addObjectIdToResourceURL(httpService.url, object, urlSuffix);
+      var request:URLRequest = getURLRequest(object, nestedBy);
+      request.method = URLRequestMethod.POST;
+      addHeaders(request, {'X-HTTP-Method-Override': 'DELETE'});
+      request.data = marshallToURLVariables(marshallToVO(object, recursive));
+      request.data["_method"] = "DELETE";
+      request.url = RxUtils.addObjectIdToResourceURL(request.url, object, urlSuffix);
       var instance:Object = this;
         
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
-        httpService.url += "?" + urlParams;  
+        request.url += "?" + urlParams;  
       }
 
-      Rx.log.debug("sending request to URL:" + httpService.url + 
-       " with method: " + httpService.method + " and content:" + 
-       ((httpService.request == null) ? "null" : "\r" + httpService.request.toString()));
-
-      httpService.addEventListener(ResultEvent.RESULT, function(event:ResultEvent):void {
-        onHttpResult(event);
-        var result:Object = event.result;
-        if (hasErrors(result)) {
-          if (responder) responder.result(event);
-        } else {
+      Rx.log.debug("sending request to URL:" + request.url + 
+       " with method: " + request.method + " and content:" + 
+       ((request.data == null) ? "null" : "\r" + request.data.toString()));
+       
+      var loader:URLLoader = getURLLoader();
+      loader.addEventListener(Event.COMPLETE, function(event:Event):void {
+        var result:Object = decodeResult(event.target.data);
+        if (!hasErrors(result)) {
           if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
             var clone:Object = RxUtils.clone(object);
             Rx.undoredo.addChangeAction({service: instance, action: "create", copy: clone,
@@ -237,13 +235,17 @@ package org.restfulx.services.http {
           }
 
           RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
-          if (responder) responder.result(event);
         }
+        if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, result));
       });
-      httpService.addEventListener(FaultEvent.FAULT, function(event:FaultEvent):void {
-        if (responder) responder.fault(event);
-      });
-      httpService.send();
+      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+
+      try {
+       loader.load(request);
+      } catch (error:Error) {
+       Rx.log.debug("failed to load requested document: " + error);
+       if (responder) responder.fault(error);
+      }
     }
 
     protected function urlEncodeMetadata(metadata:Object = null):String {
@@ -266,24 +268,14 @@ package org.restfulx.services.http {
       return result.replace(/&$/, "");
     }
 
-    protected function uploadFile(httpService:HTTPService, object:Object, responder:IResponder,
+    protected function uploadFile(request:URLRequest, object:Object, responder:IResponder,
       metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0,
       creating:Boolean = false):void {      
       var fqn:String = getQualifiedClassName(object);
       var localName:String = RxUtils.toSnakeCase(fqn.split("::")[1]);
       var file:RxFileReference = RxFileReference(object["attachment"]);
       
-      var payload:URLVariables = new URLVariables;
-      for (var key:String in httpService.request) {
-        payload[key] = httpService.request[key];
-      }
-      
       var instance:Object = this;
-      
-      var request:URLRequest = new URLRequest;
-      request.url = httpService.url;
-      request.method = httpService.method;
-      request.data = payload;
 
       var urlParams:String = urlEncodeMetadata(metadata);
       if (urlParams != "") {
@@ -291,139 +283,8 @@ package org.restfulx.services.http {
       }
       
       file.reference.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(event:DataEvent):void {
-        var result:Object = event.data;
-        if (hasErrors(result)) {
-          if (responder) responder.result(event);
-        } else {           
-          var fqn:String = getQualifiedClassName(object);
-
-          if (!creating) {
-            var cached:Object = RxUtils.clone(ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]));
-          }
-          
-          var response:Object = unmarshall(result);
-          
-          if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
-            var target:Object;
-            var clone:Object = RxUtils.clone(response);
-            var action:String = "destroy";
-            var fn:Function = Rx.models.cache.destroy;
-            
-            if (!creating) {
-              target = cached;
-              target["rev"] = object["rev"];
-              action = "update";
-              fn = Rx.models.cache.update;
-            } else {
-              target = RxUtils.clone(response);
-            }
-            
-            Rx.undoredo.addChangeAction({service: instance, action: action, copy: clone,
-              elms: [target, new UndoRedoResponder(responder, fn), metadata, 
-                nestedBy, recursive]});
-          }
-
-          RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
-          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));
-        }
-      });
-      file.reference.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
-      
-      file.reference.upload(request, localName + "[" + file.keyName + "]");
-    }
-    
-    protected function sendOrUpload(httpService:HTTPService, object:Object, responder:IResponder,
-      metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0,
-      creating:Boolean = false):void {
-      if (object["attachment"] == null) {
-        invokeCreateOrUpdateHTTPService(httpService, responder, object, metadata, nestedBy, recursive, 
-          undoRedoFlag, creating);
-      } else {
-        if (object["attachment"] is RxFileReference) {
-          uploadFile(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag, creating);
-        } else if (object["attachment"] is BinaryAttachment) {
-          invokeMultiPartRequest(httpService, object, responder, metadata, nestedBy, recursive, undoRedoFlag,
-            creating);
-        }
-      }       
-    }
-    
-    protected function invokeMultiPartRequest(httpService:HTTPService, object:Object, responder:IResponder,
-      metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0,
-      creating:Boolean = false):void {
-      var fqn:String = getQualifiedClassName(object);
-      var localName:String = RxUtils.toSnakeCase(fqn.split("::")[1]);
-      var file:BinaryAttachment = BinaryAttachment(object["attachment"]);
-      
-      var payload:URLVariables = new URLVariables;
-      for (var key:String in httpService.request) {
-        payload[key] = httpService.request[key];
-      }
-      
-      payload[localName + "[" + file.key + "]"] = object["attachment"];
-      
-      var request:URLRequest = new MultiPartRequestBuilder(payload).build();
-      request.url = httpService.url;
-      request.method = httpService.method;
-
-      var urlParams:String = urlEncodeMetadata(metadata);
-      if (urlParams != "") {
-        request.url += "?" + urlParams;  
-      } 
-      
-      var loader:URLLoader = new URLLoader();
-      loader.addEventListener(Event.COMPLETE, function(event:Event):void {
-        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, event.target.data));
-      });
-      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
-      Rx.log.debug("issuing multi-part request to: " + request.url);
-
-      loader.load(request);
-    }
-
-    protected function getHTTPService(object:Object, nestedBy:Array = null):HTTPService {
-      var service:HTTPService = new HTTPService();
-      service.resultFormat = "e4x";
-      service.useProxy = false;
-      service.contentType = "application/x-www-form-urlencoded";
-      service.headers = Rx.customHttpHeaders;
-      service.url = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
-      return service;
-    }
-    
-    protected function invokeHTTPService(service:HTTPService, 
-      responder:IResponder):void {
-      Rx.log.debug("sending request to URL:" + service.url + 
-        " with method: " + service.method + " and content:" + 
-        ((service.request == null) ? "null" : "\r" + service.request.toString()));
-      
-      service.addEventListener(ResultEvent.RESULT, onHttpResult);
-      var call:AsyncToken = service.send();
-      if (responder != null) {
-        call.addResponder(responder);
-      }
-    }
-    
-    protected function invokeCreateOrUpdateHTTPService(service:HTTPService, responder:IResponder,
-      object:Object, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, 
-      undoRedoFlag:int = 0, creating:Boolean = false):void {
-      Rx.log.debug("sending request to URL:" + service.url + 
-        " with method: " + service.method + " and content:" + 
-        ((service.request == null) ? "null" : "\r" + service.request.toString()));
-        
-      var instance:Object = this;
-
-      var urlParams:String = urlEncodeMetadata(metadata);
-      if (urlParams != "") {
-        service.url += "?" + urlParams;  
-      }
-
-      service.addEventListener(ResultEvent.RESULT, function(event:ResultEvent):void {
-        onHttpResult(event);
-        var result:Object = event.result;
-        if (hasErrors(result)) {
-          if (responder) responder.result(event);
-        } else {           
+        var result:Object = decodeResult(event.data);
+        if (!hasErrors(result)) {       
           var fqn:String = getQualifiedClassName(object);
 
           if (!creating) {
@@ -454,19 +315,163 @@ package org.restfulx.services.http {
 
           RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
           if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));
+        } else {
+          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, result));
         }
       });
-      service.addEventListener(FaultEvent.FAULT, function(event:FaultEvent):void {
-        if (responder) responder.fault(event);
-      });
-      service.send();
+      file.reference.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+      
+      file.reference.upload(request, localName + "[" + file.keyName + "]");
     }
     
-    protected function onHttpResult(event:ResultEvent):void {
-      if (event.currentTarget is HTTPService) {
-        var service:HTTPService = HTTPService(event.currentTarget);
-        service.disconnect();
-        service.removeEventListener(ResultEvent.RESULT, onHttpResult);
+    protected function sendOrUpload(request:URLRequest, object:Object, responder:IResponder,
+      metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0,
+      creating:Boolean = false):void {
+      if (object["attachment"] == null) {
+        invokeCreateOrUpdateURLRequest(request, responder, object, metadata, nestedBy, recursive, 
+          undoRedoFlag, creating);
+      } else {
+        if (object["attachment"] is RxFileReference) {
+          uploadFile(request, object, responder, metadata, nestedBy, recursive, undoRedoFlag, creating);
+        } else if (object["attachment"] is BinaryAttachment) {
+          invokeMultiPartRequest(request, object, responder, metadata, nestedBy, recursive, undoRedoFlag,
+            creating);
+        }
+      }       
+    }
+    
+    protected function invokeMultiPartRequest(request:URLRequest, object:Object, responder:IResponder,
+      metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, undoRedoFlag:int = 0,
+      creating:Boolean = false):void {
+      var fqn:String = getQualifiedClassName(object);
+      var localName:String = RxUtils.toSnakeCase(fqn.split("::")[1]);
+      var file:BinaryAttachment = BinaryAttachment(object["attachment"]);
+      
+      var payload:URLVariables = request.data as URLVariables;
+      payload[localName + "[" + file.key + "]"] = object["attachment"];
+      
+      var multiPartRequest:URLRequest = new MultiPartRequestBuilder(payload).build();
+      multiPartRequest.url = request.url;
+      multiPartRequest.method = request.method;
+
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        multiPartRequest.url += "?" + urlParams;  
+      } 
+      
+      var loader:URLLoader = getURLLoader();
+      loader.addEventListener(Event.COMPLETE, function(event:Event):void {
+        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, decodeResult(event.target.data)));
+      });
+      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+
+      try {
+        Rx.log.debug("issuing multi-part request to: " + multiPartRequest.url);
+        loader.load(multiPartRequest);
+      } catch (error:Error) {
+        Rx.log.debug("failed to load requested document: " + error);
+        if (responder) responder.fault(error);
+      }
+    }
+
+    protected function getURLRequest(object:Object, nestedBy:Array = null):URLRequest {
+      var request:URLRequest = new URLRequest();
+      request.contentType = "application/x-www-form-urlencoded";
+      request.requestHeaders = Rx.customHttpHeaders;
+      request.url = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
+      return request;
+    }
+    
+    protected function invokeURLRequest(request:URLRequest, 
+      responder:IResponder):void {
+      Rx.log.debug("sending request to URL:" + request.url + 
+        " with method: " + request.method + " and content:" + 
+        ((request.data == null) ? "null" : "\r" + request.data.toString()));
+      
+      var loader:URLLoader = getURLLoader();
+      loader.addEventListener(Event.COMPLETE, function(event:Event):void {
+        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, decodeResult(event.target.data)));
+      });
+      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+      Rx.log.debug("issuing multi-part request to: " + request.url);
+
+      try {
+        loader.load(request);
+      } catch (error:Error) {
+        Rx.log.debug("failed to load requested document: " + error);
+        if (responder) responder.fault(error);
+      }
+    }
+    
+    protected function getURLLoader():URLLoader {
+      return new URLLoader();
+    }
+    
+    protected function decodeResult(result:Object):Object {
+      return result;
+    }
+    
+    protected function invokeCreateOrUpdateURLRequest(request:URLRequest, responder:IResponder,
+      object:Object, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false, 
+      undoRedoFlag:int = 0, creating:Boolean = false):void {
+      Rx.log.debug("sending request to URL:" + request.url + 
+        " with method: " + request.method + " and content:" + 
+        ((request.data == null) ? "null" : "\r" + request.data.toString()));
+        
+      var instance:Object = this;
+
+      var urlParams:String = urlEncodeMetadata(metadata);
+      if (urlParams != "") {
+        request.url += "?" + urlParams;  
+      }
+      
+      var loader:URLLoader = getURLLoader();
+      loader.addEventListener(Event.COMPLETE, function(event:Event):void {
+        var result:Object = decodeResult(event.target.data);
+        if (!hasErrors(result)) {         
+          var fqn:String = getQualifiedClassName(object);
+
+          if (!creating) {
+            var cached:Object = RxUtils.clone(ModelsCollection(Rx.models.cache.data[fqn]).withId(object["id"]));
+          }
+          
+          var response:Object = unmarshall(result);
+          
+          if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
+            var target:Object;
+            var clone:Object = RxUtils.clone(response);
+            var action:String = "destroy";
+            var fn:Function = Rx.models.cache.destroy;
+            
+            if (!creating) {
+              target = cached;
+              target["rev"] = object["rev"];
+              action = "update";
+              fn = Rx.models.cache.update;
+            } else {
+              target = RxUtils.clone(response);
+            }
+            
+            Rx.undoredo.addChangeAction({service: instance, action: action, copy: clone,
+              elms: [target, new UndoRedoResponder(responder, fn), metadata, 
+                nestedBy, recursive]});
+          }
+
+          RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
+          if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, response));
+        } else {
+          responder.result(new ResultEvent(ResultEvent.RESULT, false, false, decodeResult(event.target.data)));
+        }
+      });
+      loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:IOErrorEvent):void {
+        if (responder) responder.fault(event);
+      });
+
+      try {
+        loader.load(request);
+      } catch (error:Error) {
+        Rx.log.debug("failed to load requested document: " + error);
+        if (responder) responder.fault(error);
       }
     }
     
@@ -510,10 +515,20 @@ package org.restfulx.services.http {
       return result;
     }
     
-    protected function addHeaders(service:HTTPService, headers:Object):void {
-      if (service.headers == null) service.headers = {};
+    protected function marshallToURLVariables(source:Object):URLVariables {
+      var variables:URLVariables = new URLVariables;
+      for (var property:String in source) {
+        variables[property] = source[property];
+      }
+      return variables;
+    }
+    
+    protected function addHeaders(request:URLRequest, headers:Object):void {
+      if (request.requestHeaders == null) request.requestHeaders = [];
       for (var key:String in headers) {
-        service.headers[key] = headers[key];
+        var entry:Object = {};
+        entry[key] = headers[key];
+        request.requestHeaders.push(entry);
       }
     }
   }

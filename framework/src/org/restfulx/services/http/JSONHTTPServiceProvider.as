@@ -87,11 +87,5 @@ package org.restfulx.services.http {
     public override function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {      
       return serializer.unmarshall(object, disconnected, defaultType);
     }
-
-    protected override function getHTTPService(object:Object, nestedBy:Array = null):HTTPService {
-      var service:HTTPService = super.getHTTPService(object, nestedBy);
-      service.resultFormat = "text";
-      return service;
-    }
   }
 }

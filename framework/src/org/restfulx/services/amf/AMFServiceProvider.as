@@ -24,9 +24,12 @@
 package org.restfulx.services.amf {
   import flash.events.DataEvent;
   import flash.events.IOErrorEvent;
+  import flash.net.URLLoader;
+  import flash.net.URLLoaderDataFormat;
   import flash.net.URLRequest;
   import flash.net.URLRequestMethod;
   import flash.net.URLVariables;
+  import flash.utils.ByteArray;
   import flash.utils.getQualifiedClassName;
   
   import mx.messaging.AbstractConsumer;
@@ -35,42 +38,45 @@ package org.restfulx.services.amf {
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
-  import mx.rpc.remoting.RemoteObject;
-  
+    
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
   import org.restfulx.serializers.ISerializer;
   import org.restfulx.serializers.AMFSerializer;
   import org.restfulx.services.IServiceProvider;
+  import org.restfulx.services.http.XMLHTTPServiceProvider;
   import org.restfulx.utils.ModelsMetadata;
   import org.restfulx.utils.RxFileReference;
   import org.restfulx.utils.RxUtils;
- 
+
   /**
-   * AMF service provider.
+   * AMF (over HTTP) based Service Provider
    */
-  public class AMFServiceProvider implements IServiceProvider {
+  public class AMFServiceProvider extends XMLHTTPServiceProvider {
     
     /** service id */
     public static const ID:int = ServicesController.generateId();
-        
-    protected var state:ModelsMetadata;
-    
-    protected var urlSuffix:String;
-    
-    protected var serializer:ISerializer;
-    
-    public function AMFServiceProvider() {
+                        
+    /**
+     * @param amfGatewayUrl root URL that this service provider will prefix to all requests.
+     *  By default this will be equal to Rx.httpRootUrl parameter
+     */
+    public function AMFServiceProvider(amfGatewayUrl:String = null) {
       state = Rx.models.state;
+      if (amfGatewayUrl == null) {
+        rootUrl = Rx.httpRootUrl;
+      } else {
+        rootUrl = amfGatewayUrl;
+      }
+      serializer = new AMFSerializer;
       urlSuffix = "amf";
-      serializer = new AMFSerializer();
     }
-    
+
     /**
      * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#id
      */
-    public function get id():int {
+    public override function get id():int {
       return ID;
     }
  
@@ -78,7 +84,7 @@ package org.restfulx.services.amf {
      * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#hasErrors
      */    
-    public function hasErrors(object:Object):Boolean {
+    public override function hasErrors(object:Object):Boolean {
       // TODO: what are we doing about the errors sent over in AMF?
       return false;
     }
@@ -87,7 +93,7 @@ package org.restfulx.services.amf {
      * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#canLazyLoad
      */
-    public function canLazyLoad():Boolean {
+    public override function canLazyLoad():Boolean {
       return true;
     }
  
@@ -95,7 +101,7 @@ package org.restfulx.services.amf {
      * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#marshall
      */
-    public function marshall(object:Object, recursive:Boolean = false):Object {
+    public override function marshall(object:Object, recursive:Boolean = false):Object {
       return serializer.marshall(object, recursive);
     }
  
@@ -103,80 +109,26 @@ package org.restfulx.services.amf {
      * @inheritDoc
      * @see org.restfulx.services.IServiceProvider#unmarshall
      */
-    public function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {
+    public override function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {
       return serializer.unmarshall(object, disconnected, defaultType);
     }
-    
-    /**
-     * @inheritDoc
-     * @see org.restfulx.services.IServiceProvider#index
-     */
-    public function index(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var ro:RemoteObject = getRemoteObject(object, nestedBy);
-      invokeRemoteObject(ro, "GET", object, false, metadata, responder);
+        
+    protected override function getURLRequest(object:Object, nestedBy:Array = null):URLRequest {
+      var request:URLRequest = new URLRequest;
+      request.contentType = "application/x-www-form-urlencoded";
+      request.requestHeaders = Rx.customHttpHeaders;
+      request.url = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
+      return request;
     }
     
-    /**
-     * @inheritDoc
-     * @see org.restfulx.services.IServiceProvider#show
-     */
-    public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
-      var ro:RemoteObject = getRemoteObject(object, nestedBy);
-      ro.source = RxUtils.addObjectIdToResourceURL(ro.source, object, urlSuffix);
-      invokeRemoteObject(ro, "GET", object, false, metadata, responder);
-    }
- 
-    /**
-     * @inheritDoc
-     * @see org.restfulx.services.IServiceProvider#create
-     */
-    public function create(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
-       recursive:Boolean = false, undoRedoFlag:int = 0):void {
-      var ro:RemoteObject = getRemoteObject(object, nestedBy);
-      invokeRemoteObject(ro, "POST", object, recursive, metadata, responder);   
+    protected override function getURLLoader():URLLoader {
+      var loader:URLLoader = new URLLoader();
+      loader.dataFormat = URLLoaderDataFormat.BINARY;
+      return loader;
     }
     
-    /**
-     * @inheritDoc
-     * @see org.restfulx.services.IServiceProvider#update
-     */
-    public function update(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, 
-        recursive:Boolean = false, undoRedoFlag:int = 0):void {
-      var ro:RemoteObject = getRemoteObject(object, nestedBy);
-      ro.source = RxUtils.addObjectIdToResourceURL(ro.source, object, urlSuffix);
-      invokeRemoteObject(ro, "PUT", object, recursive, metadata, responder); 
-    }
-    
-    /**
-     * @inheritDoc
-     * @see org.restfulx.services.IServiceProvider#destroy
-     */
-    public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
-       recursive:Boolean = false, undoRedoFlag:int = 0):void {
-      var ro:RemoteObject = getRemoteObject(object, nestedBy);
-      ro.source = RxUtils.addObjectIdToResourceURL(ro.source, object, urlSuffix);
-      invokeRemoteObject(ro, "DELETE", object, recursive, metadata, responder);
-    }
-    
-    protected function getRemoteObject(object:Object, nestedBy:Array = null):RemoteObject {
-      var ro:RemoteObject = new RemoteObject("amfora");
-      ro.endpoint = Rx.httpRootUrl;
-      ro.source = "/" + RxUtils.nestResource(object, nestedBy, urlSuffix);
-      return ro;
-    }
-    
-    protected function invokeRemoteObject(remoteObject:RemoteObject, actionName:String, object:Object, recursive:Boolean, 
-      metadata:Object, responder:IResponder):void {
-      Rx.log.debug("sending AMF request to gateway: " + remoteObject.endpoint + 
-      				   "\rurl: " + remoteObject.source +
-      				   "\raction: " + actionName + 
-      				   "\rcontent: " + ((object == null) ? "null" : "\r" + object.toString()));
-      
-      var action:AbstractOperation = remoteObject.getOperation(actionName);
-	    var call:AsyncToken = action.send(marshall(object, recursive));
-      if (responder != null) {
-        call.addResponder(responder);
-      }
+    protected override function decodeResult(result:Object):Object {
+      return (ByteArray(result).readObject());
     }
   }
 }
