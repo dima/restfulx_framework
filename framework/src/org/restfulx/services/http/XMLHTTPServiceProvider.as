@@ -37,7 +37,6 @@ package org.restfulx.services.http {
   import mx.rpc.IResponder;
   import mx.rpc.events.FaultEvent;
   import mx.rpc.events.ResultEvent;
-  import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
   import org.restfulx.collections.ModelsCollection;

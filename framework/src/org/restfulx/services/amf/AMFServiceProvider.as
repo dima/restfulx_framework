@@ -22,32 +22,14 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.services.amf {
-  import flash.events.DataEvent;
-  import flash.events.IOErrorEvent;
   import flash.net.URLLoader;
   import flash.net.URLLoaderDataFormat;
-  import flash.net.URLRequest;
-  import flash.net.URLRequestMethod;
-  import flash.net.URLVariables;
   import flash.utils.ByteArray;
-  import flash.utils.getQualifiedClassName;
-  
-  import mx.messaging.AbstractConsumer;
-  import mx.messaging.MessageAgent;
-  import mx.rpc.AbstractOperation;
-  import mx.rpc.AsyncToken;
-  import mx.rpc.IResponder;
-  import mx.rpc.events.ResultEvent;
     
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
-  import org.restfulx.serializers.ISerializer;
   import org.restfulx.serializers.AMFSerializer;
-  import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.http.XMLHTTPServiceProvider;
-  import org.restfulx.utils.ModelsMetadata;
-  import org.restfulx.utils.RxFileReference;
-  import org.restfulx.utils.RxUtils;
 
   /**
    * AMF (over HTTP) based Service Provider
@@ -112,15 +94,7 @@ package org.restfulx.services.amf {
     public override function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {
       return serializer.unmarshall(object, disconnected, defaultType);
     }
-        
-    protected override function getURLRequest(object:Object, nestedBy:Array = null):URLRequest {
-      var request:URLRequest = new URLRequest;
-      request.contentType = "application/x-www-form-urlencoded";
-      request.requestHeaders = Rx.customHttpHeaders;
-      request.url = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
-      return request;
-    }
-    
+
     protected override function getURLLoader():URLLoader {
       var loader:URLLoader = new URLLoader();
       loader.dataFormat = URLLoaderDataFormat.BINARY;
