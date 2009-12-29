@@ -22,6 +22,8 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.collections {
+  import flash.utils.IExternalizable;
+  import flash.utils.IDataInput;
  
   /**
    * Adds a few handy methods to ArrayCollection class to simplify working 
@@ -31,7 +33,8 @@ package org.restfulx.collections {
    * few helpers to ArrayCollection that exploit these <code>RxModel</code>
    * properties.
    */
-  public class ModelsCollection extends RxCollection {
+  [RemoteClass(alias="org.restfulx.messaging.io.ModelsCollection")]
+  public class ModelsCollection extends RxCollection implements IExternalizable {
     
     /** 
      * A service provider implementation can tag some metadata along with the
