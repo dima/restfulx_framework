@@ -29,6 +29,7 @@ package org.restfulx.services.http {
   import flash.events.IOErrorEvent;
   import flash.net.URLLoader;
   import flash.net.URLRequest;
+  import flash.net.URLRequestHeader;
   import flash.net.URLRequestMethod;
   import flash.net.URLVariables;
   import flash.utils.getQualifiedClassName;
@@ -524,9 +525,7 @@ package org.restfulx.services.http {
     protected function addHeaders(request:URLRequest, headers:Object):void {
       if (request.requestHeaders == null) request.requestHeaders = [];
       for (var key:String in headers) {
-        var entry:Object = {};
-        entry[key] = headers[key];
-        request.requestHeaders.push(entry);
+        request.requestHeaders.push(new URLRequestHeader(key, headers[key]));
       }
     }
   }
