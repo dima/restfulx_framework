@@ -417,6 +417,48 @@ package org.restfulx.services.air {
 	  public function sync(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
 	    updateSyncStatus(object, responder);
 	  }
+	  
+    /**
+     * @inheritDoc
+     * @see org.restfulx.services.ISyncingServiceProvider#getLastPullTimeStamp
+     */
+    public function getLastPullTimeStamp(object:Object):String {
+      var fqn:String = getQualifiedClassName(object);
+      
+      var statement:SQLStatement = getSQLStatement("SELECT last_server_pull FROM sync_metadata WHERE id = :id");
+      statement.parameters[":id"] = fqn;
+      try {
+        Rx.log.debug("pull timestamp:executing SQL:" + statement.text);
+        statement.execute();
+        
+        return statement.getResult().data[0];
+      } catch (e:Error) {
+        Rx.log.error("failed to get last_server_pull timestamp from the database: " + e);
+        throw e;
+      }
+      
+      return null;
+    }
+    
+    /**
+     * @inheritDoc
+     * @see org.restfulx.services.ISyncingServiceProvider#updateLastPullTimeStamp
+     */
+    public function updateLastPullTimeStamp(object:Object, value:String):void {
+      var fqn:String = getQualifiedClassName(object);
+      
+      var statement:SQLStatement = 
+        getSQLStatement("INSERT OR REPLACE INTO sync_metadata(id, last_server_pull) VALUES(:id, :last_server_pull)");
+      statement.parameters[":id"] = fqn;
+      statement.parameters[":last_server_pull"] = value;
+      try {
+        Rx.log.debug("pull timestamp:executing SQL:" + statement.text);
+        statement.execute();
+      } catch (e:Error) {
+        Rx.log.error("failed to get last_server_pull timestamp from the database: " + e);
+        throw e;
+      }
+    }
 
     protected function getSQLType(node:XML):String {
       var type:String = node.@type;
@@ -529,9 +571,11 @@ package org.restfulx.services.air {
       } else {
         connection.open(databaseFile);
       }
+      getSQLStatement("CREATE TABLE IF NOT EXISTS sync_metadata(id TEXT, last_server_pull TEXT, PRIMARY KEY(id))").execute();
       for (var modelName:String in sql) {
         var statement:SQLStatement = getSQLStatement(sql[modelName]["create"]);
         statement.execute();
+        getSQLStatement("INSERT OR REPLACE INTO sync_metadata(id) values('" + modelName + "')").execute();
       }
     }
     

@@ -71,6 +71,20 @@ package org.restfulx.services {
      * @return an ArrayCollection of versions that are currently known for this object
      */
     function sync(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
+    
+    /**
+     * Gets the last time (timestamp originates on the server) a sync was performed with the central server
+     *
+     * @param object object to get timestamp for (typically a model class)
+     */
+    function getLastPullTimeStamp(object:Object):String;
+    
+    /**
+     * Updates the last time (timestamp originates on the server) a sync was performed with the central server
+     *
+     * @param object object object to update timestamp for (typically a model class)
+     */
+    function updateLastPullTimeStamp(object:Object, value:String):void;
   }
 }
 
