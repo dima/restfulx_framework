@@ -94,7 +94,7 @@ package org.restfulx.services.amf {
     public override function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {
       return serializer.unmarshall(object, disconnected, defaultType);
     }
-
+    
     protected override function getURLLoader():URLLoader {
       var loader:URLLoader = new URLLoader();
       loader.dataFormat = URLLoaderDataFormat.BINARY;

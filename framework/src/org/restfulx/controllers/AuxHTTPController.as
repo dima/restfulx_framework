@@ -22,12 +22,23 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.controllers {
-
+  import flash.events.Event;
+  import flash.events.IOErrorEvent;
+  import flash.net.URLLoader;
+  import flash.net.URLRequest;
+  import flash.net.URLRequestHeader;
+  import flash.net.URLRequestMethod;
+  import flash.net.URLVariables;
+  import flash.net.URLLoaderDataFormat;
+  import flash.utils.ByteArray;
+  import flash.utils.getQualifiedClassName;
+  
   import mx.collections.ItemResponder;
   import mx.managers.CursorManager;
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
-  import mx.rpc.http.HTTPService;
+  import mx.rpc.events.FaultEvent;
+  import mx.rpc.events.ResultEvent;
   import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
@@ -98,14 +109,14 @@ package org.restfulx.controllers {
     /**
      * @param optsOrOnResult can be either an anonymous object of options or a result handler 
      *  function.
-     * @param onFault function to call on HTTPService error or if unmarshalling fails
+     * @param onFault function to call on URLLoader error or if unmarshalling fails
      * @param contentType content type for the request
-     * @param resultFormat what to treat the response as (e.g. e4x, text)
+     * @param resultFormat what to treat the response as (e.g. text, binary)
      * @param serializer what serializer to use (default is XML)
      * @param rootUrl the URL to prefix to requests
      */
     public function AuxHTTPController(optsOrOnResult:Object = null, onFault:Function = null, 
-      contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", serializer:ISerializer = null,
+      contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "text", serializer:ISerializer = null,
       rootUrl:String = null) {
       if (optsOrOnResult == null) optsOrOnResult = {};
       this.faultHandler = onFault;
@@ -228,7 +239,7 @@ package org.restfulx.controllers {
      */
     public function send(url:String, data:Object = null, method:int = AuxHTTPController.GET,
       responder:IResponder = null, httpHeaders:Object = null):void {
-      var service:HTTPService = new HTTPService();
+      var request:URLRequest = new URLRequest;
             
       if (!rootUrl) {
         rootUrl = Rx.httpRootUrl;
@@ -237,59 +248,82 @@ package org.restfulx.controllers {
       if (!data) {
         data = {};
       }
-        
-      service.resultFormat = resultFormat;
-      service.useProxy = false;
-      service.contentType = contentType;
-      service.headers = Rx.customHttpHeaders;
-      addHeaders(service, httpHeaders);
-      service.url = rootUrl + url;
       
-      service.request = data;
+      request.contentType = contentType;
+      request.requestHeaders = Rx.customHttpHeaders;
+      addHeaders(request, httpHeaders);
+      request.url = rootUrl + url;
+      
+      request.data = marshallToURLVariables(data);
       
       switch (method) {
         case GET :
-          service.method = "GET";
+          request.method = "GET";
           break;
         case POST :
-          service.method = "POST";
+          request.method = "POST";
           break;
         case PUT :
-          service.method = "POST";
-          service.request["_method"] = "PUT";
+          request.method = "POST";
+          request.data["_method"] = "PUT";
           break;
         case DELETE :
-          service.method = "POST";
-          service.request["_method"] = "DELETE";               
+          request.method = "POST";
+          request.data["_method"] = "DELETE";               
           break;
         default :
           Rx.log.error("method: " + method + " is unsupported");
           return;
       }
       
-      Rx.log.debug("sending request to URL:" + service.url + " with method: " + 
-        service.method + " and content:" + ((service.request == null) ? 
-        "null" : "\r" + ObjectUtil.toString(service.request)));      
+      Rx.log.debug("sending request to URL:" + request.url + " with method: " + 
+        request.method + " and content:" + ((request.data == null) ? 
+        "null" : "\r" + ObjectUtil.toString(request.data)));      
 
       CursorManager.setBusyCursor();
-
-      var call:AsyncToken = service.send();
-      if (responder) {
-        call.addResponder(responder);
-      }  
+      
+      var loader:URLLoader = new URLLoader;
+      loader.dataFormat = resultFormat;
+      loader.addEventListener(Event.COMPLETE, function(event:Event):void {
+        responder.result(new ResultEvent(ResultEvent.RESULT, false, false, event.target.data));
+        event.target.removeEventListener(Event.COMPLETE, arguments.callee);
+      });
+      loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event):void {
+        responder.fault(event);
+        event.target.removeEventListener(IOErrorEvent.IO_ERROR, arguments.callee);
+      });
+      
+      try {
+        loader.load(request);
+      } catch (error:Error) {
+        Rx.log.debug("failed to load requested document: " + error);
+        if (responder) responder.fault(error);
+      }
     }
     
-    protected function addHeaders(service:HTTPService, headers:Object):void {
-      if (service.headers == null) service.headers = {};
+    protected function marshallToURLVariables(source:Object):URLVariables {
+      var variables:URLVariables = new URLVariables;
+      for (var property:String in source) {
+        variables[property] = source[property];
+      }
+      return variables;
+    }
+    
+    protected function addHeaders(request:URLRequest, headers:Object):void {
+      if (request.requestHeaders == null) request.requestHeaders = [];
       for (var key:String in headers) {
-        service.headers[key] = headers[key];
+        request.requestHeaders.push(new URLRequestHeader(key, headers[key]));
       }
     }
         
     protected function unmarshall(data:Object):Object {
       CursorManager.removeBusyCursor();
       try {
-        return serializer.unmarshall(data.result);
+        if (data.result is ByteArray) {
+          return serializer.unmarshall(ByteArray(data.result).readObject());
+        } else {
+          return serializer.unmarshall(data.result);
+        }
       } catch (e:Error) {
         defaultFaultHandler(data.result);
       }

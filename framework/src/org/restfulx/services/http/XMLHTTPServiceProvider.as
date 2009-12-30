@@ -38,6 +38,7 @@ package org.restfulx.services.http {
   import mx.rpc.IResponder;
   import mx.rpc.events.FaultEvent;
   import mx.rpc.events.ResultEvent;
+  import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
   import org.restfulx.collections.ModelsCollection;
@@ -209,7 +210,7 @@ package org.restfulx.services.http {
       var request:URLRequest = getURLRequest(object, nestedBy);
       request.method = URLRequestMethod.POST;
       addHeaders(request, {'X-HTTP-Method-Override': 'DELETE'});
-      request.data = marshallToURLVariables(marshallToVO(object, recursive));
+      request.data = new URLVariables;
       request.data["_method"] = "DELETE";
       request.url = RxUtils.addObjectIdToResourceURL(request.url, object, urlSuffix);
       var instance:Object = this;
@@ -237,8 +238,12 @@ package org.restfulx.services.http {
           RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
         }
         if (responder) responder.result(new ResultEvent(ResultEvent.RESULT, false, false, result));
+        event.target.removeEventListener(Event.COMPLETE, arguments.callee);
       });
-      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+      loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event):void {
+        responder.fault(event);
+        event.target.removeEventListener(IOErrorEvent.IO_ERROR, arguments.callee);
+      });
 
       try {
        loader.load(request);
@@ -318,8 +323,12 @@ package org.restfulx.services.http {
         } else {
           responder.result(new ResultEvent(ResultEvent.RESULT, false, false, result));
         }
+        event.target.removeEventListener(DataEvent.UPLOAD_COMPLETE_DATA, arguments.callee);
       });
-      file.reference.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+      file.reference.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event):void {
+        responder.fault(event);
+        event.target.removeEventListener(IOErrorEvent.IO_ERROR, arguments.callee);
+      });
       
       file.reference.upload(request, localName + "[" + file.keyName + "]");
     }
@@ -362,8 +371,12 @@ package org.restfulx.services.http {
       var loader:URLLoader = getURLLoader();
       loader.addEventListener(Event.COMPLETE, function(event:Event):void {
         responder.result(new ResultEvent(ResultEvent.RESULT, false, false, decodeResult(event.target.data)));
+        event.target.removeEventListener(Event.COMPLETE, arguments.callee);
       });
-      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+      loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event):void {
+        responder.fault(event);
+        event.target.removeEventListener(IOErrorEvent.IO_ERROR, arguments.callee);
+      });
 
       try {
         Rx.log.debug("issuing multi-part request to: " + multiPartRequest.url);
@@ -386,13 +399,17 @@ package org.restfulx.services.http {
       responder:IResponder):void {
       Rx.log.debug("sending request to URL:" + request.url + 
         " with method: " + request.method + " and content:" + 
-        ((request.data == null) ? "null" : "\r" + request.data.toString()));
+        ((request.data == null) ? "null" : "\r" + ObjectUtil.toString(request.data)));
       
       var loader:URLLoader = getURLLoader();
       loader.addEventListener(Event.COMPLETE, function(event:Event):void {
         responder.result(new ResultEvent(ResultEvent.RESULT, false, false, decodeResult(event.target.data)));
+        event.target.removeEventListener(Event.COMPLETE, arguments.callee);
       });
-      loader.addEventListener(IOErrorEvent.IO_ERROR, responder.fault);
+      loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event):void {
+        responder.fault(event);
+        event.target.removeEventListener(IOErrorEvent.IO_ERROR, arguments.callee);
+      });
 
       try {
         loader.load(request);
@@ -400,14 +417,6 @@ package org.restfulx.services.http {
         Rx.log.debug("failed to load requested document: " + error);
         if (responder) responder.fault(error);
       }
-    }
-    
-    protected function getURLLoader():URLLoader {
-      return new URLLoader();
-    }
-    
-    protected function decodeResult(result:Object):Object {
-      return result;
     }
     
     protected function invokeCreateOrUpdateURLRequest(request:URLRequest, responder:IResponder,
@@ -461,9 +470,12 @@ package org.restfulx.services.http {
         } else {
           responder.result(new ResultEvent(ResultEvent.RESULT, false, false, decodeResult(event.target.data)));
         }
+        event.target.removeEventListener(Event.COMPLETE, arguments.callee);
+        
       });
-      loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:IOErrorEvent):void {
-        if (responder) responder.fault(event);
+      loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event):void {
+        responder.fault(event);
+        event.target.removeEventListener(IOErrorEvent.IO_ERROR, arguments.callee);
       });
 
       try {
@@ -527,6 +539,14 @@ package org.restfulx.services.http {
       for (var key:String in headers) {
         request.requestHeaders.push(new URLRequestHeader(key, headers[key]));
       }
+    }
+    
+    protected function getURLLoader():URLLoader {
+      return new URLLoader;
+    }
+    
+    protected function decodeResult(result:Object):Object {
+      return result;
     }
   }
 }
