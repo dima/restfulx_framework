@@ -25,11 +25,14 @@ package restfulx.test.cases.integration {
   import flexunit.framework.TestCase;
   
   import org.restfulx.Rx;
+  import org.restfulx.services.ISyncingServiceProvider;
   import org.restfulx.services.air.AIRServiceProvider;
   import org.restfulx.utils.TypedArray;
   
   import restfulx.test.models.IgnoredProperty;
   import restfulx.test.models.Project;
+  
+  import mx.utils.ObjectUtil;
 
   public class AIRServiceProviderTest extends TestCase {
     
@@ -71,6 +74,19 @@ package restfulx.test.cases.integration {
       ip.amount = 20;
       ip.name = "Foobar";
       ip.create({onSuccess: onCreateIgnoredSuccess, onFailure: onFailure, targetServiceId: AIRServiceProvider.ID});
+    }
+    
+    public function testGetLastPullTimeStamp():void {
+      var syncingProvider:ISyncingServiceProvider = Rx.services.getServiceProvider(AIRServiceProvider.ID) as ISyncingServiceProvider;
+      assertNull(syncingProvider.getLastPullTimeStamp(Project));
+    }
+    
+    public function testUpdateLastPullTimeStamp():void {
+      var syncingProvider:ISyncingServiceProvider = Rx.services.getServiceProvider(AIRServiceProvider.ID) as ISyncingServiceProvider;
+      syncingProvider.updateLastPullTimeStamp(Project, "1262222622");
+      
+      var lastPullTime:String = syncingProvider.getLastPullTimeStamp(Project);
+      assertEquals("1262222622", lastPullTime);
     }
     
     private function onCreateIgnoredSuccess(result:IgnoredProperty):void {

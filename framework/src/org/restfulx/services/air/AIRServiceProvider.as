@@ -36,6 +36,7 @@ package org.restfulx.services.air {
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
+  import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
   import org.restfulx.collections.ModelsCollection;
@@ -376,14 +377,11 @@ package org.restfulx.services.air {
         Rx.log.debug("dirty:executing SQL:" + statement.text);
         statement.execute();
         
-        var result:Object;
+        var result:Object = new Array;
         var data:Array = statement.getResult().data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           result = unmarshall(data);
-        } else {
-          // nothing in the DB
-          result = new Array;
         }
         
         if (responder) responder.result(result);
@@ -428,13 +426,15 @@ package org.restfulx.services.air {
       var statement:SQLStatement = getSQLStatement("SELECT last_server_pull FROM sync_metadata WHERE id = :id");
       statement.parameters[":id"] = fqn;
       try {
-        Rx.log.debug("pull timestamp:executing SQL:" + statement.text);
+        Rx.log.debug("getting last pull timestamp:executing SQL:" + statement.text);
         statement.execute();
         
-        return statement.getResult().data[0];
+        var data:Array = statement.getResult().data;      
+        if (data && data.length > 0) {
+          return data[0]["last_server_pull"];
+        }
       } catch (e:Error) {
         Rx.log.error("failed to get last_server_pull timestamp from the database: " + e);
-        throw e;
       }
       
       return null;
@@ -452,10 +452,10 @@ package org.restfulx.services.air {
       statement.parameters[":id"] = fqn;
       statement.parameters[":last_server_pull"] = value;
       try {
-        Rx.log.debug("pull timestamp:executing SQL:" + statement.text);
+        Rx.log.debug("updating last pull timestamp:executing SQL:" + statement.text);
         statement.execute();
       } catch (e:Error) {
-        Rx.log.error("failed to get last_server_pull timestamp from the database: " + e);
+        Rx.log.error("failed to update last_server_pull timestamp in the database: " + e);
         throw e;
       }
     }

@@ -29,6 +29,7 @@ package org.restfulx.controllers {
   
   import org.restfulx.Rx;
   import org.restfulx.collections.RxCollection;
+  import org.restfulx.collections.ModelsCollection;
   import org.restfulx.events.CacheUpdateEvent;
   import org.restfulx.events.PullEndEvent;
   import org.restfulx.events.PullStartEvent;
@@ -37,6 +38,7 @@ package org.restfulx.controllers {
   import org.restfulx.services.ChangeResponder;
   import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.ISyncingServiceProvider;
+  import org.restfulx.utils.RxUtils;
   
   [Bindable]
   /**
@@ -163,7 +165,12 @@ package org.restfulx.controllers {
 	    CursorManager.setBusyCursor();
 	    for each (var model:Class in models) {
 	      pullModels.push(Rx.models.state.types[model]);
-	      Rx.models.reload(model, {targetServiceId: destination.id});
+	      var lastPullTimeStamp:String = source.getLastPullTimeStamp(model);
+	      var metadata:Object = {};
+	      if (!RxUtils.isEmpty(lastPullTimeStamp)) {
+	        metadata["last_synced"] = lastPullTimeStamp;
+	      }
+	      Rx.models.reload(model, {targetServiceId: destination.id, metadata: metadata});
 	    }
 	  }
 	  
@@ -227,7 +234,13 @@ package org.restfulx.controllers {
 	         return item != event.fqn;
 	        });
   	      for each (var instance:Object in event.data) {
-  	        Rx.services.getServiceProvider(source.id).create(instance, null);
+  	        source.create(instance, null);
+  	      }
+  	      if (event.fqn) {
+  	        var cached:ModelsCollection = Rx.models.cache.data[event.fqn] as ModelsCollection;
+  	        if (cached.metadata.hasOwnProperty("last_synced")) {
+  	          source.updateLastPullTimeStamp(Rx.models.state.types[event.fqn], cached.metadata["last_synced"]);
+  	        }
   	      }
           if (!pullModels.length) {
             CursorManager.removeBusyCursor();

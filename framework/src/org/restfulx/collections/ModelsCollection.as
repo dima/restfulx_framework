@@ -35,6 +35,12 @@ package org.restfulx.collections {
   [RemoteClass(alias="org.restfulx.messaging.io.ModelsCollection")]
   public class ModelsCollection extends RxCollection implements IExternalizable {
     
+    [Bindable]
+    /**
+     * Fully Qualified Name (fqn) of the class instances that this array contains.
+     */
+    public var itemType:String;
+    
     /** 
      * A service provider implementation can tag some metadata along with the
      * serialized response that will be shared in metadata variable
