@@ -41,7 +41,7 @@ package org.restfulx.serializers {
       var result:Object = super.unmarshall(object, disconnected, defaultType);
       if (result is TypedArray) {
         var fqn:String = result.itemType;
-        for each (var instance:Object in TypedArray(result.source)) {
+        for each (var instance:Object in TypedArray(result).source) {
           cacheItem(instance, fqn);
         }
       } else if (result is RxModel) {

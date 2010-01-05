@@ -29,7 +29,7 @@ package org.restfulx.utils {
   /**
    * An array of items where we know what type of models it contains.
    */
-  [RemoteClass(alias="flex.messaging.io.TypedArray")]
+  [RemoteClass(alias="org.restfulx.messaging.io.TypedArray")]
   public class TypedArray implements IExternalizable {
     
     [Bindable]
