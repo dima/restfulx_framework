@@ -77,15 +77,16 @@ package org.restfulx.serializers {
     }
     
     // can digest both ActiveRecord-like JSON and CouchDB-like JSON
-    private function unmarshallJSONArray(instances:Array, disconnected:Boolean = false):Array {
-      if (!instances || !instances.length) return instances;
-      
+    private function unmarshallJSONArray(instances:Array, disconnected:Boolean = false):TypedArray {
       var result:TypedArray = new TypedArray;
+      
+      if (!instances || !instances.length) return result;
+      
       for each (var instance:Object in instances) {
-        result.push(unmarshallJSONObject(instance, disconnected));
+        result.source.push(unmarshallJSONObject(instance, disconnected));
       }
       
-      result.itemType = getQualifiedClassName(result[0]);
+      result.itemType = getQualifiedClassName(result.source[0]);
       return result;
     }
     

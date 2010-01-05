@@ -22,11 +22,15 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.utils {
+  import flash.utils.IDataInput;
+  import flash.utils.IDataOutput;
+  import flash.utils.IExternalizable;
 
   /**
    * An array of items where we know what type of models it contains.
    */
-  public dynamic class TypedArray extends Array {
+  [RemoteClass(alias="flex.messaging.io.TypedArray")]
+  public class TypedArray implements IExternalizable {
     
     [Bindable]
     /**
@@ -40,8 +44,30 @@ package org.restfulx.utils {
      */
     public var metadata:Object;
     
-    public function TypedArray(numElements:int = 0) {
-      super(numElements);
+    [Bindable]
+    /**
+     * Array elements of the type specified by itemType
+     */
+    public var source:Array;
+    
+    public function TypedArray(items:Array = null) {
+      if (items == null) items = new Array;
+      this.source = items;
+    }
+    
+    /**
+     * Ensures that only the source property is serialized.
+     */
+    public function readExternal(input:IDataInput):void {
+      metadata = input.readObject();
+      source = input.readObject() as Array;
+    }
+
+    /**
+     * Ensures that only the source property is serialized.
+     */
+    public function writeExternal(output:IDataOutput):void {
+      output.writeObject(source);
     }
   }
 }

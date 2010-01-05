@@ -82,12 +82,11 @@ package restfulx.test.cases.serializers {
       var storesXML:XML = TestApp(Application.application).stores;
       var stores:TypedArray = xml.unmarshall(storesXML) as TypedArray;
       
-      var marshalled:Object = vo.marshall(books[0], true);
+      var marshalled:Object = vo.marshall(books.source[0], true);
       trace(marshalled);
 
-      var marshalledForRails:Object = rails.marshall(books[0], true);
+      var marshalledForRails:Object = rails.marshall(books.source[0], true);
       trace(marshalledForRails);
     }
-
   }
 }

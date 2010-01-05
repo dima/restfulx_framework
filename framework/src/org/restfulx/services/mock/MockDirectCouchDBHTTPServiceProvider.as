@@ -59,7 +59,7 @@ package org.restfulx.services.mock {
       for (var dataSetName:String in dataSets) {        
         Rx.log.debug("loading test data for :" + dataSetName);
         for each (var instance:Object in 
-          Rx.serializers.xml.unmarshall(dataSets[dataSetName])) {
+          Rx.serializers.xml.unmarshall(dataSets[dataSetName]).source) {
           create(instance, null);    
         }
       }

@@ -49,8 +49,8 @@ package restfulx.test.cases.integration {
 
     private function onIndexMetadataSuccess(result:Object):void {
       var data:TypedArray = TypedArray(result);
-      assertEquals(1, data.length);
-      assertEquals("Project4NameString", data[0].name);
+      assertEquals(1, data.source.length);
+      assertEquals("Project4NameString", data.source[0].name);
     }
     
     private function onFailure(result:Object):void {
@@ -65,7 +65,7 @@ package restfulx.test.cases.integration {
     
     private function onIndexIgnoredSuccess(result:Object):void {
       var data:TypedArray = TypedArray(result);
-      assertEquals(null, data[0].name);
+      assertEquals(null, data.source[0].name);
     }
     
     public function testCreateWithIgnored():void {

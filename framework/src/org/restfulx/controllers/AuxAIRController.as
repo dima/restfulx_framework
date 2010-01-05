@@ -33,6 +33,7 @@ package org.restfulx.controllers {
   import mx.rpc.events.ResultEvent;
   
   import org.restfulx.Rx;
+  import org.restfulx.utils.TypedArray;
   import org.restfulx.utils.RxUtils;
   
   /**

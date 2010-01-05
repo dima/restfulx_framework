@@ -91,10 +91,10 @@ package restfulx.test.cases {
       var xmlForFacebookUsers:XML = TestApp(Application.application).facebook_users;
       var facebookUsers:TypedArray = Rx.serializers.xml.unmarshall(xmlForFacebookUsers) as TypedArray;
       
-      var facebookUser2:FacebookUser = facebookUsers[1];
+      var facebookUser2:FacebookUser = facebookUsers.source[1];
       assertEquals("FacebookUser1NameString", facebookUser2.friend.name);
       assertEquals(1, facebookUser2.friends.length);
-      assertEquals(2, FacebookUser(facebookUsers[0]).friends.length);
+      assertEquals(2, FacebookUser(facebookUsers.source[0]).friends.length);
       
       var clone:FacebookUser = RxUtils.clone(facebookUser2) as FacebookUser;
       clone.friend = null;

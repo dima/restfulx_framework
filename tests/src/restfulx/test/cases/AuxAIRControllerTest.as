@@ -59,16 +59,16 @@ package restfulx.test.cases {
     
     private function onFindAll(result:Object):void {
       assertTrue(result is TypedArray);
-      assertEquals(1, TypedArray(result).length);
-      assertEquals("SimpleProperty2NameString", SimpleProperty(result[0]).name);
-      assertTrue(SimpleProperty(result[0]).available);
+      assertEquals(1, TypedArray(result).source.length);
+      assertEquals("SimpleProperty2NameString", SimpleProperty(result.source[0]).name);
+      assertTrue(SimpleProperty(result.source[0]).available);
     }
     
     private function onFindAllWithIncludes(result:Object):void {
       assertTrue(result is TypedArray);
-      assertEquals(1, TypedArray(result).length);
+      assertEquals(1, TypedArray(result).source.length);
       
-      var project:Project = (result as TypedArray)[0];
+      var project:Project = (result as TypedArray).source[0];
       assertEquals("Project4NameString", project.name);
       assertEquals(1, project.tasks.length);
       assertEquals("Task4NameString", Task(project.tasks.getItemAt(0)).name);      
@@ -76,9 +76,9 @@ package restfulx.test.cases {
     
     private function onFindAllWithPolymorphicIncludes(result:Object):void {
       assertTrue(result is TypedArray);
-      assertEquals(1, TypedArray(result).length);
+      assertEquals(1, TypedArray(result).source.length);
       
-      var customer:Customer = (result as TypedArray)[0];
+      var customer:Customer = (result as TypedArray).source[0];
       assertEquals("Customer1NameString", customer.name);
       assertEquals("Location1CityString", Location(customer.location).city);
       assertEquals("Location1LineOneString", Location(customer.location).lineOne);

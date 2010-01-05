@@ -44,6 +44,7 @@ package org.restfulx.services.air {
   import org.restfulx.services.ISyncingServiceProvider;
   import org.restfulx.services.UndoRedoResponder;
   import org.restfulx.utils.ModelsMetadata;
+  import org.restfulx.utils.TypedArray;
   import org.restfulx.utils.RxUtils;
   import org.restfulx.utils.UUID;
 
@@ -377,7 +378,7 @@ package org.restfulx.services.air {
         Rx.log.debug("dirty:executing SQL:" + statement.text);
         statement.execute();
         
-        var result:Object = new Array;
+        var result:Object = new TypedArray;
         var data:Array = statement.getResult().data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];

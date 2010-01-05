@@ -67,10 +67,12 @@ package org.restfulx.serializers {
       return null;
     }
     
-    protected function unmarshallArray(instances:Array, disconnected:Boolean = false, defaultType:String = null):Array {
-      if (!instances || !instances.length) return instances;
-      
+    protected function unmarshallArray(instances:Array, disconnected:Boolean = false, defaultType:String = null):TypedArray {
       var results:TypedArray = new TypedArray;
+      results.itemType = defaultType;
+
+      if (!instances || !instances.length) return results;
+      
       var fqn:String = defaultType;
       if (instances[0].hasOwnProperty("clazz")) {
         fqn = state.fqns[instances[0]["clazz"]];
@@ -78,9 +80,9 @@ package org.restfulx.serializers {
       results.itemType = fqn;
       for each (var instance:Object in instances) {
         if (instance is RxModel) {
-          results.push(instance);
+          results.source.push(instance);
         } else {
-          results.push(unmarshallObject(instance, disconnected, fqn));
+          results.source.push(unmarshallObject(instance, disconnected, fqn));
         }
       }
       return results;

@@ -65,13 +65,13 @@ package restfulx.test.cases.models {
     }
     
     private function onTestEmptyCallback(results:TypedArray):void {
-      assertEquals(0, results.length);
+      assertEquals(0, results.source.length);
       assertEquals(Rx.models.state.types[Account], results.itemType);
     }
     
     private function onTestIndexWithCallback(results:TypedArray):void {
       assertEquals(Rx.models.state.types[SimpleProperty], results.itemType);
-      onTestIndexResult(new ModelsCollection(results));
+      onTestIndexResult(new ModelsCollection(results.source));
     }
     
     private function onTestIndexResult(results:ModelsCollection):void {

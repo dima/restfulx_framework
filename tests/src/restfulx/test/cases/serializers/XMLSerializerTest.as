@@ -159,7 +159,7 @@ package restfulx.test.cases.serializers {
       var storesXML:XML = TestApp(Application.application).stores;
       var stores:TypedArray = xml.unmarshall(storesXML) as TypedArray;
       
-      var marshalled:XML = xml.marshall(books[0], true) as XML;
+      var marshalled:XML = xml.marshall(books.source[0], true) as XML;
       trace(marshalled.toXMLString());
     }
 

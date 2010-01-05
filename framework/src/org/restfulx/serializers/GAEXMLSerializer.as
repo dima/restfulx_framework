@@ -65,7 +65,7 @@ package org.restfulx.serializers {
           if (state.fqns[objectName]) {
             results.itemType = state.fqns[objectName];
             for each (var node:XML in xmlFragment.children()) {
-              results.push(unmarshallObject(node, disconnected, state.fqns[objectName]));
+              results.source.push(unmarshallObject(node, disconnected, state.fqns[objectName]));
             }
           }
           return results;

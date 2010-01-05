@@ -77,7 +77,7 @@ package org.restfulx.serializers {
             }
             results.metadata = metadata;
             for each (var node:XML in xmlFragment.children()) {
-              results.push(unmarshallObject(node, disconnected, state.fqns[objectName]));
+              results.source.push(unmarshallObject(node, disconnected, state.fqns[objectName]));
             }
           }
           return results;
