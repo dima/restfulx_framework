@@ -281,7 +281,7 @@ package org.restfulx {
      *  in an object or explicitly in the order required by the function. See the example above.
      * @param onFault function to call on HTTPService error
      * @param contentType content type for the request
-     * @param resultFormat how to treat the response from the server (e4x is the default)
+     * @param resultFormat how to treat the response from the server (text is the default)
      * @param serializer ISerializer implementation to use when unmarshalling responses. Use
      *  this in conjunction with resultFormat. Default is XMLSerializer.
      * @param rootUrl the URL to prefix to requests
@@ -290,8 +290,41 @@ package org.restfulx {
      * @return AuxHTTPController instance
      */
     public static function http(optsOrOnResult:Object = null, onFault:Function = null, 
-      contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x",
+      contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "text",
       serializer:ISerializer = null, rootUrl:String = null):AuxHTTPController {
+      return new httpController(optsOrOnResult, onFault, contentType, resultFormat, serializer, rootUrl);    
+    }
+    
+    /**
+     * Handy shortcut for non-CRUD AMF operations. Works in much the same way as Rx.http
+     * except it expects to receive AMF serializes messages as response
+     *  
+     * @example It can be used to send any object to any URL by doing something like this:
+     * 
+     * <listing version="3.0">
+     *  Rx.amf(function(result:Object):void { trace(result); }).invoke("some/url/here");
+     * </listing>
+     * 
+     * <p>This will send a GET request with no arguments to "some/url/here" and call anonymous
+     * function provided when the result comes back.</p>
+     *  
+     * @param optsOrOnResult can be either an anonymous object of options or a result handler 
+     *  function. Many functions in the framework can be called with named params specified
+     *  in an object or explicitly in the order required by the function. See the example above.
+     * @param onFault function to call on URLLoader error
+     * @param contentType content type for the request
+     * @param resultFormat how to treat the response from the server (binary is the default)
+     * @param serializer ISerializer implementation to use when unmarshalling responses. Use
+     *  this in conjunction with resultFormat. Default is AMFSerializer.
+     * @param rootUrl the URL to prefix to requests
+     *  
+     * @see org.restfulx.controllers.AuxHTTPController
+     * @return AuxHTTPController instance
+     */
+    public static function amf(optsOrOnResult:Object = null, onFault:Function = null, 
+      contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "binary",
+      serializer:ISerializer = null, rootUrl:String = null):AuxHTTPController {
+      if (serializer == null) serializer = Rx.serializers.amf;
       return new httpController(optsOrOnResult, onFault, contentType, resultFormat, serializer, rootUrl);    
     }
 

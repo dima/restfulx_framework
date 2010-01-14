@@ -22,8 +22,9 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.controllers {
-  import org.restfulx.serializers.VOSerializer;
   import org.restfulx.serializers.ISerializer;
+  import org.restfulx.serializers.AMFSerializer;
+  import org.restfulx.serializers.VOSerializer;
   import org.restfulx.serializers.XMLSerializer;
   
   /**
@@ -37,10 +38,14 @@ package org.restfulx.controllers {
     
     /** Value Object serializer instance */
     public var vo:ISerializer;
+    
+    /** AMF serializer instance */
+    public var amf:ISerializer;
 
     public function SerializersController() {
       xml = new XMLSerializer;
       vo = new VOSerializer;
+      amf = new AMFSerializer;
     }
   }
 }
