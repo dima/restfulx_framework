@@ -27,7 +27,9 @@ package org.restfulx.serializers {
   import org.restfulx.Rx;
   import org.restfulx.collections.ModelsCollection;
   import org.restfulx.models.RxModel;
+  import org.restfulx.models.RxTreeModel;
   import org.restfulx.utils.TypedArray;
+  import org.restfulx.utils.RxUtils;
   
   /**
    * Serialises <code>RxModel</code> instances to AMF and back.
@@ -57,6 +59,16 @@ package org.restfulx.serializers {
         cached.setItem(instance);
       } else {
         cached.addItem(instance);
+      }
+      if (instance is RxTreeModel) processTreeModel(RxTreeModel(instance));
+    }
+    
+    private function processTreeModel(instance:RxTreeModel):void {
+      if (instance.hasOwnProperty("parent") && !RxUtils.isEmpty(instance["parent"])) {
+        if (RxUtils.isEmpty(instance["parent"].children)) {
+          instance["parent"].children = new ModelsCollection;
+        }
+        instance["parent"].children.addItem(instance);
       }
     }
   }
