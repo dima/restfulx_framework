@@ -49,8 +49,13 @@
       cents = int(Math.round(Math.max(minDollars, d) * 100));
     }
 
+    [Bindable]
     /** Minimum valid number of dollars */
     public var minDollars:Number = 0.0;
+    
+    [Bindable]
+    /** Currency sybmol to be used while formatting **/
+    public var currencySymbol:String = "$";
     
     private function formatCurrency(cents:int):String {
       if (isNaN(cents)) {
@@ -64,7 +69,7 @@
     private function updateCurrency():void {
       var trimText:String = StringUtil.trim(text);
       if (trimText.length > 0) {
-        if (trimText.charAt(0) == "$") {
+        if (trimText.charAt(0) == currencySymbol) {
           dollars = Number(trimText.substr(1));
         } else {
           dollars = Number(trimText.substr(0));
@@ -79,5 +84,5 @@
   <mx:CurrencyFormatter id="currencyFormatter" precision="2" rounding="none"
       decimalSeparatorTo="." thousandsSeparatorTo=","
       useThousandsSeparator="true" useNegativeSign="true"
-      currencySymbol="$" alignSymbol="left"/>
+      currencySymbol="{currencySymbol}" alignSymbol="left"/>
 </mx:TextInput>
