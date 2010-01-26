@@ -76,7 +76,7 @@
       var trimText:String = StringUtil.trim(text);
       if (trimText.length > 0) {
         var pos:int = trimText.indexOf(currencyFormatter.currencySymbol);
-        dollars = (pos == -1) ? Number(trimText.substr(0)) : Number(trimText.substr(pos));
+        dollars = (pos == -1) ? Number(trimText) : Number(trimText.substr(pos + currencyFormatter.currencySymbol.length));
       } else {
         dollars = 0;
       }
@@ -87,5 +87,5 @@
   <mx:CurrencyFormatter id="currencyFormatter" precision="2" rounding="none"
       decimalSeparatorTo="." thousandsSeparatorTo=","
       useThousandsSeparator="true" useNegativeSign="true"
-      currencySymbol="{currencySymbol}" alignSymbol="left"/>
+      alignSymbol="left"/>
 </mx:TextInput>
