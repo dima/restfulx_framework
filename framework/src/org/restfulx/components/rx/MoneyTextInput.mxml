@@ -54,8 +54,14 @@
     public var minDollars:Number = 0.0;
     
     [Bindable]
-    /** Currency sybmol to be used while formatting **/
-    public var currencySymbol:String = "$";
+    public function get currencySymbol():String {
+      return currencyFormatter.currencySymbol;
+    }
+
+    public function set currencySymbol(value:String):void {
+      currencyFormatter.currencySymbol = value;
+      text = formatCurrency(cents);
+    }
     
     private function formatCurrency(cents:int):String {
       if (isNaN(cents)) {
@@ -69,11 +75,8 @@
     private function updateCurrency():void {
       var trimText:String = StringUtil.trim(text);
       if (trimText.length > 0) {
-        if (trimText.charAt(0) == currencySymbol) {
-          dollars = Number(trimText.substr(1));
-        } else {
-          dollars = Number(trimText.substr(0));
-        }
+        var pos:int = trimText.indexOf(currencyFormatter.currencySymbol);
+        dollars = (pos == -1) ? Number(trimText.substr(0)) : Number(trimText.substr(pos));
       } else {
         dollars = 0;
       }
