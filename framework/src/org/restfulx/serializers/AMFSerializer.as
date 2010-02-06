@@ -30,7 +30,7 @@ package org.restfulx.serializers {
   import org.restfulx.models.RxTreeModel;
   import org.restfulx.utils.TypedArray;
   import org.restfulx.utils.RxUtils;
-  
+      
   /**
    * Serialises <code>RxModel</code> instances to AMF and back.
    */
@@ -44,22 +44,23 @@ package org.restfulx.serializers {
       if (result is TypedArray) {
         var fqn:String = result.itemType;
         for each (var instance:Object in TypedArray(result).source) {
-          cacheItem(instance, fqn);
+          cacheItem(instance, fqn, disconnected);
         }
       } else if (result is RxModel) {
-        cacheItem(result, getQualifiedClassName(result));
+        cacheItem(result, getQualifiedClassName(result), disconnected);
       }
       
       return result;
     }
     
-    private function cacheItem(instance:Object, fqn:String):void {
+    private function cacheItem(instance:Object, fqn:String, disconnected:Boolean):void {
       var cached:ModelsCollection = Rx.models.cache.data[fqn] as ModelsCollection;
       if (cached.hasItem(instance)) {
         cached.setItem(instance);
       } else {
         cached.addItem(instance);
       }
+      if (!disconnected) processPartialRelationships(RxModel(instance));
       if (instance is RxTreeModel) processTreeModel(RxTreeModel(instance));
     }
     
@@ -69,6 +70,21 @@ package org.restfulx.serializers {
           instance["parent"].children = new ModelsCollection;
         }
         instance["parent"].children.addItem(instance);
+      }
+    }
+    
+    private function processPartialRelationships(instance:RxModel):void {
+      if (instance.partials != null) {
+        for (var partial:String in instance.partials) {
+          var partialId:String = instance[partial]["id"];
+          var fqn:String = Rx.models.state.fqns[instance.partials[partial]];
+          if (!RxUtils.isEmpty(partialId) && Rx.models.cache.data.hasOwnProperty(fqn)) {
+            var relatedObject:Object = (Rx.models.cache.data[fqn] as ModelsCollection).withId(partialId);
+            if (relatedObject != null) {
+              instance[partial] = relatedObject;
+            }
+          }
+        }
       }
     }
   }

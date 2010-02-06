@@ -23,9 +23,7 @@
  ******************************************************************************/
 package restfulx.test.cases {
   import flexunit.framework.TestCase;
-  
-  import mx.utils.ObjectUtil;
-  
+    
   import org.restfulx.Rx;
   import org.restfulx.XRx;
   import org.restfulx.utils.TypedArray;

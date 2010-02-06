@@ -54,6 +54,10 @@ package org.restfulx.models {
 
     /** any model can have one attachment, this can be either RxFileRefrence or BinaryAttachment */
     public var attachment:Object;
+    
+    /** indicates which relationships on this model are partially serialized and should be attempted
+     * to be linked to current objects in cache */
+    public var partials:Object;
 
     /**
      * @param label default model property to use when doing toString().

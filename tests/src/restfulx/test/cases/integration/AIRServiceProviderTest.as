@@ -32,8 +32,6 @@ package restfulx.test.cases.integration {
   import restfulx.test.models.IgnoredProperty;
   import restfulx.test.models.Project;
   
-  import mx.utils.ObjectUtil;
-
   public class AIRServiceProviderTest extends TestCase {
     
     public function AIRServiceProviderTest(methodName:String) {
