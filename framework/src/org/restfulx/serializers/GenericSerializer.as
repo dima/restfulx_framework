@@ -182,9 +182,12 @@ package org.restfulx.serializers {
                 } else {
                   items.addItem(object);
                 }
-                
-                ref[rel] = items;
+              }else{
+              	if (items.hasItem(object)) {
+                  items.removeItem(object);
+                }
               }
+              ref[rel] = items;
               
               var sorts:Object = state.refs[targetType][rel]["sorts"];
               if (sorts && sorts is Array) {
