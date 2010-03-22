@@ -336,10 +336,24 @@ package org.restfulx.utils {
         var keyValuePair:Array = sort.split(":");
         var key:String = keyValuePair[0];
         var value:String = keyValuePair[1];
-        var caseInsensitive:Boolean = value.indexOf("caseInsensitive") != -1;
-        var descending:Boolean = value.indexOf("descending") != -1;
-        var numeric:Boolean = value.indexOf("numeric") != -1;
-        result.push(new SortField(key, caseInsensitive, descending, numeric));
+        var sortField:SortField;
+        if(key.indexOf("function") != -1){
+          var matches:Array = value.match(/^(.*)\.([a-zA-Z]+)$/);
+          try{
+            var fqn:String = fqns[matches[1]];
+            var func:String = matches[2];
+            sortField = new SortField();
+            sortField.compareFunction = types[fqn][func];
+          }catch (e:Error) {
+            throw new Error("'" + sort + "' is not a valid sort option. Try 'class.function'. Error: " + e.getStackTrace());
+          }
+        }else{
+          var caseInsensitive:Boolean = value.indexOf("caseInsensitive") != -1;
+          var descending:Boolean = value.indexOf("descending") != -1;
+          var numeric:Boolean = value.indexOf("numeric") != -1;
+          sortField = new SortField(key, caseInsensitive, descending, numeric);
+        }
+        result.push(sortField);
       }
       return result; 
     }
