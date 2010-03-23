@@ -62,6 +62,7 @@ package org.restfulx.utils {
       "dirty",
       "cloned",
       "attachment",
+      "partials",
       "prototype"
     ];
 
