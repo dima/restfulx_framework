@@ -33,6 +33,8 @@ package org.restfulx.services.amf {
   import org.restfulx.services.http.XMLHTTPServiceProvider;
   import org.restfulx.utils.ServiceErrors;
   
+  import mx.utils.ObjectUtil;
+  
   /**
    * AMF (over HTTP) based Service Provider
    */
@@ -69,10 +71,12 @@ package org.restfulx.services.amf {
      * @see org.restfulx.services.IServiceProvider#hasErrors
      */    
     public override function hasErrors(object:Object):Boolean {
-      // TODO: what are we doing about the errors sent over in AMF?
+      // under what circumstances can object be null?
+      if (object == null) return true;
+      
       if (object is ServiceErrors) {
         var response:ServiceErrors = ServiceErrors(object);
-        Rx.log.debug("received service error response, terminating processing:\n" + response.errors.toString());
+        Rx.log.debug("received service error response, terminating processing:\n" + ObjectUtil.toString(response));
         Rx.models.errors = new AMFServiceErrors(response);
         return true;
       }

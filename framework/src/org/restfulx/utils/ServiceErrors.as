@@ -29,26 +29,26 @@ package org.restfulx.utils {
   import org.restfulx.Rx;
 
   /**
-   * An array of items where we know what type of models it contains.
+   * Provides access to ServiceProvider validation errors
    */
   [RemoteClass(alias="org.restfulx.messaging.io.ServiceErrors")]
   public class ServiceErrors implements IExternalizable {
     
     [Bindable]
     /**
-     * Any metadata that may have been passed on from the server
+     * An object of key/value pairs representing service provider errors
      */
     public var errors:Object;
     
     /**
-     * Ensures that only the source property is serialized.
+     * Ensures that only the errors property is serialized.
      */
     public function readExternal(input:IDataInput):void {
       errors = input.readObject();
     }
 
     /**
-     * Ensures that only the source property is serialized.
+     * Ensures that only the errors property is serialized.
      */
     public function writeExternal(output:IDataOutput):void {
       output.writeObject(errors);
