@@ -29,7 +29,9 @@ package org.restfulx.services.amf {
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
   import org.restfulx.serializers.AMFSerializer;
+  import org.restfulx.services.AMFServiceErrors;
   import org.restfulx.services.http.XMLHTTPServiceProvider;
+  import org.restfulx.utils.ServiceErrors;
   
   /**
    * AMF (over HTTP) based Service Provider
@@ -68,6 +70,12 @@ package org.restfulx.services.amf {
      */    
     public override function hasErrors(object:Object):Boolean {
       // TODO: what are we doing about the errors sent over in AMF?
+      if (object is ServiceErrors) {
+        var response:ServiceErrors = ServiceErrors(object);
+        Rx.log.debug("received service error response, terminating processing:\n" + response.errors.toString());
+        Rx.models.errors = new AMFServiceErrors(response);
+        return true;
+      }
       return false;
     }
     

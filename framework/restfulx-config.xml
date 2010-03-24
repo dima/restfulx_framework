@@ -66,6 +66,7 @@
     <class>org.restfulx.services.IVersioningServiceProvider</class>
     <class>org.restfulx.services.ServiceResponder</class>
     <class>org.restfulx.services.UndoRedoResponder</class>
+    <class>org.restfulx.services.AMFServiceErrors</class>
     <class>org.restfulx.services.XMLServiceErrors</class>
     <class>org.restfulx.services.air.AIRServiceProvider</class>
     <class>org.restfulx.services.amf.AMFServiceProvider</class>
@@ -88,6 +89,7 @@
     <class>org.restfulx.utils.RxFileReference</class>
     <class>org.restfulx.utils.RxUtils</class>
     <class>org.restfulx.utils.TypedArray</class>
+    <class>org.restfulx.utils.ServiceErrors</class>
     <class>org.restfulx.utils.UUID</class>
     <class>org.restfulx.validators.ServiceErrorValidator</class>
   </include-classes>
