@@ -70,7 +70,6 @@
     <class>org.restfulx.services.XMLServiceErrors</class>
     <class>org.restfulx.services.air.AIRServiceProvider</class>
     <class>org.restfulx.services.amf.AMFServiceProvider</class>
-    <class>org.restfulx.services.amf.AMFROServiceProvider</class>
     <class>org.restfulx.services.as3http.AS3GAEHTTPServiceProvider</class>
     <class>org.restfulx.services.as3http.AS3JSONHTTPServiceProvider</class>
     <class>org.restfulx.services.as3http.AS3XMLHTTPServiceProvider</class>
