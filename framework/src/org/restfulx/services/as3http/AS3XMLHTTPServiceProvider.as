@@ -287,7 +287,7 @@ package org.restfulx.services.as3http {
     }
     
     protected function addHeadersToHttpRequest(request:HttpRequest):HttpRequest {
-      for (var header:String in Rx.customHttpHeaders) {
+      for each (var header:String in Rx.customHttpHeaders) {
         request.addHeader(header, Rx.customHttpHeaders[header]);
       }
       return request;

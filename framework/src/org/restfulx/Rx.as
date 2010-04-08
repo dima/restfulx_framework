@@ -244,7 +244,7 @@ package org.restfulx {
     /**
      * Stores any extra HTTP headers that needs to be sent to the backend
      */
-    public static var customHttpHeaders:Array;
+    public static var customHttpHeaders:Array = new Array;
     
     /** 
      * Stores current authenticity token.
@@ -475,7 +475,7 @@ package org.restfulx {
       defaultMetadata = null;
       sessionToken = null;
       authenticityToken = null;
-      customHttpHeaders = null;
+      customHttpHeaders = new Array;
       undoredo.clear();
       changes.errors = new RxCollection;
     }
