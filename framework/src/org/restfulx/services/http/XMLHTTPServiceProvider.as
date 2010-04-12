@@ -546,7 +546,11 @@ package org.restfulx.services.http {
     }
     
     protected function decodeResult(result:Object):Object {
-      return result;
+      if(result is String){
+      	return new XML(result);
+      }else{
+      	return result;	
+      }
     }
   }
 }
