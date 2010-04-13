@@ -395,8 +395,7 @@ package org.restfulx.services.http {
       return request;
     }
     
-    protected function invokeURLRequest(request:URLRequest, 
-      responder:IResponder):void {
+    protected function invokeURLRequest(request:URLRequest, esponder:IResponder):void {
       Rx.log.debug("sending request to URL:" + request.url + 
         " with method: " + request.method + " and content:" + 
         ((request.data == null) ? "null" : "\r" + ObjectUtil.toString(request.data)));
@@ -546,9 +545,9 @@ package org.restfulx.services.http {
     }
     
     protected function decodeResult(result:Object):Object {
-      if(result is String){
+      if (result is String) {
       	return new XML(result);
-      }else{
+      } else {
       	return result;	
       }
     }
