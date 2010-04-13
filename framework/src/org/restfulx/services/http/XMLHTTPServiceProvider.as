@@ -395,7 +395,7 @@ package org.restfulx.services.http {
       return request;
     }
     
-    protected function invokeURLRequest(request:URLRequest, esponder:IResponder):void {
+    protected function invokeURLRequest(request:URLRequest, responder:IResponder):void {
       Rx.log.debug("sending request to URL:" + request.url + 
         " with method: " + request.method + " and content:" + 
         ((request.data == null) ? "null" : "\r" + ObjectUtil.toString(request.data)));
