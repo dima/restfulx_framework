@@ -166,11 +166,11 @@ package org.restfulx.controllers {
 	    for each (var model:Class in models) {
 	      pullModels.push(Rx.models.state.types[model]);
 	      var lastPullTimeStamp:String = source.getLastPullTimeStamp(model);
-	      var metadata:Object = {};
+	      var metadata:Object = { };
 	      if (!RxUtils.isEmpty(lastPullTimeStamp)) {
 	        metadata["last_synced"] = lastPullTimeStamp;
 	      }
-	      Rx.models.reload(model, {targetServiceId: destination.id, metadata: metadata});
+	      Rx.models.reload(model, {targetServiceId: destination.id, metadata: metadata, append: true});
 	    }
 	  }
 	  
@@ -238,8 +238,8 @@ package org.restfulx.controllers {
   	      }
   	      if (event.fqn) {
   	        var cached:ModelsCollection = Rx.models.cache.data[event.fqn] as ModelsCollection;
-  	        if (cached.metadata.hasOwnProperty("last_synced")) {
-  	          source.updateLastPullTimeStamp(Rx.models.state.types[event.fqn], cached.metadata["last_synced"]);
+  	        if (cached.metadata.hasOwnProperty("lastSynced")) {
+  	          source.updateLastPullTimeStamp(Rx.models.state.types[event.fqn], cached.metadata["lastSynced"]);
   	        }
   	      }
           if (!pullModels.length) {
