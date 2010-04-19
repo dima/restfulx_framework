@@ -134,6 +134,7 @@ package org.restfulx.controllers {
       var handshake:Object = {command: "subscribe"};
       if (Rx.sessionToken) handshake["session_id"] = Rx.sessionToken;
       if (opts["channels"]) handshake["channels"] = opts["channels"];
+      if (opts["client_id"]) handshake["client_id"] = opts["client_id"]; 
       if (lastMessageId) {
         handshake["last_msg_id"] = lastMessageId;
         handshake["signature"] = currentSignature;
