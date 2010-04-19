@@ -27,6 +27,7 @@ package org.restfulx.services.http {
   import flash.events.DataEvent;
   import flash.events.Event;
   import flash.events.IOErrorEvent;
+  import flash.events.ProgressEvent;
   import flash.net.URLLoader;
   import flash.net.URLRequest;
   import flash.net.URLRequestHeader;
@@ -541,7 +542,11 @@ package org.restfulx.services.http {
     }
     
     protected function getURLLoader():URLLoader {
-      return new URLLoader;
+      var loader:URLLoader = new URLLoader;
+      loader.addEventListener(ProgressEvent.PROGRESS, function(event:ProgressEvent):void {
+        Rx.models.dispatchEvent(event);
+      });
+      return loader;
     }
     
     protected function decodeResult(result:Object):Object {

@@ -22,6 +22,7 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.services.amf {
+  import flash.events.ProgressEvent;
   import flash.net.URLLoader;
   import flash.net.URLLoaderDataFormat;
   import flash.utils.ByteArray;
@@ -111,6 +112,9 @@ package org.restfulx.services.amf {
     protected override function getURLLoader():URLLoader {
       var loader:URLLoader = new URLLoader();
       loader.dataFormat = URLLoaderDataFormat.BINARY;
+      loader.addEventListener(ProgressEvent.PROGRESS, function(event:ProgressEvent):void {
+        Rx.models.dispatchEvent(event);
+      });
       return loader;
     }
     
