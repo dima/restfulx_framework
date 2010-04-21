@@ -19,7 +19,7 @@ Here's some of the things you can do with *RestfulX*:
   that use _ActiveRecord_, _DataMapper_, _CouchRest_, _ActiveCouch_ and so on.
 
 * *Communicate* between your Flex/AIR Rich Internet Application and service providers 
-  using either _XML_ or _JSON_.
+  using _AMF_, _XML_ or _JSON_.
   
 * *Persist* your data directly in Adobe AIR _SQLite_ database or _CouchDB_ 
   without any additional infrastructure or intermediate servers.
@@ -33,7 +33,7 @@ Here's some of the things you can do with *RestfulX*:
 
 For details on how to get started with the RestfulX framework refer to:
     
-    http://restfulx.org
+    http://restfulx.github.com
     
 == Getting Involved
 
@@ -47,4 +47,4 @@ Get involved with the community:
     
 == License
 
-Copyright (c) 2008-2009 Dima Berastau and Contributors, released under MIT License
+Copyright (c) 2008-2010 Dima Berastau and Contributors, released under MIT License

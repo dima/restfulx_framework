@@ -23,6 +23,7 @@
  ******************************************************************************/
 package org.restfulx.services.amf {
   import flash.events.ProgressEvent;
+  import flash.net.ObjectEncoding;
   import flash.net.URLLoader;
   import flash.net.URLLoaderDataFormat;
   import flash.utils.ByteArray;
@@ -119,7 +120,11 @@ package org.restfulx.services.amf {
     }
     
     protected override function decodeResult(result:Object):Object {
-      return (ByteArray(result).readObject());
+      if (result is ByteArray) {
+        return (ByteArray(result).readObject());
+      } else {
+        return result;
+      }
     }
   }
 }

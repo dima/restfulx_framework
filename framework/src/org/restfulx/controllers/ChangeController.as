@@ -39,6 +39,7 @@ package org.restfulx.controllers {
   import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.ISyncingServiceProvider;
   import org.restfulx.utils.RxUtils;
+  import org.restfulx.utils.TypedArray;
   
   [Bindable]
   /**
@@ -187,7 +188,9 @@ package org.restfulx.controllers {
 	  }
 	  
 	  protected function onDirtyChanges(result:Object, token:Object = null):void {
-	    pushCount += (result as Array).length;
+	    var data:TypedArray = result as TypedArray;
+	    
+	    pushCount += data.source.length;
 	    
 	    // no undo-redo for synchronization, and the stack is lost after undo-redo
 	    if (pushCount) {
@@ -198,8 +201,8 @@ package org.restfulx.controllers {
 	        Rx.enableUndoRedo = false;
 	      }
 	    }
-	    
-	    for each (var instance:Object in result as Array) {
+	    	    
+	    for each (var instance:Object in data.source) {
 	      if (instance["rev"] == 0) instance["rev"] = "";
 	      switch (instance["sync"]) {
 	        case DELETE:

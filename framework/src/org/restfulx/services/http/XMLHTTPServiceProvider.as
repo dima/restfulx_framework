@@ -287,7 +287,7 @@ package org.restfulx.services.http {
       if (urlParams != "") {
         request.url += "?" + urlParams;  
       }
-      
+            
       file.reference.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, function(event:DataEvent):void {
         var result:Object = decodeResult(event.data);
         if (!hasErrors(result)) {       
