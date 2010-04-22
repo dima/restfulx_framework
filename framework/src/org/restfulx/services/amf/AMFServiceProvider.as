@@ -123,7 +123,7 @@ package org.restfulx.services.amf {
       if (result is ByteArray) {
         return (ByteArray(result).readObject());
       } else {
-        return result;
+        throw new Error("received response which is not a ByteArray:\n" + ObjectUtil.toString(result));
       }
     }
   }
