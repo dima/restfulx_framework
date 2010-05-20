@@ -155,7 +155,26 @@ package org.restfulx.controllers {
 	   * Pulls changes from destination service provider and passes them to the source service
 	   * provider
 	   * 
-	   * @params list of models to pull, if non provided all models will be pulled
+	   * @params list of models to pull, if non provided all models will be pulled, alternatively a list of objects that
+	   *  specify type and metadata for the pull request
+	   * 
+     * @example When you want to pull specific models with no metadata use the following syntax
+     *  
+     * <listing version="3.0">
+     *   Rx.changes.pull(Model1, Model2, Model3)
+     * </listing>
+     *  
+     * @example When you want to pull all the models do this
+     *  
+     * <listing version="3.0">
+     *   Rx.changes.pull()
+     * </listing>
+     *  
+     * @example When you want to specify extra metadata to send with the pull request for each model do this
+     *  
+     * <listing version="3.0">
+     *   Rx.changes.pull({type: Type1, metadata: {page:1, limit: 500}}, {type: Type2, metadata: {page: 1, limit:500}});
+     * </listing>
 	   */
 	  public function pull(... models):void {
       if (!Rx.enableSync || source == null || destination == null) {
@@ -164,14 +183,20 @@ package org.restfulx.controllers {
 	    if (!models.length) models = Rx.models.state.models;
 	    dispatchEvent(new PullStartEvent);
 	    CursorManager.setBusyCursor();
-	    for each (var model:Class in models) {
-	      pullModels.push(Rx.models.state.types[model]);
-	      var lastPullTimeStamp:String = source.getLastPullTimeStamp(model);
-	      var metadata:Object = { };
+	    for each (var model:Object in models) {
+	      var metadata:Object = (Rx.defaultMetadata != null) ? Rx.defaultMetadata : {};
+	      var type:Class = (model is Class) ? model as Class : model["type"];
+	      
+	      if (model.hasOwnProperty("metadata") && model["metadata"] != null) {
+	        metadata = model["metadata"];
+	      }
+        
+	      pullModels.push(Rx.models.state.types[type]);
+	      var lastPullTimeStamp:String = source.getLastPullTimeStamp(type);
 	      if (!RxUtils.isEmpty(lastPullTimeStamp)) {
 	        metadata["last_synced"] = lastPullTimeStamp;
 	      }
-	      Rx.models.reload(model, {targetServiceId: destination.id, metadata: metadata, append: true});
+	      Rx.models.reload(type, {targetServiceId: destination.id, metadata: metadata, append: true});	        
 	    }
 	  }
 	  
