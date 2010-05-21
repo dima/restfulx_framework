@@ -26,6 +26,8 @@ package org.restfulx.services.air {
   import flash.data.SQLMode;
   import flash.data.SQLStatement;
   import flash.events.TimerEvent;
+  import flash.events.SQLEvent;
+  import flash.events.SQLErrorEvent;
   import flash.filesystem.File;
   import flash.utils.Dictionary;
   import flash.utils.Timer;
@@ -36,6 +38,7 @@ package org.restfulx.services.air {
   import mx.rpc.AsyncToken;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
+  import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
   import org.restfulx.collections.ModelsCollection;
@@ -194,18 +197,20 @@ package org.restfulx.services.air {
     public function show(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:SQLStatement = getSQLStatement(sql[fqn]["select"] + " and id = '" + object["id"] + "'");
-      try {
-        Rx.log.debug("show:executing SQL:" + statement.text);
-        statement.execute();
-      
-        var vo:Object = statement.getResult().data[0];
+
+      Rx.log.debug("show:executing SQL:" + statement.text);
+
+      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        var vo:Object = (event.target as SQLStatement).getResult().data[0];
         vo["clazz"] = fqn.split("::")[1];
         object = unmarshall(vo);
-      
-        invokeResponderResult(responder, object);
-      } catch (e:Error) {
-        if (responder) responder.fault(e);
-      }
+
+        invokeResponderResult(responder, object);       
+      });
+      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        if (responder) responder.fault(event.error);
+      });
+      statement.execute();
     }
     
     /**
@@ -276,8 +281,14 @@ package org.restfulx.services.air {
         RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
 
         Rx.log.debug("create:executing SQL:" + statement.text);
+        
+        statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+          show(object, responder, metadata, nestedBy);
+        });
+        statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+          if (responder) responder.fault(event.error);
+        });
         statement.execute();
-        show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
         if (responder) responder.fault(e);
       }
@@ -335,8 +346,14 @@ package org.restfulx.services.air {
         RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
         
         Rx.log.debug("update:executing SQL:" + sqlStatement.text);
+        
+        sqlStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+          show(object, responder, metadata, nestedBy);
+        });
+        sqlStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+          if (responder) responder.fault(event.error);
+        });
         sqlStatement.execute();
-        show(object, responder, metadata, nestedBy);
       } catch (e:Error) {
         if (responder) responder.fault(e);
       }
@@ -373,21 +390,21 @@ package org.restfulx.services.air {
       
       var statement:SQLStatement = getSQLStatement(sql[fqn]["dirty"]);  
       
-      try {
-        Rx.log.debug("dirty:executing SQL:" + statement.text);
-        statement.execute();
-        
+      Rx.log.debug("dirty:executing SQL:" + statement.text);
+      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
         var result:Object = new TypedArray;
-        var data:Array = statement.getResult().data;
+        var data:Array = (event.target as SQLStatement).getResult().data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           result = unmarshall(data);
         }
         
         if (responder) responder.result(result);
-      } catch (e:Error) {
-        if (responder) responder.fault(e);
-      }    
+      });
+      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        if (responder) responder.fault(event.error);
+      });
+      statement.execute();   
     }
     
     /**
@@ -399,13 +416,17 @@ package org.restfulx.services.air {
       var statement:String = sql[fqn]["delete"];
       statement = statement.replace("{id}", object["id"]);
       statement = statement.replace("{rev}", object["rev"]);
-      try {
-        Rx.log.debug("purge:executing SQL:" + statement);
-        getSQLStatement(statement).execute();
+      
+      Rx.log.debug("purge:executing SQL:" + statement);
+      
+      var sqlStatement:SQLStatement = getSQLStatement(statement);
+      sqlStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
         invokeResponderResult(responder, object);
-      } catch (e:Error) {
-        if (responder) responder.fault(e);
-      }
+      });
+      sqlStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        if (responder) responder.fault(event.error);
+      });
+      sqlStatement.execute();
     }  
 	  
     /**
@@ -420,24 +441,27 @@ package org.restfulx.services.air {
      * @inheritDoc
      * @see org.restfulx.services.ISyncingServiceProvider#getLastPullTimeStamp
      */
-    public function getLastPullTimeStamp(object:Object):String {
+    public function getLastPullTimeStamp(object:Object, responder:IResponder):void {
       var fqn:String = getQualifiedClassName(object);
       
-      var statement:SQLStatement = getSQLStatement("SELECT last_server_pull FROM sync_metadata WHERE id = :id");
-      statement.parameters[":id"] = fqn;
-      try {
-        Rx.log.debug("getting last pull timestamp:executing SQL:" + statement.text);
-        statement.execute();
-        
-        var data:Array = statement.getResult().data;      
-        if (data && data.length > 0) {
-          return data[0]["last_server_pull"];
-        }
-      } catch (e:Error) {
-        Rx.log.error("failed to get last_server_pull timestamp from the database: " + e);
-      }
+      var statement:SQLStatement = getSQLStatement("SELECT last_server_pull FROM sync_metadata WHERE id = '" + fqn + "'");
       
-      return null;
+      Rx.log.debug("getting last pull timestamp:executing SQL:" + statement.text);      
+      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        var result:Object = {};
+        result["type"] = object;
+        var data:Array = (event.target as SQLStatement).getResult().data;
+        if (data && data.length > 0) {
+          Rx.log.debug("data: " + ObjectUtil.toString(data));
+          result["timestamp"] = data[0]["last_server_pull"];
+        }
+        invokeResponderResult(responder, result);
+      });
+      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        Rx.log.error("failed to get last_server_pull timestamp from the database: " + event.error);
+        if (responder) responder.fault(event.error);
+      });
+      statement.execute();
     }
     
     /**
@@ -451,13 +475,13 @@ package org.restfulx.services.air {
         getSQLStatement("INSERT OR REPLACE INTO sync_metadata(id, last_server_pull) VALUES(:id, :last_server_pull)");
       statement.parameters[":id"] = fqn;
       statement.parameters[":last_server_pull"] = value;
-      try {
-        Rx.log.debug("updating last pull timestamp:executing SQL:" + statement.text);
-        statement.execute();
-      } catch (e:Error) {
-        Rx.log.error("failed to update last_server_pull timestamp in the database: " + e);
-        throw e;
-      }
+      
+      Rx.log.debug("updating last pull timestamp:executing SQL:" + statement.text);
+      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        Rx.log.error("failed to update last_server_pull timestamp in the database: " + event.error);
+        throw event.error;
+      });
+      statement.execute();
     }
 
     protected function getSQLType(node:XML):String {
@@ -484,15 +508,16 @@ package org.restfulx.services.air {
       sqlStatement.parameters[":sync"] = syncStatus;
       sqlStatement.parameters[":rev"] = object["rev"];
       
-      try {
-        Rx.log.debug("updateSyncStatus:executing SQL:" + sqlStatement.text);
-        sqlStatement.execute();
+      Rx.log.debug("updateSyncStatus:executing SQL:" + sqlStatement.text);
+      sqlStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
         object["sync"] = syncStatus;
         object["xrev"] = null;
         invokeResponderResult(responder, object);
-      } catch (e:Error) {
-        if (responder) responder.fault(e);
-      }
+      });
+      sqlStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        if (responder) responder.fault(event.error);
+      });
+      sqlStatement.execute();
     }
     
     private function extractMetadata(model:Object):void {
@@ -567,9 +592,9 @@ package org.restfulx.services.air {
     
     protected function initializeConnection(databaseFile:File):void {
       if (Rx.airEncryptionKey != null) {
-        connection.open(databaseFile, SQLMode.CREATE, false, 1024, Rx.airEncryptionKey);
+        connection.openAsync(databaseFile, SQLMode.CREATE, null, false, 1024, Rx.airEncryptionKey);
       } else {
-        connection.open(databaseFile);
+        connection.openAsync(databaseFile);
       }
       getSQLStatement("CREATE TABLE IF NOT EXISTS sync_metadata(id TEXT, last_server_pull TEXT, PRIMARY KEY(id))").execute();
       for (var modelName:String in sql) {
@@ -608,12 +633,10 @@ package org.restfulx.services.air {
       var fqn:String = query['fqn'];
       var clazz:Class = getDefinitionByName(fqn) as Class;
               
-      try {
-        Rx.log.debug("index:executing SQL:" + statement.text);
-        statement.execute();
-        
-        var result:Object;
-        var data:Array = statement.getResult().data;
+      Rx.log.debug("index:executing SQL:" + statement.text);
+      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        var result:Object = null;
+        var data:Array = (event.target as SQLStatement).getResult().data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           result = unmarshall(data);
@@ -624,10 +647,12 @@ package org.restfulx.services.air {
         
         delete indexing[fqn];
         invokeResponderResult(token.responders[0], result);
-      } catch (e:Error) {
+      });
+      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
         delete indexing[fqn];
-        IResponder(token.responders[0]).fault(e);
-      }
+        IResponder(token.responders[0]).fault(event.error);
+      });
+      statement.execute();
     }
   }
 }

@@ -77,7 +77,7 @@ package org.restfulx.services {
      *
      * @param object object to get timestamp for (typically a model class)
      */
-    function getLastPullTimeStamp(object:Object):String;
+    function getLastPullTimeStamp(object:Object, responder:IResponder):void;
     
     /**
      * Updates the last time (timestamp originates on the server) a sync was performed with the central server

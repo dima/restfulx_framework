@@ -26,6 +26,8 @@ package org.restfulx.controllers {
   
   import mx.collections.ItemResponder;
   import mx.managers.CursorManager;
+  import mx.rpc.events.ResultEvent;
+  import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
   import org.restfulx.collections.RxCollection;
@@ -40,7 +42,7 @@ package org.restfulx.controllers {
   import org.restfulx.services.ISyncingServiceProvider;
   import org.restfulx.utils.RxUtils;
   import org.restfulx.utils.TypedArray;
-  
+    
   [Bindable]
   /**
    *  If Synchronization is enabled, Change controller can be hooked up to 
@@ -185,19 +187,30 @@ package org.restfulx.controllers {
 	    CursorManager.setBusyCursor();
 	    for each (var model:Object in models) {
 	      var metadata:Object = (Rx.defaultMetadata != null) ? Rx.defaultMetadata : {};
-	      var type:Class = (model is Class) ? model as Class : model["type"];
+	      var type:Class = (model is Class) ? model as Class : model["type"] as Class;
 	      
 	      if (model.hasOwnProperty("metadata") && model["metadata"] != null) {
 	        metadata = model["metadata"];
 	      }
         
 	      pullModels.push(Rx.models.state.types[type]);
-	      var lastPullTimeStamp:String = source.getLastPullTimeStamp(type);
-	      if (!RxUtils.isEmpty(lastPullTimeStamp)) {
-	        metadata["last_synced"] = lastPullTimeStamp;
-	      }
-	      Rx.models.reload(type, {targetServiceId: destination.id, metadata: metadata, append: true});	        
+	      source.getLastPullTimeStamp(type, 
+	        new ItemResponder(function(result:ResultEvent, token:Object = null):void {
+            onGetLastPullTimeStamp(result.result, metadata);
+	        }, function(error:Object, token:Object = null):void {
+	          Rx.log.debug("no timestamp available due to: " + error);
+	          throw new Error(error);
+	        }));
 	    }
+	  }
+	  
+	  private function onGetLastPullTimeStamp(result:Object, metadata:Object):void {
+	    if (result.hasOwnProperty("timestamp") && !RxUtils.isEmpty(result["timestamp"])) {
+	      metadata["last_synced"] = result["timestamp"];
+	    }
+	    Rx.log.debug("sync metadata: " + ObjectUtil.toString(metadata));
+      Rx.log.debug("responder pulling " + Rx.models.state.types[result["type"]]);
+      Rx.models.reload(result["type"], {targetServiceId: destination.id, metadata: metadata, append: true});
 	  }
 	  
 	  /**

@@ -106,7 +106,7 @@ package org.restfulx.services.amf {
      * @see org.restfulx.services.IServiceProvider#unmarshall
      */
     public override function unmarshall(object:Object, disconnected:Boolean = false, defaultType:String = null):Object {
-      trace(ObjectUtil.toString(object));
+      Rx.log.debug(ObjectUtil.toString(object));
       return serializer.unmarshall(object, disconnected, defaultType);
     }
     
