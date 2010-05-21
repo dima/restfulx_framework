@@ -58,6 +58,9 @@ package org.restfulx.services.air {
     /** service id */
     public static const ID:int = ServicesController.generateId();
     
+    /** indicates if the local database has been set up and is ready to be modified/queried */
+    public var initialized:Boolean;
+    
     private static var types:Object = {
       "int" : "INTEGER",
       "uint" : "INTEGER",
@@ -79,7 +82,7 @@ package org.restfulx.services.air {
     private var indexing:Dictionary;
     
     private var timer:Timer;
-
+    
     /**
      * @params dbFile target directory for AIR SQLite database file. If you want to use
      *  the default target directory and just want to configure the name Rx.airDatabaseName
@@ -591,19 +594,33 @@ package org.restfulx.services.air {
     }
     
     protected function initializeConnection(databaseFile:File):void {
+      connection.addEventListener(SQLEvent.OPEN, function(event:SQLEvent):void {
+        var sqlStatement:SQLStatement = getSQLStatement("CREATE TABLE IF NOT EXISTS sync_metadata(id TEXT, last_server_pull TEXT, PRIMARY KEY(id))");
+        sqlStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+          var total:int = state.models.length;
+          for (var modelName:String in sql) {
+            var statement:SQLStatement = getSQLStatement(sql[modelName]["create"]);
+            statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+              total--;
+              if (total == 0) initialized = true;
+            });
+            statement.execute();
+            getSQLStatement("INSERT OR REPLACE INTO sync_metadata(id) values('" + modelName + "')").execute();
+          }
+        });
+        sqlStatement.execute();
+      });
+      connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        Rx.log.error("failed to open connection to the database: " + event.error);
+        throw new Error("failed to open connection to the database: " + event.error);
+      });
       if (Rx.airEncryptionKey != null) {
         connection.openAsync(databaseFile, SQLMode.CREATE, null, false, 1024, Rx.airEncryptionKey);
       } else {
         connection.openAsync(databaseFile);
       }
-      getSQLStatement("CREATE TABLE IF NOT EXISTS sync_metadata(id TEXT, last_server_pull TEXT, PRIMARY KEY(id))").execute();
-      for (var modelName:String in sql) {
-        var statement:SQLStatement = getSQLStatement(sql[modelName]["create"]);
-        statement.execute();
-        getSQLStatement("INSERT OR REPLACE INTO sync_metadata(id) values('" + modelName + "')").execute();
-      }
     }
-    
+        
     protected function getSQLStatement(statement:String):SQLStatement {
       var sqlStatement:SQLStatement = new SQLStatement;
       sqlStatement.sqlConnection = connection;
@@ -620,6 +637,8 @@ package org.restfulx.services.air {
     }
         
     private function executePendindIndex(event:TimerEvent):void {
+      if (!initialized) return;
+      
       if (pending.length == 0) {
         timer.stop();
         timer = null;

@@ -23,6 +23,11 @@
  ******************************************************************************/
 package org.restfulx.services.mock {
   import flash.filesystem.File;
+  import flash.data.SQLConnection;
+  import flash.data.SQLMode;
+  import flash.data.SQLStatement;
+  import flash.events.SQLEvent;
+  import flash.events.SQLErrorEvent;
   
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
@@ -48,6 +53,34 @@ package org.restfulx.services.mock {
       }
       
       super(dbFile);
+    }
+    
+    protected override function initializeConnection(databaseFile:File):void {
+      connection.addEventListener(SQLEvent.OPEN, function(event:SQLEvent):void {
+        var sqlStatement:SQLStatement = getSQLStatement("CREATE TABLE IF NOT EXISTS sync_metadata(id TEXT, last_server_pull TEXT, PRIMARY KEY(id))");
+        sqlStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+          var total:int = state.models.length;
+          for (var modelName:String in sql) {
+            var statement:SQLStatement = getSQLStatement(sql[modelName]["create"]);
+            statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+              total--;
+              if (total == 0) initialized = true;
+            });
+            statement.execute();
+            getSQLStatement("INSERT OR REPLACE INTO sync_metadata(id) values('" + modelName + "')").execute();
+          }
+        });
+        sqlStatement.execute();
+      });
+      connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        Rx.log.error("failed to open connection to the database: " + event.error);
+        throw new Error("failed to open connection to the database: " + event.error);
+      });
+      if (Rx.airEncryptionKey != null) {
+        connection.open(databaseFile, SQLMode.CREATE, false, 1024, Rx.airEncryptionKey);
+      } else {
+        connection.open(databaseFile);
+      }
     }
     
     public function loadTestData(dataSets:Object):void {

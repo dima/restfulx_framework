@@ -24,6 +24,9 @@
 package restfulx.test.cases.integration {
   import flexunit.framework.TestCase;
   
+  import mx.collections.ItemResponder;
+  import mx.rpc.events.ResultEvent;
+  
   import org.restfulx.Rx;
   import org.restfulx.services.ISyncingServiceProvider;
   import org.restfulx.services.air.AIRServiceProvider;
@@ -76,15 +79,25 @@ package restfulx.test.cases.integration {
     
     public function testGetLastPullTimeStamp():void {
       var syncingProvider:ISyncingServiceProvider = Rx.services.getServiceProvider(AIRServiceProvider.ID) as ISyncingServiceProvider;
-      assertNull(syncingProvider.getLastPullTimeStamp(Project));
+      
+      syncingProvider.getLastPullTimeStamp(Project, 
+        new ItemResponder(function(result:ResultEvent, token:Object = null):void {
+          assertNull(result.result["timestamp"]);
+        }, function(error:Object, token:Object = null):void {
+          throw new Error(error);
+        }));
     }
     
     public function testUpdateLastPullTimeStamp():void {
       var syncingProvider:ISyncingServiceProvider = Rx.services.getServiceProvider(AIRServiceProvider.ID) as ISyncingServiceProvider;
       syncingProvider.updateLastPullTimeStamp(Project, "1262222622");
       
-      var lastPullTime:String = syncingProvider.getLastPullTimeStamp(Project);
-      assertEquals("1262222622", lastPullTime);
+      syncingProvider.getLastPullTimeStamp(Project, 
+        new ItemResponder(function(result:ResultEvent, token:Object = null):void {
+          assertEquals("1262222622", result.result["timestamp"]);
+        }, function(error:Object, token:Object = null):void {
+          throw new Error(error);
+        }));
     }
     
     private function onCreateIgnoredSuccess(result:IgnoredProperty):void {

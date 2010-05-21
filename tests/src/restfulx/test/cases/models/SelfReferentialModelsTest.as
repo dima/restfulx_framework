@@ -29,6 +29,8 @@ package restfulx.test.cases.models {
   
   import restfulx.test.RxTestCase;
   import restfulx.test.models.FacebookUser;
+  
+  import mx.utils.ObjectUtil;
 
   public class SelfReferentialModelsTest extends RxTestCase {
     public function SelfReferentialModelsTest(methodName:String, serviceProviderId:int) {
@@ -45,7 +47,7 @@ package restfulx.test.cases.models {
       
       var firstUser:FacebookUser = facebookUsers.withId("845196711") as FacebookUser;
       assertEquals(4, facebookUsers.length);
-      assertNull(firstUser.randomFriends);
+      assertEquals(0, firstUser.randomFriends.length);
       assertNull(firstUser.friend);
       assertEquals(2, firstUser.friends.length);
       assertEquals("FacebookUser1NameString", firstUser.name);
