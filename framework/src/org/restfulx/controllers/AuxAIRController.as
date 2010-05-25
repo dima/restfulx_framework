@@ -51,6 +51,8 @@ package org.restfulx.controllers {
 
     protected var connection:SQLConnection;
     
+    protected var queue:Array;
+    
     /** indicates if the local database has been set up and is ready to be modified/queried */
     public var initialized:Boolean;
     
@@ -70,7 +72,8 @@ package org.restfulx.controllers {
         if (optsOrOnResult.hasOwnProperty("onFault")) faultHandler = optsOrOnResult["onFault"];
       }
 
-      this.connection = new SQLConnection;
+      connection = new SQLConnection;
+      queue = new Array;
       
       var databaseName:String = Rx.airDatabaseName;
       var targetFile:File = File.userDirectory.resolvePath(databaseName + ".db");
@@ -208,9 +211,11 @@ package org.restfulx.controllers {
     protected function initializeConnection(databaseFile:File):void {
       connection.addEventListener(SQLEvent.OPEN, function(event:SQLEvent):void {
         initialized = true;
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         dispatchEvent(event);
       });
       connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         dispatchEvent(event);
       });
       if (Rx.airEncryptionKey != null) {
@@ -218,13 +223,6 @@ package org.restfulx.controllers {
       } else {
         connection.openAsync(databaseFile);
       }
-    }
-
-    protected function getSQLStatement(statement:String):SQLStatement {
-      var sqlStatement:SQLStatement = new SQLStatement;
-      sqlStatement.sqlConnection = connection;
-      sqlStatement.text = statement;
-      return sqlStatement;     
     }
 
     protected function unmarshall(data:Object):Object {
@@ -291,15 +289,16 @@ package org.restfulx.controllers {
       }
       
       statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
-        var result:Object;
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        var result:Object = null;
         var data:Array = statement.getResult().data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           if (includes) {
-            processIncludedRelationships(includes, fqn, data); 
+            processIncludedRelationships(includes, fqn, data, responder); 
+          } else {
+            result = data;
           }
-          result = data;
-
         } else {
           // nothing in the DB
           result = new Array;
@@ -307,14 +306,42 @@ package org.restfulx.controllers {
         invokeResponderResult(responder, result);    
       });
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         if (responder) responder.fault(event.error);
       });
       
       Rx.log.debug("executing SQL:" + statement.text);
-      statement.execute();
+      executeSQLStatement(statement);
+    }
+    
+    protected function executeSQLStatement(statement:SQLStatement, pageSize:int = -1):void {
+      if (!initialized) {
+        queueSQLStatement(statement, pageSize);
+      } else {
+        statement.execute(pageSize);
+      }
+    }
+    
+    protected function executePendingSQLStatements():void {
+      for each (var statement:Object in queue) {
+        statement["statement"].execute(statement["pageSize"]);
+      }
+    }
+    
+    protected function queueSQLStatement(statement:SQLStatement, pageSize:int = -1):void {
+      queue.push({statement: statement, pageSize: pageSize});
     }
         
-    protected function processIncludedRelationships(relationships:Array, fqn:String, data:Array):void {
+    protected function getSQLStatement(statement:String):SQLStatement {
+      var sqlStatement:SQLStatement = new SQLStatement;
+      sqlStatement.sqlConnection = connection;
+      sqlStatement.text = statement;
+      return sqlStatement;     
+    }
+    
+    protected function processIncludedRelationships(relationships:Array, fqn:String, data:Array, responder:IResponder = null):void {
+      var total:int = relationships.length;
+      var count:int = 0;
       for each (var relationship:String in relationships) {
         var target:String = Rx.models.state.refs[fqn][relationship]["type"];
         var relType:String = Rx.models.state.refs[fqn][relationship]["relType"];
@@ -344,18 +371,24 @@ package org.restfulx.controllers {
             }
 
             Rx.log.debug("executing SQL:" + statement.text);
+            statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+              event.currentTarget.removeEventListener(event.type, arguments.callee);
+              var result:Array = (event.target as SQLStatement).getResult().data;
+              if (result && result.length > 0) {
+                result[0]["clazz"] = target.split("::")[1];
+              }
+
+              if (relType == "HasMany") {
+                item[relationship] = result;
+              } else if (result && result.length > 0) {
+                item[relationship] = result[0];
+              }
+              count++;
+              if (total == count) {
+                invokeResponderResult(responder, data);
+              }
+            });
             statement.execute();
-            
-            var result:Array = statement.getResult().data;
-            if (result && result.length > 0) {
-              result[0]["clazz"] = target.split("::")[1];
-            }
-            
-            if (relType == "HasMany") {
-              item[relationship] = result;
-            } else if (result && result.length > 0) {
-              item[relationship] = result[0];
-            }
           }
         }
       }

@@ -25,6 +25,7 @@ package org.restfulx.services.air {
   import flash.data.SQLConnection;
   import flash.data.SQLMode;
   import flash.data.SQLStatement;
+  import flash.data.SQLResult;
   import flash.events.TimerEvent;
   import flash.events.SQLEvent;
   import flash.events.SQLErrorEvent;
@@ -77,11 +78,7 @@ package org.restfulx.services.air {
         
     protected var connection:SQLConnection;
     
-    private var pending:Array;
-    
-    private var indexing:Dictionary;
-    
-    private var timer:Timer;
+    protected var queue:Array;
     
     /**
      * @params dbFile target directory for AIR SQLite database file. If you want to use
@@ -97,8 +94,7 @@ package org.restfulx.services.air {
       
       state = Rx.models.state;
       
-      pending = new Array;
-      indexing = new Dictionary;
+      queue = new Array;
       sql = new Dictionary;
       connection = new SQLConnection;
       
@@ -162,7 +158,6 @@ package org.restfulx.services.air {
      */
     public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = Rx.models.state.types[clazz];
-      if (indexing[fqn]) return;
       
       var queryText:String = sql[fqn]["select"] + " AND ";
       if (metadata != null && metadata.hasOwnProperty("search") && metadata.hasOwnProperty("category")) {
@@ -173,6 +168,7 @@ package org.restfulx.services.air {
           delete metadata['search'];
         }
       }
+      
       for (var prop:String in metadata) {
         queryText += RxUtils.toSnakeCase(prop) + " LIKE '%" + metadata[prop] + "%' AND ";
       }
@@ -181,16 +177,32 @@ package org.restfulx.services.air {
 
       var statement:SQLStatement = getSQLStatement(queryText);
       
-      var token:AsyncToken = new AsyncToken(null);
-      token.addResponder(responder);
-      var query:Object = {token:token, fqn:fqn, statement:statement};
-      pending.push(query);
-      
-      if (!timer) {
-        timer = new Timer(1);
-        timer.addEventListener(TimerEvent.TIMER, executePendindIndex);
-        timer.start();
-      }
+      Rx.log.debug("index:executing SQL:" + statement.text);
+      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        var result:Object = null;
+        var sqlResult:SQLResult = (event.target as SQLStatement).getResult();
+        var data:Array = sqlResult.data;
+        if (data && data.length > 0) {
+          data[0]["clazz"] = fqn.split("::")[1];
+          result = unmarshall(data);
+        } else {
+          // nothing in the DB
+          result = new Array;
+        }
+        
+        if (!sqlResult.complete) {
+          statement.next(Rx.defaultPageSize);
+        } else {
+          event.currentTarget.removeEventListener(event.type, arguments.callee);
+        }
+        
+        invokeResponderResult(responder, result);
+      });
+      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        IResponder(responder).fault(event.error);
+      });
+      executeSQLStatement(statement, Rx.defaultPageSize);
     }
 
     /**
@@ -204,6 +216,7 @@ package org.restfulx.services.air {
       Rx.log.debug("show:executing SQL:" + statement.text);
 
       statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         var vo:Object = (event.target as SQLStatement).getResult().data[0];
         vo["clazz"] = fqn.split("::")[1];
         object = unmarshall(vo);
@@ -211,9 +224,10 @@ package org.restfulx.services.air {
         invokeResponderResult(responder, object);       
       });
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         if (responder) responder.fault(event.error);
       });
-      statement.execute();
+      executeSQLStatement(statement);
     }
     
     /**
@@ -286,12 +300,14 @@ package org.restfulx.services.air {
         Rx.log.debug("create:executing SQL:" + statement.text);
         
         statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+          event.currentTarget.removeEventListener(event.type, arguments.callee);
           show(object, responder, metadata, nestedBy);
         });
         statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+          event.currentTarget.removeEventListener(event.type, arguments.callee);
           if (responder) responder.fault(event.error);
         });
-        statement.execute();
+        executeSQLStatement(statement);
       } catch (e:Error) {
         if (responder) responder.fault(e);
       }
@@ -351,12 +367,14 @@ package org.restfulx.services.air {
         Rx.log.debug("update:executing SQL:" + sqlStatement.text);
         
         sqlStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+          event.currentTarget.removeEventListener(event.type, arguments.callee);
           show(object, responder, metadata, nestedBy);
         });
         sqlStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+          event.currentTarget.removeEventListener(event.type, arguments.callee);
           if (responder) responder.fault(event.error);
         });
-        sqlStatement.execute();
+        executeSQLStatement(sqlStatement);
       } catch (e:Error) {
         if (responder) responder.fault(e);
       }
@@ -395,6 +413,7 @@ package org.restfulx.services.air {
       
       Rx.log.debug("dirty:executing SQL:" + statement.text);
       statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         var result:Object = new TypedArray;
         var data:Array = (event.target as SQLStatement).getResult().data;
         if (data && data.length > 0) {
@@ -405,9 +424,10 @@ package org.restfulx.services.air {
         if (responder) responder.result(result);
       });
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         if (responder) responder.fault(event.error);
       });
-      statement.execute();   
+      executeSQLStatement(statement);
     }
     
     /**
@@ -424,12 +444,14 @@ package org.restfulx.services.air {
       
       var sqlStatement:SQLStatement = getSQLStatement(statement);
       sqlStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         invokeResponderResult(responder, object);
       });
       sqlStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         if (responder) responder.fault(event.error);
       });
-      sqlStatement.execute();
+      executeSQLStatement(sqlStatement);
     }  
 	  
     /**
@@ -451,6 +473,7 @@ package org.restfulx.services.air {
       
       Rx.log.debug("getting last pull timestamp:executing SQL:" + statement.text);      
       statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         var result:Object = {};
         result["type"] = object;
         var data:Array = (event.target as SQLStatement).getResult().data;
@@ -461,10 +484,11 @@ package org.restfulx.services.air {
         invokeResponderResult(responder, result);
       });
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         Rx.log.error("failed to get last_server_pull timestamp from the database: " + event.error);
         if (responder) responder.fault(event.error);
       });
-      statement.execute();
+      executeSQLStatement(statement);
     }
     
     /**
@@ -481,10 +505,11 @@ package org.restfulx.services.air {
       
       Rx.log.debug("updating last pull timestamp:executing SQL:" + statement.text);
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         Rx.log.error("failed to update last_server_pull timestamp in the database: " + event.error);
         throw event.error;
       });
-      statement.execute();
+      executeSQLStatement(statement);
     }
 
     protected function getSQLType(node:XML):String {
@@ -513,14 +538,16 @@ package org.restfulx.services.air {
       
       Rx.log.debug("updateSyncStatus:executing SQL:" + sqlStatement.text);
       sqlStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         object["sync"] = syncStatus;
         object["xrev"] = null;
         invokeResponderResult(responder, object);
       });
       sqlStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         if (responder) responder.fault(event.error);
       });
-      sqlStatement.execute();
+      executeSQLStatement(sqlStatement);
     }
     
     private function extractMetadata(model:Object):void {
@@ -595,14 +622,20 @@ package org.restfulx.services.air {
     
     protected function initializeConnection(databaseFile:File):void {
       connection.addEventListener(SQLEvent.OPEN, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         var sqlStatement:SQLStatement = getSQLStatement("CREATE TABLE IF NOT EXISTS sync_metadata(id TEXT, last_server_pull TEXT, PRIMARY KEY(id))");
         sqlStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+          event.currentTarget.removeEventListener(event.type, arguments.callee);
           var total:int = state.models.length;
           for (var modelName:String in sql) {
             var statement:SQLStatement = getSQLStatement(sql[modelName]["create"]);
             statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+              event.currentTarget.removeEventListener(event.type, arguments.callee);
               total--;
-              if (total == 0) initialized = true;
+              if (total == 0) {
+                initialized = true;
+                executePendingSQLStatements();
+              }
             });
             statement.execute();
             getSQLStatement("INSERT OR REPLACE INTO sync_metadata(id) values('" + modelName + "')").execute();
@@ -611,6 +644,7 @@ package org.restfulx.services.air {
         sqlStatement.execute();
       });
       connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         Rx.log.error("failed to open connection to the database: " + event.error);
         throw new Error("failed to open connection to the database: " + event.error);
       });
@@ -619,6 +653,24 @@ package org.restfulx.services.air {
       } else {
         connection.openAsync(databaseFile);
       }
+    }
+    
+    protected function executeSQLStatement(statement:SQLStatement, pageSize:int = -1):void {
+      if (!initialized) {
+        queueSQLStatement(statement, pageSize);
+      } else {
+        statement.execute(pageSize);
+      }
+    }
+    
+    protected function executePendingSQLStatements():void {
+      for each (var statement:Object in queue) {
+        statement["statement"].execute(statement["pageSize"]);
+      }
+    }
+    
+    protected function queueSQLStatement(statement:SQLStatement, pageSize:int = -1):void {
+      queue.push({statement: statement, pageSize: pageSize});
     }
         
     protected function getSQLStatement(statement:String):SQLStatement {
@@ -634,44 +686,6 @@ package org.restfulx.services.air {
       if (responder != null) {
         responder.result(event);
       }
-    }
-        
-    private function executePendindIndex(event:TimerEvent):void {
-      if (!initialized) return;
-      
-      if (pending.length == 0) {
-        timer.stop();
-        timer = null;
-      }
-      
-      var query:Object = pending.shift();
-      if (!query) return;
-        
-      var statement:SQLStatement = SQLStatement(query['statement']);
-      var token:AsyncToken = AsyncToken(query['token']);
-      var fqn:String = query['fqn'];
-      var clazz:Class = getDefinitionByName(fqn) as Class;
-              
-      Rx.log.debug("index:executing SQL:" + statement.text);
-      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
-        var result:Object = null;
-        var data:Array = (event.target as SQLStatement).getResult().data;
-        if (data && data.length > 0) {
-          data[0]["clazz"] = fqn.split("::")[1];
-          result = unmarshall(data);
-        } else {
-          // nothing in the DB
-          result = new Array;
-        }
-        
-        delete indexing[fqn];
-        invokeResponderResult(token.responders[0], result);
-      });
-      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
-        delete indexing[fqn];
-        IResponder(token.responders[0]).fault(event.error);
-      });
-      statement.execute();
     }
   }
 }
