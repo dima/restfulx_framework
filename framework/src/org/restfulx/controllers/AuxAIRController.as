@@ -22,10 +22,13 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.controllers {
-  
   import flash.data.SQLConnection;
   import flash.data.SQLMode;
   import flash.data.SQLStatement;
+  import flash.events.Event;
+  import flash.events.SQLEvent;
+  import flash.events.SQLErrorEvent;
+  import flash.events.EventDispatcher;
   import flash.filesystem.File;
   
   import mx.collections.ItemResponder;
@@ -40,13 +43,16 @@ package org.restfulx.controllers {
    * Custom AIR controller that allows performing arbitrary operations (as 
    * opposed to CRUD on models) against local SQLite database.
    */
-  public class AuxAIRController {
+  public class AuxAIRController extends EventDispatcher {
     
     private var resultHandler:Function;
     private var faultHandler:Function;
     private var cacheHandler:Function;
 
     protected var connection:SQLConnection;
+    
+    /** indicates if the local database has been set up and is ready to be modified/queried */
+    public var initialized:Boolean;
     
     /**
      * @param optsOrOnResult can be either an anonymous object of options or a result handler 
@@ -172,12 +178,45 @@ package org.restfulx.controllers {
       var fqn:String = Rx.models.state.types[clazz];
       execute(fqn, getSQLStatement(sql), includes, unmarshall, cacheBy);
     }
+    
+    /**
+     *  This simply executes any SQL that you pass into it optionally allowing you to unmarshall and cache
+     *  the result
+     *  
+     *  @param clazz RxModel clazz to execute the query on or the options object
+     *  @param sql the SQL query to run
+     *  @param unmarshall boolean indiciating if the result should be unmarshalled into RxModel instances
+     *  @param cacheBy RESTful cache method to simulate
+     *  
+     */
+    public function executeAnySQL(optsOrClazz:Class, sql:String, includes:Array = null, unmarshall:Boolean = false, 
+      cacheBy:String = null):void {
+      var clazz:Class = null;
+      if (optsOrClazz is Class) {
+        clazz = Class(optsOrClazz);
+      } else {
+        if (optsOrClazz.hasOwnProperty("clazz")) clazz = optsOrClazz["clazz"];
+        if (optsOrClazz.hasOwnProperty("sql")) sql = optsOrClazz["sql"];
+        if (optsOrClazz.hasOwnProperty("includes")) includes = optsOrClazz["includes"];
+        if (optsOrClazz.hasOwnProperty("unmarshall")) unmarshall = optsOrClazz["unmarshall"];
+        if (optsOrClazz.hasOwnProperty("cacheBy")) cacheBy = optsOrClazz["cacheBy"];
+      }
+      var fqn:String = Rx.models.state.types[clazz];
+      execute(fqn, getSQLStatement(sql), includes, unmarshall, cacheBy);
+    }
 
     protected function initializeConnection(databaseFile:File):void {
+      connection.addEventListener(SQLEvent.OPEN, function(event:SQLEvent):void {
+        initialized = true;
+        dispatchEvent(event);
+      });
+      connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        dispatchEvent(event);
+      });
       if (Rx.airEncryptionKey != null) {
-        connection.open(databaseFile, SQLMode.CREATE, false, 1024, Rx.airEncryptionKey);
+        connection.openAsync(databaseFile, SQLMode.CREATE, null, false, 1024, Rx.airEncryptionKey);
       } else {
-        connection.open(databaseFile);
+        connection.openAsync(databaseFile);
       }
     }
 
@@ -251,10 +290,7 @@ package org.restfulx.controllers {
         responder = new ItemResponder(defaultResultHandler, defaultFaultHandler);
       }
       
-      try {
-        Rx.log.debug("executing SQL:" + statement.text);
-        statement.execute();
-        
+      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
         var result:Object;
         var data:Array = statement.getResult().data;
         if (data && data.length > 0) {
@@ -268,12 +304,16 @@ package org.restfulx.controllers {
           // nothing in the DB
           result = new Array;
         }
-        invokeResponderResult(responder, result);
-      } catch (e:Error) {
-        responder.fault(e);
-      }
+        invokeResponderResult(responder, result);    
+      });
+      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        if (responder) responder.fault(event.error);
+      });
+      
+      Rx.log.debug("executing SQL:" + statement.text);
+      statement.execute();
     }
-    
+        
     protected function processIncludedRelationships(relationships:Array, fqn:String, data:Array):void {
       for each (var relationship:String in relationships) {
         var target:String = Rx.models.state.refs[fqn][relationship]["type"];
