@@ -340,7 +340,7 @@ package org.restfulx.controllers {
     }
     
     protected function processIncludedRelationships(relationships:Array, fqn:String, data:Array, responder:IResponder = null):void {
-      var total:int = relationships.length;
+      var total:int = relationships.length * data.length;
       var count:int = 0;
       for each (var relationship:String in relationships) {
         var target:String = Rx.models.state.refs[fqn][relationship]["type"];
