@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008-2009 Dima Berastau and Contributors
+ * Copyright (c) 2008-2010 Dima Berastau and Contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -153,8 +153,6 @@ package org.restfulx.services.air {
     }
     
     /**
-     * @inheritDoc
-     *  
      * <p>Supports special handling for the following metadata properties:</p>
      * <ul>
      *  <li><strong>search</strong>: A substring to match on one of the properties of the model idenfied
@@ -168,6 +166,8 @@ package org.restfulx.services.air {
      *  property name that has values 4.</p>
      *  
      * <p><strong>limit</strong> in combination with <strong>offset</strong> can be used to page a large data set.</p>
+     * 
+     * @inheritDoc
      *  
      * @see org.restfulx.services.IServiceProvider#index
      */
@@ -237,26 +237,6 @@ package org.restfulx.services.air {
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
         IResponder(responder).fault(event.error);
-      });
-      executeSQLStatement(statement);
-    }
-    
-    protected function computeMetadada(clazz:Object, data:TypedArray, responder:IResponder):void {
-      var fqn:String = Rx.models.state.types[clazz];
-      
-      var statement:SQLStatement = getSQLStatement(sql[fqn]["count"]);
-      Rx.log.debug("metadata:executing SQL:" + statement.text);
-      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
-        event.currentTarget.removeEventListener(event.type, arguments.callee);
-        var count:int = parseInt((event.target as SQLStatement).getResult().data[0]["count"]);
-        data.metadata = {totalEntries: count};
-        trace(ObjectUtil.toString(data.metadata));
-        invokeResponderResult(responder, data);
-      });
-      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
-        event.currentTarget.removeEventListener(event.type, arguments.callee);
-        Rx.log.error("metadata: failed to execute: " + statement.text + " because of: " + event.error + ", proceeding regardless");
-        invokeResponderResult(responder, data);
       });
       executeSQLStatement(statement);
     }
@@ -578,6 +558,26 @@ package org.restfulx.services.air {
       } else {
         return (result == null) ? types["String"] : result; 
       }
+    }
+    
+    protected function computeMetadada(clazz:Object, data:TypedArray, responder:IResponder):void {
+      var fqn:String = Rx.models.state.types[clazz];
+      
+      var statement:SQLStatement = getSQLStatement(sql[fqn]["count"]);
+      Rx.log.debug("metadata:executing SQL:" + statement.text);
+      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        var count:int = parseInt((event.target as SQLStatement).getResult().data[0]["count"]);
+        data.metadata = {totalEntries: count};
+        trace(ObjectUtil.toString(data.metadata));
+        invokeResponderResult(responder, data);
+      });
+      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        Rx.log.error("metadata: failed to execute: " + statement.text + " because of: " + event.error + ", proceeding regardless");
+        invokeResponderResult(responder, data);
+      });
+      executeSQLStatement(statement);
     }
     
     private function updateSyncStatus(object:Object, responder:IResponder, syncStatus:String = ""):void {

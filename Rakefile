@@ -7,7 +7,7 @@
 # 6. git commit
 # 7. git checkout master
 
-FRAMEWORK_VERSION = "1.2.4"
+FRAMEWORK_VERSION = "1.3.0"
 
 TEST_APP_NAME = 'TestApp.mxml'
 ROOT_DIR = File.dirname(__FILE__)
@@ -43,8 +43,9 @@ task :doc do
     "org.restfulx.events" => "Events dispatched by the framework.",
     "org.restfulx.models" => "Classes used by RX models.",
     "org.restfulx.serializers" => "Serializers provided by the framework, including XML, ValueObject and JSON.",
-    "org.restfulx.services" => "Services provided by the framework including XML-over-HTTP, JSON-over-HTTP, CouchDB and AIR.",
+    "org.restfulx.services" => "Services provided by the framework including XML-over-HTTP, JSON-over-HTTP, AMF, CouchDB and AIR.",
     "org.restfulx.services.air" => "Adobe AIR service provider classes.",
+    "org.restfulx.services.amf" => "AMF service provider and supporting classes.",
     "org.restfulx.services.as3http" => "Direct CouchDB, XML and JSON service providers based on the as3httpclientlib.",
     "org.restfulx.services.http" => "XML and JSON service providers based on the default Flex HTTPService.",
     "org.restfulx.services.mock" => "Adds a few testing specific service providers.",
@@ -53,7 +54,7 @@ task :doc do
   }
   
   package_list = packages.keys.map do |key|
-    "-package #{key} \"#{packages[key].gsub(/\s/, "\\ ")}\""
+    "-package #{key} \"#{packages[key]}\""
   end
     
   system("#{get_executable('asdoc')} +configname=air -source-path framework/src -doc-sources framework/src -library-path+=#{libs.join(',')} #{package_list.join(" ")} -output doc/api  -main-title '\"RestfulX\ Framework\ #{FRAMEWORK_VERSION}\ API\ Documenation\"'")

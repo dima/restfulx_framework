@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="AuxHTTPController,org.restfulx.controllers.AuxHTTPController,DELETE,GET,POST,PUT,addHeaders,defaultFaultHandler,defaultResultHandler,invoke,send,unmarshall,unmarshallAndCacheResultHandler,unmarshallResultHandler" name="keywords">
+<meta content="AuxHTTPController,org.restfulx.controllers.AuxHTTPController,DELETE,GET,POST,PUT,addHeaders,defaultFaultHandler,defaultResultHandler,invoke,marshallToURLVariables,send,unmarshall,unmarshallAndCacheResultHandler,unmarshallResultHandler" name="keywords">
 <title>org.restfulx.controllers.AuxHTTPController</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.4 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/AuxHTTPController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">"RestfulX Framework 1.3.0 API Documenation"</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/AuxHTTPController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;AuxHTTPController</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -107,7 +107,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#AuxHTTPController()">AuxHTTPController</a>(optsOrOnResult:Object = null, onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", serializer:<a href="../serializers/ISerializer.html">ISerializer</a> = null, rootUrl:String = null)</div>
+<a class="signatureLink" href="#AuxHTTPController()">AuxHTTPController</a>(optsOrOnResult:Object = null, onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "text", serializer:<a href="../serializers/ISerializer.html">ISerializer</a> = null, rootUrl:String = null)</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">AuxHTTPController</td>
@@ -140,7 +140,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#addHeaders()">addHeaders</a>(service:HTTPService, headers:Object):void</div>
+<a class="signatureLink" href="#addHeaders()">addHeaders</a>(request:URLRequest, headers:Object):void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">AuxHTTPController</td>
 </tr>
@@ -155,6 +155,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#defaultResultHandler()">defaultResultHandler</a>(data:Object, token:Object = null):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">AuxHTTPController</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#marshallToURLVariables()">marshallToURLVariables</a>(source:Object):URLVariables</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">AuxHTTPController</td>
 </tr>
@@ -220,7 +227,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function AuxHTTPController(optsOrOnResult:Object = null, onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "e4x", serializer:<a href="../serializers/ISerializer.html">ISerializer</a> = null, rootUrl:String = null)</code><p>
+<code>public function AuxHTTPController(optsOrOnResult:Object = null, onFault:Function = null, contentType:String = "application/x-www-form-urlencoded", resultFormat:String = "text", serializer:<a href="../serializers/ISerializer.html">ISerializer</a> = null, rootUrl:String = null)</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -232,7 +239,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">onFault</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; function to call on HTTPService error or if unmarshalling fails
+<td width="20px"></td><td><code><span class="label">onFault</span>:Function</code> (default = <code>null</code>)<code></code> &mdash; function to call on URLLoader error or if unmarshalling fails
      </td>
 </tr>
 <tr>
@@ -246,7 +253,7 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">resultFormat</span>:String</code> (default = "<code>e4x</code>")<code></code> &mdash; what to treat the response as (e.g. e4x, text)
+<td width="20px"></td><td><code><span class="label">resultFormat</span>:String</code> (default = "<code>text</code>")<code></code> &mdash; what to treat the response as (e.g. text, binary)
      </td>
 </tr>
 <tr>
@@ -274,10 +281,10 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected function addHeaders(service:HTTPService, headers:Object):void</code><span class="label">Parameters</span>
+<code>protected function addHeaders(request:URLRequest, headers:Object):void</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">service</span>:HTTPService</code></td>
+<td width="20px"></td><td><code><span class="label">request</span>:URLRequest</code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>
@@ -388,6 +395,27 @@ showHideInherited();
 <tr>
 <td width="20px"></td><td><code><span class="label">httpHeaders</span>:*</code> (default = <code>null</code>)<code></code> &mdash; an object (key, value pairs) of HTTP headers to send along with this request
      </td>
+</tr>
+</table>
+</div>
+<a name="marshallToURLVariables()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">marshallToURLVariables</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function marshallToURLVariables(source:Object):URLVariables</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">source</span>:Object</code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>URLVariables</code></td>
 </tr>
 </table>
 </div>

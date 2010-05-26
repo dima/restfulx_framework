@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008-2009 Dima Berastau and Contributors
+ * Copyright (c) 2008-2010 Dima Berastau and Contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,10 @@ package org.restfulx.utils {
   import flash.utils.IDataOutput;
   import flash.utils.IExternalizable;
 
+  [RemoteClass(alias="org.restfulx.messaging.io.TypedArray")]
   /**
    * An array of items where we know what type of models it contains.
    */
-  [RemoteClass(alias="org.restfulx.messaging.io.TypedArray")]
   public class TypedArray implements IExternalizable {
     
     [Bindable]

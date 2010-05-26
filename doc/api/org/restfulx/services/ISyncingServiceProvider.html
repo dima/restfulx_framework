@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="ISyncingServiceProvider,org.restfulx.services.ISyncingServiceProvider,dirty,purge,sync" name="keywords">
+<meta content="ISyncingServiceProvider,org.restfulx.services.ISyncingServiceProvider,dirty,getLastPullTimeStamp,purge,sync,updateLastPullTimeStamp" name="keywords">
 <title>org.restfulx.services.ISyncingServiceProvider</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.4 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/services/ISyncingServiceProvider.html&amp;org/restfulx/services/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">"RestfulX Framework 1.3.0 API Documenation"</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/services/ISyncingServiceProvider.html&amp;org/restfulx/services/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Interface&nbsp;ISyncingServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
@@ -119,6 +119,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("In
           </div>
 </td><td class="summaryTableOwnerCol">ISyncingServiceProvider</td>
 </tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getLastPullTimeStamp()">getLastPullTimeStamp</a>(object:Object, responder:IResponder):void</div>
+<div class="summaryTableDescription">
+     Gets the last time (timestamp originates on the server) a sync was performed with the central server
+          </div>
+</td><td class="summaryTableOwnerCol">ISyncingServiceProvider</td>
+</tr>
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
@@ -172,7 +181,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("In
 <tr class="hideInheritedMethod">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="IServiceProvider.html#unmarshall()">unmarshall</a>(object:Object, disconnected:Boolean = false):Object</div>
+<a class="signatureLink" href="IServiceProvider.html#unmarshall()">unmarshall</a>(object:Object, disconnected:Boolean = false, defaultType:String = null):Object</div>
 <div class="summaryTableDescription">
      The reverse of marshall.</div>
 </td><td class="summaryTableOwnerCol"><a href="IServiceProvider.html">IServiceProvider</a></td>
@@ -184,6 +193,15 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("In
 <div class="summaryTableDescription">
      RESTful CRUD contract: update method.</div>
 </td><td class="summaryTableOwnerCol"><a href="IServiceProvider.html">IServiceProvider</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#updateLastPullTimeStamp()">updateLastPullTimeStamp</a>(object:Object, value:String):void</div>
+<div class="summaryTableDescription">
+     Updates the last time (timestamp originates on the server) a sync was performed with the central server
+          </div>
+</td><td class="summaryTableOwnerCol">ISyncingServiceProvider</td>
 </tr>
 </table>
 </div>
@@ -233,6 +251,29 @@ showHideInherited();
       instance. In case of XMLHTTPServiceProvider nesting may require additional configuration on the server.
       If you are using Rails see config/routes.rb for more details.
      </td>
+</tr>
+</table>
+</div>
+<a name="getLastPullTimeStamp()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getLastPullTimeStamp</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getLastPullTimeStamp(object:Object, responder:IResponder):void</code><p>
+     Gets the last time (timestamp originates on the server) a sync was performed with the central server
+          </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object to get timestamp for (typically a model class)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code></td>
 </tr>
 </table>
 </div>
@@ -315,6 +356,29 @@ showHideInherited();
       instance. In case of XMLHTTPServiceProvider nesting may require additional configuration on the server.
       If you are using Rails see config/routes.rb for more details.
      </td>
+</tr>
+</table>
+</div>
+<a name="updateLastPullTimeStamp()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">updateLastPullTimeStamp</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function updateLastPullTimeStamp(object:Object, value:String):void</code><p>
+     Updates the last time (timestamp originates on the server) a sync was performed with the central server
+          </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">object</span>:Object</code> &mdash; object object to update timestamp for (typically a model class)
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">value</span>:String</code></td>
 </tr>
 </table>
 </div>
