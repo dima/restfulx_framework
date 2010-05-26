@@ -154,18 +154,47 @@ package org.restfulx.services.air {
     
     /**
      * @inheritDoc
+     *  
+     * <p>Supports special handling for the following metadata properties:</p>
+     * <ul>
+     *  <li><strong>search</strong>: A substring to match on one of the properties of the model idenfied
+     *  by <strong>category</strong></li>
+     *  <li><strong>category</strong>: Model property that will be used for search (e.g. name, description)</li>
+     *  <li><strong>limit</strong>: limit the number of records return to this number</li>
+     *  <li><strong>offset</strong>: start returning records from this number</li>
+     * </ul>
+     *  
+     *  <p>The rest of the metadata properties become compound conditions where {name: 4}, would match model
+     *  property name that has values 4.</p>
+     *  
+     * <p><strong>limit</strong> in combination with <strong>offset</strong> can be used to page a large data set.</p>
+     *  
      * @see org.restfulx.services.IServiceProvider#index
      */
     public function index(clazz:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
       var fqn:String = Rx.models.state.types[clazz];
+      var limit:int = -1;
+      var offset:int = -1;
       
       var queryText:String = sql[fqn]["select"] + " AND ";
-      if (metadata != null && metadata.hasOwnProperty("search") && metadata.hasOwnProperty("category")) {
-        if (!RxUtils.isEmpty(metadata['search']) && !RxUtils.isEmpty(metadata['category'])) {
-          var category:String = metadata['category'];
-          metadata[category] = metadata["search"];
-          delete metadata['category'];
-          delete metadata['search'];
+      if (metadata != null) {
+        if (metadata.hasOwnProperty("search") && metadata.hasOwnProperty("category")) {
+          if (!RxUtils.isEmpty(metadata["search"]) && !RxUtils.isEmpty(metadata["category"])) {
+            var category:String = metadata["category"];
+            metadata[category] = metadata["search"];
+            delete metadata["category"];
+            delete metadata["search"];
+          }          
+        }
+        
+        if (metadata.hasOwnProperty("limit") && !RxUtils.isEmpty(metadata["limit"])) {
+          limit = parseInt(metadata["limit"]);
+          delete metadata["limit"];
+        }
+        
+        if (metadata.hasOwnProperty("offset") && !RxUtils.isEmpty(metadata["offset"])) {
+          offset = parseInt(metadata["offset"]);
+          delete metadata["offset"];
         }
       }
       
@@ -174,35 +203,62 @@ package org.restfulx.services.air {
       }
       
       queryText = queryText.substr(0, queryText.length - 5);
+      
+      if (limit > -1) {
+        queryText += " LIMIT " + limit;
+      }
+      
+      if (offset > -1) {
+        queryText += " OFFSET " + offset;
+      }
 
       var statement:SQLStatement = getSQLStatement(queryText);
       
       Rx.log.debug("index:executing SQL:" + statement.text);
       statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
         var result:Object = null;
         var sqlResult:SQLResult = (event.target as SQLStatement).getResult();
         var data:Array = sqlResult.data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           result = unmarshall(data);
+          if (result is TypedArray) {
+            computeMetadada(clazz, result as TypedArray, responder);
+          } else {
+            invokeResponderResult(responder, result);            
+          }
         } else {
           // nothing in the DB
           result = new Array;
-        }
-        
-        if (!sqlResult.complete) {
-          statement.next(Rx.defaultPageSize);
-        } else {
-          event.currentTarget.removeEventListener(event.type, arguments.callee);
-        }
-        
-        invokeResponderResult(responder, result);
+          invokeResponderResult(responder, result);
+        }        
       });
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
         IResponder(responder).fault(event.error);
       });
-      executeSQLStatement(statement, Rx.defaultPageSize);
+      executeSQLStatement(statement);
+    }
+    
+    protected function computeMetadada(clazz:Object, data:TypedArray, responder:IResponder):void {
+      var fqn:String = Rx.models.state.types[clazz];
+      
+      var statement:SQLStatement = getSQLStatement(sql[fqn]["count"]);
+      Rx.log.debug("metadata:executing SQL:" + statement.text);
+      statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        var count:int = parseInt((event.target as SQLStatement).getResult().data[0]["count"]);
+        data.metadata = {totalEntries: count};
+        trace(ObjectUtil.toString(data.metadata));
+        invokeResponderResult(responder, data);
+      });
+      statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        Rx.log.error("metadata: failed to execute: " + statement.text + " because of: " + event.error + ", proceeding regardless");
+        invokeResponderResult(responder, data);
+      });
+      executeSQLStatement(statement);
     }
 
     /**
@@ -618,6 +674,8 @@ package org.restfulx.services.air {
       sql[modelName]["select"] = selectStatement;
       
       sql[modelName]["dirty"] = "SELECT * FROM " + tableName + " WHERE sync != ''";
+      
+      sql[modelName]["count"] = "SELECT count(*) as count FROM " + tableName;
     }
     
     protected function initializeConnection(databaseFile:File):void {
@@ -655,22 +713,22 @@ package org.restfulx.services.air {
       }
     }
     
-    protected function executeSQLStatement(statement:SQLStatement, pageSize:int = -1):void {
+    protected function executeSQLStatement(statement:SQLStatement):void {
       if (!initialized) {
-        queueSQLStatement(statement, pageSize);
+        queueSQLStatement(statement);
       } else {
-        statement.execute(pageSize);
+        statement.execute();
       }
     }
     
     protected function executePendingSQLStatements():void {
-      for each (var statement:Object in queue) {
-        statement["statement"].execute(statement["pageSize"]);
+      for each (var statement:SQLStatement in queue) {
+        statement.execute();
       }
     }
     
-    protected function queueSQLStatement(statement:SQLStatement, pageSize:int = -1):void {
-      queue.push({statement: statement, pageSize: pageSize});
+    protected function queueSQLStatement(statement:SQLStatement):void {
+      queue.push(statement);
     }
         
     protected function getSQLStatement(statement:String):SQLStatement {

@@ -185,12 +185,6 @@ package org.restfulx {
      */
     public static var airDatabaseName:String = "rxdb";
     
-    /**
-     * Page size to use for local and remote queries. For local queries this become the prefetch
-     * argument, for remote queries this becomes "limit" parameter
-     */
-    public static var defaultPageSize:int = -1;
-    
     /** 
      * Encryption key to use for connection to AIR SQLite database (if this field is empty connection
      * will be unencrypted = default).

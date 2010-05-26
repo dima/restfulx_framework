@@ -314,22 +314,22 @@ package org.restfulx.controllers {
       executeSQLStatement(statement);
     }
     
-    protected function executeSQLStatement(statement:SQLStatement, pageSize:int = -1):void {
+    protected function executeSQLStatement(statement:SQLStatement):void {
       if (!initialized) {
-        queueSQLStatement(statement, pageSize);
+        queueSQLStatement(statement);
       } else {
-        statement.execute(pageSize);
+        statement.execute();
       }
     }
     
     protected function executePendingSQLStatements():void {
-      for each (var statement:Object in queue) {
-        statement["statement"].execute(statement["pageSize"]);
+      for each (var statement:SQLStatement in queue) {
+        statement.execute();
       }
     }
     
-    protected function queueSQLStatement(statement:SQLStatement, pageSize:int = -1):void {
-      queue.push({statement: statement, pageSize: pageSize});
+    protected function queueSQLStatement(statement:SQLStatement):void {
+      queue.push(statement);
     }
         
     protected function getSQLStatement(statement:String):SQLStatement {

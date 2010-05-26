@@ -201,6 +201,7 @@
        
        private function addIntegrationTests(ts:TestSuite):void {
          ts.addTest(new AIRServiceProviderTest("testIndexWithMetadata"));
+         ts.addTest(new AIRServiceProviderTest("testIndexWithLimitAndOffset"));
          ts.addTest(new AIRServiceProviderTest("testIndexWithIgnored"));
          ts.addTest(new AIRServiceProviderTest("testCreateWithIgnored"));
          ts.addTest(new AIRServiceProviderTest("testGetLastPullTimeStamp"));

@@ -47,11 +47,24 @@ package restfulx.test.cases.integration {
       Rx.models.index(Project, {onSuccess: onIndexMetadataSuccess, onFailure: onFailure, 
         metadata: {name : '4'}, targetServiceId: AIRServiceProvider.ID});
     }
+    
+    public function testIndexWithLimitAndOffset():void {
+      Rx.models.reset(null, true);
+      
+      Rx.models.index(Project, {onSuccess: onIndexWithLimitAndOffset, onFailure: onFailure,
+        metadata: {limit: 2, offset: 0}, targetServiceId: AIRServiceProvider.ID});
+    }
 
     private function onIndexMetadataSuccess(result:Object):void {
       var data:TypedArray = TypedArray(result);
       assertEquals(1, data.source.length);
       assertEquals("Project4NameString", data.source[0].name);
+    }
+    
+    private function onIndexWithLimitAndOffset(result:Object):void {
+      var data:TypedArray = TypedArray(result);
+      assertEquals(4, data.metadata["totalEntries"]);
+      assertEquals(2, data.source.length);
     }
     
     private function onFailure(result:Object):void {
@@ -93,8 +106,8 @@ package restfulx.test.cases.integration {
       syncingProvider.updateLastPullTimeStamp(Project, "1262222622");
       
       syncingProvider.getLastPullTimeStamp(Project, 
-        new ItemResponder(function(result:ResultEvent, token:Object = null):void {
-          assertEquals("1262222622", result.result["timestamp"]);
+        new ItemResponder(function(event:ResultEvent, token:Object = null):void {
+          assertEquals("1262222622", event.result["timestamp"]);
         }, function(error:Object, token:Object = null):void {
           throw new Error(error);
         }));
