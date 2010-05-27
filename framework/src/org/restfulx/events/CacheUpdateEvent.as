@@ -25,6 +25,7 @@ package org.restfulx.events {
   import flash.events.Event;
   
   import org.restfulx.Rx;
+  import org.restfulx.services.IServiceProvider;
 
   /**
    * This event is dispatched Rx Models cache gets updated and can be
@@ -54,10 +55,13 @@ package org.restfulx.events {
     /** Data associated with the operation */
     public var data:Object;
     
-    public function CacheUpdateEvent(fqn:String, opType:int, data:Object = null) {
+    public var serviceProvider:IServiceProvider;
+    
+    public function CacheUpdateEvent(fqn:String, opType:int, serviceProvider:IServiceProvider, data:Object = null) {
       super(ID, false, false);
       this.fqn = fqn;
       this.opType = opType;
+      this.serviceProvider = serviceProvider;
       this.data = data;
     }
     

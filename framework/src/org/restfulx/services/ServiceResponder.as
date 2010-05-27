@@ -111,7 +111,7 @@ package org.restfulx.services {
             delete Rx.models.state.waiting[parent];
           }
           
-          handler(result);
+          handler(result, service);
           
           // and fire user's callback responder here
           if (onSuccess != null) {

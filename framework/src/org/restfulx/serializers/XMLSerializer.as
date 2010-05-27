@@ -58,10 +58,21 @@ package org.restfulx.serializers {
         Rx.log.debug("unmarshalling response:\n" + xmlFragment.toXMLString());
 
         var objectName:String = xmlFragment.localName();
-        
-        if (objectName == "nil_classes") return new Array;
-        
+
         var results:TypedArray = new TypedArray;
+        // no result array can still have metadata     
+        if (objectName == "nil_classes")  {
+          results.itemType = defaultType;
+          results.metadata = {};
+          for each (var nilResultAttribute:XML in xmlFragment.attributes()) {
+            if (nilResultAttribute.name().toString() != "type") {
+              results.metadata[RxUtils.toCamelCase(nilResultAttribute.name().toString())] = nilResultAttribute.toString();
+            }
+          }
+          
+          return results;
+        }
+        
         // if the object name is the same as the controller specified 
         // on the model (which are typically plural) we know we got back 
         // a collection of "known" model elements
@@ -69,13 +80,12 @@ package org.restfulx.serializers {
           // we are only going to specifically unmarshall known relationships
           if (state.fqns[objectName]) {
             results.itemType = state.fqns[objectName];
-            var metadata:Object = {};
+            results.metadata = {};
             for each (var attribute:XML in xmlFragment.attributes()) {
               if (attribute.name().toString() != "type") {
-                metadata[RxUtils.toCamelCase(attribute.name().toString())] = attribute.toString();
+                results.metadata[RxUtils.toCamelCase(attribute.name().toString())] = attribute.toString();
               }
             }
-            results.metadata = metadata;
             for each (var node:XML in xmlFragment.children()) {
               results.source.push(unmarshallObject(node, disconnected, state.fqns[objectName]));
             }

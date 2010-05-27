@@ -205,7 +205,7 @@ package org.restfulx.controllers {
 	  }
 	  
 	  private function onGetLastPullTimeStamp(result:Object, metadata:Object):void {
-	    if (result.hasOwnProperty("timestamp") && !RxUtils.isEmpty(result["timestamp"])) {
+	    if (result != null && result.hasOwnProperty("timestamp") && !RxUtils.isEmpty(result["timestamp"])) {
 	      metadata["last_synced"] = result["timestamp"];
 	    }
 	    Rx.log.debug("sync metadata: " + ObjectUtil.toString(metadata));
@@ -269,7 +269,7 @@ package org.restfulx.controllers {
 	  protected function onCacheUpdate(event:CacheUpdateEvent):void {
 	    if (source == null || destination == null) return;
 	    
-	    if (Rx.enableSync && Rx.defaultServiceId == destination.id) {
+	    if (Rx.enableSync && destination.id == event.serviceProvider.id && source.id != Rx.defaultServiceId) {
 	      if (pullModels.indexOf(event.fqn) != -1 && event.data != null) {
 	        pullModels = pullModels.filter(function(item:*, index:int, a:Array):Boolean {
 	         return item != event.fqn;
@@ -281,7 +281,8 @@ package org.restfulx.controllers {
   	      source.commitTransaction(new ItemResponder(function(result:ResultEvent, token:Object = null):void {
     	      if (event.fqn) {
     	        var cached:ModelsCollection = Rx.models.cache.data[event.fqn] as ModelsCollection;
-    	        if (cached.metadata.hasOwnProperty("lastSynced")) {
+    	        if (cached.metadata.hasOwnProperty("lastSynced") && !RxUtils.isEmpty(cached.metadata["lastSynced"]) ) {
+    	          Rx.log.debug("updating lastSynced property with: " + cached.metadata["lastSynced"]);
     	          source.updateLastPullTimeStamp(Rx.models.state.types[event.fqn], cached.metadata["lastSynced"]);
     	        }
     	      }
@@ -294,6 +295,8 @@ package org.restfulx.controllers {
 	          throw new Error(error);
 	        }));
   	    }
+	    } else {
+	      CursorManager.removeBusyCursor();
 	    }
 	  }
   }

@@ -34,6 +34,7 @@ package org.restfulx.controllers {
   import org.restfulx.events.AfterUpdateEvent;
   import org.restfulx.events.CacheUpdateEvent;
   import org.restfulx.models.RxModel;
+  import org.restfulx.services.IServiceProvider;
   import org.restfulx.services.GenericServiceErrors;
   import org.restfulx.utils.ModelsMetadata;
   import org.restfulx.utils.RxUtils;
@@ -78,27 +79,32 @@ package org.restfulx.controllers {
      * Cache version of the <code>index</code> call. This dispatches
      *  index update event.
      * @param models unmarshalled models
+     * @param serviceProvider the provider that is this operation was perfomed by
      */
-    public function index(models:Object):void {
+    public function index(models:Object, serviceProvider:IServiceProvider):void {
       var fqn:String;
+      var result:Array = new Array;
       if (models is TypedArray) {
         var modelsArray:TypedArray = models as TypedArray;
         fqn = modelsArray.itemType;
         (data[fqn] as ModelsCollection).metadata = modelsArray.metadata;
+        result = models.source;
       } else if (models is RxModel) {
         fqn = getQualifiedClassName(models);
+        result.push(models);
       }
-      if (fqn != null) Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.INDEX, data[fqn]));            
+      if (fqn != null) Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.INDEX, serviceProvider, result));            
     }
 
     /**
      * Cache version of the <code>show</code> call. This dispatches
      *  show update event.
      * @param model unmarshalled model
+     * @param serviceProvider the provider that is this operation was perfomed by
      */
-    public function show(model:RxModel):void {
+    public function show(model:RxModel, serviceProvider:IServiceProvider):void {
       var fqn:String = getQualifiedClassName(model);
-      if (fqn != null) Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW, model));            
+      if (fqn != null) Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW, serviceProvider, model));            
     }
 
     /**
@@ -106,11 +112,12 @@ package org.restfulx.controllers {
      *  create update event.
      *  
      * @param model unmarshalled model
+     * @param serviceProvider the provider that is this operation was perfomed by
      */    
-    public function create(model:RxModel):void {
+    public function create(model:RxModel, serviceProvider:IServiceProvider):void {
       var fqn:String = getQualifiedClassName(model);
       Rx.models.errors = new GenericServiceErrors;
-      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.CREATE, model));
+      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.CREATE, serviceProvider, model));
       model.dispatchEvent(new AfterCreateEvent);
       model.dispatchEvent(new AfterSaveEvent);
     }
@@ -119,11 +126,12 @@ package org.restfulx.controllers {
      * Cache version of the <code>update</code> call. This dispatches
      *  update update event.
      * @param model unmarshalled model
+     * @param serviceProvider the provider that is this operation was perfomed by
      */    
-    public function update(model:RxModel):void {
+    public function update(model:RxModel, serviceProvider:IServiceProvider):void {
       var fqn:String = getQualifiedClassName(model);
       Rx.models.errors = new GenericServiceErrors;
-      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.UPDATE, model));    
+      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.UPDATE, serviceProvider, model));    
       model.dispatchEvent(new AfterUpdateEvent);
       model.dispatchEvent(new AfterSaveEvent);        
     }
@@ -133,12 +141,13 @@ package org.restfulx.controllers {
      *  destroy update event and cleans up any other model references.
      *  
      * @param model unmarshalled model
+     * @param serviceProvider the provider that is this operation was perfomed by
      */    
-    public function destroy(model:RxModel):void {
+    public function destroy(model:RxModel, serviceProvider:IServiceProvider):void {
       var fqn:String = getQualifiedClassName(model);
       RxUtils.cleanupModelReferences(model, fqn);
       ModelsCollection(data[fqn]).removeItem(model);
-      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.DESTROY));  
+      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.DESTROY, serviceProvider));  
       model.dispatchEvent(new AfterDestroyEvent);         
     }
   }

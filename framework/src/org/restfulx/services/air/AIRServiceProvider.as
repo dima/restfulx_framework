@@ -514,7 +514,6 @@ package org.restfulx.services.air {
         result["type"] = object;
         var data:Array = (event.target as SQLStatement).getResult().data;
         if (data && data.length > 0) {
-          Rx.log.debug("data: " + ObjectUtil.toString(data));
           result["timestamp"] = data[0]["last_server_pull"];
         }
         invokeResponderResult(responder, result);
@@ -546,6 +545,7 @@ package org.restfulx.services.air {
       });
       connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
+        Rx.log.debug("rolling back");
         connection.rollback();
         if (responder) responder.fault(event.error);
       });
@@ -720,7 +720,7 @@ package org.restfulx.services.air {
               }
             });
             statement.execute();
-            getSQLStatement("INSERT OR REPLACE INTO sync_metadata(id) values('" + modelName + "')").execute();
+            getSQLStatement("INSERT OR IGNORE INTO sync_metadata(id) values('" + modelName + "')").execute();
           }
         });
         sqlStatement.execute();
