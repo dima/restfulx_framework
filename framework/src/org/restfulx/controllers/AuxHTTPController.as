@@ -23,7 +23,9 @@
  ******************************************************************************/
 package org.restfulx.controllers {
   import flash.events.Event;
+  import flash.events.EventDispatcher;
   import flash.events.IOErrorEvent;
+  import flash.events.ProgressEvent;
   import flash.net.URLLoader;
   import flash.net.URLRequest;
   import flash.net.URLRequestHeader;
@@ -91,7 +93,7 @@ package org.restfulx.controllers {
    *  
    * @see #invoke
    */
-  public class AuxHTTPController {
+  public class AuxHTTPController extends EventDispatcher {
     
     public static const GET:int = 1;
     public static const POST:int = 2;
@@ -293,6 +295,9 @@ package org.restfulx.controllers {
       loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:Event):void {
         responder.fault(event);
         event.target.removeEventListener(IOErrorEvent.IO_ERROR, arguments.callee);
+      });
+      loader.addEventListener(ProgressEvent.PROGRESS, function(event:ProgressEvent):void {
+        Rx.models.dispatchEvent(event);
       });
       
       try {

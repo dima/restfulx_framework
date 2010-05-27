@@ -85,6 +85,16 @@ package org.restfulx.services {
      * @param object object object to update timestamp for (typically a model class)
      */
     function updateLastPullTimeStamp(object:Object, value:String):void;
+    
+    /**
+     * If the service provider supports it, this begins a transaction
+     */
+    function beginTransaction():void;
+    
+    /**
+     * If the service provider supports it, this commits the currently active transaction
+     */
+    function commitTransaction(responder:IResponder = null):void;
   }
 }
 

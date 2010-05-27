@@ -274,19 +274,25 @@ package org.restfulx.controllers {
 	        pullModels = pullModels.filter(function(item:*, index:int, a:Array):Boolean {
 	         return item != event.fqn;
 	        });
+	        source.beginTransaction();
   	      for each (var instance:Object in event.data) {
   	        source.create(instance, null);
   	      }
-  	      if (event.fqn) {
-  	        var cached:ModelsCollection = Rx.models.cache.data[event.fqn] as ModelsCollection;
-  	        if (cached.metadata.hasOwnProperty("lastSynced")) {
-  	          source.updateLastPullTimeStamp(Rx.models.state.types[event.fqn], cached.metadata["lastSynced"]);
-  	        }
-  	      }
-          if (!pullModels.length) {
-            CursorManager.removeBusyCursor();
-            dispatchEvent(new PullEndEvent);
-          }
+  	      source.commitTransaction(new ItemResponder(function(result:ResultEvent, token:Object = null):void {
+    	      if (event.fqn) {
+    	        var cached:ModelsCollection = Rx.models.cache.data[event.fqn] as ModelsCollection;
+    	        if (cached.metadata.hasOwnProperty("lastSynced")) {
+    	          source.updateLastPullTimeStamp(Rx.models.state.types[event.fqn], cached.metadata["lastSynced"]);
+    	        }
+    	      }
+            if (!pullModels.length) {
+              CursorManager.removeBusyCursor();
+              dispatchEvent(new PullEndEvent);
+            }
+          }, function(error:Object, token:Object = null):void {
+	          Rx.log.debug("no timestamp available due to: " + error);
+	          throw new Error(error);
+	        }));
   	    }
 	    }
 	  }

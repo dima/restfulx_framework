@@ -34,6 +34,7 @@ package org.restfulx.controllers {
   import mx.collections.ItemResponder;
   import mx.rpc.IResponder;
   import mx.rpc.events.ResultEvent;
+  import mx.utils.ObjectUtil;
   
   import org.restfulx.Rx;
   import org.restfulx.utils.TypedArray;
@@ -166,7 +167,7 @@ package org.restfulx.controllers {
      *  @param cacheBy RESTful cache method to simulate
      *  
      */
-    public function findAllBySQL(optsOrClazz:Class, sql:String, includes:Array = null, unmarshall:Boolean = true, 
+    public function findAllBySQL(optsOrClazz:Object, sql:String, includes:Array = null, unmarshall:Boolean = true, 
       cacheBy:String = "index"):void {
       var clazz:Class = null;
       if (optsOrClazz is Class) {
@@ -207,16 +208,55 @@ package org.restfulx.controllers {
       var fqn:String = Rx.models.state.types[clazz];
       execute(fqn, getSQLStatement(sql), includes, unmarshall, cacheBy);
     }
+    
+    /**
+     *  This executes any sequence of SQL statements within a trasaction
+     *  
+     *  @param clazz RxModel clazz to execute the query on or the options object
+     *  @param statements the array of SQL queries to run
+     */
+    public function executeAnySQLInBulk(optsOrClazz:Object, statements:Array):void {
+      var clazz:Class = null;
+      if (optsOrClazz is Class) {
+        clazz = Class(optsOrClazz);
+      } else {
+        if (optsOrClazz.hasOwnProperty("clazz")) clazz = optsOrClazz["clazz"];
+        if (optsOrClazz.hasOwnProperty("statements")) statements = optsOrClazz["statements"];
+      }
+      try {
+        var responder:IResponder = new ItemResponder(defaultResultHandler, defaultFaultHandler);
+        connection.addEventListener(SQLEvent.COMMIT, function(event:SQLEvent):void {
+          invokeResponderResult(responder, "SUCCESS");
+        });
+        connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+          Rx.log.error(event.error.getStackTrace());
+          connection.rollback();
+        });
+        connection.begin();
+
+        for each (var statement:SQLStatement in statements) {
+          statement.sqlConnection = connection;
+          statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+            connection.rollback();
+            responder.fault(event.error);
+          });
+          statement.execute();
+        }
+
+        connection.commit();        
+      } catch (e:Error) {
+        Rx.log.error(e.getStackTrace());
+      }
+    }
 
     protected function initializeConnection(databaseFile:File):void {
       connection.addEventListener(SQLEvent.OPEN, function(event:SQLEvent):void {
-        initialized = true;
         event.currentTarget.removeEventListener(event.type, arguments.callee);
-        dispatchEvent(event);
+        initialized = true;
+        executePendingSQLStatements();
       });
       connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
-        dispatchEvent(event);
       });
       if (Rx.airEncryptionKey != null) {
         connection.openAsync(databaseFile, SQLMode.CREATE, null, false, 1024, Rx.airEncryptionKey);

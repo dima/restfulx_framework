@@ -62,6 +62,8 @@ package org.restfulx.services.air {
     /** indicates if the local database has been set up and is ready to be modified/queried */
     public var initialized:Boolean;
     
+    public var connection:SQLConnection;
+    
     private static var types:Object = {
       "int" : "INTEGER",
       "uint" : "INTEGER",
@@ -75,9 +77,7 @@ package org.restfulx.services.air {
     protected var state:ModelsMetadata;
 
     protected var sql:Dictionary;
-        
-    protected var connection:SQLConnection;
-    
+            
     protected var queue:Array;
     
     /**
@@ -529,6 +529,31 @@ package org.restfulx.services.air {
     
     /**
      * @inheritDoc
+     * @see org.restfulx.services.ISyncingServiceProvider#beginTransaction
+     */
+    public function beginTransaction():void {
+      connection.begin();
+    }
+    
+    /**
+     * @inheritDoc
+     * @see org.restfulx.services.ISyncingServiceProvider#commitTransaction
+     */
+    public function commitTransaction(responder:IResponder = null):void {
+      connection.addEventListener(SQLEvent.COMMIT, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        if (responder) invokeResponderResult(responder, "SUCCESS");
+      });
+      connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        connection.rollback();
+        if (responder) responder.fault(event.error);
+      });
+      connection.commit();
+    }
+    
+    /**
+     * @inheritDoc
      * @see org.restfulx.services.ISyncingServiceProvider#updateLastPullTimeStamp
      */
     public function updateLastPullTimeStamp(object:Object, value:String):void {
@@ -653,7 +678,7 @@ package org.restfulx.services.air {
       insertParams += ":rev, :sync, :id, ";
       updateStatement += "rev=:rev,sync=:sync,";
       
-      createStatement += "rev INTEGER, sync TEXT, id TEXT, PRIMARY KEY(id, rev))";      
+      createStatement += "rev TEXT, sync TEXT, id TEXT, PRIMARY KEY(id, rev))";      
       sql[modelName]["create"] = createStatement;
             
       insertParams = insertParams.substr(0, insertParams.length - 2);
