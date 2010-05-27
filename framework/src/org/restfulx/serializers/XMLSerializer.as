@@ -72,7 +72,7 @@ package org.restfulx.serializers {
             var metadata:Object = {};
             for each (var attribute:XML in xmlFragment.attributes()) {
               if (attribute.name().toString() != "type") {
-                metadata[attribute.name().toString()] = attribute.toString();
+                metadata[RxUtils.toCamelCase(attribute.name().toString())] = attribute.toString();
               }
             }
             results.metadata = metadata;
