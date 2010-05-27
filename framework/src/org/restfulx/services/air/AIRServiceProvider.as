@@ -594,7 +594,6 @@ package org.restfulx.services.air {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
         var count:int = parseInt((event.target as SQLStatement).getResult().data[0]["count"]);
         data.metadata = {totalEntries: count};
-        trace(ObjectUtil.toString(data.metadata));
         invokeResponderResult(responder, data);
       });
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {

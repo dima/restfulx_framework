@@ -25,7 +25,7 @@ package org.restfulx.serializers {
   import com.adobe.serialization.json.JSON;
   
   import flash.utils.getQualifiedClassName;
-  
+    
   import org.restfulx.models.RxModel;
   import org.restfulx.utils.RxUtils;
   import org.restfulx.utils.TypedArray;
@@ -62,8 +62,8 @@ package org.restfulx.serializers {
       try {
         if (object is Array) {
           return unmarshallJSONArray(object as Array, disconnected);
-        } else if (object is String) {
-          var source:Object = JSON.decode(object as String);
+        } else {
+          var source:Object = JSON.decode(object.toString());
           if (source is Array) {
             return unmarshallJSONArray(source as Array, disconnected);
           } else {
@@ -82,6 +82,14 @@ package org.restfulx.serializers {
       
       if (!instances || !instances.length) return result;
       
+      if (instances[0].hasOwnProperty("metadata")) {
+        result.metadata = new Object;
+        var metadata:Object = instances.shift()["metadata"];
+        for (var prop:String in metadata) {
+          result.metadata[RxUtils.toCamelCase(prop)] = metadata[prop];
+        }
+      }
+            
       for each (var instance:Object in instances) {
         result.source.push(unmarshallJSONObject(instance, disconnected));
       }

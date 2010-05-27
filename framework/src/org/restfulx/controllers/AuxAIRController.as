@@ -234,13 +234,13 @@ package org.restfulx.controllers {
         });
         connection.begin();
 
-        for each (var statement:SQLStatement in statements) {
-          statement.sqlConnection = connection;
-          statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        for each (var statement:String in statements) {
+          var sqlStatement:SQLStatement = getSQLStatement(statement);
+          sqlStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
             connection.rollback();
             responder.fault(event.error);
           });
-          statement.execute();
+          sqlStatement.execute();
         }
 
         connection.commit();        

@@ -87,7 +87,6 @@ package org.restfulx.services {
       if (handler != null) {
         if (!service.hasErrors(event.result)) {
           var result:Object = service.unmarshall(event.result, false, modelType);
-          
           var resultType:String;
           if (result is TypedArray) {
             resultType = TypedArray(result).itemType;
