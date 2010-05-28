@@ -26,9 +26,12 @@ package org.restfulx.serializers {
   
   import flash.utils.getQualifiedClassName;
     
+  import org.restfulx.Rx;
   import org.restfulx.models.RxModel;
   import org.restfulx.utils.RxUtils;
   import org.restfulx.utils.TypedArray;
+  
+  import mx.utils.ObjectUtil;
   
   /**
    * Serialises <code>RxModel</code> instances to JSON and back.
@@ -71,7 +74,8 @@ package org.restfulx.serializers {
           }
         }
       } catch (e:Error) {
-        throw new Error("could not unmarshall provided object");
+        Rx.log.error("couldn't unmarshall: " + ObjectUtil.toString(object) + e.getStackTrace());
+        throw new Error("could not unmarshall provided object:" + e.getStackTrace());
       }
       return null;    
     }

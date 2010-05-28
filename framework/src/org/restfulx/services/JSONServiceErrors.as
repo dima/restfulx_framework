@@ -44,7 +44,7 @@ package org.restfulx.services {
       super();
       if (result != null && result.hasOwnProperty("errors")) {
         for each (var entry:Array in result["errors"]) {
-          var key:String = entry.shift();
+          var key:String = RxUtils.toCamelCase(entry.shift());
           errors[key] = new Array;
           for each (var error:String in entry) {
             errors[key].push(createValidationResult(error));

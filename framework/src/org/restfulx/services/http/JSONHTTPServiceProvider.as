@@ -64,7 +64,7 @@ package org.restfulx.services.http {
      */
     public override function hasErrors(object:Object):Boolean {
       var errors:String = object.toString();
-      if (errors.indexOf('{\"errors\":)') == 0) {
+      if (errors.indexOf('{\"errors\":') == 0) {
         Rx.log.debug("received service error response, terminating processing:\n" + errors);
         Rx.models.errors = new JSONServiceErrors(JSON.decode(errors));
         return true;

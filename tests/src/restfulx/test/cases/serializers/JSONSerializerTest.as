@@ -63,6 +63,7 @@ package restfulx.test.cases.serializers {
     
     public function testErrorUnmarshalling():void {
       var marshalled:String = '{\"errors\":[[\"business_number\",\"is not a number\"],[\"name\",\"can\'t be blank\"]]}';
+      assertEquals(0, marshalled.indexOf('{\"errors\":'));
       var result:Object = JSON.decode(marshalled);
       assertTrue(result.hasOwnProperty("errors"));
       assertEquals(2, (result["errors"] as Array).length)
