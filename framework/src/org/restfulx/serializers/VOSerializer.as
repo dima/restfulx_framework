@@ -31,7 +31,7 @@ package org.restfulx.serializers {
   import org.restfulx.models.RxModel;
   import org.restfulx.utils.RxUtils;
   import org.restfulx.utils.TypedArray;
-  
+    
   /**
    *  Serializes <code>RxModel</code> instances to Value Objects and back.
    */

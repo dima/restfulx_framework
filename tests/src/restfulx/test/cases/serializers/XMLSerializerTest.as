@@ -105,8 +105,8 @@ package restfulx.test.cases.serializers {
     
     public function testNothingUnmarshalling():void {
       var xmlForNothing:XML = TestApp(Application.application).nothing;
-      var result:Array = xml.unmarshall(xmlForNothing) as Array;
-      assertEquals(0, result.length);
+      var result:TypedArray = xml.unmarshall(xmlForNothing) as TypedArray;
+      assertEquals(0, result.source.length);
     }
     
     public function testObjectMarshalling():void {

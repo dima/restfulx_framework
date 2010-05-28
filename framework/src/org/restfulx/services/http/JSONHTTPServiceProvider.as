@@ -22,11 +22,14 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package org.restfulx.services.http {
+  import com.adobe.serialization.json.JSON;
+  
   import mx.rpc.http.HTTPService;
   
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
   import org.restfulx.serializers.JSONSerializer;
+  import org.restfulx.services.JSONServiceErrors;
   import org.restfulx.utils.RxUtils;
 
   /**
@@ -60,7 +63,12 @@ package org.restfulx.services.http {
      * @see org.restfulx.services.IServiceProvider#hasErrors
      */
     public override function hasErrors(object:Object):Boolean {
-      // TODO: what are we doing about the errors sent over in JSON?
+      var errors:String = object.toString();
+      if (errors.indexOf('{\"errors\":)') == 0) {
+        Rx.log.debug("received service error response, terminating processing:\n" + errors);
+        Rx.models.errors = new JSONServiceErrors(JSON.decode(errors));
+        return true;
+      }
       return false;
     }
 

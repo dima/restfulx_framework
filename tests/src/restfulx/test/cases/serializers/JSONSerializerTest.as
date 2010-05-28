@@ -22,9 +22,14 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package restfulx.test.cases.serializers {
+  import com.adobe.serialization.json.JSON;
+  
   import flexunit.framework.TestCase;
   
+  import mx.utils.ObjectUtil;
+  
   import org.restfulx.serializers.JSONSerializer;
+  import org.restfulx.services.JSONServiceErrors;
   import org.restfulx.utils.TypedArray;
   
   import restfulx.test.models.Project;
@@ -54,6 +59,13 @@ package restfulx.test.cases.serializers {
       var prop:SimpleProperty = getNewSimpleProperty();
       var result:String = json.marshall(prop) as String;
       assertEquals(0, result.indexOf('{"simple_property":{'));
+    }
+    
+    public function testErrorUnmarshalling():void {
+      var marshalled:String = '{\"errors\":[[\"business_number\",\"is not a number\"],[\"name\",\"can\'t be blank\"]]}';
+      var result:Object = JSON.decode(marshalled);
+      assertTrue(result.hasOwnProperty("errors"));
+      assertEquals(2, (result["errors"] as Array).length)
     }
     
     public function testObjectMarshallingWithMetadata():void {

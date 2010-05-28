@@ -269,7 +269,8 @@ package org.restfulx.controllers {
 	  protected function onCacheUpdate(event:CacheUpdateEvent):void {
 	    if (source == null || destination == null) return;
 	    
-	    if (Rx.enableSync && destination.id == event.serviceProvider.id && source.id != Rx.defaultServiceId) {
+	    if (Rx.enableSync && (event.serviceProvider != null && destination.id == event.serviceProvider.id)
+	      && source.id != Rx.defaultServiceId) {
 	      if (pullModels.indexOf(event.fqn) != -1 && event.data != null) {
 	        pullModels = pullModels.filter(function(item:*, index:int, a:Array):Boolean {
 	         return item != event.fqn;

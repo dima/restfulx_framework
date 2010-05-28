@@ -39,6 +39,7 @@ package org.restfulx.controllers {
   import org.restfulx.Rx;
   import org.restfulx.utils.TypedArray;
   import org.restfulx.utils.RxUtils;
+  import org.restfulx.services.air.AIRServiceProvider;
   
   /**
    * Custom AIR controller that allows performing arbitrary operations (as 
@@ -265,35 +266,36 @@ package org.restfulx.controllers {
       }
     }
 
-    protected function unmarshall(data:Object):Object {
+    protected function unmarshall(event:ResultEvent):Object {
       try {
-        return Rx.serializers.vo.unmarshall(data.result);
+        return Rx.serializers.vo.unmarshall(event.result);
       } catch (e:Error) {
-        defaultFaultHandler(data.result);
+        Rx.log.error(e.getStackTrace());
+        defaultFaultHandler(e);
       }
       return null;
     }
     
-    protected function unmarshallResultHandler(data:Object, token:Object = null):void {
-      var result:Object = unmarshall(data);
+    protected function unmarshallResultHandler(event:Object, token:Object = null):void {
+      var result:Object = unmarshall(event as ResultEvent);
       if (result && resultHandler != null) resultHandler(result);
     }
     
-    protected function unmarshallAndCacheResultHandler(data:Object, token:Object = null):void {
-      var result:Object = unmarshall(data);
-      if (result) cacheHandler(result);
+    protected function unmarshallAndCacheResultHandler(event:Object, token:Object = null):void {
+      var result:Object = unmarshall(event as ResultEvent);
+      if (result) cacheHandler(result, null);
       if (result && resultHandler != null) resultHandler(result);
     }
     
-    protected function defaultResultHandler(data:Object, token:Object = null):void {
-      if (resultHandler != null) resultHandler(data.result);
+    protected function defaultResultHandler(event:Object, token:Object = null):void {
+      if (resultHandler != null) resultHandler(event.result);
     }
     
     protected function defaultFaultHandler(info:Object, token:Object = null):void {
       if (faultHandler != null) { 
         faultHandler(info);
       } else {
-        throw new Error(info.toString());
+        throw new Error(info);
       }
     }
 
@@ -331,11 +333,11 @@ package org.restfulx.controllers {
       statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
         var result:Object = null;
-        var data:Array = statement.getResult().data;
+        var data:Array = (event.target as SQLStatement).getResult().data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           if (includes) {
-            processIncludedRelationships(includes, fqn, data, responder); 
+            return processIncludedRelationships(includes, fqn, data, responder); 
           } else {
             result = data;
           }

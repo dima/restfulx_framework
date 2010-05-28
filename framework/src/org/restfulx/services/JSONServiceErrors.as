@@ -21,47 +21,36 @@
  *
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
-package restfulx.test.cases.integration {
-  import flexunit.framework.TestCase;
-  
+package org.restfulx.services {
   import org.restfulx.Rx;
-  import org.restfulx.services.http.JSONHTTPServiceProvider;
+  import org.restfulx.services.GenericServiceErrors;
+  import org.restfulx.utils.RxUtils;
+  import org.restfulx.utils.TypedArray;
+  import org.restfulx.utils.ServiceErrors;
   
-  import restfulx.test.models.SimpleProperty;
-  
-  public class JSONHTTPServiceProviderTest extends TestCase {
-        
-    public function JSONHTTPServiceProviderTest(methodName:String) {
-      super(methodName);
-      Rx.httpRootUrl = "http://localhost:3000/";
-    }
+  /**
+   * JSON-based Service Provider specific IServiceErrors implementation.
+   */
+  public class JSONServiceErrors extends GenericServiceErrors {
     
-    public function testHasErrors():void {
-      // TODO
-    }
-
-    public function testIndex():void {
-      Rx.models.index(SimpleProperty, {targetServiceId: JSONHTTPServiceProvider.ID});
-    }
-    
-    public function testCreate():void {
-      var simpleProperty:SimpleProperty = new SimpleProperty;
-      simpleProperty.name = "Foobar";
-      simpleProperty.create({targetServiceId: JSONHTTPServiceProvider.ID});
-    }
-    
-    public function testUpdate():void {
-      var simpleProperty:SimpleProperty = new SimpleProperty;
-      simpleProperty.name = "Foobar";
-      simpleProperty.id = "555";
-      simpleProperty.update({targetServiceId: JSONHTTPServiceProvider.ID});
-    }
-
-    public function testDestroy():void {
-      var simpleProperty:SimpleProperty = new SimpleProperty;
-      simpleProperty.name = "Foobar";
-      simpleProperty.id = "666";
-      simpleProperty.destroy({targetServiceId: JSONHTTPServiceProvider.ID});
+    /**
+     * Transforms errors into an array of Validation results
+     * mapped by field name.
+     *  
+     *  
+     * @param result errors response
+     */   
+    public function JSONServiceErrors(result:Object) {
+      super();
+      if (result != null && result.hasOwnProperty("errors")) {
+        for each (var entry:Array in result["errors"]) {
+          var key:String = entry.shift();
+          errors[key] = new Array;
+          for each (var error:String in entry) {
+            errors[key].push(createValidationResult(error));
+          }
+        }        
+      }
     }
   }
 }
