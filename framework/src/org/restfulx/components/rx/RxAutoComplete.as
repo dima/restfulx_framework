@@ -343,7 +343,9 @@ package org.restfulx.components.rx {
           dispatchEvent(new Event("selectedItemChange"));
         }
       } else {
-        dataProvider = new ArrayCollection([{label: noResultText}]);
+        var noResultObject:Object = {};
+        noResultObject[this.labelField] = noResultText;
+        dataProvider = new ArrayCollection([noResultObject]);
         noResults = true;
         invalidateProperties();
         invalidateDisplayList();
