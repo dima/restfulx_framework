@@ -188,15 +188,25 @@ package org.restfulx.controllers {
 	    for each (var model:Object in models) {
 	      var metadata:Object = (Rx.defaultMetadata != null) ? Rx.defaultMetadata : {};
 	      var type:Class = (model is Class) ? model as Class : model["type"] as Class;
+	      var fetchDependencies:Boolean = true;
+	      var useLazyMode:Boolean = true;
 	      
 	      if (model.hasOwnProperty("metadata") && model["metadata"] != null) {
 	        metadata = model["metadata"];
+	      }
+	      
+	      if (model.hasOwnProperty("fetchDependencies") && model["fetchDependencies"] != null) {
+	        fetchDependencies = model["fetchDependencies"];
+	      }
+	      
+	      if (model.hasOwnProperty("useLazyMode") && model["useLazyMode"] != null) {
+	        useLazyMode = model["useLazyMode"];
 	      }
         
 	      pullModels.push(Rx.models.state.types[type]);
 	      source.getLastPullTimeStamp(type, 
 	        new ItemResponder(function(result:ResultEvent, token:Object = null):void {
-            onGetLastPullTimeStamp(result.result, metadata);
+            onGetLastPullTimeStamp(result.result, fetchDependencies, useLazyMode, metadata);
 	        }, function(error:Object, token:Object = null):void {
 	          Rx.log.debug("no timestamp available due to: " + error);
 	          throw new Error(error);
@@ -204,13 +214,14 @@ package org.restfulx.controllers {
 	    }
 	  }
 	  
-	  private function onGetLastPullTimeStamp(result:Object, metadata:Object):void {
+	  private function onGetLastPullTimeStamp(result:Object, fetchDependencies:Boolean, useLazyMode:Boolean, metadata:Object):void {
 	    if (result != null && result.hasOwnProperty("timestamp") && !RxUtils.isEmpty(result["timestamp"])) {
 	      metadata["last_synced"] = result["timestamp"];
 	    }
 	    Rx.log.debug("sync metadata: " + ObjectUtil.toString(metadata));
       Rx.log.debug("responder pulling " + Rx.models.state.types[result["type"]]);
-      Rx.models.reload(result["type"], {targetServiceId: destination.id, metadata: metadata, append: true});
+      Rx.models.reload(result["type"], {targetServiceId: destination.id, fetchDependencies: fetchDependencies,
+        useLazyMode: useLazyMode, metadata: metadata, append: true});
 	  }
 	  
 	  /**

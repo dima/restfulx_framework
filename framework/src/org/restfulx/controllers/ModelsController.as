@@ -208,6 +208,7 @@ package org.restfulx.controllers {
                 fetchDependencies: fetchDependencies,
                 useLazyMode: useLazyMode,
                 append: append,
+                metadata: metadata,
                 targetServiceId: targetServiceId,
                 customProcessor: customProcessor
               });
