@@ -35,6 +35,7 @@ package org.restfulx.components.rx {
   import org.restfulx.events.RxAutoCompleteItemEvent;
   import org.restfulx.models.RxModel;
   import org.restfulx.utils.RxUtils;
+  import org.restfulx.utils.TypedArray;
   
   [Event(name="typedTextChange", type="flash.events.Event")]
   [Event(name="chosenItemChange", type="flash.events.Event")]
@@ -325,7 +326,7 @@ package org.restfulx.components.rx {
       itemShown = false;
       noResults = false;
       dataProvider = null;
-      if ((results as Array).length) {
+      if ((results as TypedArray).source.length) {
         dataProvider = Rx.filter(Rx.models.cached(_resource), filterFunction);
         dataProvider.refresh();
         
