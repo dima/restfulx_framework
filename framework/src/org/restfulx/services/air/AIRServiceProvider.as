@@ -230,7 +230,8 @@ package org.restfulx.services.air {
           }
         } else {
           // nothing in the DB
-          result = new Array;
+          result = new TypedArray;
+          result.itemType = fqn;
           invokeResponderResult(responder, result);
         }        
       });

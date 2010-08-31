@@ -165,11 +165,12 @@ package org.restfulx.controllers {
      * @param customProcessor if provided then it will be used instead of the standard service provider workflow,
      *  this allows you to fully customize index processing. This function should have the same signature as
      *  IServiceProvider#index
+     * @param unmarshallDisconnected if true then the unmarshaller will not try to link up the result with other items in the cache
      */
     [Bindable(event="cacheUpdate")]
     public function index(clazz:Class, optsOrOnSuccess:Object = null, onFailure:Function = null, 
       nestedBy:Array = null, metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, 
-      append:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):ModelsCollection {
+      append:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null, unmarshallDisconnected:Boolean = false):ModelsCollection {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -184,6 +185,7 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("append")) append = optsOrOnSuccess["append"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
           if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
+          if (optsOrOnSuccess.hasOwnProperty("unmarshallDisconnected")) unmarshallDisconnected = optsOrOnSuccess["unmarshallDisconnected"];
         }
       }
       var fqn:String = state.types[clazz];
@@ -270,7 +272,7 @@ package org.restfulx.controllers {
     [Bindable(event="cacheUpdate")]
     public function show(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false,
-      targetServiceId:int = -1, customProcessor:Function = null):RxModel {
+      targetServiceId:int = -1, customProcessor:Function = null, unmarshallDisconnected:Boolean = false):RxModel {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -284,6 +286,7 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("useLazyMode")) useLazyMode = optsOrOnSuccess["useLazyMode"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
           if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
+          if (optsOrOnSuccess.hasOwnProperty("unmarshallDisconnected")) unmarshallDisconnected = optsOrOnSuccess["unmarshallDisconnected"];          
         }
       }
       
@@ -347,7 +350,7 @@ package org.restfulx.controllers {
         }
         
         var service:IServiceProvider = getServiceProvider(targetServiceId);
-        var serviceResponder:ServiceResponder = new ServiceResponder(cache.show, service, fqn, onSuccess, onFailure);
+        var serviceResponder:ServiceResponder = new ServiceResponder(cache.show, service, fqn, onSuccess, onFailure, unmarshallDisconnected);
 
         if (customProcessor != null) {
           customProcessor(object, serviceResponder, metadata, nestedBy);
@@ -373,9 +376,9 @@ package org.restfulx.controllers {
      */
     public function showById(clazz:Class, id:*, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = false,
-      targetServiceId:int = -1, customProcessor:Function = null):RxModel {
+      targetServiceId:int = -1, customProcessor:Function = null, unmarshallDisconnected:Boolean = false):RxModel {
       return show({clazz: clazz, id: id}, optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, 
-        targetServiceId, customProcessor);
+        targetServiceId, customProcessor, unmarshallDisconnected);
     }
 
     /**
@@ -397,7 +400,8 @@ package org.restfulx.controllers {
      *  IServiceProvider#update
      */
     public function update(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void {
+      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null,
+      unmarshallDisconnected:Boolean = false):void {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -410,11 +414,12 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("recursive")) recursive = optsOrOnSuccess["recursive"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
           if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
+          if (optsOrOnSuccess.hasOwnProperty("unmarshallDisconnected")) unmarshallDisconnected = optsOrOnSuccess["unmarshallDisconnected"];
         }
       }
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
-      var serviceResponder:ServiceResponder = new ServiceResponder(cache.update, service, fqn, onSuccess, onFailure);
+      var serviceResponder:ServiceResponder = new ServiceResponder(cache.update, service, fqn, onSuccess, onFailure, unmarshallDisconnected);
       
       if (customProcessor != null) {
         customProcessor(object, serviceResponder, metadata, nestedBy, recursive);
@@ -447,7 +452,8 @@ package org.restfulx.controllers {
      *  IServiceProvider#create
      */
     public function create(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void {
+      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null, 
+      unmarshallDisconnected:Boolean = false):void {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -460,11 +466,12 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("recursive")) recursive = optsOrOnSuccess["recursive"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
           if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
+          if (optsOrOnSuccess.hasOwnProperty("unmarshallDisconnected")) unmarshallDisconnected = optsOrOnSuccess["unmarshallDisconnected"];
         }
       }
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
-      var serviceResponder:ServiceResponder = new ServiceResponder(cache.create, service, fqn, onSuccess, onFailure);
+      var serviceResponder:ServiceResponder = new ServiceResponder(cache.create, service, fqn, onSuccess, onFailure, unmarshallDisconnected);
       
       if (customProcessor != null) {
         customProcessor(object, serviceResponder, metadata, nestedBy, recursive);
@@ -497,7 +504,8 @@ package org.restfulx.controllers {
      *  IServiceProvider#destroy
      */
     public function destroy(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
-      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null):void {
+      metadata:Object = null, recursive:Boolean = false, targetServiceId:int = -1, customProcessor:Function = null,
+      unmarshallDisconnected:Boolean = false):void {
       var onSuccess:Object = null;
       if (optsOrOnSuccess != null) {
         if (optsOrOnSuccess is Function || optsOrOnSuccess is IResponder) {
@@ -510,6 +518,7 @@ package org.restfulx.controllers {
           if (optsOrOnSuccess.hasOwnProperty("recursive")) recursive = optsOrOnSuccess["recursive"];
           if (optsOrOnSuccess.hasOwnProperty("targetServiceId")) targetServiceId = optsOrOnSuccess["targetServiceId"];
           if (optsOrOnSuccess.hasOwnProperty("customProcessor")) customProcessor = optsOrOnSuccess["customProcessor"];
+          if (optsOrOnSuccess.hasOwnProperty("unmarshallDisconnected")) unmarshallDisconnected = optsOrOnSuccess["unmarshallDisconnected"];
         }
       }
       var fqn:String = getQualifiedClassName(object);
@@ -587,14 +596,14 @@ package org.restfulx.controllers {
      */
     public function reload(object:Object, optsOrOnSuccess:Object = null, onFailure:Function = null, nestedBy:Array = null,
       metadata:Object = null, fetchDependencies:Boolean = true, useLazyMode:Boolean = true, append:Boolean = false, 
-      targetServiceId:int = -1, customProcessor:Function = null):void {
+      targetServiceId:int = -1, customProcessor:Function = null, unmarshallDisconnected:Boolean = false):void {
       reset(object);      
       if (object is Class) {
         index(Class(object), optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, append,
-          targetServiceId, customProcessor);
+          targetServiceId, customProcessor, unmarshallDisconnected);
       } else {
         show(object, optsOrOnSuccess, onFailure, nestedBy, metadata, fetchDependencies, useLazyMode, 
-          targetServiceId, customProcessor);
+          targetServiceId, customProcessor, unmarshallDisconnected);
       }
     }
 

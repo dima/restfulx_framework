@@ -48,6 +48,7 @@ package org.restfulx.services {
     private var modelType:String;
     private var onSuccess:Object;
     private var onFailure:Function;
+    private var unmarshallDisconnected:Boolean;
 
     /**
      * @param handler function to call with the unmarshalled result
@@ -57,13 +58,14 @@ package org.restfulx.services {
      *  everything has been *successfully* processed
      * @param onFailure
      */
-    public function ServiceResponder(handler:Function, service:IServiceProvider, modelType:String, onSuccess:Object = null, 
-      onFailure:Function = null) {
+    public function ServiceResponder(handler:Function, service:IServiceProvider, modelType:String, 
+      onSuccess:Object = null, onFailure:Function = null, unmarshallDisconnected:Boolean = false) {
       this.handler = handler;
       this.service = service;
       this.modelType = modelType;
       this.onSuccess = onSuccess;
       this.onFailure = onFailure;
+      this.unmarshallDisconnected = unmarshallDisconnected;
     }
     
     public function get handler():Function {
@@ -86,7 +88,7 @@ package org.restfulx.services {
       Rx.models.dispatchEvent(new ServiceCallStopEvent);
       if (handler != null) {
         if (!service.hasErrors(event.result)) {
-          var result:Object = service.unmarshall(event.result, false, modelType);
+          var result:Object = service.unmarshall(event.result, unmarshallDisconnected, modelType);
           var resultType:String;
           if (result is TypedArray) {
             resultType = TypedArray(result).itemType;
