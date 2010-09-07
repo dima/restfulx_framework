@@ -398,7 +398,8 @@ package org.restfulx.controllers {
         var conditions:Object = Rx.models.state.refs[fqn][relationship]["conditions"];
                 
         if (target) {
-          for each (var item:Object in data) {
+          for (var i:int = 0; i < data.length; i++) {
+            var item:Object = data[i];
             var tableName:String = Rx.models.state.controllers[target];
             
             var query:String = "SELECT * FROM " + tableName + 
@@ -438,9 +439,9 @@ package org.restfulx.controllers {
               }
 
               if (relType == "HasMany") {
-                item[relationship] = result;
+                data[i][relationship] = result;
               } else if (result && result.length > 0) {
-                item[relationship] = result[0];
+                data[i][relationship] = result[0];
               }
               count++;
               if (total == count) {
