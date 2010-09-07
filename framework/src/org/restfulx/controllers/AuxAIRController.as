@@ -260,9 +260,9 @@ package org.restfulx.controllers {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
       });
       if (Rx.airEncryptionKey != null) {
-        connection.openAsync(databaseFile, SQLMode.CREATE, null, false, 1024, Rx.airEncryptionKey);
+        connection.open(databaseFile, SQLMode.CREATE, false, 1024, Rx.airEncryptionKey);
       } else {
-        connection.openAsync(databaseFile);
+        connection.open(databaseFile);
       }
     }
 
