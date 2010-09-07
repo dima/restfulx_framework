@@ -382,6 +382,12 @@ package org.restfulx.controllers {
       return sqlStatement;     
     }
     
+    protected function checkConditions(source:Object, conditions:Object):Boolean {
+      var allConditionsMet:Boolean = true;
+
+      return allConditionsMet;
+    }
+    
     protected function processIncludedRelationships(relationships:Array, fqn:String, data:Array, responder:IResponder = null):void {
       var total:int = relationships.length * data.length;
       var count:int = 0;
@@ -389,29 +395,39 @@ package org.restfulx.controllers {
         var target:String = Rx.models.state.refs[fqn][relationship]["type"];
         var relType:String = Rx.models.state.refs[fqn][relationship]["relType"];
         var referAs:String = Rx.models.state.refs[fqn][relationship]["referAs"];
+        var conditions:Object = Rx.models.state.refs[fqn][relationship]["conditions"];
                 
         if (target) {
           for each (var item:Object in data) {
             var tableName:String = Rx.models.state.controllers[target];
             
-            var statement:SQLStatement = getSQLStatement("SELECT * FROM " + tableName + 
-              " WHERE sync != 'D' AND " + Rx.models.state.names[fqn]["single"] + "_id = '" + item["id"] + "'");
+            var query:String = "SELECT * FROM " + tableName + 
+              " WHERE sync != 'D' AND " + Rx.models.state.names[fqn]["single"] + "_id = '" + item["id"] + "'";
               
             if (!RxUtils.isEmpty(referAs)) {
               var mirrorObject:Object = Rx.models.state.refs[target][referAs];
               if (mirrorObject) {
                 var polymorphic:Boolean = mirrorObject["polymorphic"];
 
-                var query:String = "SELECT * FROM " + tableName + " WHERE sync != 'D' AND " + 
+                query = "SELECT * FROM " + tableName + " WHERE sync != 'D' AND " + 
                   referAs + "_id = '" + item["id"] + "'";
                   
                 if (polymorphic) {
                   query += " AND " + referAs + "_type = '" + fqn.split("::")[1] + "'";
                 }
-
-                statement = getSQLStatement(query);
               }
             }
+            
+            if (conditions) {
+              for (var condition:String in conditions) {
+                condition = RxUtils.toSnakeCase(condition);
+                query += " AND " + condition + " LIKE '%" + conditions[condition] + "%' AND "
+              }
+              
+              query = query.substr(0, query.length - 5);
+            }
+            
+            var statement:SQLStatement = getSQLStatement(query);
 
             Rx.log.debug("executing SQL:" + statement.text);
             statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
