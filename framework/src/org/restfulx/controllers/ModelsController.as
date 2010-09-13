@@ -222,9 +222,10 @@ package org.restfulx.controllers {
         state.waiting[fqn] = true;
   
         var service:IServiceProvider = getServiceProvider(targetServiceId);
-        var serviceResponder:ServiceResponder = new ServiceResponder(cache.index, service, fqn, onSuccess, onFailure);
+        var serviceResponder:ServiceResponder = new ServiceResponder(cache.index, service, fqn, onSuccess, onFailure, 
+          unmarshallDisconnected);
         if (customProcessor != null) {
-          customProcessor(clazz, serviceResponder, metadata, nestedBy);
+          customProcessor(clazz, serviceResponder, metadata, nestedBy, unmarshallDisconnected);
         } else {
           invokeService(service.index, service, clazz, serviceResponder, metadata, nestedBy);
         }
@@ -523,7 +524,8 @@ package org.restfulx.controllers {
       }
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
-      var serviceResponder:ServiceResponder = new ServiceResponder(cache.destroy, service, fqn, onSuccess, onFailure);
+      var serviceResponder:ServiceResponder = new ServiceResponder(cache.destroy, service, fqn, onSuccess, onFailure,
+        unmarshallDisconnected);
       
       if (customProcessor != null) {
         customProcessor(object, serviceResponder, metadata, nestedBy, recursive);
