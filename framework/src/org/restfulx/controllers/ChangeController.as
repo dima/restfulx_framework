@@ -110,6 +110,10 @@ package org.restfulx.controllers {
     
     private var destination:IServiceProvider;
     
+    private var onSuccess:Function;
+    
+    private var onFailure:Function;
+    
     private var canUndoRedo:Boolean;
     
     private var notifiedPushStart:Boolean;
@@ -118,12 +122,15 @@ package org.restfulx.controllers {
      * @param source ISyncingServiceProvider implementation that changes come from
      * @param destination IServiceProvider implemnetation that the changes should go to
      */
-  	public function ChangeController(source:ISyncingServiceProvider = null, destination:IServiceProvider = null) {
+  	public function ChangeController(source:ISyncingServiceProvider = null, destination:IServiceProvider = null, 
+  	  onSuccess:Function = null, onFailure:Function = null) {
   	  super();
       setSyncProviders(source, destination);
       Rx.models.addEventListener(CacheUpdateEvent.ID, onCacheUpdate);
   		this.pullModels = new Array;
   		this.pushModels = new Array;
+  		this.onSuccess = onSuccess;
+  		this.onFailure = onFailure;
   	}
   	
     /**
@@ -191,6 +198,16 @@ package org.restfulx.controllers {
 	      var fetchDependencies:Boolean = true;
 	      var useLazyMode:Boolean = true;
 	      var unmarshallDisconnected:Boolean = false;
+	      var onSuccess:Function = null;
+	      var onFailure:Function = null;
+	      
+	      if (model.hasOwnProperty("onSuccess") && model["onSuccess"] != null) {
+	        onSuccess = model["onSuccess"];
+	      }
+	      
+	      if (model.hasOwnProperty("onFailure") && model["onFailure"] != null) {
+	        onFailure = model["onFailure"];
+	      }
 	      
 	      if (model.hasOwnProperty("metadata") && model["metadata"] != null) {
 	        metadata = model["metadata"];
@@ -211,7 +228,8 @@ package org.restfulx.controllers {
 	      pullModels.push(Rx.models.state.types[type]);
 	      source.getLastPullTimeStamp(type, 
 	        new ItemResponder(function(result:ResultEvent, token:Object = null):void {
-            onGetLastPullTimeStamp(result.result, fetchDependencies, useLazyMode, metadata, unmarshallDisconnected);
+            onGetLastPullTimeStamp(result.result, fetchDependencies, useLazyMode, metadata, unmarshallDisconnected, onSuccess,
+              onFailure);
 	        }, function(error:Object, token:Object = null):void {
 	          Rx.log.debug("no timestamp available due to: " + error);
 	          throw new Error(error);
@@ -220,14 +238,15 @@ package org.restfulx.controllers {
 	  }
 	  
 	  private function onGetLastPullTimeStamp(result:Object, fetchDependencies:Boolean, useLazyMode:Boolean, metadata:Object,
-	    unmarshallDisconnected:Boolean = false):void {
+	    unmarshallDisconnected:Boolean = false, onSuccess:Function = null, onFailure:Function = null):void {
 	    if (result != null && result.hasOwnProperty("timestamp") && !RxUtils.isEmpty(result["timestamp"])) {
 	      metadata["last_synced"] = result["timestamp"];
 	    }
 	    Rx.log.debug("sync metadata: " + ObjectUtil.toString(metadata));
       Rx.log.debug("responder pulling " + Rx.models.state.types[result["type"]]);
-      Rx.models.reload(result["type"], {targetServiceId: destination.id, fetchDependencies: fetchDependencies,
-        useLazyMode: useLazyMode, metadata: metadata, append: true, unmarshallDisconnected: unmarshallDisconnected});
+      Rx.models.reload(result["type"], {onSuccess: onSuccess, onFailure: onFailure, targetServiceId: destination.id, 
+        fetchDependencies: fetchDependencies, useLazyMode: useLazyMode, metadata: metadata, append: true, 
+        unmarshallDisconnected: unmarshallDisconnected});
 	  }
 	  
 	  /**
