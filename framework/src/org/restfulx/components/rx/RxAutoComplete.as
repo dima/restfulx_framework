@@ -137,6 +137,10 @@ package org.restfulx.components.rx {
     
     /** Always invoke show on the model independency of the currently shown status */
     public var alwaysShow:Boolean = false;
+    
+    /** Disable automatic invocation of search function, you'll have to add your own button/control to
+        invoke search */
+    public var useManualSearch:Boolean = false;
 
     private var _resource:Class;
 
@@ -299,7 +303,7 @@ package org.restfulx.components.rx {
             
       if (data.length == 0) resourceSearched = false;
 
-      if (!itemPreselected && !resourceSearched && !searchInProgress) {
+      if (!useManualSearch && !itemPreselected && !resourceSearched && !searchInProgress) {
         searchInProgress = true;
         if (delayTimer != null && delayTimer.running) {
           delayTimer.stop();
@@ -311,7 +315,10 @@ package org.restfulx.components.rx {
       }
     }
     
-    private function invokeSearch(event:TimerEvent):void {
+    /**
+     * Perform search on the server using typed text as search criteria
+     */
+    public function invokeSearch(event:TimerEvent = null):void {
       if (RxUtils.isEmpty(typedText)) {
         searchInProgress = false;
         return;
