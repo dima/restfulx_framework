@@ -137,7 +137,11 @@ package org.restfulx.components.rx {
     /** Always invoke show on the model independency of the currently shown status */
     public var alwaysShow:Boolean = false;
     
+    /** If set to true, do not automatically submot queries to the server */
     public var useManualSearch:Boolean = false;
+    
+    /** If enter key is hit, invoke search */
+    public var enterKeyInvokesSearch:Boolean = true;
 
     private var _resource:Class;
 
@@ -483,6 +487,7 @@ package org.restfulx.components.rx {
             itemShown = false;
             if (textInput.text != "") {
               dispatchEvent(new RxAutoCompleteItemEvent(_typedText));
+              if (enterKeyInvokesSearch) invokeSearch();
               event.stopPropagation();
             }
           }
