@@ -24,6 +24,7 @@
 package org.restfulx.components.rx {
   import flash.events.Event;
   import flash.events.KeyboardEvent;
+  import flash.events.MouseEvent;
   import flash.events.TimerEvent;
   import flash.ui.Keyboard;
   import flash.utils.Timer;
@@ -452,7 +453,7 @@ package org.restfulx.components.rx {
     }
     
     private function onDropDownClose(event:Event = null):void {
-      if (selectedItem != null && selectedItem is RxModel) {
+      if (event is MouseEvent && selectedItem != null && selectedItem is RxModel) {
         if (showOnEnter && !alwaysShow && !Rx.models.shown(selectedItem)) {
           RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
         } else if (showOnEnter && alwaysShow) {
