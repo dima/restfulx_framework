@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="CacheUpdateEvent,org.restfulx.events.CacheUpdateEvent,CREATE,DESTROY,ID,INDEX,SHOW,UPDATE,data,fqn,opType,isCreate,isCreateFor,isDestroy,isDestroyFor,isFor,isIndex,isIndexFor,isShow,isShowFor,isUpdate,isUpdateFor" name="keywords">
+<meta content="CacheUpdateEvent,org.restfulx.events.CacheUpdateEvent,CREATE,DESTROY,ID,INDEX,SHOW,UPDATE,data,fqn,opType,serviceProvider,isCreate,isCreateFor,isDestroy,isDestroyFor,isFor,isIndex,isIndexFor,isShow,isShowFor,isUpdate,isUpdateFor" name="keywords">
 <title>org.restfulx.events.CacheUpdateEvent</title>
 </head>
 <body>
@@ -84,6 +84,11 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 </td><td class="summaryTableOwnerCol">CacheUpdateEvent</td>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#serviceProvider">serviceProvider</a> : <a href="../services/IServiceProvider.html">IServiceProvider</a>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">CacheUpdateEvent</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SHOW">SHOW</a> : int = 2<div class="summaryTableDescription">[static]</div>
 </td><td class="summaryTableOwnerCol">CacheUpdateEvent</td>
 </tr>
@@ -103,7 +108,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#CacheUpdateEvent()">CacheUpdateEvent</a>(fqn:String, opType:int, data:Object = null)</div>
+<a class="signatureLink" href="#CacheUpdateEvent()">CacheUpdateEvent</a>(fqn:String, opType:int, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>, data:Object = null)</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">CacheUpdateEvent</td>
 </tr>
@@ -252,6 +257,15 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public var opType:int</code><p> The operation that was performed </p></div>
+<a name="serviceProvider"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">serviceProvider</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a></code>
+</div>
 <a name="SHOW"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -279,7 +293,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function CacheUpdateEvent(fqn:String, opType:int, data:Object = null)</code><span class="label">Parameters</span>
+<code>public function CacheUpdateEvent(fqn:String, opType:int, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>, data:Object = null)</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">fqn</span>:String</code></td>
@@ -289,6 +303,12 @@ showHideInherited();
 </tr>
 <tr>
 <td width="20px"></td><td><code><span class="label">opType</span>:int</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">serviceProvider</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code></td>
 </tr>
 <tr>
 <td class="paramSpacer">&nbsp;</td>

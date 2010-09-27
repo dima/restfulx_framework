@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
-<meta content="AIRServiceProvider,org.restfulx.services.air.AIRServiceProvider,ID,connection,initialized,queue,sql,state,id,canLazyLoad,computeMetadada,create,destroy,dirty,executePendingSQLStatements,executeSQLStatement,getLastPullTimeStamp,getSQLStatement,getSQLType,hasErrors,index,initializeConnection,invokeResponderResult,marshall,purge,queueSQLStatement,show,sync,unmarshall,update,updateLastPullTimeStamp" name="keywords">
+<meta content="AIRServiceProvider,org.restfulx.services.air.AIRServiceProvider,ID,connection,initialized,queue,sql,state,id,beginTransaction,canLazyLoad,commitTransaction,computeMetadada,create,destroy,dirty,executePendingSQLStatements,executeSQLStatement,getLastPullTimeStamp,getSQLStatement,getSQLType,hasErrors,index,initializeConnection,invokeResponderResult,marshall,purge,queueSQLStatement,show,sync,unmarshall,update,updateLastPullTimeStamp" name="keywords">
 <title>org.restfulx.services.air.AIRServiceProvider</title>
 </head>
 <body>
@@ -58,6 +58,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#connection">connection</a> : SQLConnection<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
+</tr>
+<tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#id">id</a> : int<div class="summaryTableDescription">[read-only]
      
      ID uniquely identifies this service provider.</div>
@@ -75,10 +79,6 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <table id="summaryTableProtectedProperty" class="summaryTable " cellpadding="3" cellspacing="0">
 <tr>
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
-</tr>
-<tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#connection">connection</a> : SQLConnection<div class="summaryTableDescription"></div>
-</td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#queue">queue</a> : Array<div class="summaryTableDescription"></div>
@@ -113,10 +113,30 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#beginTransaction()">beginTransaction</a>():void</div>
+<div class="summaryTableDescription">
+     
+     If the service provider supports it, this begins a transaction
+     </div>
+</td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#canLazyLoad()">canLazyLoad</a>():Boolean</div>
 <div class="summaryTableDescription">
      
      Indicates if this service provider can perform lazy loading.</div>
+</td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#commitTransaction()">commitTransaction</a>(responder:IResponder = null):void</div>
+<div class="summaryTableDescription">
+     
+     If the service provider supports it, this commits the currently active transaction
+     </div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
 </tr>
 <tr class="">
@@ -339,7 +359,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected var connection:SQLConnection</code>
+<code>public var connection:SQLConnection</code>
 </div>
 <a name="id"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
@@ -426,10 +446,27 @@ showHideInherited();
 </div>
 <a name="methodDetail"></a>
 <div class="detailSectionHeader">Method detail</div>
+<a name="beginTransaction()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">beginTransaction</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function beginTransaction():void</code><p>
+     
+     If the service provider supports it, this begins a transaction
+     </p><p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../../services/ISyncingServiceProvider.html#beginTransaction" target="">org.restfulx.services.ISyncingServiceProvider.beginTransaction</a>
+</div>
+</div>
 <a name="canLazyLoad()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
-<td class="detailHeaderName">canLazyLoad</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+<td class="detailHeaderName">canLazyLoad</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
 </tr>
 </table>
 <div class="detailBody">
@@ -452,6 +489,29 @@ showHideInherited();
 </p>
 <div class="seeAlso">
 <a href="../../services/IServiceProvider.html#canLazyLoad" target="">org.restfulx.services.IServiceProvider.canLazyLoad</a>
+</div>
+</div>
+<a name="commitTransaction()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">commitTransaction</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function commitTransaction(responder:IResponder = null):void</code><p>
+     
+     If the service provider supports it, this commits the currently active transaction
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">responder</span>:IResponder</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../../services/ISyncingServiceProvider.html#commitTransaction" target="">org.restfulx.services.ISyncingServiceProvider.commitTransaction</a>
 </div>
 </div>
 <a name="computeMetadada()"></a>

@@ -24,6 +24,7 @@
 package org.restfulx.components.rx {
   import flash.events.Event;
   import flash.events.KeyboardEvent;
+  import flash.events.MouseEvent;
   import flash.events.TimerEvent;
   import flash.ui.Keyboard;
   import flash.utils.Timer;
@@ -36,7 +37,7 @@ package org.restfulx.components.rx {
   import org.restfulx.models.RxModel;
   import org.restfulx.utils.RxUtils;
   import org.restfulx.utils.TypedArray;
-  
+    
   [Event(name="typedTextChange", type="flash.events.Event")]
   [Event(name="chosenItemChange", type="flash.events.Event")]
   [Event(name="selectedItemChange", type="flash.events.Event")]
@@ -95,6 +96,11 @@ package org.restfulx.components.rx {
     public var filterFunction:Function;
     
     /**
+     * Invoked when server responds with an error
+     */
+    public var onServerErrorFunction:Function;
+    
+    /**
      * By default RxAutoComplete will use Rx.models.reload function with metadata in append mode, 
      * which will use the current service provider. If you are unhappy with any part of standard
      * Rx index/reload processing, you can provide your own custom function here to do all
@@ -138,9 +144,11 @@ package org.restfulx.components.rx {
     /** Always invoke show on the model independency of the currently shown status */
     public var alwaysShow:Boolean = false;
     
-    /** Disable automatic invocation of search function, you'll have to add your own button/control to
-        invoke search */
+    /** If set to true, do not automatically submot queries to the server */
     public var useManualSearch:Boolean = false;
+    
+    /** If enter key is hit, invoke search */
+    public var enterKeyInvokesSearch:Boolean = true;
 
     private var _resource:Class;
 
@@ -191,9 +199,10 @@ package org.restfulx.components.rx {
       setStyle("cornerRadius",0);
       setStyle("paddingLeft",0);
       setStyle("paddingRight",0);
-      rowCount = 7;
+      rowCount = 10;
       
       addEventListener("typedTextChange", onTypedTextChange);
+      addEventListener("close", onDropDownClose);
     }
     
     /** 
@@ -316,14 +325,14 @@ package org.restfulx.components.rx {
     }
     
     /**
-     * Perform search on the server using typed text as search criteria
+     * Calling this function will force the control to hit the server with the search
      */
     public function invokeSearch(event:TimerEvent = null):void {
       if (RxUtils.isEmpty(typedText)) {
         searchInProgress = false;
         return;
       }
-      Rx.models.reload(resource, {onSuccess: onResourceSearch, append: true, 
+      Rx.models.reload(resource, {onSuccess: onResourceSearch, onFailure: onServerErrorFunction, append: true, 
         metadata: {search: typedText, category: filterCategory}, customProcessor: customSearchFunction});
     }
         
@@ -333,7 +342,7 @@ package org.restfulx.components.rx {
       itemShown = false;
       noResults = false;
       dataProvider = null;
-      if ((results as TypedArray).source.length) {
+      if ((results as Array).length) {
         dataProvider = Rx.filter(Rx.models.cached(_resource), filterFunction);
         dataProvider.refresh();
         
@@ -446,6 +455,55 @@ package org.restfulx.components.rx {
         }
       }      
     }
+    
+    private function onDropDownClose(event:Event = null):void {
+      if (event is MouseEvent && selectedItem != null && selectedItem is RxModel) {
+        if (showOnEnter && !alwaysShow && !Rx.models.shown(selectedItem)) {
+          RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
+        } else if (showOnEnter && alwaysShow) {
+          Rx.models.reset(selectedItem);
+          RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
+        } else {
+          selectedObject = selectedItem;
+          itemShown = true;
+          if (clearTextAfterFind) clearTypedText();
+          dispatchEvent(new Event("chosenItemChange"));
+          if (event) event.stopPropagation();
+        }
+      }
+    }
+    
+    private function handleSelectOrEnter(event:Event = null):void {
+      if (selectedItem != null && selectedItem is RxModel) {
+        if (showOnEnter && !alwaysShow && !Rx.models.shown(selectedItem)) {
+          RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
+        } else if (showOnEnter && alwaysShow) {
+          Rx.models.reset(selectedItem);
+          RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
+        } else {
+          selectedObject = selectedItem;
+          itemShown = true;
+          if (clearTextAfterFind) clearTypedText();
+          dispatchEvent(new Event("chosenItemChange"));
+          if (event) event.stopPropagation();
+        }
+      } else if (preselectedObject != null && preselectedObject is RxModel) {
+        selectedItem = preselectedObject;
+        selectedObject = selectedItem;
+        itemShown = true;
+        preselectedObject = null;
+      } else {
+        textInput.text = _typedText;
+        selectedObject = null;
+        preselectedObject = null;
+        itemShown = false;
+        if (textInput.text != "") {
+          dispatchEvent(new RxAutoCompleteItemEvent(_typedText));
+          if (enterKeyInvokesSearch) invokeSearch();
+          if (event) event.stopPropagation();
+        }
+      }
+    }
 
     override protected function keyDownHandler(event:KeyboardEvent):void {
       super.keyDownHandler(event);
@@ -464,34 +522,7 @@ package org.restfulx.components.rx {
           showingDropdown = false;
           dropdownClosed = true;
         } else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB) {
-          if (selectedItem != null && selectedItem is RxModel) {
-            if (showOnEnter && !alwaysShow && !Rx.models.shown(selectedItem)) {
-              RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
-            } else if (showOnEnter && alwaysShow) {
-              Rx.models.reset(selectedItem);
-              RxModel(selectedItem).show({onSuccess: onResourceShow, useLazyMode: true});
-            } else {
-              selectedObject = selectedItem;
-              itemShown = true;
-              if (clearTextAfterFind) clearTypedText();
-              dispatchEvent(new Event("chosenItemChange"));
-              event.stopPropagation();
-            }
-          } else if (preselectedObject != null && preselectedObject is RxModel) {
-            selectedItem = preselectedObject;
-            selectedObject = selectedItem;
-            itemShown = true;
-            preselectedObject = null;
-          } else {
-            textInput.text = _typedText;
-            selectedObject = null;
-            preselectedObject = null;
-            itemShown = false;
-            if (textInput.text != "") {
-              dispatchEvent(new RxAutoCompleteItemEvent(_typedText));
-              event.stopPropagation();
-            }
-          }
+          handleSelectOrEnter(event);
         } else if ((event.keyCode == Keyboard.UP || event.keyCode == Keyboard.DOWN) && showingDropdown) {
           dispatchEvent(new Event("itemHighlighted"));
           event.stopPropagation();

@@ -108,7 +108,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#ChangeController()">ChangeController</a>(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a> = null, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a> = null)</div>
+<a class="signatureLink" href="#ChangeController()">ChangeController</a>(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a> = null, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a> = null, onSuccess:Function = null, onFailure:Function = null)</div>
 <div class="summaryTableDescription">
      </div>
 </td><td class="summaryTableOwnerCol">ChangeController</td>
@@ -246,7 +246,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function ChangeController(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a> = null, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a> = null)</code><p>
+<code>public function ChangeController(source:<a href="../services/ISyncingServiceProvider.html">ISyncingServiceProvider</a> = null, destination:<a href="../services/IServiceProvider.html">IServiceProvider</a> = null, onSuccess:Function = null, onFailure:Function = null)</code><p>
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -259,6 +259,18 @@ showHideInherited();
 <tr>
 <td width="20px"></td><td><code><span class="label">destination</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> (default = <code>null</code>)<code></code> &mdash; IServiceProvider implemnetation that the changes should go to
      </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">onSuccess</span>:Function</code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">onFailure</span>:Function</code> (default = <code>null</code>)<code></code></td>
 </tr>
 </table>
 </div>
