@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2008-2010 Dima Berastau and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Redistributions of files must retain the above copyright notice.
+ ******************************************************************************/
+ -->
+<mx:TextInput xmlns:mx="http://www.adobe.com/2006/mxml"
+  text="{formatCurrency(cents)}" focusOut="updateCurrency()">
+  <mx:Script><![CDATA[
+    import flash.events.Event;
+    import mx.utils.StringUtil;
+
+    [Bindable]
+    /** Number of cents */
+    public var cents:int;
+
+    [Bindable]
+    /**
+     * Get the number of dollars.  Ideally this would be a decimal type.
+     */
+    public function get dollars():Number {
+      return cents / 100.0;
+    }
+
+    /**
+     * Set the number of dollars.  Ideally this would be a decimal type.
+     */
+    public function set dollars(d:Number):void {
+      cents = int(Math.round(Math.max(minDollars, d) * 100));
+    }
+
+    [Bindable]
+    /** Minimum valid number of dollars */
+    public var minDollars:Number = 0.0;
+    
+    [Bindable]
+    public function get currencySymbol():String {
+      return currencyFormatter.currencySymbol;
+    }
+
+    public function set currencySymbol(value:String):void {
+      currencyFormatter.currencySymbol = value;
+      text = formatCurrency(cents);
+    }
+    
+    private function formatCurrency(cents:int):String {
+      if (isNaN(cents)) {
+        return '';
+      } else {
+        var tempDollars:Number = cents / 100.0;
+        return currencyFormatter.format(tempDollars);
+      }
+    }
+
+    private function updateCurrency():void {
+      var trimText:String = StringUtil.trim(text);
+      if (trimText.length > 0) {
+        var pos:int = trimText.indexOf(currencyFormatter.currencySymbol);
+        dollars = (pos == -1) ? Number(trimText) : Number(trimText.substr(pos + currencyFormatter.currencySymbol.length));
+      } else {
+        dollars = 0;
+      }
+      // needed in case binding doesn't trigger
+      text = formatCurrency(cents);
+    }
+  ]]></mx:Script>
+  <mx:CurrencyFormatter id="currencyFormatter" precision="2" rounding="none"
+      decimalSeparatorTo="." thousandsSeparatorTo=","
+      useThousandsSeparator="true" useNegativeSign="true"
+      alignSymbol="left"/>
+</mx:TextInput>

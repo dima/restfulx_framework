@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<facebook_users type="array">
+  <facebook_user>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">845196711</id>
+    <name>FacebookUser1NameString</name>
+    <friend_id type="integer" nil="true"></friend_id>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </facebook_user>
+  <facebook_user>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">5165920311</id>
+    <name>FacebookUser2NameString</name>
+    <friend_id type="integer">845196711</friend_id>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </facebook_user>
+  <facebook_user>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">13452406411</id>
+    <name>FacebookUser4NameString</name>
+    <friend_id type="integer">5165920311</friend_id>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </facebook_user>
+  <facebook_user>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">22529498911</id>
+    <name>FacebookUser3NameString</name>
+    <friend_id type="integer">845196711</friend_id>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </facebook_user>
+</facebook_users>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ignored_properties type="array">
+  <ignored_property>
+    <amount type="integer">1</amount>
+    <available type="boolean">true</available>
+    <created_at type="datetime">2008/12/08 21:59:36</created_at>
+    <delivered_on type="date">2008/12/08</delivered_on>
+    <id type="integer">380986833</id>
+    <name>SimpleProperty2NameString</name>
+    <price type="float">1.5</price>
+    <quantity type="decimal">9.99</quantity>
+    <sold_on type="datetime">2000/01/01 13:59:19</sold_on>
+    <updated_at type="datetime">2008/12/08 21:59:36</updated_at>
+  </ignored_property>
+  <ignored_property>
+    <amount type="integer">10</amount>
+    <available type="boolean">false</available>
+    <created_at type="datetime">2008/12/08 21:59:36</created_at>
+    <delivered_on type="date">2008/12/08</delivered_on>
+    <id type="integer">424194069</id>
+    <name>SimpleProperty1NameString</name>
+    <price type="float">1.5</price>
+    <quantity type="decimal">9.99</quantity>
+    <sold_on type="datetime">2000/01/01 13:59:19</sold_on>
+    <updated_at type="datetime">2008/12/08 21:59:36</updated_at>
+  </ignored_property>
+  <ignored_property>
+    <amount type="integer"></amount>
+    <available type="boolean"></available>
+    <created_at type="datetime">2008/12/08 21:59:36</created_at>
+    <delivered_on type="date">2008/12/08</delivered_on>
+    <id type="integer">482976022</id>
+    <name></name>
+    <price type="float"></price>
+    <quantity type="decimal"></quantity>
+    <sold_on type="datetime"></sold_on>
+    <updated_at type="datetime">2008/12/08 21:59:36</updated_at>
+  </ignored_property>
+  <ignored_property>
+    <amount type="integer"/>
+    <available type="boolean"/>
+    <created_at type="datetime">2008/12/08 21:59:36</created_at>
+    <delivered_on type="date">2008/12/08</delivered_on>
+    <id type="integer">943245828</id>
+    <name/>
+    <price type="float"/>
+    <quantity type="decimal"/>
+    <sold_on type="datetime"/>
+    <updated_at type="datetime">2008/12/08 21:59:36</updated_at>
+  </ignored_property>
+</ignored_properties>

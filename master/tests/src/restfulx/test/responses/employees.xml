@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<employees type="array">
+  <employee>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">69560147</id>
+    <name>Employee2NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </employee>
+  <employee>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">112767383</id>
+    <name>Employee1NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </employee>
+  <employee>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">404601800</id>
+    <name>Employee3NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </employee>
+  <employee>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">944425195</id>
+    <name>Employee4NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </employee>
+</employees>

@@ -1,0 +1,50 @@
+= RestfulX Framework: The RESTful way to develop Adobe Flex and AIR applications
+
+== Description
+
+Here's some of the things you can do with *RestfulX*:
+
+* *Create* a complete _Adobe_ _Flex_ or _AIR_ application in less than 5 minutes.
+
+  Use our lightweight Ruby-based code generation toolkit to create a fully functional
+  CRUD application. Simply do:
+  
+    sudo gem install restfulx
+  
+  And then run:
+  
+    rx-gen -h
+
+* *Integrate* with _Ruby_ _On_ _Rails_, _Merb_ or _Sinatra_ applications 
+  that use _ActiveRecord_, _DataMapper_, _CouchRest_, _ActiveCouch_ and so on.
+
+* *Communicate* between your Flex/AIR Rich Internet Application and service providers 
+  using _AMF_, _XML_ or _JSON_.
+  
+* *Persist* your data directly in Adobe AIR _SQLite_ database or _CouchDB_ 
+  without any additional infrastructure or intermediate servers.
+  
+* *Deploy* your RestfulX application on the Google App Engine and use Google
+  DataStore for persistence.
+  
+* *Synchronize* your data between AIR _SQLite_ and other service providers. 
+
+== Getting Started
+
+For details on how to get started with the RestfulX framework refer to:
+    
+    http://restfulx.github.com
+    
+== Getting Involved
+
+Report bugs or track framework development progress:
+
+    http://github.com/dima/restfulx_framework/issues
+  
+Get involved with the community:
+      
+    http://groups.google.com/group/restfulx-framework
+    
+== License
+
+Copyright (c) 2008-2010 Dima Berastau and Contributors, released under MIT License

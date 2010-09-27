@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="*" xmlns:flexunit="flexunit.flexui.*"
+  creationComplete="onCreationComplete()" backgroundColor="#FFFFFF">
+  <mx:Script>
+    <![CDATA[
+      import restfulx.test.cases.AuxAIRControllerTest;
+      import flexunit.framework.TestSuite;
+
+      import org.restfulx.Rx;
+      import org.restfulx.serializers.JSONSerializer;
+      import org.restfulx.services.air.AIRServiceProvider;
+      import org.restfulx.services.as3http.AS3JSONHTTPServiceProvider;
+      import org.restfulx.services.as3http.DirectCouchDBHTTPServiceProvider;
+      import org.restfulx.services.as3http.AS3XMLHTTPServiceProvider;
+      import org.restfulx.services.http.XMLHTTPServiceProvider;
+      import org.restfulx.services.http.JSONHTTPServiceProvider;
+      import org.restfulx.services.mock.MockDirectCouchDBHTTPServiceProvider;
+      import org.restfulx.services.mock.MockXMLHTTPServiceProvider;
+      import org.restfulx.services.mock.MockAIRServiceProvider;
+            
+      import restfulx.test.cases.serializers.CouchDBJSONSerializerTest;
+      import restfulx.test.cases.serializers.GAEXMLSerializerTest;
+      import restfulx.test.cases.serializers.XMLSerializerTest;
+      import restfulx.test.cases.serializers.VOSerializerTest;
+      import restfulx.test.cases.serializers.JSONSerializerTest;
+      
+      import restfulx.test.cases.integration.AIRServiceProviderTest;
+      import restfulx.test.cases.integration.AS3XMLHTTPServiceProviderTest;
+      import restfulx.test.cases.integration.DirectCouchDBServiceProviderTest;
+      import restfulx.test.cases.integration.JSONHTTPServiceProviderTest;
+      
+      import restfulx.test.cases.models.SimplePropertiesTest;
+      import restfulx.test.cases.models.NothingIndexingTest;
+      import restfulx.test.cases.models.SelfReferentialModelsTest;
+      import restfulx.test.cases.models.SingleTableInheritanceTest;
+      import restfulx.test.cases.models.HasManyThroughRelationshipsTest;
+      import restfulx.test.cases.models.NonStandardKeyRelationshipsTest;
+      import restfulx.test.cases.models.TreeModelsTest;
+      import restfulx.test.cases.models.PolymorphicRelationshipsTest;
+      import restfulx.test.cases.models.BasicRelationshipsTest;
+      import restfulx.test.cases.models.SortFilterTest;
+      
+      import restfulx.test.models.Nothing;
+      
+      import restfulx.test.cases.ModelsControllerTest;
+      import restfulx.test.cases.InflectorTest;
+      import restfulx.test.cases.ReferenceCleanupTest;
+      import restfulx.test.cases.CommandsControllerTest;
+      import restfulx.test.cases.RxUtilTest;
+      import restfulx.test.cases.bugs.Bug26Test;
+      
+      import restfulx.test.controllers.RxTestController;
+      
+      private function onCreationComplete():void {
+        Rx.enableLogging();
+        
+        Rx.couchDbRootUrl = "http://127.0.0.1:5984/";
+        Rx.couchDbDatabaseName = "restfulx_tests/";
+        
+        RxTestController.initialize([MockXMLHTTPServiceProvider, MockAIRServiceProvider, AS3XMLHTTPServiceProvider,
+          JSONHTTPServiceProvider, XMLHTTPServiceProvider, MockDirectCouchDBHTTPServiceProvider, AIRServiceProvider, 
+          DirectCouchDBHTTPServiceProvider, AS3JSONHTTPServiceProvider], 
+          MockXMLHTTPServiceProvider.ID, "restfulx-tests");
+                    
+        var testData:Object = {
+          simple_properties: simple_properties,
+          ignored_properties: ignored_properties,
+          projects: projects,
+          tasks: tasks,
+          contractors: contractors,
+          locations: locations,
+          employees: employees,
+          customers: customers,
+          categories: categories,
+          movies: movies,
+          actors: actors,
+          payable_accounts: payable_accounts,
+          receivable_accounts: receivable_accounts,
+          billable_weeks: billable_weeks,
+          clients: clients,
+          timesheets: timesheets,
+          stores: stores,
+          books: books,
+          authors: authors,
+          facebook_users: facebook_users,
+          nothing: nothing
+        }
+
+        MockXMLHTTPServiceProvider(Rx.services.getServiceProvider(MockXMLHTTPServiceProvider.ID)).loadTestData(testData);
+        MockAIRServiceProvider(Rx.services.getServiceProvider(MockAIRServiceProvider.ID)).loadTestData(testData);
+//        MockDirectCouchDBHTTPServiceProvider(Rx.services.getServiceProvider(MockDirectCouchDBHTTPServiceProvider.ID)).loadTestData(testData);
+        
+        var testSuite:TestSuite = new TestSuite;
+        addServiceDependentTests(testSuite, MockXMLHTTPServiceProvider.ID);
+        
+        addServiceDependentTests(testSuite, AIRServiceProvider.ID);
+        // enable only if you have CouchDB installed and restfulx_tests database prepopulated with test data, see above
+//        addServiceDependentTests(testSuite, DirectCouchDBHTTPServiceProvider.ID);
+        
+        addNonServiceDependentTests(testSuite);
+        addIntegrationTests(testSuite);
+        testRunner.test = testSuite;
+        testRunner.startTest();
+      }
+      
+      private function addServiceDependentTests(ts:TestSuite, serviceProviderId:int):void {
+        ts.addTest(new SimplePropertiesTest("testIndexWithEventListener", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testIndexWithOnSuccessFunction", serviceProviderId));
+        ts.addTest(new SimplePropertiesTest("testIndexWithOnFailureFunction", serviceProviderId));
+        
+        ts.addTest(new BasicRelationshipsTest("testBasicRelationshipsIndex", serviceProviderId));
+        
+        ts.addTest(new PolymorphicRelationshipsTest("testPolymorphicRelationshipsIndex", serviceProviderId));
+        
+        ts.addTest(new TreeModelsTest("testTreeModelIndex", serviceProviderId));
+        
+        ts.addTest(new SelfReferentialModelsTest("testModelsWithSelfReferenceIndex", serviceProviderId));
+        
+        ts.addTest(new NonStandardKeyRelationshipsTest("testNonStandardKeyRelationshipsIndex", serviceProviderId));
+        
+        ts.addTest(new HasManyThroughRelationshipsTest("testHasManyThroughForm1Index", serviceProviderId));
+        ts.addTest(new HasManyThroughRelationshipsTest("testHasManyThroughForm2Index", serviceProviderId));
+        
+        ts.addTest(new SingleTableInheritanceTest("testSTIIndex", serviceProviderId));
+        
+        ts.addTest(new NothingIndexingTest("testNothingIndex", serviceProviderId));
+
+        ts.addTest(new SortFilterTest("testFilter", serviceProviderId));
+        ts.addTest(new SortFilterTest("testSort", serviceProviderId));
+        ts.addTest(new SortFilterTest("testFilterWithSort", serviceProviderId));
+        ts.addTest(new SortFilterTest("testSortWithFilter", serviceProviderId));
+       }
+       
+       private function addNonServiceDependentTests(ts:TestSuite):void {
+        // these should not be run with an actual async service provider because they'll affect
+        // other tests
+        for each (var serviceProviderId:int in [MockXMLHTTPServiceProvider.ID, MockAIRServiceProvider.ID]) {
+          ts.addTest(new SimplePropertiesTest("testCreateWithTrueBoolean", serviceProviderId));
+          ts.addTest(new SimplePropertiesTest("testCreateWithFalseBoolean", serviceProviderId));
+        }
+                
+        ts.addTest(new AuxAIRControllerTest("testFindAll"));
+        ts.addTest(new AuxAIRControllerTest("testFindAllWithIncludes"));
+        ts.addTest(new AuxAIRControllerTest("testFindAllWithPolymorphicIncludes"));
+
+        ts.addTest(new RxUtilTest("testResourceNesting"));
+        ts.addTest(new RxUtilTest("testCamelCasing"));
+        ts.addTest(new InflectorTest("testInflector"));
+         
+        ts.addTest(new CommandsControllerTest("testCommandExecutionByClass"));
+        ts.addTest(new CommandsControllerTest("testCommandExecutionByName"));
+        
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasOneAndHasManies"));
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasManyThroughs"));
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedHasOneAndHasManiesDiffNames"));
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicHasOne"));
+        ts.addTest(new XMLSerializerTest("testUnmarshallingWithNestedPolymorphicBelongsTo"));
+        ts.addTest(new XMLSerializerTest("testObjectMarshalling"));
+        ts.addTest(new XMLSerializerTest("testObjectMarshallingWithSetRelationships"));
+        ts.addTest(new XMLSerializerTest("testObjectMarshallingWithNullRelationship"));
+        ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshalling"));
+        ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshallingWithMixedRelationships"));
+        ts.addTest(new XMLSerializerTest("testNothingUnmarshalling"));
+
+        ts.addTest(new JSONSerializerTest("testObjectUnmarshalling"));
+        ts.addTest(new JSONSerializerTest("testErrorUnmarshalling"));
+        ts.addTest(new JSONSerializerTest("testObjectMarshalling"));
+                        
+        ts.addTest(new CouchDBJSONSerializerTest("testCouchDBObjectUnmarshalling"));
+        ts.addTest(new CouchDBJSONSerializerTest("testCouchDBObjectUnmarshallingWithRelationships"));
+        ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshalling"));
+        ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshallingWithSetRelationships"));
+        ts.addTest(new CouchDBJSONSerializerTest("testObjectMarshallingWithNullRelationship"));
+        ts.addTest(new CouchDBJSONSerializerTest("testRecursiveObjectMarshalling"));
+        ts.addTest(new CouchDBJSONSerializerTest("testNothingUnmarshalling"));        
+        
+        // TODO: JSON nested resources unmarshalling
+        
+        ts.addTest(new VOSerializerTest("testObjectMarshalling"));
+        ts.addTest(new VOSerializerTest("testObjectMarshallingWithSetRelationships"));
+        ts.addTest(new VOSerializerTest("testObjectMarshallingWithNullRelationship"));
+        ts.addTest(new VOSerializerTest("testRecursiveObjectMarshalling"));
+        ts.addTest(new VOSerializerTest("testRecursiveObjectMarshallingWithMixedRelationships"));
+                
+        ts.addTest(new ReferenceCleanupTest("testHasManyRelationshipCleanup"));
+        ts.addTest(new ReferenceCleanupTest("testHasOneRelationshipCleanup"));
+        ts.addTest(new ReferenceCleanupTest("testSelfReferentialModelCleanup"));
+        
+        ts.addTest(new GAEXMLSerializerTest("testUnmarshalling"));
+        
+        // TODO: VO unmarshalling tests
+        
+        ts.addTest(new Bug26Test("testUserShow"));
+        ts.addTest(new Bug26Test("testContactAShow"));
+        ts.addTest(new Bug26Test("testContactBShow"));
+        
+        ts.addTest(new ModelsControllerTest("testShowById"));
+        ts.addTest(new ModelsControllerTest("testShowV1"));
+        ts.addTest(new ModelsControllerTest("testShowV2"));
+        ts.addTest(new ModelsControllerTest("testIndexWithNoDependencies"));
+       }
+       
+       private function addIntegrationTests(ts:TestSuite):void {
+         ts.addTest(new AIRServiceProviderTest("testIndexWithMetadata"));
+         ts.addTest(new AIRServiceProviderTest("testIndexWithLimitAndOffset"));
+         ts.addTest(new AIRServiceProviderTest("testIndexWithIgnored"));
+         ts.addTest(new AIRServiceProviderTest("testCreateWithIgnored"));
+         ts.addTest(new AIRServiceProviderTest("testGetLastPullTimeStamp"));
+         ts.addTest(new AIRServiceProviderTest("testUpdateLastPullTimeStamp"))
+//         ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
+//        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
+//        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));
+//        ts.addTest(new JSONHTTPServiceProviderTest("testIndex"));
+//        ts.addTest(new JSONHTTPServiceProviderTest("testCreate"));
+//        ts.addTest(new JSONHTTPServiceProviderTest("testUpdate"));
+//        ts.addTest(new JSONHTTPServiceProviderTest("testDestroy"));
+//        ts.addTest(new DirectCouchDBServiceProviderTest("testListAllDBs"));
+//        ts.addTest(new DirectCouchDBServiceProviderTest("testErroHandler"));
+//        ts.addTest(new DirectCouchDBServiceProviderTest("testCouchDBJSONMarshalling"));
+       }
+    ]]>
+  </mx:Script>
+  <!-- basic properties -->
+  <mx:XML id="simple_properties" source="restfulx/test/responses/simple_properties.xml"/>
+  
+  <!-- basic properties with ignores defined -->
+  <mx:XML id="ignored_properties" source="restfulx/test/responses/ignored_properties.xml"/>
+  
+  <!-- basic relationships -->
+  <mx:XML id="projects" source="restfulx/test/responses/projects.xml"/>
+  <mx:XML id="tasks" source="restfulx/test/responses/tasks.xml"/>
+  <mx:XML id="contractors" source="restfulx/test/responses/contractors.xml"/>
+  
+  <!-- polymorphic relationships -->
+  <mx:XML id="locations" source="restfulx/test/responses/locations.xml"/>
+  <mx:XML id="customers" source="restfulx/test/responses/customers.xml"/>
+  <mx:XML id="employees" source="restfulx/test/responses/employees.xml"/>
+  
+  <!-- tree-like structures -->
+  <mx:XML id="categories" source="restfulx/test/responses/categories.xml"/>
+  
+  <!-- self-referential models -->
+  <mx:XML id="facebook_users" source="restfulx/test/responses/facebook_users.xml"/>
+  
+  <!-- different key relationships -->
+  <mx:XML id="movies" source="restfulx/test/responses/movies.xml"/>
+  <mx:XML id="actors" source="restfulx/test/responses/actors.xml"/>
+  
+  <!-- STI -->
+  <mx:XML id="payable_accounts" source="restfulx/test/responses/payable_accounts.xml"/>
+  <mx:XML id="receivable_accounts" source="restfulx/test/responses/receivable_accounts.xml"/>
+  
+  <!-- TODO: generic STI (e.g. accounts) returns XML with records, which won't be parsed -->
+
+  <!-- HasMany(through) form 1 -->
+  <mx:XML id="billable_weeks" source="restfulx/test/responses/billable_weeks.xml"/>
+  <mx:XML id="clients" source="restfulx/test/responses/clients.xml"/>
+  <mx:XML id="timesheets" source="restfulx/test/responses/timesheets.xml"/>
+
+  <!-- HasMany(through) form 2 -->
+  <mx:XML id="stores" source="restfulx/test/responses/stores.xml"/>
+  <mx:XML id="books" source="restfulx/test/responses/books.xml"/>
+  <mx:XML id="authors" source="restfulx/test/responses/authors.xml"/>
+  
+  <!-- Standard named HasOne and HasMany includes -->
+  <mx:XML id="project_with_contractor_and_tasks" source="restfulx/test/responses/project_with_contractor_and_tasks.xml"/>
+ 
+  <!-- Non-standard named HasOne and HasMany includes -->
+  <mx:XML id="movie_with_lead_actor_and_actors" source="restfulx/test/responses/movie_with_lead_actor_and_actors.xml"/>
+
+  <!-- Polymorphic HasOne included -->
+  <mx:XML id="customer_with_location" source="restfulx/test/responses/customer_with_location.xml"/>
+  
+  <!-- Polymorphic BelongsTo included -->
+  <mx:XML id="location_with_owner" source="restfulx/test/responses/location_with_owner.xml"/>
+  
+  <!-- HasMany and HasMany(:through) form 1 included -->
+  <mx:XML id="timesheet_with_clients_and_billable_weeks" source="restfulx/test/responses/timesheet_with_clients_and_billable_weeks.xml"/>
+
+  <!-- HasMany(:through) form 1 with different names included -->
+  <mx:XML id="client_with_timesheets_and_incomplete_timesheets" source="restfulx/test/responses/client_with_timesheets_and_incomplete_timesheets.xml"/>
+
+  <!-- HasMany(:through) form 2 included -->
+  <mx:XML id="store_with_authors" source="restfulx/test/responses/store_with_authors.xml"/>
+  
+  <mx:XML id="nothing" source="restfulx/test/responses/nothing.xml"/>
+
+  <!-- GAE formatted XML -->
+  <mx:XML id="posts" source="restfulx/test/responses/posts.xml"/>
+
+  <!-- Reported Bugs -->
+  <mx:XML id="bug26user" source="restfulx/test/responses/bug26/user.xml"/>
+  <mx:XML id="bug26contactA" source="restfulx/test/responses/bug26/contactA.xml"/>
+  <mx:XML id="bug26contactB" source="restfulx/test/responses/bug26/contactB.xml"/>
+  <flexunit:TestRunnerBase id="testRunner" width="100%" height="100%"/>
+</mx:Application>
