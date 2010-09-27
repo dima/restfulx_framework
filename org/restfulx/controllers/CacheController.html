@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.4 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/CacheController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">"RestfulX Framework 1.3.0 API Documenation"</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/controllers/CacheController.html&amp;org/restfulx/controllers/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;CacheController</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
@@ -93,7 +93,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#create()">create</a>(model:<a href="../models/RxModel.html">RxModel</a>):void</div>
+<a class="signatureLink" href="#create()">create</a>(model:<a href="../models/RxModel.html">RxModel</a>, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</div>
 <div class="summaryTableDescription">
      Cache version of the <code>create</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
@@ -101,7 +101,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#destroy()">destroy</a>(model:<a href="../models/RxModel.html">RxModel</a>):void</div>
+<a class="signatureLink" href="#destroy()">destroy</a>(model:<a href="../models/RxModel.html">RxModel</a>, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</div>
 <div class="summaryTableDescription">
      Cache version of the <code>destroy</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
@@ -109,7 +109,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#index()">index</a>(models:Object):void</div>
+<a class="signatureLink" href="#index()">index</a>(models:Object, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</div>
 <div class="summaryTableDescription">
      Cache version of the <code>index</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
@@ -117,7 +117,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#show()">show</a>(model:<a href="../models/RxModel.html">RxModel</a>):void</div>
+<a class="signatureLink" href="#show()">show</a>(model:<a href="../models/RxModel.html">RxModel</a>, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</div>
 <div class="summaryTableDescription">
      Cache version of the <code>show</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
@@ -125,7 +125,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#update()">update</a>(model:<a href="../models/RxModel.html">RxModel</a>):void</div>
+<a class="signatureLink" href="#update()">update</a>(model:<a href="../models/RxModel.html">RxModel</a>, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</div>
 <div class="summaryTableDescription">
      Cache version of the <code>update</code> call.</div>
 </td><td class="summaryTableOwnerCol">CacheController</td>
@@ -174,7 +174,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function create(model:<a href="../models/RxModel.html">RxModel</a>):void</code><p>
+<code>public function create(model:<a href="../models/RxModel.html">RxModel</a>, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</code><p>
      Cache version of the <code>create</code> call. This dispatches
       create update event.
       
@@ -182,6 +182,13 @@ showHideInherited();
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RxModel.html">RxModel</a></code> &mdash; unmarshalled model
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">serviceProvider</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> &mdash; the provider that is this operation was perfomed by
      </td>
 </tr>
 </table>
@@ -193,7 +200,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function destroy(model:<a href="../models/RxModel.html">RxModel</a>):void</code><p>
+<code>public function destroy(model:<a href="../models/RxModel.html">RxModel</a>, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</code><p>
      Cache version of the <code>destroy</code> call. This dispatches
       destroy update event and cleans up any other model references.
       
@@ -201,6 +208,13 @@ showHideInherited();
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RxModel.html">RxModel</a></code> &mdash; unmarshalled model
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">serviceProvider</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> &mdash; the provider that is this operation was perfomed by
      </td>
 </tr>
 </table>
@@ -212,13 +226,20 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function index(models:Object):void</code><p>
+<code>public function index(models:Object, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</code><p>
      Cache version of the <code>index</code> call. This dispatches
       index update event.
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">models</span>:Object</code> &mdash; unmarshalled models
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">serviceProvider</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> &mdash; the provider that is this operation was perfomed by
      </td>
 </tr>
 </table>
@@ -230,13 +251,20 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function show(model:<a href="../models/RxModel.html">RxModel</a>):void</code><p>
+<code>public function show(model:<a href="../models/RxModel.html">RxModel</a>, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</code><p>
      Cache version of the <code>show</code> call. This dispatches
       show update event.
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RxModel.html">RxModel</a></code> &mdash; unmarshalled model
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">serviceProvider</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> &mdash; the provider that is this operation was perfomed by
      </td>
 </tr>
 </table>
@@ -248,13 +276,20 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function update(model:<a href="../models/RxModel.html">RxModel</a>):void</code><p>
+<code>public function update(model:<a href="../models/RxModel.html">RxModel</a>, serviceProvider:<a href="../services/IServiceProvider.html">IServiceProvider</a>):void</code><p>
      Cache version of the <code>update</code> call. This dispatches
       update update event.
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">model</span>:<a href="../models/RxModel.html">RxModel</a></code> &mdash; unmarshalled model
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">serviceProvider</span>:<a href="../services/IServiceProvider.html">IServiceProvider</a></code> &mdash; the provider that is this operation was perfomed by
      </td>
 </tr>
 </table>

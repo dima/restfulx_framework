@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="TypedArray,org.restfulx.utils.TypedArray,itemType,metadata" name="keywords">
+<meta content="TypedArray,org.restfulx.utils.TypedArray,itemType,metadata,source,readExternal,writeExternal" name="keywords">
 <title>org.restfulx.utils.TypedArray</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">RestfulX Framework 1.2.4 API Documenation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/TypedArray.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">"RestfulX Framework 1.3.0 API Documenation"</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/TypedArray.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;TypedArray</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
@@ -35,7 +35,10 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">org.restfulx.utils</a></td>
 </tr>
 <tr>
-<td class="classHeaderTableLabel">Class</td><td class="classSignature">public dynamic  class TypedArray</td>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class TypedArray</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implements</td><td>flash.utils.IExternalizable</td>
 </tr>
 </table>
 <p></p>
@@ -62,6 +65,12 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
      </div>
 </td><td class="summaryTableOwnerCol">TypedArray</td>
 </tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#source">source</a> : Array<div class="summaryTableDescription">
+     Array elements of the type specified by itemType
+     </div>
+</td><td class="summaryTableOwnerCol">TypedArray</td>
+</tr>
 </table>
 </div>
 <a name="methodSummary"></a>
@@ -74,8 +83,24 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#TypedArray()">TypedArray</a>(numElements:int = 0)</div>
+<a class="signatureLink" href="#TypedArray()">TypedArray</a>(items:Array = null)</div>
 <div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">TypedArray</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#readExternal()">readExternal</a>(input:IDataInput):void</div>
+<div class="summaryTableDescription">
+     Ensures that only the source property is serialized.</div>
+</td><td class="summaryTableOwnerCol">TypedArray</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#writeExternal()">writeExternal</a>(output:IDataOutput):void</div>
+<div class="summaryTableDescription">
+     Ensures that only the source property is serialized.</div>
 </td><td class="summaryTableOwnerCol">TypedArray</td>
 </tr>
 </table>
@@ -109,6 +134,17 @@ showHideInherited();
      Any metadata that may have been passed on from the server
      </p><p>This property can be used as the source for data binding.</p>
 </div>
+<a name="source"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">source</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public var source:Array</code><p>
+     Array elements of the type specified by itemType
+     </p><p>This property can be used as the source for data binding.</p>
+</div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="TypedArray()"></a>
@@ -118,10 +154,44 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function TypedArray(numElements:int = 0)</code><span class="label">Parameters</span>
+<code>public function TypedArray(items:Array = null)</code><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="20px"></td><td><code><span class="label">numElements</span>:int</code> (default = <code>0</code>)<code></code></td>
+<td width="20px"></td><td><code><span class="label">items</span>:Array</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="readExternal()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">readExternal</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function readExternal(input:IDataInput):void</code><p>
+     Ensures that only the source property is serialized.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">input</span>:IDataInput</code></td>
+</tr>
+</table>
+</div>
+<a name="writeExternal()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">writeExternal</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function writeExternal(output:IDataOutput):void</code><p>
+     Ensures that only the source property is serialized.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">output</span>:IDataOutput</code></td>
 </tr>
 </table>
 </div>
