@@ -254,7 +254,7 @@ package org.restfulx.controllers {
       if (httpHeaders == null) httpHeaders = new Object;
       
       request.contentType = contentType;
-      request.requestHeaders = Rx.customHttpHeaders;
+      request.requestHeaders = Rx.customHttpHeaders.slice(0);
       addHeaders(request, httpHeaders);
       request.url = rootUrl + url;
       

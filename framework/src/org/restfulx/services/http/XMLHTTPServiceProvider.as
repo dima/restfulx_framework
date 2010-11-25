@@ -391,7 +391,7 @@ package org.restfulx.services.http {
     protected function getURLRequest(object:Object, nestedBy:Array = null):URLRequest {
       var request:URLRequest = new URLRequest();
       request.contentType = "application/x-www-form-urlencoded";
-      request.requestHeaders = Rx.customHttpHeaders;
+      request.requestHeaders = Rx.customHttpHeaders.slice(0);
       request.url = rootUrl + RxUtils.nestResource(object, nestedBy, urlSuffix);
       return request;
     }
