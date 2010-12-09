@@ -21,6 +21,15 @@
  *
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
+
+/**FLEX 4 Changes***************************************************************
+ *
+ * Changed selectionBeginIndex to selectionAnchorPosition
+ * 
+ * Changed setSelection to selectRange
+ *		    
+ ******************************************************************************/
+
 package org.restfulx.components.rx {
   import flash.events.Event;
   import flash.events.KeyboardEvent;
@@ -392,8 +401,9 @@ package org.restfulx.components.rx {
         showDropdown = true;
       } else if (dropdown) {
         if (typedTextChanged) {
-          cursorPosition = textInput.selectionBeginIndex;
-    
+          //cursorPosition = textInput.selectionBeginIndex;
+		  cursorPosition = textInput.selectionAnchorPosition;  // Flex 4 
+
           if (ArrayCollection(dataProvider).length) {
             if (!itemPreselected && !itemShown) { 
               showDropdown = true;
@@ -427,18 +437,21 @@ package org.restfulx.components.rx {
         showDropdown = false;
         showingDropdown = true;
         if (dropdownClosed) dropdownClosed = false;
-        textInput.setSelection(0, textInput.text.length);
+        //textInput.setSelection(0, textInput.text.length);
+		textInput.selectRange(0, textInput.text.length); // Flex 4
       } else if (dropdown) {
         if (typedTextChanged) {
           //This is needed because a call to super.updateDisplayList() iset the text
           // in the textInput to "" and the value typed by the user gets losts
           textInput.text = _typedText;
-          textInput.setSelection(cursorPosition, cursorPosition);
+         // textInput.setSelection(cursorPosition, cursorPosition);
+		  textInput.selectRange(cursorPosition, cursorPosition); //Flex 4
           typedTextChanged = false;
         } else if (typedText) {
           //Sets the selection when user navigates the suggestion list through
           //arrows keys.
-          textInput.setSelection(0, textInput.text.length);
+          //textInput.setSelection(0, textInput.text.length);
+		  textInput.selectRange(0, textInput.text.length); //Flex4
         }
         
         if (clearingText) clearingText = false;
@@ -514,11 +527,13 @@ package org.restfulx.components.rx {
         // field to original text
         if (event.keyCode == Keyboard.UP && prevIndex == 0) {
           textInput.text = _typedText;
-          textInput.setSelection(textInput.text.length, textInput.text.length);
+          //textInput.setSelection(textInput.text.length, textInput.text.length);
+		  textInput.selectRange(textInput.text.length, textInput.text.length); // Flex 4
           selectedIndex = -1; 
         } else if (event.keyCode == Keyboard.ESCAPE && showingDropdown) {
           textInput.text = _typedText;
-          textInput.setSelection(textInput.text.length, textInput.text.length);
+          //textInput.setSelection(textInput.text.length, textInput.text.length);
+		  textInput.selectRange(textInput.text.length, textInput.text.length); //Flex 4
           showingDropdown = false;
           dropdownClosed = true;
         } else if (event.keyCode == Keyboard.ENTER || event.keyCode == Keyboard.TAB) {
@@ -561,7 +576,8 @@ package org.restfulx.components.rx {
       super.close(event);
       if (selectedIndex == 0) {
         textInput.text = selectedLabel;
-        textInput.setSelection(cursorPosition, textInput.text.length);
+        //textInput.setSelection(cursorPosition, textInput.text.length); // Flex 4
+		textInput.selectRange(cursorPosition, textInput.text.length);
       }      
     } 
   }
