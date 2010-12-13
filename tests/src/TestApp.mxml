@@ -206,7 +206,8 @@
          ts.addTest(new AIRServiceProviderTest("testIndexWithIgnored"));
          ts.addTest(new AIRServiceProviderTest("testCreateWithIgnored"));
          ts.addTest(new AIRServiceProviderTest("testGetLastPullTimeStamp"));
-         ts.addTest(new AIRServiceProviderTest("testUpdateLastPullTimeStamp"))
+         ts.addTest(new AIRServiceProviderTest("testUpdateLastPullTimeStamp"));
+         ts.addTest(new AIRServiceProviderTest("testRecursiveDestroy"))
 //         ts.addTest(new AS3XMLHTTPServiceProviderTest("testIndex"));
 //        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreate"));
 //        ts.addTest(new AS3XMLHTTPServiceProviderTest("testCreateAndUpdate"));

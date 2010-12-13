@@ -423,19 +423,22 @@ package org.restfulx.services.air {
      */
     public function destroy(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null,
       recursive:Boolean = false, undoRedoFlag:int = 0):void {
-      if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
-        var clone:Object = RxUtils.clone(object);
-        Rx.undoredo.addChangeAction({service: this, action: "create", copy: clone,
-          elms: [clone, new UndoRedoResponder(responder, Rx.models.cache.create), metadata, 
-            nestedBy, recursive]});
+      var fqn:String = Rx.models.state.types[object];  
+      if (!recursive) {
+        if (Rx.enableUndoRedo && undoRedoFlag != Rx.undoredo.UNDO) {
+          var clone:Object = RxUtils.clone(object);
+          Rx.undoredo.addChangeAction({service: this, action: "create", copy: clone,
+            elms: [clone, new UndoRedoResponder(responder, Rx.models.cache.create), metadata, 
+              nestedBy, recursive]});
+        }
+
+        RxUtils.fireUndoRedoActionEvent(undoRedoFlag);        
       }
-      
-      RxUtils.fireUndoRedoActionEvent(undoRedoFlag);
         
       if (object["sync"] == 'N') {
-        purge(object, responder, metadata, nestedBy);
+        purge(object, responder, metadata, nestedBy, recursive);
       } else {
-        updateSyncStatus(object, responder, "D");
+        updateSyncStatus(object, responder, "D", recursive);
       }
     }
     
@@ -471,7 +474,7 @@ package org.restfulx.services.air {
      * @inheritDoc
      * @see org.restfulx.services.ISyncingServiceProvider#purge
      */
-    public function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void {
+    public function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["delete"];
       statement = statement.replace("{id}", object["id"]);
@@ -489,6 +492,35 @@ package org.restfulx.services.air {
         if (responder) responder.fault(event.error);
       });
       executeSQLStatement(sqlStatement);
+      
+      if (recursive) {
+        var refName:String = Rx.models.state.names[fqn]["single"];
+        Rx.log.debug(refName);
+        
+        for (var rel:String in Rx.models.state.refs[fqn]) {
+          var relObject:Object = Rx.models.state.refs[fqn][rel];
+          var relType:String = relObject["relType"];
+          var relObjType:String = relObject["type"];
+          if (relType == "HasOne" || relType == "HasMany") {
+            var tableName:String = Rx.models.state.controllers[relObjType]
+            
+            var recusriveStatement:SQLStatement = getSQLStatement("DELETE FROM " + tableName + 
+              "WHERE " + refName + "_id='" + object["id"] + "'");
+
+            Rx.log.debug("recursively deleting children:executing SQL:" + recusriveStatement.text);      
+            recusriveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+              event.currentTarget.removeEventListener(event.type, arguments.callee);
+              Rx.log.debug("successfully deleted children");
+              // TODO: we should clean up cache here?
+            });
+            recusriveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+              event.currentTarget.removeEventListener(event.type, arguments.callee);
+              Rx.log.error("failed to delete children of " + refName + ":" + object["id"] + " from the database: " + event.error);
+            });
+            executeSQLStatement(recusriveStatement);
+          }
+        }
+      }
     }  
 	  
     /**
@@ -605,7 +637,7 @@ package org.restfulx.services.air {
       executeSQLStatement(statement);
     }
     
-    private function updateSyncStatus(object:Object, responder:IResponder, syncStatus:String = ""):void {
+    private function updateSyncStatus(object:Object, responder:IResponder, syncStatus:String = "", recursive:Boolean = false):void {
       var fqn:String = getQualifiedClassName(object);
       var statement:String = sql[fqn]["sync"];
       if (RxUtils.isEmpty(object["xrev"])) {
@@ -629,6 +661,35 @@ package org.restfulx.services.air {
         if (responder) responder.fault(event.error);
       });
       executeSQLStatement(sqlStatement);
+      
+      if (recursive) {
+        var refName:String = Rx.models.state.names[fqn]["single"];
+        Rx.log.debug(refName);
+        
+        for (var rel:String in Rx.models.state.refs[fqn]) {
+          var relObject:Object = Rx.models.state.refs[fqn][rel];
+          var relType:String = relObject["relType"];
+          var relObjType:String = relObject["type"];
+          if (relType == "HasOne" || relType == "HasMany") {
+            var tableName:String = Rx.models.state.controllers[relObjType]
+            
+            var recusriveStatement:SQLStatement = getSQLStatement("UPDATE " + tableName + 
+              " SET sync=:sync WHERE " + refName + "_id='" + object["id"] + "'");
+            recusriveStatement.parameters[":sync"] = syncStatus;
+
+            Rx.log.debug("recursively updating children sync status:executing SQL:" + recusriveStatement.text);      
+            recusriveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+              event.currentTarget.removeEventListener(event.type, arguments.callee);
+              Rx.log.debug("successfully updated children sync status");
+            });
+            recusriveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+              event.currentTarget.removeEventListener(event.type, arguments.callee);
+              Rx.log.error("failed to update sync status on children of " + refName + ":" + object["id"] + " from the database: " + event.error);
+            });
+            executeSQLStatement(recusriveStatement);
+          }
+        }
+      }
     }
     
     private function extractMetadata(model:Object):void {

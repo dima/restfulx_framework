@@ -54,9 +54,10 @@ package org.restfulx.services {
      *  [project, user] where project is some Project model instance and user is some User model
      *  instance. In case of XMLHTTPServiceProvider nesting may require additional configuration on the server.
      *  If you are using Rails see config/routes.rb for more details.
+     * @param recursive indicates if a purge operations should be recusrive
      * @return an ArrayCollection of versions that are currently known for this object
      */
-    function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void;
+    function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false):void;
     
     /**
      * Mark a specific model object as synced

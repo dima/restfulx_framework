@@ -35,6 +35,8 @@ package restfulx.test.cases.integration {
   import restfulx.test.models.IgnoredProperty;
   import restfulx.test.models.Project;
   
+  import mx.utils.ObjectUtil;
+  
   public class AIRServiceProviderTest extends TestCase {
     
     public function AIRServiceProviderTest(methodName:String) {
@@ -118,5 +120,22 @@ package restfulx.test.cases.integration {
       assertTrue(result.available);
       assertNull(result.name);
     }
+    
+    public function testRecursiveDestroy():void {
+      Rx.models.showById(Project, "1060557696",  {onSuccess: onProjectShowSuccess, onFailure: onFailure, 
+        targetServiceId: AIRServiceProvider.ID})
+    }
+    
+    private function onProjectShowSuccess(result:Project):void {
+      assertEquals("1060557696", result.id);
+      result.destroy({onSuccess: onProjectDestroy, recursive: true});
+    }
+    
+    // TODO: What should we check here?
+    private function onProjectDestroy(result:Project):void {
+      assertTrue(true);
+    }
+    
+    // TODO: add a test for recusrively deleting newly created records
   }
 }
