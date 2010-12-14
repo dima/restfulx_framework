@@ -504,20 +504,19 @@ package org.restfulx.services.air {
           if (relType == "HasOne" || relType == "HasMany") {
             var tableName:String = Rx.models.state.controllers[relObjType]
             
-            var recusriveStatement:SQLStatement = getSQLStatement("DELETE FROM " + tableName + 
+            var recursiveStatement:SQLStatement = getSQLStatement("DELETE FROM " + tableName + 
               "WHERE " + refName + "_id='" + object["id"] + "'");
 
-            Rx.log.debug("recursively deleting children:executing SQL:" + recusriveStatement.text);      
-            recusriveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+            Rx.log.debug("recursively deleting children:executing SQL:" + recursiveStatement.text);      
+            recursiveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
               event.currentTarget.removeEventListener(event.type, arguments.callee);
               Rx.log.debug("successfully deleted children");
-              // TODO: we should clean up cache here?
             });
-            recusriveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+            recursiveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
               event.currentTarget.removeEventListener(event.type, arguments.callee);
               Rx.log.error("failed to delete children of " + refName + ":" + object["id"] + " from the database: " + event.error);
             });
-            executeSQLStatement(recusriveStatement);
+            executeSQLStatement(recursiveStatement);
           }
         }
       }
@@ -673,20 +672,20 @@ package org.restfulx.services.air {
           if (relType == "HasOne" || relType == "HasMany") {
             var tableName:String = Rx.models.state.controllers[relObjType]
             
-            var recusriveStatement:SQLStatement = getSQLStatement("UPDATE " + tableName + 
+            var recursiveStatement:SQLStatement = getSQLStatement("UPDATE " + tableName + 
               " SET sync=:sync WHERE " + refName + "_id='" + object["id"] + "'");
-            recusriveStatement.parameters[":sync"] = syncStatus;
+            recursiveStatement.parameters[":sync"] = syncStatus;
 
-            Rx.log.debug("recursively updating children sync status:executing SQL:" + recusriveStatement.text);      
-            recusriveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+            Rx.log.debug("recursively updating children sync status:executing SQL:" + recursiveStatement.text);      
+            recursiveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
               event.currentTarget.removeEventListener(event.type, arguments.callee);
               Rx.log.debug("successfully updated children sync status");
             });
-            recusriveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+            recursiveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
               event.currentTarget.removeEventListener(event.type, arguments.callee);
               Rx.log.error("failed to update sync status on children of " + refName + ":" + object["id"] + " from the database: " + event.error);
             });
-            executeSQLStatement(recusriveStatement);
+            executeSQLStatement(recursiveStatement);
           }
         }
       }

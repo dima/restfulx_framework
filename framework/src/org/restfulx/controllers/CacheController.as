@@ -80,8 +80,9 @@ package org.restfulx.controllers {
      *  index update event.
      * @param models unmarshalled models
      * @param serviceProvider the provider that is this operation was perfomed by
+     * @param options for extra processing
      */
-    public function index(models:Object, serviceProvider:IServiceProvider):void {
+    public function index(models:Object, serviceProvider:IServiceProvider, opts:Object = null):void {
       var fqn:String;
       var result:Array = new Array;
       if (models is TypedArray) {
@@ -101,8 +102,9 @@ package org.restfulx.controllers {
      *  show update event.
      * @param model unmarshalled model
      * @param serviceProvider the provider that is this operation was perfomed by
+     * @param options for extra processing
      */
-    public function show(model:RxModel, serviceProvider:IServiceProvider):void {
+    public function show(model:RxModel, serviceProvider:IServiceProvider, opts:Object = null):void {
       var fqn:String = getQualifiedClassName(model);
       if (fqn != null) Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.SHOW, serviceProvider, model));            
     }
@@ -113,8 +115,9 @@ package org.restfulx.controllers {
      *  
      * @param model unmarshalled model
      * @param serviceProvider the provider that is this operation was perfomed by
+     * @param options for extra processing
      */    
-    public function create(model:RxModel, serviceProvider:IServiceProvider):void {
+    public function create(model:RxModel, serviceProvider:IServiceProvider, opts:Object = null):void {
       var fqn:String = getQualifiedClassName(model);
       Rx.models.errors = new GenericServiceErrors;
       Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.CREATE, serviceProvider, model));
@@ -127,8 +130,9 @@ package org.restfulx.controllers {
      *  update update event.
      * @param model unmarshalled model
      * @param serviceProvider the provider that is this operation was perfomed by
+     * @param options for extra processing
      */    
-    public function update(model:RxModel, serviceProvider:IServiceProvider):void {
+    public function update(model:RxModel, serviceProvider:IServiceProvider, opts:Object = null):void {
       var fqn:String = getQualifiedClassName(model);
       Rx.models.errors = new GenericServiceErrors;
       Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.UPDATE, serviceProvider, model));    
@@ -142,9 +146,13 @@ package org.restfulx.controllers {
      *  
      * @param model unmarshalled model
      * @param serviceProvider the provider that is this operation was perfomed by
+     * @param options for extra processing
      */    
-    public function destroy(model:RxModel, serviceProvider:IServiceProvider):void {
+    public function destroy(model:RxModel, serviceProvider:IServiceProvider, opts:Object = null):void {
       var fqn:String = getQualifiedClassName(model);
+      if (opts != null && opts.hasOwnProperty("recursive") && opts["recursive"] == true) {
+        RxUtils.cleanupModelAssociations(model, fqn);        
+      }
       RxUtils.cleanupModelReferences(model, fqn);
       ModelsCollection(data[fqn]).removeItem(model);
       Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.DESTROY, serviceProvider));  

@@ -525,7 +525,7 @@ package org.restfulx.controllers {
       var fqn:String = getQualifiedClassName(object);
       var service:IServiceProvider = getServiceProvider(targetServiceId);
       var serviceResponder:ServiceResponder = new ServiceResponder(cache.destroy, service, fqn, onSuccess, onFailure,
-        unmarshallDisconnected);
+        unmarshallDisconnected, recursive);
       
       if (customProcessor != null) {
         customProcessor(object, serviceResponder, metadata, nestedBy, recursive);

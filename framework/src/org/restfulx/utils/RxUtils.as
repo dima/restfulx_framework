@@ -193,7 +193,7 @@ package org.restfulx.utils {
     }
 
     /**
-     *  Updates an parent references with this item if their ids match.
+     *  Updates a parent references with this item if their ids match.
      *  
      * @param model model instance to clean-up references for
      * @param fqn FullyQualifiedName of the model
@@ -208,18 +208,44 @@ package org.restfulx.utils {
         items.addItem(model);
       }
     }
-
+    
     /**
-     *  Cleanup references to specified model.
+     * Clean up all HasOne,HasMany associations that this model refers to.
      *  
      * @param model model instance to clean-up references for
      * @param fqn FullyQualifiedName of the model
+     */ 
+    public static function cleanupModelAssociations(model:Object, fqn:String):void {
+      for (var reference:String in Rx.models.state.refs[fqn]) {
+        var relObject:Object = Rx.models.state.refs[fqn][reference];
+        var relType:String = relObject["relType"];
+        var relObjectType:String = relObject["type"];
+        if (relType == "HasOne" || relType == "HasMany" && model[reference] != null) {
+          var items:ModelsCollection = Rx.models.cache.data[relObjectType];
+          if (relType == "HasMany") {
+            for each (var relatedItem:Object in model[reference] as ModelsCollection) {
+              items.removeItem(relatedItem);
+            }
+          } else if (relType == "HasOne") {
+            items.removeItem(model[reference])
+          }
+        }
+      }
+    }
+
+    /**
+     *  Clean up references to specified model.
+     *  
+     * @param model model instance to clean-up references for
+     * @param fqn FullyQualifiedName of the model
+     * @param singleReference indicates if this reference is single
      */
     public static function cleanupModelReferences(model:Object, fqn:String, singleReference:String = ""):void {
       for (var reference:String in Rx.models.state.refs[fqn]) {
-        if (ObjectUtil.hasMetadata(model, reference, "BelongsTo") && model[reference] != null && 
-          (RxUtils.isEmpty(singleReference) || singleReference == reference)) {
-          var referAs:String = Rx.models.state.refs[fqn][reference]["referAs"];
+        var relObject:Object = Rx.models.state.refs[fqn][reference];
+        var relType:String = relObject["relType"];
+        if (relType == "BelongsTo" && model[reference] != null && (RxUtils.isEmpty(singleReference) || singleReference == reference)) {
+          var referAs:String = relObject["referAs"];
           var referAsPlural:String = referAs;
           var referAsSingle:String = referAs;
           var hasManyRel:Boolean = false;
@@ -232,7 +258,6 @@ package org.restfulx.utils {
             }
           }
           
-          var type:String = Rx.models.state.refs[fqn][reference]["type"];
           // go into the reference and clean up any refs to this object from [HasMany] annotated
           // properties
           for each (var ref:String in referAsPlural.split(",")) {

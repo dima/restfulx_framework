@@ -49,6 +49,7 @@ package org.restfulx.services {
     private var onSuccess:Object;
     private var onFailure:Function;
     private var unmarshallDisconnected:Boolean;
+    private var recursive:Boolean;
 
     /**
      * @param handler function to call with the unmarshalled result
@@ -57,9 +58,11 @@ package org.restfulx.services {
      * @param onSuccess optional user callback function or IResponder to call when
      *  everything has been *successfully* processed
      * @param onFailure
+     * @param recursive indicates if this call is recursive and should be handled recursively by
+     *  underlying service provider and cache controller
      */
     public function ServiceResponder(handler:Function, service:IServiceProvider, modelType:String, 
-      onSuccess:Object = null, onFailure:Function = null, unmarshallDisconnected:Boolean = false) {
+      onSuccess:Object = null, onFailure:Function = null, unmarshallDisconnected:Boolean = false, recursive:Boolean = false) {
       this.handler = handler;
       this.service = service;
       this.modelType = modelType;
@@ -113,7 +116,7 @@ package org.restfulx.services {
             delete Rx.models.state.waiting[parent];
           }
           
-          handler(result, service);
+          handler(result, service, {recursive: recursive});
           
           // and fire user's callback responder here
           if (onSuccess != null) {
