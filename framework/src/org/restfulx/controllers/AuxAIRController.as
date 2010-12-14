@@ -403,7 +403,7 @@ package org.restfulx.controllers {
             var tableName:String = Rx.models.state.controllers[target];
             
             var query:String = "SELECT * FROM " + tableName + 
-              " WHERE sync != 'D' AND " + Rx.models.state.names[fqn]["single"] + "_id = '" + item["id"] + "'";
+              " WHERE sync != 'D' AND " + RxUtils.toSnakeCase(Rx.models.state.names[fqn]["single"]) + "_id = '" + item["id"] + "'";
               
             if (!RxUtils.isEmpty(referAs)) {
               var mirrorObject:Object = Rx.models.state.refs[target][referAs];
@@ -411,10 +411,10 @@ package org.restfulx.controllers {
                 var polymorphic:Boolean = mirrorObject["polymorphic"];
 
                 query = "SELECT * FROM " + tableName + " WHERE sync != 'D' AND " + 
-                  referAs + "_id = '" + item["id"] + "'";
+                  RxUtils.toSnakeCase(referAs) + "_id = '" + item["id"] + "'";
                   
                 if (polymorphic) {
-                  query += " AND " + referAs + "_type = '" + fqn.split("::")[1] + "'";
+                  query += " AND " + RxUtils.toSnakeCase(referAs) + "_type = '" + fqn.split("::")[1] + "'";
                 }
               }
             }
