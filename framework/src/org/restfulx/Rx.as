@@ -193,7 +193,7 @@ package org.restfulx {
      * <p><b>NOTE:</b> Given limitations in SQLite we can only add columns, existing
      *  columns will not be renamed or removed as you add/remove/rename properties
      *  in your models. It is your responsibility to migrate data and cleanup client
-     *  databases if required.
+     *  databases if required.</p>
      */
     public static var airEnableDatabaseMigrations:Boolean = false;
     
