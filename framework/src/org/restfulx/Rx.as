@@ -185,6 +185,18 @@ package org.restfulx {
      */
     public static var airDatabaseName:String = "rxdb";
     
+    /**
+     * Any properties that you add to your models can be automatically
+     * added to your AIR database. Set this variable to true if you want to enable
+     * this functionality.
+     *  
+     * <p><b>NOTE:</b> Given limitations in SQLite we can only add columns, existing
+     *  columns will not be renamed or removed as you add/remove/rename properties
+     *  in your models. It is your responsibility to migrate data and cleanup client
+     *  databases if required.
+     */
+    public static var airEnableDatabaseMigrations:Boolean = false;
+    
     /** 
      * Encryption key to use for connection to AIR SQLite database (if this field is empty connection
      * will be unencrypted = default).

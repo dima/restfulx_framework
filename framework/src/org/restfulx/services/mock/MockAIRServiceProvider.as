@@ -32,6 +32,8 @@ package org.restfulx.services.mock {
   import org.restfulx.Rx;
   import org.restfulx.controllers.ServicesController;
   import org.restfulx.services.air.AIRServiceProvider;
+  
+  import mx.utils.ObjectUtil;
 
   /**
    * Adds testing specific methods to AIRServiceProvider.
@@ -72,7 +74,12 @@ package org.restfulx.services.mock {
         });
         sqlStatement.execute();
       });
+      connection.addEventListener(SQLEvent.SCHEMA, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        Rx.log.debug("schema:" + ObjectUtil.toString(SQLConnection(event.currentTarget).getSchemaResult()));
+      });
       connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+        Rx.log.error(ObjectUtil.toString(event));
         Rx.log.error("failed to open connection to the database: " + event.error);
         throw new Error("failed to open connection to the database: " + event.error);
       });

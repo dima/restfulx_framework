@@ -26,6 +26,9 @@ package org.restfulx.services.air {
   import flash.data.SQLMode;
   import flash.data.SQLStatement;
   import flash.data.SQLResult;
+  import flash.data.SQLSchemaResult;
+  import flash.data.SQLTableSchema;
+  import flash.data.SQLColumnSchema;
   import flash.events.TimerEvent;
   import flash.events.SQLEvent;
   import flash.events.SQLErrorEvent;
@@ -77,6 +80,10 @@ package org.restfulx.services.air {
     protected var state:ModelsMetadata;
 
     protected var sql:Dictionary;
+    
+    protected var tables:Dictionary;
+    
+    protected var schema:Dictionary;
             
     protected var queue:Array;
     
@@ -96,6 +103,8 @@ package org.restfulx.services.air {
       
       queue = new Array;
       sql = new Dictionary;
+      tables = new Dictionary;
+      schema = new Dictionary;
       connection = new SQLConnection;
       
       for each (var model:Class in state.models) {
@@ -694,6 +703,8 @@ package org.restfulx.services.air {
     private function extractMetadata(model:Object):void {
       var tableName:String = RxUtils.getResourceName(model);
       
+      tables[tableName] = new Array;
+      
       // make sure we don't try to create anything for a resource with no controller
       if (RxUtils.isEmpty(tableName)) return;
       
@@ -709,6 +720,7 @@ package org.restfulx.services.air {
       for each (var node:XML in describeType(model)..accessor) {
         var snakeName:String = RxUtils.toSnakeCase(node.@name);
         var type:String = node.@type;
+        var sqlType:String = types["String"];
         
         if (RxUtils.isInvalidPropertyType(type) || RxUtils.isInvalidPropertyName(node.@name) 
           || RxUtils.isHasOne(node) || RxUtils.isIgnored(node)) continue;
@@ -720,18 +732,21 @@ package org.restfulx.services.air {
             insertStatement += snakeNameType + ", ";
             insertParams += ":" + snakeNameType + ", ";
             updateStatement += snakeNameType + "=:" + snakeNameType + ",";
+            
+            tables[tableName].push({name: snakeNameType, type: sqlType});
           }
          
           snakeName = snakeName + "_id";
-          
-          createStatement += snakeName + " " +  types["String"] + ", ";
         } else {   
-          createStatement += snakeName + " " +  getSQLType(node) + ", ";
+          sqlType =  getSQLType(node);
         }
         
+        createStatement += snakeName + " " +  sqlType + ", ";
         insertStatement += snakeName + ", ";
         insertParams += ":" + snakeName + ", ";
         updateStatement += snakeName + "=:" + snakeName + ",";
+        
+        tables[tableName].push({name: snakeName, type: sqlType});
       }
       
       insertStatement += "rev, sync, id, ";
@@ -763,7 +778,47 @@ package org.restfulx.services.air {
       sql[modelName]["count"] = "SELECT count(*) as count FROM " + tableName;
     }
     
+    /**
+     * Add any columns that have been added to models but do not currently
+     * exist in database.
+     */
+    public function migrateDatabase():void {
+      connection.loadSchema();
+    }
+    
+    protected function extractSchema(result:SQLSchemaResult):void {
+      for each (var table:SQLTableSchema in result.tables) {
+        schema[table.name] = new Array;
+        
+        for each (var column:SQLColumnSchema in table.columns) {
+          schema[table.name].push(column.name);
+        }
+      }
+    }
+    
+    // NOTE: given current limitations in ALTER TABLE syntax for SQLite we can
+    // only add new columns but cannot remove old ones or rename columns,
+    // those operations would have to be done manually.
+    // see http://www.sqlite.org/lang_altertable.html for more details.
+    protected function performDatabaseMigration():void {
+      for (var table:String in tables) {
+        for each (var column:Object in tables[table]) {
+          // existing schema doesn't have this column
+          if (schema[table].indexOf(column["name"]) == -1) {
+            var sqlText:String = "ALTER TABLE " + table + " ADD COLUMN " + column["name"] + " " + column["type"];
+            Rx.log.debug("migrating with: " + sqlText);
+            getSQLStatement(sqlText).execute();
+          }
+        }
+      }
+    }
+    
     protected function initializeConnection(databaseFile:File):void {
+      connection.addEventListener(SQLEvent.SCHEMA, function(event:SQLEvent):void {
+        event.currentTarget.removeEventListener(event.type, arguments.callee);
+        extractSchema(SQLConnection(event.currentTarget).getSchemaResult());
+        performDatabaseMigration();
+      });
       connection.addEventListener(SQLEvent.OPEN, function(event:SQLEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
         var sqlStatement:SQLStatement = getSQLStatement("CREATE TABLE IF NOT EXISTS sync_metadata(id TEXT, last_server_pull TEXT, PRIMARY KEY(id))");
@@ -777,6 +832,7 @@ package org.restfulx.services.air {
               total--;
               if (total == 0) {
                 initialized = true;
+                if (Rx.airEnableDatabaseMigrations) migrateDatabase();
                 executePendingSQLStatements();
               }
             });

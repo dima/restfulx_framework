@@ -135,7 +135,6 @@ package restfulx.test.cases.integration {
     private function onProjectDestroy(result:Project):void {
       assertTrue(true);
     }
-    
     // TODO: add a test for recusrively deleting newly created records
   }
 }
