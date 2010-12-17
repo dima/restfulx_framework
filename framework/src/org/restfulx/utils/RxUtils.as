@@ -220,7 +220,7 @@ package org.restfulx.utils {
         var relObject:Object = Rx.models.state.refs[fqn][reference];
         var relType:String = relObject["relType"];
         var relObjectType:String = relObject["type"];
-        if (relType == "HasOne" || relType == "HasMany" && model[reference] != null) {
+        if ((relType == "HasOne" || relType == "HasMany") && (model.hasOwnProperty(reference) && model[reference] != null)) {
           var items:ModelsCollection = Rx.models.cache.data[relObjectType];
           if (relType == "HasMany") {
             for each (var relatedItem:Object in model[reference] as ModelsCollection) {
@@ -246,7 +246,8 @@ package org.restfulx.utils {
       for (var reference:String in Rx.models.state.refs[fqn]) {
         var relObject:Object = Rx.models.state.refs[fqn][reference];
         var relType:String = relObject["relType"];
-        if (relType == "BelongsTo" && model[reference] != null && (RxUtils.isEmpty(singleReference) || singleReference == reference)) {
+        if (relType == "BelongsTo" && model.hasOwnProperty(reference) && model[reference] != null 
+          && (RxUtils.isEmpty(singleReference) || singleReference == reference)) {
           var referAs:String = relObject["referAs"];
           var referAsPlural:String = referAs;
           var referAsSingle:String = referAs;
