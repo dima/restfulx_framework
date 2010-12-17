@@ -154,10 +154,18 @@ package org.restfulx.controllers {
 	      throw new Error("Push can be performed only if Rx.enableSync is true and source and destination providers are set");
 	    }
 	    errors = new RxCollection;
-	    if (!models.length) models = Rx.models.state.models;
-	    for each (var model:Class in models) {
-	      source.dirty(model, new ItemResponder(onDirtyChanges, onDirtyFault));
-	    }
+	    if (!models.length) {
+	      models = Rx.models.state.models;
+      }
+      
+      if (models.length > 0) {
+        notifiedPushStart = true;
+        dispatchEvent(new PushStartEvent);
+  	    for each (var model:Class in models) {
+  	      source.dirty(model, new ItemResponder(onDirtyChanges, onDirtyFault));
+  	    }
+      }
+
 	  }
 	  
 	  /**
@@ -268,8 +276,6 @@ package org.restfulx.controllers {
 	    
 	    // no undo-redo for synchronization, and the stack is lost after undo-redo
 	    if (pushCount) {
-	      dispatchEvent(new PushStartEvent);
-	      notifiedPushStart = true;
 	      if (!canUndoRedo) {
   	      canUndoRedo = Rx.enableUndoRedo;
 	        Rx.enableUndoRedo = false;
