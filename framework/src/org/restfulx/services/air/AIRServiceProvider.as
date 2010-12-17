@@ -702,7 +702,7 @@ package org.restfulx.services.air {
           } 
           
           var recursiveStatement:SQLStatement = getSQLStatement("DELETE FROM " + tableName + 
-            "WHERE " + refName + "_id='" + object["id"] + "'");
+            " WHERE " + refName + "_id='" + object["id"] + "'");
           
           if (relType == "HasMany") {
             for each (var nestedObject:Object in object[rel]) {
