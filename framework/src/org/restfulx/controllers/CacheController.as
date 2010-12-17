@@ -40,6 +40,8 @@ package org.restfulx.controllers {
   import org.restfulx.utils.RxUtils;
   import org.restfulx.utils.TypedArray;
   
+  import mx.utils.ObjectUtil;
+  
   /**
    * In-memory model data store. This class is responsible for storing models
    *  that make it into memory as a result of various <code>ModelsController</code>
@@ -151,6 +153,7 @@ package org.restfulx.controllers {
     public function destroy(model:RxModel, serviceProvider:IServiceProvider, opts:Object = null):void {
       var fqn:String = getQualifiedClassName(model);
       if (opts != null && opts.hasOwnProperty("recursive") && opts["recursive"] == true) {
+        Rx.log.debug("recursively cleaning up associations for: " + fqn + " with id: " + model["id"]);
         RxUtils.cleanupModelAssociations(model, fqn);        
       }
       RxUtils.cleanupModelReferences(model, fqn);

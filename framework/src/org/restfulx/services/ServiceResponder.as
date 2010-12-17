@@ -69,6 +69,7 @@ package org.restfulx.services {
       this.onSuccess = onSuccess;
       this.onFailure = onFailure;
       this.unmarshallDisconnected = unmarshallDisconnected;
+      this.recursive = recursive;
     }
     
     public function get handler():Function {

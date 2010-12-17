@@ -266,7 +266,7 @@ package org.restfulx.utils {
           }
 
           refs[fqn][refName] = {type: refType, referAs: referAs, conditions: conditions, sorts: sorts, relType: relType, 
-            polymorphic: polymorphic};
+            polymorphic: polymorphic, dependencies: dependencies};
           
           for each (var dependency:String in dependencies) {
             if (controllers[dependency] && dependency != fqn && (eager[fqn] as Array).indexOf(dependency) == -1) {

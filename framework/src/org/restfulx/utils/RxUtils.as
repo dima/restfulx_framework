@@ -210,7 +210,7 @@ package org.restfulx.utils {
     }
     
     /**
-     * Clean up all HasOne,HasMany associations that this model refers to.
+     * Clean up all HasOne,HasMany associations that this model refers to recursively
      *  
      * @param model model instance to clean-up references for
      * @param fqn FullyQualifiedName of the model
@@ -224,10 +224,12 @@ package org.restfulx.utils {
           var items:ModelsCollection = Rx.models.cache.data[relObjectType];
           if (relType == "HasMany") {
             for each (var relatedItem:Object in model[reference] as ModelsCollection) {
+              cleanupModelAssociations(relatedItem, relObjectType);
               items.removeItem(relatedItem);
             }
           } else if (relType == "HasOne") {
-            items.removeItem(model[reference])
+            cleanupModelAssociations(model[reference], relObjectType);
+            items.removeItem(model[reference]);
           }
         }
       }

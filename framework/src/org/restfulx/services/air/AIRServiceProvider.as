@@ -503,31 +503,7 @@ package org.restfulx.services.air {
       executeSQLStatement(sqlStatement);
       
       if (recursive) {
-        var refName:String = Rx.models.state.names[fqn]["single"];
-        Rx.log.debug(refName);
-        
-        for (var rel:String in Rx.models.state.refs[fqn]) {
-          var relObject:Object = Rx.models.state.refs[fqn][rel];
-          var relType:String = relObject["relType"];
-          var relObjType:String = relObject["type"];
-          if (relType == "HasOne" || relType == "HasMany") {
-            var tableName:String = Rx.models.state.controllers[relObjType]
-            
-            var recursiveStatement:SQLStatement = getSQLStatement("DELETE FROM " + tableName + 
-              "WHERE " + refName + "_id='" + object["id"] + "'");
-
-            Rx.log.debug("recursively deleting children:executing SQL:" + recursiveStatement.text);      
-            recursiveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
-              event.currentTarget.removeEventListener(event.type, arguments.callee);
-              Rx.log.debug("successfully deleted children");
-            });
-            recursiveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
-              event.currentTarget.removeEventListener(event.type, arguments.callee);
-              Rx.log.error("failed to delete children of " + refName + ":" + object["id"] + " from the database: " + event.error);
-            });
-            executeSQLStatement(recursiveStatement);
-          }
-        }
+        purgeRecursively(object, fqn);
       }
     }  
 	  
@@ -671,31 +647,79 @@ package org.restfulx.services.air {
       executeSQLStatement(sqlStatement);
       
       if (recursive) {
-        var refName:String = Rx.models.state.names[fqn]["single"];
-        Rx.log.debug(refName);
-        
-        for (var rel:String in Rx.models.state.refs[fqn]) {
-          var relObject:Object = Rx.models.state.refs[fqn][rel];
-          var relType:String = relObject["relType"];
-          var relObjType:String = relObject["type"];
-          if (relType == "HasOne" || relType == "HasMany") {
-            var tableName:String = Rx.models.state.controllers[relObjType]
-            
-            var recursiveStatement:SQLStatement = getSQLStatement("UPDATE " + tableName + 
-              " SET sync=:sync WHERE " + refName + "_id='" + object["id"] + "'");
-            recursiveStatement.parameters[":sync"] = syncStatus;
-
-            Rx.log.debug("recursively updating children sync status:executing SQL:" + recursiveStatement.text);      
-            recursiveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
-              event.currentTarget.removeEventListener(event.type, arguments.callee);
-              Rx.log.debug("successfully updated children sync status");
-            });
-            recursiveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
-              event.currentTarget.removeEventListener(event.type, arguments.callee);
-              Rx.log.error("failed to update sync status on children of " + refName + ":" + object["id"] + " from the database: " + event.error);
-            });
-            executeSQLStatement(recursiveStatement);
+        updateSyncStatusRecursively(object, fqn, syncStatus);
+      }
+    }
+    
+    private function updateSyncStatusRecursively(object:Object, fqn:String, syncStatus:String):void {
+      var refName:String = Rx.models.state.names[fqn]["single"];
+      for (var rel:String in Rx.models.state.refs[fqn]) {
+        var relObject:Object = Rx.models.state.refs[fqn][rel];
+        var relType:String = relObject["relType"];
+        var relObjType:String = relObject["type"];
+        if (relType == "HasOne" || relType == "HasMany") {
+          var tableName:String = Rx.models.state.controllers[relObjType];
+          
+          if (!RxUtils.isEmpty(relObject["referAs"])) {
+            refName = relObject["referAs"];
           }
+          
+          var recursiveStatement:SQLStatement = getSQLStatement("UPDATE " + tableName + 
+            " SET sync=:sync WHERE " + refName + "_id='" + object["id"] + "'");
+          recursiveStatement.parameters[":sync"] = syncStatus;
+          
+          if (relType == "HasMany") {
+            for each (var nestedObject:Object in object[rel]) {
+              updateSyncStatusRecursively(nestedObject, relObjType, syncStatus);
+            } 
+          }
+          
+          Rx.log.debug("executing SQL:" + recursiveStatement.text);      
+          recursiveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+            event.currentTarget.removeEventListener(event.type, arguments.callee);
+            Rx.log.debug("successfully updated children sync status");
+          });
+          recursiveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+            event.currentTarget.removeEventListener(event.type, arguments.callee);
+            Rx.log.error("failed to remove/update children of: " + object["id"] + " from the database: " + event.error);
+          });
+          executeSQLStatement(recursiveStatement);
+        }
+      }
+    }
+    
+    private function purgeRecursively(object:Object, fqn:String):void {
+      var refName:String = Rx.models.state.names[fqn]["single"];
+      for (var rel:String in Rx.models.state.refs[fqn]) {
+        var relObject:Object = Rx.models.state.refs[fqn][rel];
+        var relType:String = relObject["relType"];
+        var relObjType:String = relObject["type"];
+        if (relType == "HasOne" || relType == "HasMany") {
+          var tableName:String = Rx.models.state.controllers[relObjType];
+          
+          if (!RxUtils.isEmpty(relObject["referAs"])) {
+            refName = relObject["referAs"];
+          } 
+          
+          var recursiveStatement:SQLStatement = getSQLStatement("DELETE FROM " + tableName + 
+            "WHERE " + refName + "_id='" + object["id"] + "'");
+          
+          if (relType == "HasMany") {
+            for each (var nestedObject:Object in object[rel]) {
+              purgeRecursively(nestedObject, relObjType);
+            } 
+          }
+          
+          Rx.log.debug("recursively deleting children:executing SQL:" + recursiveStatement.text);      
+          recursiveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+            event.currentTarget.removeEventListener(event.type, arguments.callee);
+            Rx.log.debug("successfully deleted children");
+          });
+          recursiveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+            event.currentTarget.removeEventListener(event.type, arguments.callee);
+            Rx.log.error("failed to delete children of " + refName + ":" + object["id"] + " from the database: " + event.error);
+          });
+          executeSQLStatement(recursiveStatement);
         }
       }
     }
