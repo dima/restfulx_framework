@@ -392,7 +392,6 @@ package org.restfulx.controllers {
       var total:int = relationships.length * data.length;
       var count:int = 0;
       for each (var relationship:String in relationships) {
-        Rx.log.debug("monkeys:" + ObjectUtil.toString(Rx.models.state.refs[fqn]));
         var target:String = Rx.models.state.refs[fqn][relationship]["type"];
         var relType:String = Rx.models.state.refs[fqn][relationship]["relType"];
         var referAs:String = Rx.models.state.refs[fqn][relationship]["referAs"];
