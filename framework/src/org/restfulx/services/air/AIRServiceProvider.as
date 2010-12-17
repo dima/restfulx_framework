@@ -668,10 +668,12 @@ package org.restfulx.services.air {
             " SET sync=:sync WHERE " + RxUtils.toSnakeCase(refName) + "_id='" + object["id"] + "'");
           recursiveStatement.parameters[":sync"] = syncStatus;
           
-          if (relType == "HasMany") {
+          if (relType == "HasMany" && object[rel] != null) {
             for each (var nestedObject:Object in object[rel]) {
               updateSyncStatusRecursively(nestedObject, relObjType, syncStatus);
             } 
+          } else if (relType == "HasOne" && object[rel] != null) {
+            updateSyncStatusRecursively(object[rel], relObjType, syncStatus);
           }
           
           Rx.log.debug("executing SQL:" + recursiveStatement.text);      
@@ -704,10 +706,12 @@ package org.restfulx.services.air {
           var recursiveStatement:SQLStatement = getSQLStatement("DELETE FROM " + tableName + 
             " WHERE " + RxUtils.toSnakeCase(refName) + "_id='" + object["id"] + "'");
           
-          if (relType == "HasMany") {
+          if (relType == "HasMany" && object[rel] != null) {
             for each (var nestedObject:Object in object[rel]) {
               purgeRecursively(nestedObject, relObjType);
             } 
+          } else if (relType == "HasOne" && object[rel] != null) {
+            purgeRecursively(object[rel], relObjType);
           }
           
           Rx.log.debug("recursively deleting children:executing SQL:" + recursiveStatement.text);      
