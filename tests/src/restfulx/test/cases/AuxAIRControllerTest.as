@@ -33,6 +33,8 @@ package restfulx.test.cases {
   import restfulx.test.models.Project;
   import restfulx.test.models.SimpleProperty;
   import restfulx.test.models.Task;
+  
+  import mx.utils.ObjectUtil;
 
   public class AuxAIRControllerTest extends TestCase {
         
@@ -48,6 +50,11 @@ package restfulx.test.cases {
     public function testFindAllWithIncludes():void {
       Rx.models.reset(null, true);
       XRx.air(onFindAllWithIncludes).findAll(Project, ["name LIKE :name", {":name" : "%4%"}], ["tasks"]);
+    }
+    
+    public function testFindAllWithBelongsToInclude():void {
+      Rx.models.reset(null, true);
+      XRx.air(onFindAllWithBelongsToInclude).findAll(Task, ["name LIKE :name", {":name" : "%4%"}], ["project"]);
     }
     
     public function testFindAllWithPolymorphicIncludes():void {
@@ -70,6 +77,15 @@ package restfulx.test.cases {
       assertEquals("Project4NameString", project.name);
       assertEquals(1, project.tasks.length);
       assertEquals("Task4NameString", Task(project.tasks.getItemAt(0)).name);      
+    }
+    
+    private function onFindAllWithBelongsToInclude(result:Object):void {
+      assertTrue(result is TypedArray);
+      assertEquals(1, TypedArray(result).source.length);
+      
+      var task:Task = (result as TypedArray).source[0];
+      assertEquals("Task4NameString", task.name);
+      assertEquals("Project4NameString", task.project.name);
     }
     
     private function onFindAllWithPolymorphicIncludes(result:Object):void {

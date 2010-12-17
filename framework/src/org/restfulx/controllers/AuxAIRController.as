@@ -392,29 +392,40 @@ package org.restfulx.controllers {
       var total:int = relationships.length * data.length;
       var count:int = 0;
       for each (var relationship:String in relationships) {
+        Rx.log.debug("monkeys:" + ObjectUtil.toString(Rx.models.state.refs[fqn]));
         var target:String = Rx.models.state.refs[fqn][relationship]["type"];
         var relType:String = Rx.models.state.refs[fqn][relationship]["relType"];
         var referAs:String = Rx.models.state.refs[fqn][relationship]["referAs"];
         var conditions:Object = Rx.models.state.refs[fqn][relationship]["conditions"];
-                
+        var polymorphic:Boolean = Rx.models.state.refs[fqn][relationship]["polymorphic"];
+        
         if (target) {
           for (var i:int = 0; i < data.length; i++) {
             var item:Object = data[i];
             var tableName:String = Rx.models.state.controllers[target];
-            
-            var query:String = "SELECT * FROM " + tableName + 
+            var query:String = "";
+            if (relType == "BelongsTo") {
+              if (polymorphic) {
+                var relatedFQN:String = Rx.models.state.fqns[item[relationship + "_type"]];
+                tableName = Rx.models.state.controllers[relatedFQN];
+              }
+
+              query = "SELECT * FROM " + tableName + " WHERE sync != 'D' AND id = '" + item[relationship + "_id"] + "'";              
+            } else if (relType == "HasMany" || relType == "HasOne") {
+              query = "SELECT * FROM " + tableName + 
               " WHERE sync != 'D' AND " + RxUtils.toSnakeCase(Rx.models.state.names[fqn]["single"]) + "_id = '" + item["id"] + "'";
               
-            if (!RxUtils.isEmpty(referAs)) {
-              var mirrorObject:Object = Rx.models.state.refs[target][referAs];
-              if (mirrorObject) {
-                var polymorphic:Boolean = mirrorObject["polymorphic"];
+              if (!RxUtils.isEmpty(referAs)) {
+                var mirrorObject:Object = Rx.models.state.refs[target][referAs];
+                if (mirrorObject) {
+                  var polymorphicRelated:Boolean = mirrorObject["polymorphic"];
 
-                query = "SELECT * FROM " + tableName + " WHERE sync != 'D' AND " + 
-                  RxUtils.toSnakeCase(referAs) + "_id = '" + item["id"] + "'";
-                  
-                if (polymorphic) {
-                  query += " AND " + RxUtils.toSnakeCase(referAs) + "_type = '" + fqn.split("::")[1] + "'";
+                  query = "SELECT * FROM " + tableName + " WHERE sync != 'D' AND " + 
+                    RxUtils.toSnakeCase(referAs) + "_id = '" + item["id"] + "'";
+
+                  if (polymorphicRelated) {
+                    query += " AND " + RxUtils.toSnakeCase(referAs) + "_type = '" + fqn.split("::")[1] + "'";
+                  }
                 }
               }
             }
