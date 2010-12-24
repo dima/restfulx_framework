@@ -32,6 +32,7 @@ package org.restfulx.services.air {
   import flash.events.TimerEvent;
   import flash.events.SQLEvent;
   import flash.events.SQLErrorEvent;
+  import flash.events.SQLUpdateEvent;
   import flash.filesystem.File;
   import flash.utils.Dictionary;
   import flash.utils.Timer;
@@ -664,27 +665,35 @@ package org.restfulx.services.air {
             refName = relObject["referAs"];
           }
           
-          var recursiveStatement:SQLStatement = getSQLStatement("UPDATE " + tableName + 
+          var statement:SQLStatement = getSQLStatement("UPDATE " + tableName + 
             " SET sync=:sync WHERE " + RxUtils.toSnakeCase(refName) + "_id='" + object["id"] + "'");
-          recursiveStatement.parameters[":sync"] = syncStatus;
+          statement.parameters[":sync"] = syncStatus;
           
-          if (relType == "HasMany" && object[rel] != null) {
-            for each (var nestedObject:Object in object[rel]) {
-              updateSyncStatusRecursively(nestedObject, relObjType, syncStatus);
-            } 
-          } else if (relType == "HasOne" && object[rel] != null) {
-            updateSyncStatusRecursively(object[rel], relObjType, syncStatus);
-          }
+          var recursiveStatement:SQLStatement = getSQLStatement("SELECT id FROM " + tableName + " WHERE " + 
+            RxUtils.toSnakeCase(refName) + "_id='" + object["id"] + "'");
           
-          Rx.log.debug("executing SQL:" + recursiveStatement.text);      
-          recursiveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+          Rx.log.debug("executing SQL:" + statement.text);
+          Rx.log.debug("executing SQL:" + recursiveStatement.text);
+          statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
             event.currentTarget.removeEventListener(event.type, arguments.callee);
             Rx.log.debug("successfully updated children sync status");
           });
-          recursiveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+          statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
             event.currentTarget.removeEventListener(event.type, arguments.callee);
             Rx.log.error("failed to remove/update children of: " + object["id"] + " from the database: " + event.error);
           });
+          recursiveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+            Rx.log.debug("recursing into children of " + relObjType);
+            event.currentTarget.removeEventListener(event.type, arguments.callee);
+            for each (var relatedObject:Object in (event.target as SQLStatement).getResult().data) {
+              updateSyncStatusRecursively(relatedObject, relObjType, syncStatus);
+            }
+          });
+          recursiveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+            event.currentTarget.removeEventListener(event.type, arguments.callee);
+            Rx.log.error("failed to recurse into children of: " + relObjType + ": " + event.error);
+          });
+          executeSQLStatement(statement);
           executeSQLStatement(recursiveStatement);
         }
       }
@@ -703,26 +712,37 @@ package org.restfulx.services.air {
             refName = relObject["referAs"];
           } 
           
-          var recursiveStatement:SQLStatement = getSQLStatement("DELETE FROM " + tableName + 
-            " WHERE " + RxUtils.toSnakeCase(refName) + "_id='" + object["id"] + "'");
+          var recursiveStatement:SQLStatement = getSQLStatement("SELECT id FROM " + tableName + " WHERE " + 
+            RxUtils.toSnakeCase(refName) + "_id='" + object["id"] + "'");
           
-          if (relType == "HasMany" && object[rel] != null) {
-            for each (var nestedObject:Object in object[rel]) {
-              purgeRecursively(nestedObject, relObjType);
-            } 
-          } else if (relType == "HasOne" && object[rel] != null) {
-            purgeRecursively(object[rel], relObjType);
-          }
-          
-          Rx.log.debug("recursively deleting children:executing SQL:" + recursiveStatement.text);      
+          Rx.log.debug("recursively deleting children:executing SQL:" + recursiveStatement.text);
           recursiveStatement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+            var statement:SQLStatement = getSQLStatement("DELETE FROM " + tableName + 
+              " WHERE " + RxUtils.toSnakeCase(refName) + "_id='" + object["id"] + "'");
+              
+            statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
+              event.currentTarget.removeEventListener(event.type, arguments.callee);
+              Rx.log.debug("successfully deleted children");
+            });
+            statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
+              event.currentTarget.removeEventListener(event.type, arguments.callee);
+              Rx.log.error("failed to delete children of " + refName + ":" + object["id"] + " from the database: " + event.error);
+            });
+            
+            Rx.log.debug("recursively deleting children:executing SQL:" + statement.text);
+            executeSQLStatement(statement);
+            
+            Rx.log.debug("recursing into children of " + relObjType);
             event.currentTarget.removeEventListener(event.type, arguments.callee);
-            Rx.log.debug("successfully deleted children");
+            for each (var relatedObject:Object in (event.target as SQLStatement).getResult().data) {
+              purgeRecursively(relatedObject, relObjType);
+            }
           });
           recursiveStatement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
             event.currentTarget.removeEventListener(event.type, arguments.callee);
-            Rx.log.error("failed to delete children of " + refName + ":" + object["id"] + " from the database: " + event.error);
+            Rx.log.error("failed to recurse into children of: " + relObjType + ": " + event.error);
           });
+          
           executeSQLStatement(recursiveStatement);
         }
       }
