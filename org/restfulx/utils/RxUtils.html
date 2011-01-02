@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
-<meta content="RxUtils,org.restfulx.utils.RxUtils,addModelToCache,addObjectIdToResourceURL,canDeleteModel,cast,cleanupModelReferences,clone,daysFromNow,describeResource,fireUndoRedoActionEvent,getAttributeAnnotation,getResourceName,getResourcePathPrefix,getWithDefault,isAnyEmpty,isBelongsTo,isDateTime,isEmpty,isHasMany,isHasOne,isIgnored,isInSamePackage,isInTheFuture,isInvalidPropertyName,isInvalidPropertyType,isLazy,isNested,isPolymorphicBelongsTo,isoToDate,itemMatches,lowerCaseFirst,mergeArrays,navToURL,nestResource,removeFirstMatch,shallowCopy,toCamelCase,toSnakeCase,uncast,updateExistingParentReferenceIfExists,upperCaseFirst" name="keywords">
+<meta content="RxUtils,org.restfulx.utils.RxUtils,addModelToCache,addObjectIdToResourceURL,canDeleteModel,cast,cleanupModelAssociations,cleanupModelReferences,clone,daysFromNow,describeResource,fireUndoRedoActionEvent,getAttributeAnnotation,getResourceName,getResourcePathPrefix,getWithDefault,isAnyEmpty,isBelongsTo,isDateTime,isEmpty,isHasMany,isHasOne,isIgnored,isInSamePackage,isInTheFuture,isInvalidPropertyName,isInvalidPropertyType,isLazy,isNested,isPolymorphicBelongsTo,isoToDate,itemMatches,lowerCaseFirst,mergeArrays,navToURL,nestResource,removeFirstMatch,shallowCopy,toCamelCase,toSnakeCase,uncast,updateExistingParentReferenceIfExists,upperCaseFirst" name="keywords">
 <title>org.restfulx.utils.RxUtils</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">"RestfulX Framework 1.3.0 API Documenation"</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/RxUtils.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">"RestfulX Framework 1.3.1 API Documenation"</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/restfulx/utils/RxUtils.html&amp;org/restfulx/utils/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;RxUtils</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a></td>
@@ -89,9 +89,19 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#cleanupModelAssociations()">cleanupModelAssociations</a>(model:Object, fqn:String):void</div>
+<div class="summaryTableDescription">[static]
+     Clean up all HasOne,HasMany associations that this model refers to recursively
+      
+     </div>
+</td><td class="summaryTableOwnerCol">RxUtils</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#cleanupModelReferences()">cleanupModelReferences</a>(model:Object, fqn:String, singleReference:String = ""):void</div>
 <div class="summaryTableDescription">[static]
-      Cleanup references to specified model.</div>
+      Clean up references to specified model.</div>
 </td><td class="summaryTableOwnerCol">RxUtils</td>
 </tr>
 <tr class="">
@@ -276,7 +286,9 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#isNested()">isNested</a>(attribute:XML):Boolean</div>
-<div class="summaryTableDescription">[static]</div>
+<div class="summaryTableDescription">[static]
+     Checks if the node is annotated with [Nested]
+     </div>
 </td><td class="summaryTableOwnerCol">RxUtils</td>
 </tr>
 <tr class="">
@@ -331,6 +343,8 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#navToURL()">navToURL</a>(url:Object, target:String = "_top"):Boolean</div>
 <div class="summaryTableDescription">[static]
+     Wrapper around navigateToURL that does URLRequest formatting and error handling
+      
      </div>
 </td><td class="summaryTableOwnerCol">RxUtils</td>
 </tr>
@@ -392,7 +406,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <div class="summarySignature">
 <a class="signatureLink" href="#updateExistingParentReferenceIfExists()">updateExistingParentReferenceIfExists</a>(model:Object, fqn:String):void</div>
 <div class="summaryTableDescription">[static]
-      Updates an parent references with this item if their ids match.</div>
+      Updates a parent references with this item if their ids match.</div>
 </td><td class="summaryTableOwnerCol">RxUtils</td>
 </tr>
 <tr class="">
@@ -533,6 +547,31 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="cleanupModelAssociations()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">cleanupModelAssociations</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function cleanupModelAssociations(model:Object, fqn:String):void</code><p>
+     Clean up all HasOne,HasMany associations that this model refers to recursively
+      
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">model</span>:Object</code> &mdash; model instance to clean-up references for
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">fqn</span>:String</code> &mdash; FullyQualifiedName of the model
+     </td>
+</tr>
+</table>
+</div>
 <a name="cleanupModelReferences()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -541,7 +580,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static function cleanupModelReferences(model:Object, fqn:String, singleReference:String = ""):void</code><p>
-      Cleanup references to specified model.
+      Clean up references to specified model.
       
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
@@ -560,7 +599,8 @@ showHideInherited();
 <td class="paramSpacer">&nbsp;</td>
 </tr>
 <tr>
-<td width="20px"></td><td><code><span class="label">singleReference</span>:String</code> (default = "<code></code>")<code></code></td>
+<td width="20px"></td><td><code><span class="label">singleReference</span>:String</code> (default = "<code></code>")<code></code> &mdash; indicates if this reference is single
+     </td>
 </tr>
 </table>
 </div>
@@ -1071,7 +1111,9 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public static function isNested(attribute:XML):Boolean</code><span class="label">Parameters</span>
+<code>public static function isNested(attribute:XML):Boolean</code><p>
+     Checks if the node is annotated with [Nested]
+     </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
 <td width="20px"></td><td><code><span class="label">attribute</span>:XML</code></td>
@@ -1237,6 +1279,8 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static function navToURL(url:Object, target:String = "_top"):Boolean</code><p>
+     Wrapper around navigateToURL that does URLRequest formatting and error handling
+      
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -1443,7 +1487,7 @@ showHideInherited();
 </table>
 <div class="detailBody">
 <code>public static function updateExistingParentReferenceIfExists(model:Object, fqn:String):void</code><p>
-      Updates an parent references with this item if their ids match.
+      Updates a parent references with this item if their ids match.
       
      </p><span class="label">Parameters</span>
 <table border="0" cellspacing="0" cellpadding="0">
