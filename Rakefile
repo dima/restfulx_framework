@@ -7,7 +7,7 @@
 # 6. git commit
 # 7. git checkout master
 
-FRAMEWORK_VERSION = "1.3.0"
+FRAMEWORK_VERSION = "1.3.1"
 
 TEST_APP_NAME = 'TestApp.mxml'
 ROOT_DIR = File.dirname(__FILE__)

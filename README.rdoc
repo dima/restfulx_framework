@@ -47,4 +47,4 @@ Get involved with the community:
     
 == License
 
-Copyright (c) 2008-2010 Dima Berastau and Contributors, released under MIT License
+Copyright (c) 2008-2011 Dima Berastau and Contributors, released under MIT License

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008-2010 Dima Berastau and Contributors
+ * Copyright (c) 2008-2011 Dima Berastau and Contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -66,6 +66,7 @@ package org.restfulx.services.air {
     /** indicates if the local database has been set up and is ready to be modified/queried */
     public var initialized:Boolean;
     
+    /** reference to the connnection object used by AIR service provider */
     public var connection:SQLConnection;
     
     private static var types:Object = {
@@ -78,14 +79,19 @@ package org.restfulx.services.air {
       "DateTime" : "TEXT"
     }
     
+    /** local metadata state */
     protected var state:ModelsMetadata;
 
+    /** map of models to various SQL expressions */
     protected var sql:Dictionary;
     
+    /** tables as per all the models registered */
     protected var tables:Dictionary;
     
+    /** existing schema (already in SQLite) */
     protected var schema:Dictionary;
-            
+    
+    /** queue of SQL expressions to execute */
     protected var queue:Array;
     
     /**

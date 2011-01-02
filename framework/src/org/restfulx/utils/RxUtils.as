@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008-2010 Dima Berastau and Contributors
+ * Copyright (c) 2008-2011 Dima Berastau and Contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -390,6 +390,9 @@ package org.restfulx.utils {
       return getAttributeAnnotation(attribute, "Lazy").length() > 0;
     }
     
+    /**
+     * Checks if the node is annotated with [Nested]
+     */
     public static function isNested(attribute:XML):Boolean {
       return getAttributeAnnotation(attribute, "Nested").length() > 0;
     }
@@ -615,6 +618,8 @@ package org.restfulx.utils {
     }
     
     /**
+     * Wrapper around navigateToURL that does URLRequest formatting and error handling
+     *  
      * @param url either a String URL or a URLRequest
      * @param target the target for the URL
      * @return true if the navigateToURL call succeeded, false if it did not (or if it wasn't attempted)

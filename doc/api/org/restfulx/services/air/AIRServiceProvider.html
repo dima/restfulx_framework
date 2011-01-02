@@ -4,7 +4,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
 <link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
-<meta content="AIRServiceProvider,org.restfulx.services.air.AIRServiceProvider,ID,connection,initialized,queue,sql,state,id,beginTransaction,canLazyLoad,commitTransaction,computeMetadada,create,destroy,dirty,executePendingSQLStatements,executeSQLStatement,getLastPullTimeStamp,getSQLStatement,getSQLType,hasErrors,index,initializeConnection,invokeResponderResult,marshall,purge,queueSQLStatement,show,sync,unmarshall,update,updateLastPullTimeStamp" name="keywords">
+<meta content="AIRServiceProvider,org.restfulx.services.air.AIRServiceProvider,ID,connection,initialized,queue,schema,sql,state,tables,id,beginTransaction,canLazyLoad,commitTransaction,computeMetadada,create,destroy,dirty,executePendingSQLStatements,executeSQLStatement,extractSchema,getLastPullTimeStamp,getSQLStatement,getSQLType,hasErrors,index,initializeConnection,invokeResponderResult,marshall,migrateDatabase,performDatabaseMigration,purge,queueSQLStatement,show,sync,unmarshall,update,updateLastPullTimeStamp" name="keywords">
 <title>org.restfulx.services.air.AIRServiceProvider</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
 			--></script>
 <table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
 <tr>
-<td align="left" class="titleTableTitle">"RestfulX Framework 1.3.0 API Documenation"</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/air/AIRServiceProvider.html&amp;org/restfulx/services/air/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+<td align="left" class="titleTableTitle">"RestfulX Framework 1.3.1 API Documenation"</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?org/restfulx/services/air/AIRServiceProvider.html&amp;org/restfulx/services/air/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
 </tr>
 <tr class="titleTableRow2">
 <td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;AIRServiceProvider</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
@@ -58,7 +58,7 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#connection">connection</a> : SQLConnection<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#connection">connection</a> : SQLConnection<div class="summaryTableDescription"> reference to the connnection object used by AIR service provider </div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
 </tr>
 <tr class="">
@@ -81,16 +81,24 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#queue">queue</a> : Array<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#queue">queue</a> : Array<div class="summaryTableDescription"> queue of SQL expressions to execute </div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
 </tr>
 <tr class="">
-<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#sql">sql</a> : Dictionary<div class="summaryTableDescription"></div>
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#schema">schema</a> : Dictionary<div class="summaryTableDescription"> existing schema (already in SQLite) </div>
+</td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#sql">sql</a> : Dictionary<div class="summaryTableDescription"> map of models to various SQL expressions </div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
 </tr>
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#state">state</a> : <a href="../../utils/ModelsMetadata.html">ModelsMetadata</a>
-<div class="summaryTableDescription"></div>
+<div class="summaryTableDescription"> local metadata state </div>
+</td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#tables">tables</a> : Dictionary<div class="summaryTableDescription"> tables as per all the models registered </div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
 </tr>
 </table>
@@ -212,7 +220,16 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
-<a class="signatureLink" href="#purge()">purge</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</div>
+<a class="signatureLink" href="#migrateDatabase()">migrateDatabase</a>():void</div>
+<div class="summaryTableDescription">
+     Add any columns that have been added to models but do not currently
+     exist in database.</div>
+</td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#purge()">purge</a>(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false):void</div>
 <div class="summaryTableDescription">
      
      Tries to eallydelete an object as opposed to just mark it for deletion.</div>
@@ -298,6 +315,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <tr class="">
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
+<a class="signatureLink" href="#extractSchema()">extractSchema</a>(result:SQLSchemaResult):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
 <a class="signatureLink" href="#getSQLStatement()">getSQLStatement</a>(statement:String):SQLStatement</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
@@ -320,6 +344,13 @@ if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Cl
 <td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
 <div class="summarySignature">
 <a class="signatureLink" href="#invokeResponderResult()">invokeResponderResult</a>(responder:IResponder, result:Object):void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#performDatabaseMigration()">performDatabaseMigration</a>():void</div>
 <div class="summaryTableDescription"></div>
 </td><td class="summaryTableOwnerCol">AIRServiceProvider</td>
 </tr>
@@ -359,8 +390,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public var connection:SQLConnection</code>
-</div>
+<code>public var connection:SQLConnection</code><p> reference to the connnection object used by AIR service provider </p></div>
 <a name="id"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -407,8 +437,15 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected var queue:Array</code>
-</div>
+<code>protected var queue:Array</code><p> queue of SQL expressions to execute </p></div>
+<a name="schema"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">schema</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected var schema:Dictionary</code><p> existing schema (already in SQLite) </p></div>
 <a name="sql"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -416,8 +453,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected var sql:Dictionary</code>
-</div>
+<code>protected var sql:Dictionary</code><p> map of models to various SQL expressions </p></div>
 <a name="state"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -425,8 +461,15 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>protected var state:<a href="../../utils/ModelsMetadata.html">ModelsMetadata</a></code>
-</div>
+<code>protected var state:<a href="../../utils/ModelsMetadata.html">ModelsMetadata</a></code><p> local metadata state </p></div>
+<a name="tables"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">tables</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected var tables:Dictionary</code><p> tables as per all the models registered </p></div>
 <a name="constructorDetail"></a>
 <div class="detailSectionHeader">Constructor detail</div>
 <a name="AIRServiceProvider()"></a>
@@ -736,6 +779,20 @@ showHideInherited();
 </tr>
 </table>
 </div>
+<a name="extractSchema()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">extractSchema</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function extractSchema(result:SQLSchemaResult):void</code><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">result</span>:SQLSchemaResult</code></td>
+</tr>
+</table>
+</div>
 <a name="getLastPullTimeStamp()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -979,6 +1036,26 @@ showHideInherited();
 <a href="../../services/IServiceProvider.html#marshall" target="">org.restfulx.services.IServiceProvider.marshall</a>
 </div>
 </div>
+<a name="migrateDatabase()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">migrateDatabase</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function migrateDatabase():void</code><p>
+     Add any columns that have been added to models but do not currently
+     exist in database.
+     </p></div>
+<a name="performDatabaseMigration()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">performDatabaseMigration</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>protected function performDatabaseMigration():void</code>
+</div>
 <a name="purge()"></a>
 <table cellspacing="0" cellpadding="0" class="detailHeader">
 <tr>
@@ -986,7 +1063,7 @@ showHideInherited();
 </tr>
 </table>
 <div class="detailBody">
-<code>public function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null):void</code><p>
+<code>public function purge(object:Object, responder:IResponder, metadata:Object = null, nestedBy:Array = null, recursive:Boolean = false):void</code><p>
      
      Tries to eallydelete an object as opposed to just mark it for deletion.
           </p><span class="label">Parameters</span>
@@ -1017,6 +1094,13 @@ showHideInherited();
       [project, user] where project is some Project model instance and user is some User model
       instance. In case of XMLHTTPServiceProvider nesting may require additional configuration on the server.
       If you are using Rails see config/routes.rb for more details.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">recursive</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; indicates if a purge operations should be recusrive
      </td>
 </tr>
 </table>
