@@ -281,7 +281,8 @@ package org.restfulx.controllers {
 	        Rx.enableUndoRedo = false;
 	      }
 	    }
-	    	    
+	    
+	    source.beginTransaction();
 	    for each (var instance:Object in data.source) {
 	      if (instance["rev"] == 0) instance["rev"] = "";
 	      switch (instance["sync"]) {
@@ -301,6 +302,12 @@ package org.restfulx.controllers {
 	          Rx.log.error("don't know what to do with: " + instance + ",sync status: " + instance["sync"]);
 	          pushCount--;
 	      }
+	      source.commitTransaction(new ItemResponder(function(result:ResultEvent, token:Object = null):void {
+          Rx.log.debug("push changes synced back to original source provider");
+        }, function(error:Object, token:Object = null):void {
+          Rx.log.debug("couldn't sync push changes due to: " + error);
+          throw new Error(error);
+        }));
 	    }
 	  }
 	  
@@ -344,4 +351,3 @@ package org.restfulx.controllers {
 	  }
   }
 }
-
