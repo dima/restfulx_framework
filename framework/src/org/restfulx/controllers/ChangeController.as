@@ -284,29 +284,29 @@ package org.restfulx.controllers {
   	      canUndoRedo = Rx.enableUndoRedo;
 	        Rx.enableUndoRedo = false;
 	      }
-	    }
-	    
-	    source.beginTransaction();
-	    for each (var instance:Object in data.source) {
-	      if (instance["rev"] == 0) instance["rev"] = "";
-	      switch (instance["sync"]) {
-	        case DELETE:
-	          Rx.log.debug("destroying instance: " + instance);
-	          destination.destroy(instance, new ChangeResponder(instance, this, source, destination, DELETE));
-	          break;
-	        case CREATE:
-	          Rx.log.debug("creating instance: " + instance);
- 	          destination.create(instance, new ChangeResponder(instance, this, source, destination, CREATE));
-	          break;
-	        case UPDATE:
-	          Rx.log.debug("updating instance: " + instance);
-	          destination.update(instance, new ChangeResponder(instance, this, source, destination, UPDATE));
-	          break;
-	        default:
-	          Rx.log.error("don't know what to do with: " + instance + ",sync status: " + instance["sync"]);
-	          pushCount--;
-	      }
-	      source.commitTransaction(new ItemResponder(function(result:ResultEvent, token:Object = null):void {
+	      
+	      source.beginTransaction();
+  	    for each (var instance:Object in data.source) {
+  	      if (instance["rev"] == 0) instance["rev"] = "";
+  	      switch (instance["sync"]) {
+  	        case DELETE:
+  	          Rx.log.debug("destroying instance: " + instance);
+  	          destination.destroy(instance, new ChangeResponder(instance, this, source, destination, DELETE));
+  	          break;
+  	        case CREATE:
+  	          Rx.log.debug("creating instance: " + instance);
+   	          destination.create(instance, new ChangeResponder(instance, this, source, destination, CREATE));
+  	          break;
+  	        case UPDATE:
+  	          Rx.log.debug("updating instance: " + instance);
+  	          destination.update(instance, new ChangeResponder(instance, this, source, destination, UPDATE));
+  	          break;
+  	        default:
+  	          Rx.log.error("don't know what to do with: " + instance + ",sync status: " + instance["sync"]);
+  	          pushCount--;
+  	      }
+  	    }
+  	    source.commitTransaction(new ItemResponder(function(result:ResultEvent, token:Object = null):void {
           Rx.log.debug("push changes synced back to original source provider");
         }, function(error:Object, token:Object = null):void {
           Rx.log.debug("couldn't sync push changes due to: " + error);
