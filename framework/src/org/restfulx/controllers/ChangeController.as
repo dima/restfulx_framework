@@ -161,8 +161,8 @@ package org.restfulx.controllers {
       if (models.length > 0) {
         notifiedPushStart = true;
         dispatchEvent(new PushStartEvent);
-        models.forEach(function(o:Class):void {
-          pushModels.push(o);
+        models.forEach(function(type:Class, i:int, array:Array):void {
+          pushModels.push(Rx.models.state.types[type]);
         });
   	    for each (var model:Class in models) {
   	      source.dirty(model, new ItemResponder(onDirtyChanges, onDirtyFault));
