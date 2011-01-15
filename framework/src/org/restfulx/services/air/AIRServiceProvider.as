@@ -475,9 +475,17 @@ package org.restfulx.services.air {
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           result = unmarshall(data);
-        }
-        
-        if (responder) responder.result(result);
+          if (result is TypedArray) {
+            computeMetadada(Rx.models.state.types[fqn], result as TypedArray, responder);
+          } else {
+            invokeResponderResult(responder, result);            
+          }
+        } else {
+          // nothing in the DB
+          result = new TypedArray;
+          result.itemType = fqn;
+          invokeResponderResult(responder, result);
+        }        
       });
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
