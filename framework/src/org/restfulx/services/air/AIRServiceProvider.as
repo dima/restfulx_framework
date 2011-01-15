@@ -470,8 +470,9 @@ package org.restfulx.services.air {
       Rx.log.debug("dirty:executing SQL:" + statement.text);
       statement.addEventListener(SQLEvent.RESULT, function(event:SQLEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
-        var result:Object = new TypedArray;
-        var data:Array = (event.target as SQLStatement).getResult().data;
+        var result:Object = null;
+        var sqlResult:SQLResult = (event.target as SQLStatement).getResult();
+        var data:Array = sqlResult.data;
         if (data && data.length > 0) {
           data[0]["clazz"] = fqn.split("::")[1];
           result = unmarshall(data);
@@ -485,7 +486,7 @@ package org.restfulx.services.air {
           result = new TypedArray;
           result.itemType = fqn;
           invokeResponderResult(responder, result);
-        }        
+        }       
       });
       statement.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
