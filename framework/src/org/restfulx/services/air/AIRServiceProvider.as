@@ -578,6 +578,14 @@ package org.restfulx.services.air {
     
     /**
      * @inheritDoc
+     * @see org.restfulx.services.ISyncingServiceProvider#inTransaction
+     */
+     public function inTransaction():Boolean {
+       return connection.inTransaction;
+     }
+    
+    /**
+     * @inheritDoc
      * @see org.restfulx.services.ISyncingServiceProvider#updateLastPullTimeStamp
      */
     public function updateLastPullTimeStamp(object:Object, value:String):void {

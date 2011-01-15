@@ -261,6 +261,14 @@ package org.restfulx.controllers {
 	   * Used internally to finish push session.
 	   */
 	  public function notifyPushEnd():void {
+	    if (source.inTransaction()) {
+	      source.commitTransaction(new ItemResponder(function(result:ResultEvent, token:Object = null):void {
+          Rx.log.debug("push changes synced back to original source provider");
+        }, function(error:Object, token:Object = null):void {
+          Rx.log.debug("couldn't sync push changes due to: " + error);
+          throw new Error(error);
+        })); 
+	    }
       CursorManager.removeBusyCursor();
       Rx.enableUndoRedo = canUndoRedo;
       canUndoRedo = false;
@@ -306,12 +314,6 @@ package org.restfulx.controllers {
   	          pushCount--;
   	      }
   	    }
-  	    source.commitTransaction(new ItemResponder(function(result:ResultEvent, token:Object = null):void {
-          Rx.log.debug("push changes synced back to original source provider");
-        }, function(error:Object, token:Object = null):void {
-          Rx.log.debug("couldn't sync push changes due to: " + error);
-          throw new Error(error);
-        }));
 	    }
 	    
 	    if (pushCount == 0 && pushModels.length == 0) {

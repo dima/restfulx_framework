@@ -96,6 +96,11 @@ package org.restfulx.services {
      * If the service provider supports it, this commits the currently active transaction
      */
     function commitTransaction(responder:IResponder = null):void;
+    
+    /**
+     * Indicates if this service provider is currently involved in a transaction
+     */
+    function inTransaction():Boolean;
   }
 }
 
