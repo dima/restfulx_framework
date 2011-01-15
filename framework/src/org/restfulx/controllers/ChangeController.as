@@ -161,7 +161,9 @@ package org.restfulx.controllers {
       if (models.length > 0) {
         notifiedPushStart = true;
         dispatchEvent(new PushStartEvent);
-        pushModels.push(models);
+        models.forEach(function(o:Class):void {
+          pushModels.push(o);
+        });
   	    for each (var model:Class in models) {
   	      source.dirty(model, new ItemResponder(onDirtyChanges, onDirtyFault));
   	    }
@@ -269,6 +271,7 @@ package org.restfulx.controllers {
           throw new Error(error);
         })); 
 	    }
+	    pushModels = new Array();
       CursorManager.removeBusyCursor();
       Rx.enableUndoRedo = canUndoRedo;
       canUndoRedo = false;
