@@ -280,8 +280,8 @@ package org.restfulx.controllers {
       dispatchEvent(new PushEndEvent);
 	  }
 	  
-	  protected function onDirtyChanges(result:Object, token:Object = null):void {
-	    var data:TypedArray = result as TypedArray;
+	  protected function onDirtyChanges(event:Object, token:Object = null):void {
+	    var data:TypedArray = event.result as TypedArray;
 	    
       pushModels = pushModels.filter(function(item:*, index:int, a:Array):Boolean {
        return item != data.itemType;
