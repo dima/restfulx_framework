@@ -101,6 +101,11 @@ package org.restfulx {
    */
   public class Rx {
     
+    /**
+     * Indiciates current frarmework version
+     */
+     public static const version:String = "1.3.1";
+    
     /** 
      * Framework logger. In order to see any framework-level logging at all
      * you should call <code>Rx.enableLogging()</code> anywhere in your

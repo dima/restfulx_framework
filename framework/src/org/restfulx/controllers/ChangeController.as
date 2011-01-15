@@ -162,10 +162,10 @@ package org.restfulx.controllers {
         notifiedPushStart = true;
         dispatchEvent(new PushStartEvent);
   	    for each (var model:Class in models) {
+  	      pushModels.push(Rx.models.state.types[model]);
   	      source.dirty(model, new ItemResponder(onDirtyChanges, onDirtyFault));
   	    }
       }
-
 	  }
 	  
 	  /**
@@ -272,6 +272,10 @@ package org.restfulx.controllers {
 	  protected function onDirtyChanges(result:Object, token:Object = null):void {
 	    var data:TypedArray = result as TypedArray;
 	    
+      pushModels = pushModels.filter(function(item:*, index:int, a:Array):Boolean {
+       return item != data.itemType;
+      });
+	    
 	    pushCount += data.source.length;
 	    
 	    // no undo-redo for synchronization, and the stack is lost after undo-redo
@@ -308,6 +312,10 @@ package org.restfulx.controllers {
           Rx.log.debug("couldn't sync push changes due to: " + error);
           throw new Error(error);
         }));
+	    }
+	    
+	    if (pushCount == 0 && pushModels.length == 0) {
+	      notifyPushEnd();
 	    }
 	  }
 	  
