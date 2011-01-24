@@ -158,7 +158,7 @@ package org.restfulx.controllers {
       }
       RxUtils.cleanupModelReferences(model, fqn);
       ModelsCollection(data[fqn]).removeItem(model);
-      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.DESTROY, serviceProvider));  
+      Rx.models.dispatchEvent(new CacheUpdateEvent(fqn, CacheUpdateEvent.DESTROY, serviceProvider, model));  
       model.dispatchEvent(new AfterDestroyEvent);         
     }
   }
