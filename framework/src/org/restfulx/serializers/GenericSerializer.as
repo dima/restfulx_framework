@@ -221,7 +221,11 @@ package org.restfulx.serializers {
         } else {
           if (defaultValue == null) {
             try {
-              object[targetName] = "";
+              if(object[targetName] is Number){
+                object[targetName] = NaN;
+              }else{
+                object[targetName] = "";	
+              }
             } catch (e:Error) {
               object[targetName] = null;
             }
