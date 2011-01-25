@@ -210,6 +210,7 @@ package org.restfulx.serializers {
           }
           
           object[targetName] = ref;
+          processHasManyThroughRelationships(ref,targetType);
         } else if (isNestedArray) {
           object[targetName] = processNestedArray(attribute, targetType, disconnected);
         } else if (isNestedObject && !disconnected) {
@@ -337,10 +338,18 @@ package org.restfulx.serializers {
             
           // form 2 e.g. object[authors]
           } else if (object.hasOwnProperty(localSingleName) && object.hasOwnProperty(refNamePlural)) {
-            if (object[refNamePlural] == null) {
-              object[refNamePlural] = new ModelsCollection;
-            }
-            object[localSingleName][relationship["attribute"]] = object[refNamePlural];        
+            for each(var item:Object in ModelsCollection(object[refNamePlural])){
+              if (checkConditions(item, conditions)) {            
+                if (items.hasItem(item)) {
+                  items.setItem(item);
+                } else {
+                  items.addItem(item);
+                }
+              }else if (items.hasItem(item)) {
+                items.removeItem(item);
+              }
+			}
+            object[localSingleName][relationship["attribute"]] = items;
           }
         } catch (e:Error) {
           // do something
