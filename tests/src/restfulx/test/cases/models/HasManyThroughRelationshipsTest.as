@@ -22,8 +22,6 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package restfulx.test.cases.models {
-  import mx.controls.Alert;
-  
   import org.restfulx.Rx;
   import org.restfulx.collections.ModelsCollection;
   import org.restfulx.events.CacheUpdateEvent;
