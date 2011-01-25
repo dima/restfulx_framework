@@ -22,6 +22,8 @@
  * Redistributions of files must retain the above copyright notice.
  ******************************************************************************/
 package restfulx.test.cases.models {
+  import mx.controls.Alert;
+  
   import org.restfulx.Rx;
   import org.restfulx.collections.ModelsCollection;
   import org.restfulx.events.CacheUpdateEvent;
@@ -90,17 +92,17 @@ package restfulx.test.cases.models {
         var firstStore:Store = stores.withId("458237344") as Store;
         var firstBook:Book = books.withId("404163108") as Book;
         var firstAuthor:Author = authors.withId("404163108") as Author;
-  
+  		
         assertEquals(4, stores.length);
-        assertEquals(4, books.length);
-        assertEquals(4, authors.length);
-        
+        assertEquals(5, books.length);
+        assertEquals(6, authors.length);
+		
         assertEquals("Store4NameString", firstStore.name);
-        assertEquals(1, firstStore.authors.length);
-        assertEquals(1, firstStore.books.length);
+        assertEquals(3, firstStore.authors.length);
+        assertEquals(2, firstStore.books.length);
         assertEquals("Author4NameString", Author(firstStore.authors.getItemAt(0)).name);
         assertEquals("Book4NameString", Book(firstStore.books.getItemAt(0)).name);
-        assertEquals(1, firstStore.randomAuthors.length);
+        assertEquals(3, firstStore.randomAuthors.length);
         assertEquals("Author4NameString", Author(firstStore.randomAuthors.getItemAt(0)).name);
         Rx.models.removeEventListener(CacheUpdateEvent.ID, onCacheUpdateForm2);
       }
