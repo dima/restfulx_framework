@@ -161,11 +161,13 @@ package org.restfulx.controllers {
       if (models.length > 0) {
         notifiedPushStart = true;
         dispatchEvent(new PushStartEvent);
+        models.forEach(function(type:Class, i:int, array:Array):void {
+          pushModels.push(Rx.models.state.types[type]);
+        });
   	    for each (var model:Class in models) {
   	      source.dirty(model, new ItemResponder(onDirtyChanges, onDirtyFault));
   	    }
       }
-
 	  }
 	  
 	  /**
@@ -261,6 +263,15 @@ package org.restfulx.controllers {
 	   * Used internally to finish push session.
 	   */
 	  public function notifyPushEnd():void {
+	    if (source.inTransaction()) {
+	      source.commitTransaction(new ItemResponder(function(result:ResultEvent, token:Object = null):void {
+          Rx.log.debug("push changes synced back to original source provider");
+        }, function(error:Object, token:Object = null):void {
+          Rx.log.debug("couldn't sync push changes due to: " + error);
+          throw new Error(error);
+        })); 
+	    }
+	    pushModels = new Array();
       CursorManager.removeBusyCursor();
       Rx.enableUndoRedo = canUndoRedo;
       canUndoRedo = false;
@@ -269,8 +280,12 @@ package org.restfulx.controllers {
       dispatchEvent(new PushEndEvent);
 	  }
 	  
-	  protected function onDirtyChanges(result:Object, token:Object = null):void {
-	    var data:TypedArray = result as TypedArray;
+	  protected function onDirtyChanges(event:Object, token:Object = null):void {
+	    var data:TypedArray = event.result as TypedArray;
+	    
+      pushModels = pushModels.filter(function(item:*, index:int, a:Array):Boolean {
+       return item != data.itemType;
+      });
 	    
 	    pushCount += data.source.length;
 	    
@@ -280,27 +295,32 @@ package org.restfulx.controllers {
   	      canUndoRedo = Rx.enableUndoRedo;
 	        Rx.enableUndoRedo = false;
 	      }
+	      
+	      source.beginTransaction();
+  	    for each (var instance:Object in data.source) {
+  	      if (instance["rev"] == 0) instance["rev"] = "";
+  	      switch (instance["sync"]) {
+  	        case DELETE:
+  	          Rx.log.debug("destroying instance: " + instance);
+  	          destination.destroy(instance, new ChangeResponder(instance, this, source, destination, DELETE));
+  	          break;
+  	        case CREATE:
+  	          Rx.log.debug("creating instance: " + instance);
+   	          destination.create(instance, new ChangeResponder(instance, this, source, destination, CREATE));
+  	          break;
+  	        case UPDATE:
+  	          Rx.log.debug("updating instance: " + instance);
+  	          destination.update(instance, new ChangeResponder(instance, this, source, destination, UPDATE));
+  	          break;
+  	        default:
+  	          Rx.log.error("don't know what to do with: " + instance + ",sync status: " + instance["sync"]);
+  	          pushCount--;
+  	      }
+  	    }
 	    }
-	    	    
-	    for each (var instance:Object in data.source) {
-	      if (instance["rev"] == 0) instance["rev"] = "";
-	      switch (instance["sync"]) {
-	        case DELETE:
-	          Rx.log.debug("destroying instance: " + instance);
-	          destination.destroy(instance, new ChangeResponder(instance, this, source, destination, DELETE));
-	          break;
-	        case CREATE:
-	          Rx.log.debug("creating instance: " + instance);
- 	          destination.create(instance, new ChangeResponder(instance, this, source, destination, CREATE));
-	          break;
-	        case UPDATE:
-	          Rx.log.debug("updating instance: " + instance);
-	          destination.update(instance, new ChangeResponder(instance, this, source, destination, UPDATE));
-	          break;
-	        default:
-	          Rx.log.error("don't know what to do with: " + instance + ",sync status: " + instance["sync"]);
-	          pushCount--;
-	      }
+	    
+	    if (pushCount == 0 && pushModels.length == 0) {
+	      notifyPushEnd();
 	    }
 	  }
 	  
@@ -344,4 +364,3 @@ package org.restfulx.controllers {
 	  }
   }
 }
-
