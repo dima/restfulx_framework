@@ -44,6 +44,13 @@ package restfulx.test.cases.serializers {
       super(methodName);
       json = new JSONSerializer;
     }
+    
+    public function testEmptyObjectUnmarshalling():void {
+      var marshalled:String = '[]';
+      var unmarshalled:Object = json.unmarshall(marshalled);
+      assertTrue(unmarshalled is TypedArray);
+      assertEquals(0, TypedArray(unmarshalled).source.length);
+    }
 
     public function testObjectUnmarshalling():void {
       var marshalled:String = '[{\"project\": {\"name\": \"Project4NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"id\": 490909803, \"tasks\": [{\"name\": \"Task4NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"project_id\": 490909803, \"id\": 540638538, \"created_at\": \"2008-12-09T00:02:40Z\"}], \"created_at\": \"2008-12-09T00:02:40Z\"}}, {\"project\": {\"name\": \"Project2NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"id\": 1043718716, \"tasks\": [{\"name\": \"Task2NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"project_id\": 1043718716, \"id\": 525404037, \"created_at\": \"2008-12-09T00:02:40Z\"}], \"created_at\": \"2008-12-09T00:02:40Z\"}}, {\"project\": {\"name\": \"Project1NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"id\": 1060557696, \"tasks\": [{\"name\": \"Task1NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"project_id\": 1060557696, \"id\": 568611273, \"created_at\": \"2008-12-09T00:02:40Z\"}], \"created_at\": \"2008-12-09T00:02:40Z\"}}, {\"project\": {\"name\": \"Project3NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"id\": 1063252898, \"tasks\": [{\"name\": \"Task3NameString\", \"updated_at\": \"2008-12-09T00:02:40Z\", \"project_id\": 1063252898, \"id\": 1069820074, \"created_at\": \"2008-12-09T00:02:40Z\"}], \"created_at\": \"2008-12-09T00:02:40Z\"}}]';

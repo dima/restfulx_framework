@@ -163,6 +163,7 @@
         ts.addTest(new XMLSerializerTest("testRecursiveObjectMarshallingWithMixedRelationships"));
         ts.addTest(new XMLSerializerTest("testNothingUnmarshalling"));
 
+        ts.addTest(new JSONSerializerTest("testEmptyObjectUnmarshalling"));
         ts.addTest(new JSONSerializerTest("testObjectUnmarshalling"));
         ts.addTest(new JSONSerializerTest("testErrorUnmarshalling"));
         ts.addTest(new JSONSerializerTest("testObjectMarshalling"));

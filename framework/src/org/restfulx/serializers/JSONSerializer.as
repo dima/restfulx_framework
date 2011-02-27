@@ -64,13 +64,13 @@ package org.restfulx.serializers {
       }
       try {
         if (object is Array) {
-          return unmarshallJSONArray(object as Array, disconnected);
+          return unmarshallJSONArray(object as Array, disconnected, defaultType);
         } else {
           var source:Object = JSON.decode(object.toString());
           if (source is Array) {
-            return unmarshallJSONArray(source as Array, disconnected);
+            return unmarshallJSONArray(source as Array, disconnected, defaultType);
           } else {
-            return unmarshallJSONObject(source, disconnected);
+            return unmarshallJSONObject(source, disconnected, defaultType);
           }
         }
       } catch (e:Error) {
@@ -81,10 +81,13 @@ package org.restfulx.serializers {
     }
     
     // can digest both ActiveRecord-like JSON and CouchDB-like JSON
-    private function unmarshallJSONArray(instances:Array, disconnected:Boolean = false):TypedArray {
+    private function unmarshallJSONArray(instances:Array, disconnected:Boolean = false, defaultType:String = null):TypedArray {
       var result:TypedArray = new TypedArray;
       
-      if (!instances || !instances.length) return result;
+      if (!instances || !instances.length) {
+        result.itemType = defaultType;
+        return result;
+      }
       
       if (instances[0].hasOwnProperty("metadata")) {
         result.metadata = new Object;
@@ -102,7 +105,7 @@ package org.restfulx.serializers {
       return result;
     }
     
-    private function unmarshallJSONObject(source:Object, disconnected:Boolean = false):Object {
+    private function unmarshallJSONObject(source:Object, disconnected:Boolean = false, defaultType:String = null):Object {
       if (!source.hasOwnProperty("id") && !source.hasOwnProperty("_id")) {
         // ActiveRecord-like JSON array with element names as object keys
         for (var prop:String in source) {
@@ -116,7 +119,7 @@ package org.restfulx.serializers {
         convertProperties(source);
       }
       
-      return super.unmarshall(source, disconnected);
+      return super.unmarshall(source, disconnected, defaultType);
     }
     
     private function convertProperties(instance:Object):Object {
