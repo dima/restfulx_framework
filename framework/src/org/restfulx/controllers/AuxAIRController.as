@@ -145,7 +145,7 @@ package org.restfulx.controllers {
 
       var statement:SQLStatement = getSQLStatement(text);
       
-      if (conditions.length == 2) {
+      if (conditions != null && conditions.length == 2) {
         var params:Object = conditions[1];
         for (var param:String in params) {
           statement.parameters[param] = params[param];
