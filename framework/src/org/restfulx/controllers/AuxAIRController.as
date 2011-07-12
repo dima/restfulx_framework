@@ -139,7 +139,7 @@ package org.restfulx.controllers {
       var fqn:String = Rx.models.state.types[clazz];
       
       var text:String = "SELECT * FROM " + Rx.models.state.controllers[fqn] + " WHERE sync != 'D'";
-      if (conditions.length) {
+      if (conditions != null && conditions.length > 0) {
         text += " AND " + conditions[0];
       }
 
