@@ -578,8 +578,10 @@ package org.restfulx.services.air {
       });
       connection.addEventListener(SQLErrorEvent.ERROR, function(event:SQLErrorEvent):void {
         event.currentTarget.removeEventListener(event.type, arguments.callee);
-        Rx.log.debug("rolling back");
-        connection.rollback();
+	if(connection.inTransaction) {
+	        Rx.log.debug("rolling back");
+	        connection.rollback();
+	}
         if (responder) responder.fault(event.error);
       });
       connection.commit();
