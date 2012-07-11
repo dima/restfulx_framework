@@ -139,13 +139,13 @@ package org.restfulx.controllers {
       var fqn:String = Rx.models.state.types[clazz];
       
       var text:String = "SELECT * FROM " + Rx.models.state.controllers[fqn] + " WHERE sync != 'D'";
-      if (conditions.length) {
+      if (conditions != null && conditions.length > 0) {
         text += " AND " + conditions[0];
       }
 
       var statement:SQLStatement = getSQLStatement(text);
       
-      if (conditions.length == 2) {
+      if (conditions != null && conditions.length == 2) {
         var params:Object = conditions[1];
         for (var param:String in params) {
           statement.parameters[param] = params[param];
