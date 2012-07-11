@@ -9,6 +9,13 @@
   </book>
   <book>
     <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">1023124238</id>
+    <name>Book5NameString</name>
+    <store_id type="integer">458237344</store_id>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </book>
+  <book>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
     <id type="integer">968145068</id>
     <name>Book2NameString</name>
     <store_id type="integer">1019959561</store_id>

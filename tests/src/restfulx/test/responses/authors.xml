@@ -28,4 +28,18 @@
     <name>Author3NameString</name>
     <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
   </author>
+  <author>
+    <book_id type="integer">1023124238</book_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">790999880</id>
+    <name>Author5NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </author>
+  <author>
+    <book_id type="integer">1023124238</book_id>
+    <created_at type="datetime">2008/12/09 00:02:40</created_at>
+    <id type="integer">790999881</id>
+    <name>Author6NameString</name>
+    <updated_at type="datetime">2008/12/09 00:02:40</updated_at>
+  </author>
 </authors>
